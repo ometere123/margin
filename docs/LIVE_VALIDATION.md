@@ -177,4 +177,4 @@ Measure representative worst-case calls rather than one arbitrary transaction:
 - resolve current page only;
 - repeated resolution with history.
 
-Document observed fee values and choose production UX accordingly.
+The current stable `genlayer-js@1.1.8` finalized transaction objects for the real browser Submit and Resolve hashes expose lifecycle/finality and GenVM execution fields, but do not expose a fee amount or a persisted wallet fee estimate. Their per-receipt `gas_used` values are `0` in the Studionet response. No fee total is claimed here; a complete fee profile still requires capturing the injected wallet's request parameters during representative submissions (including the maximum-size cases above).
