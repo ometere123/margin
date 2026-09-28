@@ -189,6 +189,18 @@ function annotate(claim: MarginClaim, ranges: Range[], aggregateCount = 1) {
 let cachedClaims: MarginClaim[] = [];
 let lastCanonical = '';
 let reanchorTimer: number | undefined;
+let emptyReadRetryTimer: number | undefined;
+
+function scheduleEmptyReadRetry() {
+  if (emptyReadRetryTimer !== undefined) return;
+  // pageClaims suppresses a cold-cache retry for the gateway cooldown. Retry
+  // once after that window so a transient 429/HTML response cannot permanently
+  // hide a finalized annotation on an otherwise unchanged page.
+  emptyReadRetryTimer = window.setTimeout(() => {
+    emptyReadRetryTimer = undefined;
+    void refresh();
+  }, 16_000);
+}
 
 function renderClaims(claims: MarginClaim[]) {
   clearAnnotations();
@@ -234,6 +246,11 @@ async function refresh() {
     cachedClaims = (response?.claims || []) as MarginClaim[];
     lastCanonical = canonical;
     renderClaims(cachedClaims);
+    if (cachedClaims.length === 0) scheduleEmptyReadRetry();
+    else if (emptyReadRetryTimer !== undefined) {
+      window.clearTimeout(emptyReadRetryTimer);
+      emptyReadRetryTimer = undefined;
+    }
   } catch {
     // A transient gateway/rate-limit failure must not create an unhandled
     // background error or erase the last finalized annotation.
