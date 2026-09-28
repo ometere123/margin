@@ -10,6 +10,27 @@ window.addEventListener('unhandledrejection', (event) => {
   }
 });
 
+function extensionContextIsAlive(): boolean {
+  try {
+    return Boolean(chrome.runtime?.id);
+  } catch {
+    return false;
+  }
+}
+
+async function sendRuntimeMessage<T = any>(message: unknown): Promise<T | null> {
+  if (!extensionContextIsAlive()) return null;
+  try {
+    return await chrome.runtime.sendMessage(message) as T;
+  } catch (error) {
+    // Reloading an unpacked MV3 extension invalidates content scripts that are
+    // still attached to open pages. Do not turn that normal teardown into a
+    // page-level error or an unhandled promise rejection.
+    if (String((error as Error)?.message || error).includes('Extension context invalidated')) return null;
+    throw error;
+  }
+}
+
 function preferredCanonicalUrl(): string {
   const link = document.querySelector<HTMLLinkElement>('link[rel="canonical"][href]');
   try {
@@ -157,7 +178,7 @@ function annotate(claim: MarginClaim, ranges: Range[], aggregateCount = 1) {
   badge.style.left = `${Math.max(4, Math.min(document.documentElement.scrollWidth - 120, rect.left + window.scrollX))}px`;
   badge.addEventListener('click', (event) => {
     event.preventDefault(); event.stopPropagation();
-    void chrome.runtime.sendMessage({ type: 'OPEN_CLAIM', claim }).catch(() => {
+    void sendRuntimeMessage({ type: 'OPEN_CLAIM', claim }).catch(() => {
       // The extension may have been reloaded while this page stayed open.
     });
   });
@@ -205,9 +226,11 @@ function scheduleReanchor() {
 
 async function refresh() {
   if (!/^https?:$/.test(location.protocol)) return;
+  if (!extensionContextIsAlive()) return;
   try {
     const canonical = preferredCanonicalUrl();
-    const response = await chrome.runtime.sendMessage({ type: 'GET_PAGE_CLAIMS', url: canonical });
+    const response = await sendRuntimeMessage<{ claims?: MarginClaim[] }>({ type: 'GET_PAGE_CLAIMS', url: canonical });
+    if (!response) return;
     cachedClaims = (response?.claims || []) as MarginClaim[];
     lastCanonical = canonical;
     renderClaims(cachedClaims);
@@ -219,11 +242,19 @@ async function refresh() {
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message?.type === 'CAPTURE_SELECTION') {
-    captureSelection().then((payload) => sendResponse({ ok: true, payload })).catch((error) => sendResponse({ ok: false, error: String(error.message || error) }));
+    captureSelection().then((payload) => {
+      try { sendResponse({ ok: true, payload }); } catch {}
+    }).catch((error) => {
+      try { sendResponse({ ok: false, error: String(error.message || error) }); } catch {}
+    });
     return true;
   }
   if (message?.type === 'REFRESH_ANNOTATIONS') {
-    refresh().then(() => sendResponse({ ok: true })).catch(() => sendResponse({ ok: false })); return true;
+    refresh().then(() => {
+      try { sendResponse({ ok: true }); } catch {}
+    }).catch(() => {
+      try { sendResponse({ ok: false }); } catch {}
+    }); return true;
   }
   return false;
 });
@@ -248,6 +279,7 @@ domObserver.observe(document.documentElement, { childList: true, subtree: true, 
 // Content scripts run in an isolated world, so polling the canonical URL is more reliable
 // than monkey-patching a site's History API for SPA navigation.
 window.setInterval(() => {
+  if (!extensionContextIsAlive()) return;
   const canonical = preferredCanonicalUrl();
   if (canonical !== lastCanonical) void refresh();
 }, 3000);
