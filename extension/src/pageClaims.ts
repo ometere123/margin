@@ -1,7 +1,10 @@
 import type { MarginClaim } from '../../shared/protocol';
 
 export const PAGE_CLAIMS_CACHE_TTL_MS = 15_000;
-export const PAGE_CLAIMS_MIN_RPC_INTERVAL_MS = 2_500;
+// A single readContract can make more than one RPC request. Keep the global
+// cadence well below the provider's 30-request/minute gateway limit even when
+// several tabs are polling different pages.
+export const PAGE_CLAIMS_MIN_RPC_INTERVAL_MS = 7_500;
 
 type CacheEntry = { claims: MarginClaim[]; fetchedAt: number };
 
@@ -15,6 +18,7 @@ export function createPageClaimsReader(
   const cache = new Map<string, CacheEntry>();
   const inFlight = new Map<string, Promise<MarginClaim[]>>();
   let nextRpcAt = 0;
+  let suppressUntil = 0;
 
   async function waitForRpcSlot() {
     const waitMs = Math.max(0, nextRpcAt - now());
@@ -25,6 +29,7 @@ export function createPageClaimsReader(
   return async function read(canonicalUrl: string): Promise<MarginClaim[]> {
     const cached = cache.get(canonicalUrl);
     if (cached && now() - cached.fetchedAt < ttlMs) return cached.claims;
+    if (now() < suppressUntil) return cached?.claims || [];
     const existing = inFlight.get(canonicalUrl);
     if (existing) return existing;
 
@@ -36,8 +41,12 @@ export function createPageClaimsReader(
       .catch((error) => {
         // Preserve a last known finalized result during a temporary gateway or
         // rate-limit failure; do not make an annotation disappear optimistically.
+        // Also suppress a burst of retries when there is no cached result. The
+        // next scheduled read will try again after the gateway cooldown.
+        suppressUntil = now() + 15_000;
         if (cached) return cached.claims;
-        throw error;
+        void error;
+        return [];
       })
       .finally(() => inFlight.delete(canonicalUrl));
     inFlight.set(canonicalUrl, request);

@@ -56,12 +56,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
   if (message?.type === 'OPEN_CLAIM') {
-    // Start opening before the storage await so a badge click retains its
-    // user-gesture eligibility in Chrome.
-    const panelOpen = sender.tab?.id ? chrome.sidePanel.open({ tabId: sender.tab.id }) : Promise.resolve();
+    // A content-script click is delivered to the service worker as a message,
+    // not as a sidePanel user gesture. Calling sidePanel.open() here therefore
+    // rejects in Chrome. Store the selected claim and let the user open the
+    // panel with the extension action; context-menu launches still open it in
+    // their gesture-backed handler above.
     chrome.storage.session.set({ selectedClaim: message.claim, pendingDraft: null, panelError: '' }).then(async () => {
       try {
-        await panelOpen;
         sendResponse({ ok: true });
       } catch (error) {
         sendResponse({ ok: false, error: String((error as Error).message || error) });

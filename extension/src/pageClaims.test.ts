@@ -29,4 +29,17 @@ describe('bounded finalized page reads', () => {
     await expect(read('https://example.com/')).resolves.toEqual([claim('one')]);
     expect(fetchClaims).toHaveBeenCalledTimes(2);
   });
+
+  it('suppresses repeated cold-cache retries after a gateway failure', async () => {
+    let now = 1000;
+    const fetchClaims = vi.fn().mockRejectedValue(new Error('Unexpected token < in JSON'));
+    const read = createPageClaimsReader(fetchClaims, () => now, 100, 0);
+    await expect(read('https://example.com/')).resolves.toEqual([]);
+    now += 1;
+    await expect(read('https://example.com/')).resolves.toEqual([]);
+    expect(fetchClaims).toHaveBeenCalledTimes(1);
+    now += 15_001;
+    await expect(read('https://example.com/')).resolves.toEqual([]);
+    expect(fetchClaims).toHaveBeenCalledTimes(2);
+  });
 });

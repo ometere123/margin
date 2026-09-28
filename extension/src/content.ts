@@ -186,11 +186,16 @@ function scheduleReanchor() {
 
 async function refresh() {
   if (!/^https?:$/.test(location.protocol)) return;
-  const canonical = preferredCanonicalUrl();
-  const response = await chrome.runtime.sendMessage({ type: 'GET_PAGE_CLAIMS', url: canonical });
-  cachedClaims = (response?.claims || []) as MarginClaim[];
-  lastCanonical = canonical;
-  renderClaims(cachedClaims);
+  try {
+    const canonical = preferredCanonicalUrl();
+    const response = await chrome.runtime.sendMessage({ type: 'GET_PAGE_CLAIMS', url: canonical });
+    cachedClaims = (response?.claims || []) as MarginClaim[];
+    lastCanonical = canonical;
+    renderClaims(cachedClaims);
+  } catch {
+    // A transient gateway/rate-limit failure must not create an unhandled
+    // background error or erase the last finalized annotation.
+  }
 }
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
