@@ -76,13 +76,25 @@ class Margin(gl.Contract):
         if not (value.startswith("https://") or value.startswith("http://")):
             raise gl.vm.UserError(f"{label} must use http or https")
 
-    def _parse_evidence_urls(self, raw: str) -> list[str]:
+    def _parse_evidence_urls(self, raw: str | list[typing.Any]) -> list[str]:
+        if isinstance(raw, list):
+            value = raw
+        else:
+            raw = str(raw)
+            if raw.startswith('"') and raw.endswith('"'):
+                try:
+                    unwrapped = json.loads(raw)
+                    if isinstance(unwrapped, str):
+                        raw = unwrapped
+                except Exception:
+                    pass
         if len(raw) > 6500:
             raise gl.vm.UserError("evidence list is too large")
-        try:
-            value = json.loads(raw)
-        except Exception:
-            raise gl.vm.UserError("evidence_urls_json must be valid JSON")
+        if not isinstance(raw, list):
+            try:
+                value = json.loads(raw)
+            except Exception:
+                raise gl.vm.UserError("evidence_urls_json must be valid JSON")
         if not isinstance(value, list):
             raise gl.vm.UserError("evidence_urls_json must be a JSON array")
         if len(value) > MAX_EVIDENCE_URLS:
@@ -213,6 +225,9 @@ class Margin(gl.Contract):
         claim_key = str(claim_key).strip().lower()
         page_key = str(page_key).strip().lower()
         page_digest = str(page_digest).strip().lower()
+        prefix = "" if prefix == 0 else str(prefix)
+        suffix = "" if suffix == 0 else str(suffix)
+        archive_url = "" if archive_url == 0 else str(archive_url)
         self._require_hex64(claim_key, "claim_key")
         self._require_hex64(page_key, "page_key")
         self._require_hex64(page_digest, "page_digest")
