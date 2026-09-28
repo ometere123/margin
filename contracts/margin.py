@@ -61,6 +61,7 @@ class Margin(gl.Contract):
         self.expected_chain_id = u256(EXPECTED_CHAIN_ID)
 
     def _require_hex64(self, value: str, label: str) -> None:
+        value = str(value).strip()
         if len(value) != 64:
             raise gl.vm.UserError(f"{label} must be 64 hex characters")
         for char in value.lower():
@@ -156,12 +157,14 @@ class Margin(gl.Contract):
 
     @gl.public.view
     def get_claim(self, claim_key: str) -> dict[str, typing.Any]:
+        claim_key = str(claim_key).strip().lower()
         if claim_key not in self.claims:
             return {}
         return self._claim_dict(self.claims[claim_key])
 
     @gl.public.view
     def get_page_claims(self, page_key: str) -> list[dict[str, typing.Any]]:
+        page_key = str(page_key).strip().lower()
         raw = self.page_index.get(page_key, "")
         if raw == "":
             return []
@@ -173,6 +176,7 @@ class Margin(gl.Contract):
 
     @gl.public.view
     def get_decision_history(self, claim_key: str) -> list[dict[str, typing.Any]]:
+        claim_key = str(claim_key).strip().lower()
         if claim_key not in self.claims:
             return []
         claim = self.claims[claim_key]
@@ -206,6 +210,9 @@ class Margin(gl.Contract):
         evidence_urls_json: str,
         archive_url: str,
     ) -> None:
+        claim_key = str(claim_key).strip().lower()
+        page_key = str(page_key).strip().lower()
+        page_digest = str(page_digest).strip().lower()
         self._require_hex64(claim_key, "claim_key")
         self._require_hex64(page_key, "page_key")
         self._require_hex64(page_digest, "page_digest")
@@ -264,6 +271,7 @@ class Margin(gl.Contract):
 
     @gl.public.write
     def resolve_claim(self, claim_key: str) -> None:
+        claim_key = str(claim_key).strip().lower()
         if claim_key not in self.claims:
             raise gl.vm.UserError("unknown claim")
         stored = self.claims[claim_key]
