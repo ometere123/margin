@@ -11,6 +11,25 @@ const successful = {
   },
 };
 
+const realMixedValidatorReceipt = {
+  status: 7,
+  statusName: 'FINALIZED',
+  result: 6,
+  consensus_history: {
+    consensus_results: [{
+      consensus_round: 'Accepted',
+      leader_result: [
+        { mode: 'leader', execution_result: 'SUCCESS' },
+        { mode: 'validator', execution_result: 'ERROR' },
+      ],
+      validator_results: [
+        { mode: 'validator', execution_result: 'SUCCESS' },
+        { mode: 'validator', execution_result: 'ERROR' },
+      ],
+    }],
+  },
+};
+
 describe('transaction finality handling', () => {
   it('accepts finalized successful return with null application result and no legacy field', () => {
     expect(isSuccessfulFinalizedReceipt(successful)).toBe(true);
@@ -34,6 +53,24 @@ describe('transaction finality handling', () => {
         ],
       },
     })).toBe(true);
+  });
+
+  it('accepts the installed SDK receipt shape with mixed validator errors', () => {
+    expect(isSuccessfulFinalizedReceipt(realMixedValidatorReceipt)).toBe(true);
+    expect(executionSummary(realMixedValidatorReceipt)).toBe('SUCCESS');
+  });
+
+  it('rejects an accepted finalized transaction whose canonical leader execution failed', () => {
+    expect(isSuccessfulFinalizedReceipt({
+      ...realMixedValidatorReceipt,
+      consensus_history: {
+        consensus_results: [{
+          consensus_round: 'Accepted',
+          leader_result: [{ mode: 'leader', execution_result: 'FINISHED_WITH_ERROR' }],
+          validator_results: [{ mode: 'validator', execution_result: 'SUCCESS' }],
+        }],
+      },
+    })).toBe(false);
   });
 
   it('does not treat accepted as final success', () => {
