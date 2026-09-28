@@ -69,7 +69,7 @@ Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat th
 
 The corrected contract deployment is real and finalized. The following remain open and must not be represented as completed:
 
-- corrected-contract Assured Claim live transactions;
+- Assured Claim appeal/settlement after the recorded appeal window;
 - consumer deployment/exercise and bond withdrawal readback;
 - live wallet-to-chain end-to-end verification, including a fresh submit/resolve session;
 - live fee profiling and all-four-verdict evidence;

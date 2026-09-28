@@ -165,12 +165,11 @@ This follows the important GenLayer rule that validators must independently veri
 
 ## What remains intentionally environment-specific
 
-The corrected contract is deployed and a corrected-contract normal claim lifecycle is recorded in `deployment.json`, but the following live evidence remains account/browser dependent and must not be inferred from unit tests:
+The corrected contract is deployed, corrected-contract normal claim lifecycles are recorded in `deployment.json`, and the RFC browser-aligned claim has been read and visibly rendered by the built extension. The following evidence remains account/browser dependent and must not be inferred from unit tests:
 
-- load the unpacked extension in Chrome and test against real pages;
-- verify the already-deployed static signer against the new public contract address;
-- exercise the complete browser-wallet-to-annotation flow;
-- exercise the Assured Claim bond, appeal and settlement path;
+- complete a fresh wallet-to-chain submit/resolve session from the extension;
+- exercise the Assured Claim appeal and post-deadline settlement path;
+- deploy/exercise the reference consumer and record its canonical readback;
 - measure representative fee profiles and transaction-level appeals where supported by the stable tooling.
 
 The product architecture should not be redesigned to complete those steps.
