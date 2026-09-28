@@ -16,6 +16,8 @@ Run these only against **Studionet chain ID 61999**.
 3. Record contract address and deploy tx.
 4. Verify `stats()` starts at zero.
 
+The current corrected deployment is recorded in `deployment.json`; its runtime identity was read as chain `61999`, network `studionet`, RPC `https://studio.genlayer.com/api`. Do not overwrite that record with a new address unless a contract defect requires redeployment.
+
 ## Deterministic write tests
 
 Exercise and record results for:
@@ -32,6 +34,8 @@ Exercise and record results for:
 - overlong quote/statement rejection;
 - page limit behavior;
 - readback through `get_claim` and `get_page_claims`.
+
+The corrected deployment has a finalized normal claim lifecycle recorded in `deployment.json`: submit `0xe5e82dafcc335f8906efb5854267b524648f9490b81df718129acd63c908ba2e`, resolve `0x6de269fe99104bed617c1b891b6d191ffe26f9f0ec2c0395539a6598940f3ffd`, final status `SUPPORTED`, revision `1`.
 
 ## Consensus tests
 
@@ -71,6 +75,8 @@ Resolve one claim multiple times after source changes. Verify:
 - Distinguish decided vs finalized transaction state.
 - Verify the extension displays `LATEST_FINAL`, not an optimistic/unfinalized state.
 - Exercise one network-level appeal of a resolution transaction with the current SDK/Studio tooling and document the resulting identity/finality behavior.
+
+The optional application-level Assured Claim appeal/settlement path is separate from a GenLayer transaction-level appeal and still requires a dedicated live run.
 
 ## Browser extension
 

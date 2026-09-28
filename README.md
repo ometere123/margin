@@ -47,9 +47,11 @@ GenLayer Studionet 61999
     │
     ├── submit_claim()      deterministic bounded storage
     │
-    └── resolve_claim()     validators independently fetch public evidence
-             │
-             └── exact agreement on decision-bearing status
+    ├── resolve_claim()     validators independently fetch public evidence
+    │       └── bounded source manifest + structured finding fields
+    │
+    └── optional Assured Claim lifecycle
+            └── HTTPS domain proof → publisher/challenger GEN bonds → one appeal → settlement
 
 MARGIN extension
     │ read LATEST_FINAL directly from 61999
@@ -130,7 +132,7 @@ The exact command flags should still be checked against `npm exec -- genlayer <c
 8. Fund the wallet from the Studionet faucet.
 9. Run the scenarios in `docs/LIVE_VALIDATION.md`. Normal users never configure the contract, RPC, chain or signer URL.
 
-Current canonical contract: `0x03fE368186822d745b4DB8e4A49f8F43e867D57C` on Studionet 61999. It was deployed from source commit `a18eba60cdb1b26c55692cb8dbc6f26d08ea1359`; the production signer is [`https://margin-signer.vercel.app/`](https://margin-signer.vercel.app/). See [`SUBMISSION.md`](SUBMISSION.md) for finalized deployment and claim-resolution transactions.
+Current canonical contract: `0xb4161203706B2428D5FbC5B7e114b09d1De32960` on Studionet 61999, deployed from source commit `552a6810742bd28ed0fc9eac80f07e69e95f8791`. The prior `0x03fE...D57C` deployment is historical. The production signer is [`https://margin-signer.vercel.app/`](https://margin-signer.vercel.app/). See [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md) for the live record.
 
 ## Evidence model
 
@@ -151,15 +153,20 @@ The local page digest prevents the extension from silently changing what *it* sa
 
 `resolve_claim` runs a leader adjudication over the same bounded source set that validators can independently fetch. A validator reruns the source-grounded adjudication. The decision-bearing `status` must match exactly. Rationale may differ and only the accepted leader rationale is stored.
 
+Each accepted revision also stores a digest of the ordered sources, fetch statuses and bounded content digests observed by validators, plus structured source-index fields. An unchanged source manifest cannot consume another revision; immediate refreshes after the first decision are restricted to the challenger or a cooldown. Recognised archive hosts are distinguished from ordinary supplemental URLs.
+
+An optional Assured Claim binds a publisher to an HTTPS `/.well-known/margin.json` proof, requires publisher and challenger GEN bonds, permits one bounded appeal, and exposes deterministic settlement/withdrawal state. It is separate from normal permissionless annotations. `contracts/margin_consumer.py` demonstrates reading settled MARGIN state directly before allowing a protected action.
+
 This follows the important GenLayer rule that validators must independently verify the substance rather than only checking that the leader returned syntactically valid JSON.
 
 ## What remains intentionally environment-specific
 
-This repository is built so another agent only has to finish things that require the live browser environment:
+The corrected contract is deployed and a corrected-contract normal claim lifecycle is recorded in `deployment.json`, but the following live evidence remains account/browser dependent and must not be inferred from unit tests:
 
 - load the unpacked extension in Chrome and test against real pages;
-- deploy the static signer and set its production URL;
+- verify the already-deployed static signer against the new public contract address;
 - exercise the complete browser-wallet-to-annotation flow;
+- exercise the Assured Claim bond, appeal and settlement path;
 - measure representative fee profiles and transaction-level appeals where supported by the stable tooling.
 
 The product architecture should not be redesigned to complete those steps.

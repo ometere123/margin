@@ -16,7 +16,7 @@ describe('provider-backed signer wallet', () => {
     };
     const client = createProviderBackedClient('0x1111111111111111111111111111111111111111', provider);
     const txHash = await client.writeContract({
-      address: '0x03fE368186822d745b4DB8e4A49f8F43e867D57C',
+      address: '0xb4161203706B2428D5FbC5B7e114b09d1De32960',
       functionName: 'submit_claim',
       args: ['claim', 'page', 'https://example.com/', 'quote', 'prefix', 'suffix', 'digest', 'TECHNICAL', 'objection', '[]', ''],
       value: 0n,

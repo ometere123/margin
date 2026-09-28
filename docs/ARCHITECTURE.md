@@ -21,7 +21,7 @@ It has no database and no authority over extension annotations. Finalized on-cha
 
 ### Intelligent Contract
 
-The contract owns challenge state and resolution history. It does not own browser data or user identity.
+The contract owns challenge state and resolution history. It does not own browser data or user identity. An optional Assured Claim layer adds domain-control proof, publisher/challenger GEN bonds, one bounded appeal, and deterministic settlement without changing the permissionless normal annotation path.
 
 ## 2. Canonical page identity
 
@@ -61,15 +61,19 @@ The contract fetches:
 - optional archive URL;
 - up to three evidence URLs.
 
-Source text is explicitly treated as untrusted prompt material. The leader must return exactly one bounded status and a concise rationale. A validator independently re-fetches/re-runs the same evidence task and accepts only if the decision-bearing status matches exactly.
+Source text is explicitly treated as untrusted prompt material. Validators independently fetch the bounded source set and commit an ordered source manifest containing fetch status, provenance and content digests. The leader must return bounded structured findings; validators re-derive and verify the decision-bearing fields and manifest. A validator disagreement cannot be hidden by a leader-provided digest.
 
 MARGIN does not use fuzzy status tolerance.
 
 ## 5. Revision model
 
-A claim may be re-resolved up to five times. Each resolution is appended to immutable keyed history before the latest status is updated. This supports pages/evidence changing over time without pretending that the old decision never existed.
+A claim may be re-resolved up to five times, but unchanged source manifests are rejected, immediate refreshes after the first decision are restricted to the original challenger, and other refreshes require a cooldown. Each accepted resolution stores its ordered evidence manifest and is appended to immutable keyed history before the latest status is updated. This prevents a stranger from trivially burning all revision capacity.
 
 The current extension renders the latest finalized status.
+
+### Assured Claims and consumers
+
+An Assured Claim requires an exact HTTPS `/.well-known/margin.json` proof bound to the publisher, nonce, claim and expiry. The publisher and challenger lock bounded GEN bonds. One appeal may be opened before the deadline; after the deadline, deterministic settlement allocates the funded balances according to the finalized status. `MarginConsumer` demonstrates a downstream contract reading settled MARGIN state directly rather than trusting extension data.
 
 ## 6. No MARGIN backend
 

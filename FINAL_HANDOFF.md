@@ -2,14 +2,14 @@
 
 ## Current live status (2026-09-28)
 
-The canonical Studionet deployment is complete for the contract path. Use [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md) as the authoritative live record:
+The corrected Studionet deployment and one corrected-contract normal claim lifecycle are complete. Use [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md) as the authoritative live record; browser annotation evidence and the optional Assured Claim live path remain open.
 
 - Network: Studionet, chain `61999`, RPC `https://studio.genlayer.com/api`.
-- Contract: `0x03fE368186822d745b4DB8e4A49f8F43e867D57C`.
-- Deployment: `0xde6118bd3f5208c0b01f99ba085c7630e8fefc20811b3cd807d2b69e285082e9`, `FINALIZED / MAJORITY_AGREE / SUCCESS`.
-- Source commit: `a18eba60cdb1b26c55692cb8dbc6f26d08ea1359`.
-- Live claim submission: `0x3566ff81712e5b461a1f7e7dfe52a47eac49a6e289aedb6dcaac1f67d2605ed7`.
-- Live resolution: `0x9411abcfe550b88b3d4e68bb54e22d1222da64616e7449e27d07aef29a5e013e`, finalized `SUPPORTED`.
+- Contract: `0xb4161203706B2428D5FbC5B7e114b09d1De32960`.
+- Deployment: `0xe72cb9b184b2cd98f2b86182c7b2bd0df3091ed71bc50417dac6cbffef13e27b`, `FINALIZED / MAJORITY_AGREE / SUCCESS`.
+- Source commit: `552a6810742bd28ed0fc9eac80f07e69e95f8791`.
+- Runtime identity: `chain_id=61999`, `network=studionet`, `rpc=https://studio.genlayer.com/api`.
+- A corrected-contract normal claim is finalized as `SUPPORTED`; browser annotation rendering is not claimed yet.
 
 The earlier environment-bound checklist below is historical context. It is not permission to overwrite the final deployment record or claim that browser-wallet verification occurred when it has not.
 
@@ -21,14 +21,15 @@ MARGIN has been pushed to the environment boundary available in this build sessi
 - Text-selection capture with canonical URL, exact/prefix/suffix anchor and local page digest.
 - Challenge composer for five bounded claim classes and up to three public evidence URLs plus an optional public archive URL.
 - Canonical page key and claim key generation, with both keys recomputed and enforced by the Intelligent Contract.
-- GenLayer Intelligent Contract with bounded page index, bounded revision history, public views, deterministic submission validation and non-deterministic web/LLM resolution.
-- Independent validator re-execution of the evidence task; decision-bearing status must match exactly.
+- GenLayer Intelligent Contract with bounded page index, bounded revision history, validator-bound source manifests, domain-controlled Assured Claims, native GEN bonds, one appeal and deterministic settlement views.
+- Independent validator re-execution of the evidence task; decision-bearing status, structured source indexes and source-manifest digest must match exactly.
 - Bounded results: `SUPPORTED`, `CONTRADICTED`, `INCONCLUSIVE`, `STALE`.
 - Read-only extension state uses finalized GenLayer reads rather than a MARGIN backend.
 - Static wallet signer for injected EIP-1193 wallets, transaction fee estimation, writes and finalization.
 - Webpage annotation rendering anchored back beside the challenged text.
 - Prompt-injection treatment: fetched pages are explicitly untrusted evidence and cannot redefine adjudication instructions.
-- Source-level and direct-mode test suites, controlled public-fixture pages, architecture/threat/live-validation documentation.
+- Minimal downstream consumer in `contracts/margin_consumer.py` reads settled Assured Claim state directly.
+- Source-level and Direct Mode test suites, controlled public-fixture pages, architecture/threat/live-validation documentation.
 
 ## Fixed network invariant
 
@@ -53,34 +54,30 @@ The user's machine may have a global `0.40.0rc2` CLI. **Ignore the global binary
 
 Do not run bare `genlayer ...` commands from this repo.
 
-## Checks completed in the originating environment
+## Checks completed for the corrected candidate
 
-- `python3 -m py_compile` on the contract and Python tests: PASS.
-- source invariant suite: PASS.
-- repository-wide forbidden-chain scan: PASS.
-- shared `protocol.ts` compile with the available global TypeScript compiler: PASS.
-- a temporary-module-shim TypeScript pass over extension/signer source was also completed successfully during development.
-- JS/Python canonical-JSON claim-key parity was checked, including Unicode input: PASS.
+- WSL Direct Mode: 11/11 PASS.
+- WSL contract lint/validation: PASS with `genvm-lint 0.11.1rc2`.
+- Python/source invariant suite: 11/11 PASS.
+- `npm exec -- genlayer --version`: `0.39.1`.
+- Studionet network info and deployed `network()` readback: `61999`, `studionet`, `https://studio.genlayer.com/api`.
+- Extension/signer typecheck, tests and builds: PASS before the current production reference update.
 
 Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat the checks that do not require package downloads.
 
-## Environment boundary reached here
+## Remaining verification boundary
 
-The build container could not reach npm, so the following must **not** be represented as completed yet:
+The corrected contract deployment is real and finalized. The following remain open and must not be represented as completed:
 
-- fresh `npm install` / `npm ci`;
-- real `npm run verify` against downloaded dependencies;
-- actual extension/signer production bundles;
-- GenVM linter execution with the current downloaded toolchain;
-- Direct Mode execution with the downloaded GenLayer testing suite;
-- deployment to Studionet;
-- live validator/finality/appeal exercise;
-- live browser + wallet end-to-end verification;
-- live fee profiling.
+- corrected-contract Assured Claim live transactions;
+- consumer deployment/exercise and bond withdrawal readback;
+- live browser + wallet end-to-end annotation verification;
+- live fee profiling and all-four-verdict evidence;
+- automated browser E2E and hostile-page matrix.
 
 ## Production configuration hardening
 
-The canonical static signer is `https://margin-signer.vercel.app/`. Its Vite production build receives the public `VITE_MARGIN_CONTRACT_ADDRESS` value for the canonical Studionet deployment. The signer no longer asks normal users to save a contract address and ignores incoming contract query parameters. The extension release similarly embeds the canonical contract and signer origin; Options is informational rather than an infrastructure editor.
+The canonical static signer is `https://margin-signer.vercel.app/`. Its Vite production build receives the public `VITE_MARGIN_CONTRACT_ADDRESS` value for the canonical Studionet deployment. The signer no longer asks normal users to save a contract address and ignores incoming contract query parameters. The extension release similarly embeds the canonical contract and signer origin; Options is informational rather than an infrastructure editor. The corrected signer deployment is live; browser-wallet verification remains open.
 
 The signer must use the injected EIP-1193 provider directly. In `genlayer-js@1.1.8`, `client.connect('studionet')` enters the legacy GenLayer Snap path (`wallet_getSnaps` / `wallet_requestSnaps`); production MARGIN therefore constructs the provider-backed client without calling that helper. `signer/src/wallet.test.ts` guards this boundary.
 

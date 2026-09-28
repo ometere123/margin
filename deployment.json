@@ -3,29 +3,35 @@
   "chainId": 61999,
   "rpc": "https://studio.genlayer.com/api",
   "explorer": "https://explorer-studio.genlayer.com",
-  "contractAddress": "0x03fE368186822d745b4DB8e4A49f8F43e867D57C",
-  "deploymentTx": "0xde6118bd3f5208c0b01f99ba085c7630e8fefc20811b3cd807d2b69e285082e9",
+  "contractAddress": "0xb4161203706B2428D5FbC5B7e114b09d1De32960",
+  "deploymentTx": "0xe72cb9b184b2cd98f2b86182c7b2bd0df3091ed71bc50417dac6cbffef13e27b",
   "deploymentStatus": "FINALIZED / MAJORITY_AGREE / SUCCESS",
-  "sourceCommit": "a18eba60cdb1b26c55692cb8dbc6f26d08ea1359",
-  "sourceBytes": 16762,
-  "sourceSha256": "5d4330301fa51c8ae7f7253c1f4d6730d0a91746e5479e8b269c60a7f52b954b",
+  "sourceCommit": "552a6810742bd28ed0fc9eac80f07e69e95f8791",
+  "sourceBytes": 38765,
+  "sourceSha256": "aaa87487cd226dc665e4ab73405153c583d1757cd80a4b022989df156f9e5993",
   "signerUrl": "https://margin-signer.vercel.app/",
   "runtimeIdentity": {
     "chain_id": 61999,
     "network": "studionet",
     "rpc": "https://studio.genlayer.com/api"
   },
+  "previousDeployment": {
+    "contractAddress": "0x03fE368186822d745b4DB8e4A49f8F43e867D57C",
+    "deploymentTx": "0xde6118bd3f5208c0b01f99ba085c7630e8fefc20811b3cd807d2b69e285082e9",
+    "status": "historical"
+  },
   "liveEvidence": {
-    "claim": {
-      "pageUrl": "https://www.rfc-editor.org/rfc/rfc9110",
-      "pageKey": "e593c606c957bfa3dc85eb280e67319b7f5e0060b4404759580d2667b512fe7e",
-      "claimKey": "72aac182216660f528b586f9e6816a7bb9beaccf5d8419f0050465189a7708e4",
-      "submitTx": "0x3566ff81712e5b461a1f7e7dfe52a47eac49a6e289aedb6dcaac1f67d2605ed7",
-      "submitStatus": "FINALIZED / MAJORITY_AGREE / SUCCESS",
-      "resolveTx": "0x9411abcfe550b88b3d4e68bb54e22d1222da64616e7449e27d07aef29a5e013e",
-      "resolveStatus": "FINALIZED / MAJORITY_AGREE / SUCCESS",
-      "finalVerdict": "SUPPORTED",
-      "revision": 1
+    "normalClaim": {
+      "claimKey": "27a215c4cfe5d008e90ea65093c822f6af2133b2872e65cee69f06bf31861a69",
+      "pageKey": "50b4ec7a293d091d0f8e13a613cd51900d43c8fc5d8dc16d12ce167b55a96cd2",
+      "submitTx": "0xe5e82dafcc335f8906efb5854267b524648f9490b81df718129acd63c908ba2e",
+      "submitFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "resolveTx": "0x6de269fe99104bed617c1b891b6d191ffe26f9f0ec2c0395539a6598940f3ffd",
+      "resolveFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "status": "SUPPORTED",
+      "revision": 1,
+      "sourceManifestDigest": "38a9c1f3bb0616568cc0bec2ff86dfba8bcf5e3e3f3de369c961a98f5f0d2510",
+      "evidenceUrls": ["https://www.rfc-editor.org/rfc/rfc9110.html"]
     }
   },
   "toolVersions": {

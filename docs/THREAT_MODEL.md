@@ -51,9 +51,15 @@ Mitigations:
 - fetched adjudication material is capped per primary/archive/evidence source;
 - strict string bounds;
 - 5 resolutions maximum per claim;
+- unchanged source manifests are rejected;
+- immediate refresh after the first decision is challenger-controlled and other refreshes are cooldown-gated;
 - every write costs a GenLayer transaction.
 
-A future version can add per-address throttling/bonds if live use demonstrates need. Do not add speculative tokenomics merely to look decentralized.
+The optional Assured Claim path adds explicit publisher/challenger bonds and one bounded appeal. Settlement is one-shot and liabilities remain reserved until the appeal deadline.
+
+## Evidence-manifest integrity
+
+Each accepted resolution commits the validator-observed ordered source manifest, including URL, fetch status, provenance and bounded content digest. The leader cannot substitute a digest, source index or archive interpretation without failing the validator consistency checks. A browser-local page digest remains only a capture anchor, not historical proof.
 
 ## Scope abuse
 
