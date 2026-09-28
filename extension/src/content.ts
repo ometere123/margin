@@ -212,7 +212,7 @@ async function refresh() {
       claimKeys: cachedClaims.map((claim) => claim.claim_key),
     });
     renderClaims(cachedClaims);
-    if (cachedClaims.length === 0) scheduleEmptyReadRetry();
+    if (response.ok === false || cachedClaims.length === 0) scheduleEmptyReadRetry();
     else if (emptyReadRetryTimer !== undefined) {
       window.clearTimeout(emptyReadRetryTimer);
       emptyReadRetryTimer = undefined;
