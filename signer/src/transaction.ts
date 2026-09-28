@@ -16,6 +16,10 @@ export type PendingTransaction = {
   id: string;
   label: 'Submission' | 'Resolution';
   claimKey: string;
+  account?: string;
+  submittedAt?: string;
+  contractAddress?: string;
+  network?: 'studionet';
   state?: 'submitted' | 'finalized' | 'failed' | 'tracking-interrupted';
   verdict?: string;
 };

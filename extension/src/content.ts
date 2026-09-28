@@ -120,21 +120,21 @@ function findRange(exact: string, prefix: string, suffix: string): Range | null 
 }
 
 const badges = new Map<string, HTMLButtonElement>();
+let activeHighlight: any = null;
 
 function clearAnnotations() {
   for (const badge of badges.values()) badge.remove();
   badges.clear();
-  document.querySelectorAll('.margin-underlined').forEach((el) => el.classList.remove('margin-underlined'));
+  const cssHighlights = (globalThis as any).CSS?.highlights;
+  cssHighlights?.delete('margin-claims');
+  activeHighlight = null;
 }
 
-function annotate(claim: MarginClaim) {
+function annotate(claim: MarginClaim, ranges: Range[]) {
   if (claim.canonical_url !== preferredCanonicalUrl()) return;
   const range = findRange(claim.quote, claim.prefix, claim.suffix);
   if (!range) return;
-  const element = range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
-    ? range.commonAncestorContainer as HTMLElement
-    : range.commonAncestorContainer.parentElement;
-  element?.classList.add('margin-underlined');
+  ranges.push(range);
   const rect = range.getBoundingClientRect();
   if (!rect.width && !rect.height) return;
   const badge = document.createElement('button');
@@ -158,6 +158,7 @@ let reanchorTimer: number | undefined;
 
 function renderClaims(claims: MarginClaim[]) {
   clearAnnotations();
+  const ranges: Range[] = [];
   const grouped = new Map<string, MarginClaim[]>();
   for (const claim of claims) {
     const key = `${claim.quote}\u0000${claim.prefix}\u0000${claim.suffix}`;
@@ -167,7 +168,13 @@ function renderClaims(claims: MarginClaim[]) {
   }
   for (const list of grouped.values()) {
     list.sort((a, b) => String(b.resolved_at || b.created_at).localeCompare(String(a.resolved_at || a.created_at)));
-    annotate(list[0]);
+    annotate(list[0], ranges);
+  }
+  const HighlightCtor = (globalThis as any).Highlight;
+  const cssHighlights = (globalThis as any).CSS?.highlights;
+  if (ranges.length && HighlightCtor && cssHighlights) {
+    activeHighlight = new HighlightCtor(...ranges);
+    cssHighlights.set('margin-claims', activeHighlight);
   }
 }
 

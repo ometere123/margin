@@ -158,11 +158,11 @@ async function waitForFinalizedSuccess(client: any, txId: string, label: string)
 }
 
 function persistTransactions() {
-  if (draft) sessionStorage.setItem(transactionsStorageKey(draft.claimKey), JSON.stringify(transactions));
+  if (draft) localStorage.setItem(transactionsStorageKey(draft.claimKey), JSON.stringify(transactions));
 }
 
 function saveTransaction(label: PendingTransaction['label'], txId: string) {
-  const tx: PendingTransaction = { id: txId, label, claimKey: draft!.claimKey, state: 'submitted' };
+  const tx: PendingTransaction = { id: txId, label, claimKey: draft!.claimKey, state: 'submitted', account: account || undefined, submittedAt: new Date().toISOString(), contractAddress, network: 'studionet' };
   transactions = [...transactions.filter((item) => item.label !== label), tx];
   persistTransactions();
   render();
@@ -279,7 +279,7 @@ async function initialize() {
   await verifyDraft();
   if (draft) {
     try {
-      const stored = sessionStorage.getItem(transactionsStorageKey(draft.claimKey));
+      const stored = localStorage.getItem(transactionsStorageKey(draft.claimKey));
       if (stored) transactions = JSON.parse(stored) as PendingTransaction[];
     } catch { transactions = []; }
   }
