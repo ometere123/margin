@@ -249,7 +249,7 @@ def test_assured_claim_domain_proof_and_bond_lifecycle(direct_vm, direct_deploy,
         contract.withdraw_assured_credit(key)
 
 
-def test_assured_appeal_requires_new_source_and_settles_once(direct_vm, direct_deploy, direct_alice, direct_bob):
+def test_assured_appeal_requires_new_source_and_settles_once(direct_vm, direct_deploy, direct_alice, direct_bob, direct_charlie):
     contract = direct_deploy("contracts/margin.py")
     direct_vm.sender = direct_alice
     key = submit(contract)
@@ -274,9 +274,17 @@ def test_assured_appeal_requires_new_source_and_settles_once(direct_vm, direct_d
     direct_vm.mock_llm(r".*MARGIN web-claim challenge.*", json.dumps({"status": "CONTRADICTED", "rationale": "Initial evidence.", "claim_present": True, "supporting_source_indexes": [], "contradicting_source_indexes": [0], "historical_evidence_used": False, "source_manifest_digest": digest_one}))
     contract.resolve_assured_claim(key)
 
+    direct_vm.sender = direct_charlie
+    direct_vm.value = 1
+    with direct_vm.expect_revert("only the publisher or challenger may appeal"):
+        contract.appeal_assured_claim(key, "An unauthorized appeal attempt.")
+
+    direct_vm.sender = direct_bob
     direct_vm.value = 1
     contract.appeal_assured_claim(key, "A new authoritative support matrix is now available.")
     assert contract.get_assured_claim(key)["state"] == "APPEALED"
+    with direct_vm.expect_revert("assured claim is not appealable"):
+        contract.appeal_assured_claim(key, "A duplicate appeal must be rejected.")
 
     direct_vm.clear_mocks()
     body_two = "Updated support matrix says Node 18 is supported."
@@ -294,3 +302,5 @@ def test_assured_appeal_requires_new_source_and_settles_once(direct_vm, direct_d
     contract.settle_assured_claim(key)
     with direct_vm.expect_revert("not ready for settlement"):
         contract.settle_assured_claim(key)
+    with direct_vm.expect_revert("assured claim is not appealable"):
+        contract.appeal_assured_claim(key, "A settled claim cannot be appealed.")
