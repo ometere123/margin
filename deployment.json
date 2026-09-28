@@ -72,6 +72,28 @@
       "publisherCreditAfterWithdrawal": 0,
       "settlementNote": "After the recorded appeal deadline, settlement paid the 2 GEN contradicted-claim challenger payout. The challenger withdrawal finalized successfully and canonical readback shows both credits at zero."
     },
+    "assuredSupportedClaim": {
+      "claimKey": "09c8cdd7a1ad5716bcafadc38458685340400da3682436e4a1f86319b82b5a9c",
+      "canonicalUrl": "https://margin-signer.vercel.app/fixtures/claim-supported.html",
+      "domainProofUrl": "https://margin-signer.vercel.app/.well-known/margin.json",
+      "domainProofDigest": "80990a2f9671c9c6e4be58373530923d75cffac3346b4aeb1de723be2153bf76",
+      "publisher": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+      "challenger": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+      "publisherBond": 1,
+      "challengeBond": 1,
+      "registerTx": "0xb031b3c1b45c6a4a41f3e03001b525223d046c3f273f782a2c3329fb9abd7376",
+      "registerFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "challengeTx": "0x978d517eb7d774af22d7f19c2eea33877b65bc01a3a05364e88c197c0e4955ed",
+      "challengeFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "resolveTx": "0x4ad4827bb4827f1c3365f64a2e62a64b273c2b12286a9ac5af246e2c17273de0",
+      "resolveFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "finalStatus": "SUPPORTED",
+      "state": "RESOLVED",
+      "appealDeadline": "2026-09-28T12:37:10.149202+00:00",
+      "settlementPendingAtLastRead": true,
+      "evidenceUrls": ["https://margin-signer.vercel.app/fixtures/support.html"],
+      "sourceManifestDigest": "7e1defff880eeccdb06d6d8630c68e2c1690669b5ebc24a58f02975dd97f2143"
+    },
     "consumer": {
       "contractAddress": "0x2885169713d79cb2FC463Dc624Ea5fc08b59d044",
       "deploymentTx": "0x84ba75b54e4f58b5550388b9a474c31099b8626f55b8c8041081ed886a27c6a4",

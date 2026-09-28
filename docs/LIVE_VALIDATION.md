@@ -120,6 +120,18 @@ The controlled claim at `https://margin-signer.vercel.app/fixtures/claim.html` w
 - Canonical readback before settlement: `RESOLVED`, final status `CONTRADICTED`, proof digest `088b665050431b27899232eaf324c46105034857866a410aa2eba2fcff42d043`.
 - After the recorded appeal deadline, settlement finalized in `0xa4bff00ddba0254be669092d1a965ab748d02c091a98c36ec15c64343bd2755b` (`FINALIZED / MAJORITY_AGREE / SUCCESS`). The 2 GEN contradicted-claim challenger payout was then withdrawn in `0x8314aa27ad1a2c95d1be6910cccff22e430495c28691888f0cb828bb2ddf4990`, also finalized successfully. Readback shows `SETTLED`, `CONTRADICTED`, and both publisher/challenger credits at `0` after withdrawal.
 
+A second controlled Assured Claim was created specifically to prove the positive settlement and downstream-consumer path. It is intentionally separate from the earlier negative-gate claim:
+
+- Claim key: `09c8cdd7a1ad5716bcafadc38458685340400da3682436e4a1f86319b82b5a9c`
+- Canonical claim fixture: `https://margin-signer.vercel.app/fixtures/claim-supported.html`
+- Evidence fixture: `https://margin-signer.vercel.app/fixtures/support.html`
+- Domain proof: `https://margin-signer.vercel.app/.well-known/margin.json`; observed proof digest `80990a2f9671c9c6e4be58373530923d75cffac3346b4aeb1de723be2153bf76`
+- Registration: `0xb031b3c1b45c6a4a41f3e03001b525223d046c3f273f782a2c3329fb9abd7376` — finalized `MAJORITY_AGREE / SUCCESS`, 1 GEN publisher bond
+- Challenge: `0x978d517eb7d774af22d7f19c2eea33877b65bc01a3a05364e88c197c0e4955ed` — finalized `MAJORITY_AGREE / SUCCESS`, 1 GEN challenge bond
+- Resolution: `0x4ad4827bb4827f1c3365f64a2e62a64b273c2b12286a9ac5af246e2c17273de0` — finalized `MAJORITY_AGREE / SUCCESS`
+- Canonical readback after resolution: `RESOLVED / SUPPORTED`; appeal deadline `2026-09-28T12:37:10.149202+00:00`
+- Settlement, withdrawal, and positive consumer execution are intentionally not recorded here until their transactions finalize and canonical readback is verified.
+
 ## Downstream consumer evidence
 
 The separate reference consumer was deployed at `0x2885169713d79cb2FC463Dc624Ea5fc08b59d044` by finalized transaction `0x84ba75b54e4f58b5550388b9a474c31099b8626f55b8c8041081ed886a27c6a4`. Its `execute_if_supported` call against the canonical MARGIN contract and the settled `CONTRADICTED` claim finalized in `0xb7c25973b255b6148b0e156db42ef6128bb22c0dc89ba15be828cc440b78ebd0` with the expected contract error `protected action requires a SUPPORTED assured claim`. `has_executed` was `false` both before and after the call. This is a negative-gate proof that the consumer reads canonical MARGIN state and does not trust a caller-supplied/frontend status.
