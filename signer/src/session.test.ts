@@ -16,6 +16,7 @@ describe('injected wallet session policy', () => {
   it('tracks account and chain changes defensively', () => {
     expect(accountFromProvider([])).toBeNull();
     expect(accountFromProvider(['not-an-address'])).toBeNull();
+    expect(accountFromProvider(['0x81301DD9C3605a7DA743D87b803156d8445620B0'])).toBe('0x81301DD9C3605a7DA743D87b803156d8445620B0');
     expect(isStudionetChainHex('0xf22f')).toBe(true);
     expect(isStudionetChainHex('0xf21d')).toBe(false);
   });

@@ -129,12 +129,18 @@ function bindProviderListeners() {
   if (listenersBound || !window.ethereum?.on) return;
   listenersBound = true;
   window.ethereum.on('accountsChanged', (accounts: string[]) => {
-    account = accounts?.[0] ? accounts[0] as `0x${string}` : null;
+    account = accountFromProvider(accounts);
     void updateChainState().finally(() => render(account ? 'Wallet account changed.' : 'Wallet disconnected.'));
   });
   window.ethereum.on('chainChanged', (chainHex: string) => {
     chainCorrect = isStudionetChainHex(chainHex);
     render(chainCorrect ? 'Wallet is on Studionet 61999.' : 'Wallet left Studionet 61999. Writes are disabled.');
+  });
+  window.ethereum.on('disconnect', () => {
+    account = null;
+    chainCorrect = false;
+    statusMessage = '';
+    render('Wallet provider disconnected. Connect again before writing.');
   });
 }
 
