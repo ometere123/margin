@@ -35,7 +35,7 @@ Exercise and record results for:
 - page limit behavior;
 - readback through `get_claim` and `get_page_claims`.
 
-The corrected deployment has a finalized normal claim lifecycle recorded in `deployment.json`: submit `0xe5e82dafcc335f8906efb5854267b524648f9490b81df718129acd63c908ba2e`, resolve `0x6de269fe99104bed617c1b891b6d191ffe26f9f0ec2c0395539a6598940f3ffd`, final status `SUPPORTED`, revision `1`.
+The corrected deployment has finalized normal claim lifecycles recorded in `deployment.json`, including a browser-aligned `/info/rfc9110/` claim: submit `0x3c8172c9919ee95a19f8b55e8f55c5a98304892061efe6581b37942385f263cd`, resolve `0x42f5004557bc12a3d4f6a7dd2b30532989a4732524196523b92c4ce1e2904247`, final status `SUPPORTED`, revision `1`.
 
 ## Consensus tests
 

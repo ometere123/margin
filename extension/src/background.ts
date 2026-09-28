@@ -2,6 +2,7 @@ import { createClient } from 'genlayer-js';
 import { studionet } from 'genlayer-js/chains';
 import { TransactionHashVariant } from 'genlayer-js/types';
 import { canonicalizeUrl, pageKeyFor, MARGIN_CHAIN_ID, MARGIN_CONTRACT_ADDRESS, MARGIN_SIGNER_URL, type MarginClaim } from '../../shared/protocol';
+import { createPageClaimsReader } from './pageClaims';
 
 const readClient = createClient({ chain: studionet });
 
@@ -9,10 +10,9 @@ async function settings() {
   return { contractAddress: MARGIN_CONTRACT_ADDRESS, signerUrl: MARGIN_SIGNER_URL };
 }
 
-async function getPageClaims(url: string): Promise<MarginClaim[]> {
+async function fetchPageClaims(canonical: string): Promise<MarginClaim[]> {
   const { contractAddress } = await settings();
   if (!/^0x[0-9a-fA-F]{40}$/.test(contractAddress)) return [];
-  const canonical = canonicalizeUrl(url);
   const pageKey = await pageKeyFor(canonical);
   const result = await readClient.readContract({
     address: contractAddress as `0x${string}`,
@@ -24,6 +24,12 @@ async function getPageClaims(url: string): Promise<MarginClaim[]> {
   return claims.filter((claim) => claim.canonical_url === canonical);
 }
 
+const readPageClaims = createPageClaimsReader(fetchPageClaims);
+
+async function getPageClaims(url: string): Promise<MarginClaim[]> {
+  return readPageClaims(canonicalizeUrl(url));
+}
+
 chrome.runtime.onInstalled.addListener(async () => {
   await chrome.contextMenus.removeAll();
   chrome.contextMenus.create({ id: 'margin-challenge', title: 'Challenge with MARGIN', contexts: ['selection'] });
@@ -32,14 +38,15 @@ chrome.runtime.onInstalled.addListener(async () => {
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId !== 'margin-challenge' || !tab?.id) return;
+  // Start this before any await so Chrome preserves the context-menu gesture.
+  const panelOpen = chrome.sidePanel.open({ tabId: tab.id });
   try {
+    await panelOpen;
     const response = await chrome.tabs.sendMessage(tab.id, { type: 'CAPTURE_SELECTION' });
     if (!response?.ok) throw new Error(response?.error || 'Could not capture selection');
     await chrome.storage.session.set({ pendingDraft: response.payload, selectedClaim: null, panelError: '' });
-    await chrome.sidePanel.open({ tabId: tab.id });
   } catch (error) {
     await chrome.storage.session.set({ panelError: String((error as Error).message || error) });
-    await chrome.sidePanel.open({ tabId: tab.id });
   }
 });
 
@@ -49,9 +56,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
   if (message?.type === 'OPEN_CLAIM') {
+    // Start opening before the storage await so a badge click retains its
+    // user-gesture eligibility in Chrome.
+    const panelOpen = sender.tab?.id ? chrome.sidePanel.open({ tabId: sender.tab.id }) : Promise.resolve();
     chrome.storage.session.set({ selectedClaim: message.claim, pendingDraft: null, panelError: '' }).then(async () => {
-      if (sender.tab?.id) await chrome.sidePanel.open({ tabId: sender.tab.id });
-      sendResponse({ ok: true });
+      try {
+        await panelOpen;
+        sendResponse({ ok: true });
+      } catch (error) {
+        sendResponse({ ok: false, error: String((error as Error).message || error) });
+      }
     });
     return true;
   }

@@ -226,4 +226,4 @@ domObserver.observe(document.documentElement, { childList: true, subtree: true, 
 window.setInterval(() => {
   const canonical = preferredCanonicalUrl();
   if (canonical !== lastCanonical) void refresh();
-}, 1200);
+}, 3000);
