@@ -1,0 +1,8 @@
+{
+  "protocol_version": 2,
+  "domain": "margin-signer.vercel.app",
+  "publisher_wallet": "0xb29ead15b1e8a2420fae84de974088f67a15ccc2",
+  "nonce": "assured-demo-20260928",
+  "claim_key": "86260d481ffc15e272e1954c5292bd060a3293a502993333ec4a32c8594a4b72",
+  "expiry": "2027-01-01T00:00:00+00:00"
+}
