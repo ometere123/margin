@@ -56,7 +56,7 @@ Do not run bare `genlayer ...` commands from this repo.
 
 ## Checks completed for the corrected candidate
 
-- WSL Direct Mode: 11/11 PASS.
+- WSL Direct Mode: 14/14 PASS, including adversarial domain-proof rejection cases.
 - WSL contract lint/validation: PASS with `genvm-lint 0.11.1rc2`.
 - Python/source invariant suite: 12/12 PASS.
 - `npm exec -- genlayer --version`: `0.39.1`.

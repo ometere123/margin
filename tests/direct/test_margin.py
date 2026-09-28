@@ -249,6 +249,69 @@ def test_assured_claim_domain_proof_and_bond_lifecycle(direct_vm, direct_deploy,
         contract.withdraw_assured_credit(key)
 
 
+def test_assured_claim_rejects_cross_origin_proof_url(direct_vm, direct_deploy, direct_alice):
+    contract = direct_deploy("contracts/margin.py")
+    direct_vm.sender = direct_alice
+    key = submit(contract)
+    direct_vm.value = 1
+    with direct_vm.expect_revert("domain proof URL must match the canonical origin"):
+        contract.register_assured_claim(
+            key,
+            "https://attacker.example/.well-known/margin.json",
+            "cross-origin-nonce",
+            "2999-01-01T00:00:00+00:00",
+        )
+
+
+def test_assured_claim_rejects_expired_domain_proof(direct_vm, direct_deploy, direct_alice):
+    contract = direct_deploy("contracts/margin.py")
+    direct_vm.sender = direct_alice
+    key = submit(contract)
+    publisher = "0x" + direct_alice.hex()
+    expiry = "2000-01-01T00:00:00+00:00"
+    proof = json.dumps({
+        "protocol_version": 2,
+        "domain": "example.com",
+        "publisher_wallet": publisher,
+        "nonce": "expired-proof-nonce",
+        "claim_key": key,
+        "expiry": expiry,
+    })
+    direct_vm.mock_web(r".*example\.com/\.well-known/margin\.json", {"status": 200, "body": proof})
+    direct_vm.value = 1
+    with direct_vm.expect_revert("domain proof could not be independently verified"):
+        contract.register_assured_claim(
+            key,
+            "https://example.com/.well-known/margin.json",
+            "expired-proof-nonce",
+            expiry,
+        )
+
+
+def test_assured_claim_rejects_wrong_publisher_in_domain_proof(direct_vm, direct_deploy, direct_alice, direct_bob):
+    contract = direct_deploy("contracts/margin.py")
+    direct_vm.sender = direct_alice
+    key = submit(contract)
+    expiry = "2999-01-01T00:00:00+00:00"
+    proof = json.dumps({
+        "protocol_version": 2,
+        "domain": "example.com",
+        "publisher_wallet": "0x" + direct_bob.hex(),
+        "nonce": "wrong-publisher-nonce",
+        "claim_key": key,
+        "expiry": expiry,
+    })
+    direct_vm.mock_web(r".*example\.com/\.well-known/margin\.json", {"status": 200, "body": proof})
+    direct_vm.value = 1
+    with direct_vm.expect_revert("domain proof could not be independently verified"):
+        contract.register_assured_claim(
+            key,
+            "https://example.com/.well-known/margin.json",
+            "wrong-publisher-nonce",
+            expiry,
+        )
+
+
 def test_assured_appeal_requires_new_source_and_settles_once(direct_vm, direct_deploy, direct_alice, direct_bob, direct_charlie):
     contract = direct_deploy("contracts/margin.py")
     direct_vm.sender = direct_alice
