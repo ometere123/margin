@@ -3,6 +3,8 @@ import { executionSummary, isSuccessfulFinalizedReceipt, pendingStorageKey, trac
 
 const successful = {
   statusName: 'FINALIZED',
+  result: 6,
+  result_name: 'MAJORITY_AGREE',
   consensus_data: {
     leader_receipt: [{ execution_result: 'SUCCESS' }],
     validators: [{ execution_result: 'SUCCESS' }],
@@ -15,8 +17,23 @@ describe('transaction finality handling', () => {
   });
 
   it('rejects finalized GenVM execution errors', () => {
-    expect(isSuccessfulFinalizedReceipt({ statusName: 'FINALIZED', consensus_data: { leader_receipt: [{ execution_result: 'FINISHED_WITH_ERROR' }] } })).toBe(false);
-    expect(executionSummary({ statusName: 'FINALIZED', consensus_data: { leader_receipt: [{ execution_result: 'FINISHED_WITH_ERROR' }] } })).toBe('FINISHED_WITH_ERROR');
+    expect(isSuccessfulFinalizedReceipt({ statusName: 'FINALIZED', result_name: 'MAJORITY_AGREE', consensus_data: { leader_receipt: [{ execution_result: 'FINISHED_WITH_ERROR' }] } })).toBe(false);
+    expect(executionSummary({ statusName: 'FINALIZED', result_name: 'MAJORITY_AGREE', consensus_data: { leader_receipt: [{ execution_result: 'FINISHED_WITH_ERROR' }] } })).toBe('FINISHED_WITH_ERROR');
+  });
+
+  it('accepts accepted consensus with mixed validator execution results', () => {
+    expect(isSuccessfulFinalizedReceipt({
+      statusName: 'FINALIZED', result_name: 'MAJORITY_AGREE', result: 6,
+      consensus_data: {
+        leader_receipt: [{ execution_result: 'SUCCESS' }],
+        validators: [
+          { execution_result: 'SUCCESS' },
+          { execution_result: 'ERROR', genvm_result: { error_code: 'CONSENSUS_VALIDATOR_QUORUM_REACHED' } },
+          { execution_result: 'SUCCESS' },
+          { execution_result: 'ERROR', genvm_result: { error_code: 'CONSENSUS_VALIDATOR_QUORUM_REACHED' } },
+        ],
+      },
+    })).toBe(true);
   });
 
   it('does not treat accepted as final success', () => {
@@ -31,7 +48,11 @@ describe('transaction finality handling', () => {
   });
 
   it('supports the SDK legacy success fallback when available', () => {
-    expect(isSuccessfulFinalizedReceipt({ statusName: 'FINALIZED', txExecutionResultName: 'FINISHED_WITH_RETURN' })).toBe(true);
-    expect(isSuccessfulFinalizedReceipt({ statusName: 'FINALIZED', txExecutionResult: 1 })).toBe(true);
+    expect(isSuccessfulFinalizedReceipt({ statusName: 'FINALIZED', result_name: 'MAJORITY_AGREE', txExecutionResultName: 'FINISHED_WITH_RETURN' })).toBe(true);
+    expect(isSuccessfulFinalizedReceipt({ statusName: 'FINALIZED', result: 6, txExecutionResult: 1 })).toBe(true);
+  });
+
+  it('rejects finalized disagreement even when one validator executed successfully', () => {
+    expect(isSuccessfulFinalizedReceipt({ statusName: 'FINALIZED', result_name: 'MAJORITY_DISAGREE', result: 7, consensus_data: { leader_receipt: [{ execution_result: 'SUCCESS' }], validators: [{ execution_result: 'SUCCESS' }] } })).toBe(false);
   });
 });
