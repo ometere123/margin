@@ -61,7 +61,7 @@ Do not run bare `genlayer ...` commands from this repo.
 - Python/source invariant suite: 11/11 PASS.
 - `npm exec -- genlayer --version`: `0.39.1`.
 - Studionet network info and deployed `network()` readback: `61999`, `studionet`, `https://studio.genlayer.com/api`.
-- Extension/signer typecheck, tests and builds: PASS before the current production reference update.
+- Extension/signer typecheck, tests and builds: PASS on the current committed source; extension tests `11/11`, signer tests `15/15`, source invariants `11/11`.
 
 Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat the checks that do not require package downloads.
 
