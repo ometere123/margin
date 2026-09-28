@@ -38,4 +38,11 @@ describe('rendered DOM text anchoring', () => {
     expect(match.range).toBeNull();
     expect(match.matchCount).toBe(2);
   });
+
+  it('does not count hidden duplicate text as a visible ambiguous anchor', () => {
+    const document = dom('<p hidden>same visible claim</p><p>same visible claim</p>');
+    const match = findRangeDetailed(document, 'same visible claim', '', '');
+    expect(match.range).not.toBeNull();
+    expect(match.matchCount).toBe(1);
+  });
 });
