@@ -82,6 +82,7 @@ async function captureSelection() {
 
 const badges = new Map<string, HTMLButtonElement>();
 let activeHighlight: any = null;
+let activeProvenance: HTMLElement | null = null;
 let lastDiagnostics: Record<string, unknown> = {};
 const debugEnabled = new URLSearchParams(location.search).get('margin_debug') === '1';
 
@@ -93,9 +94,71 @@ function debug(event: string, details: Record<string, unknown> = {}) {
 function clearAnnotations() {
   for (const badge of badges.values()) badge.remove();
   badges.clear();
+  activeProvenance?.remove();
+  activeProvenance = null;
   const cssHighlights = (globalThis as any).CSS?.highlights;
   cssHighlights?.delete('margin-claims');
   activeHighlight = null;
+}
+
+function showProvenance(claim: MarginClaim, badge: HTMLButtonElement) {
+  if (activeProvenance?.dataset.marginProvenance === claim.claim_key) {
+    activeProvenance.remove();
+    activeProvenance = null;
+    badge.setAttribute('aria-expanded', 'false');
+    return;
+  }
+  if (activeProvenance) {
+    const previousClaimKey = activeProvenance.dataset.marginProvenance;
+    if (previousClaimKey) badges.get(previousClaimKey)?.setAttribute('aria-expanded', 'false');
+    activeProvenance.remove();
+  }
+  const panel = document.createElement('aside');
+  panel.dataset.marginProvenance = claim.claim_key;
+  panel.setAttribute('role', 'dialog');
+  panel.setAttribute('aria-label', 'MARGIN claim provenance');
+  panel.style.cssText = 'all:initial!important;position:fixed!important;z-index:2147483647!important;right:16px!important;top:16px!important;width:min(360px,calc(100vw - 32px))!important;max-height:calc(100vh - 32px)!important;overflow:auto!important;padding:14px!important;border:1px solid #d7d0ff!important;border-radius:12px!important;background:#fff!important;color:#171717!important;box-shadow:0 8px 28px rgba(0,0,0,.24)!important;font:13px/1.45 system-ui,sans-serif!important;';
+  const heading = document.createElement('strong');
+  heading.textContent = `MARGIN · ${claim.status}`;
+  const close = document.createElement('button');
+  close.type = 'button';
+  close.textContent = 'Close';
+  close.style.cssText = 'float:right!important;border:0!important;background:transparent!important;color:#555!important;cursor:pointer!important;font:inherit!important;';
+  close.addEventListener('click', () => {
+    panel.remove();
+    if (activeProvenance === panel) activeProvenance = null;
+    badge.setAttribute('aria-expanded', 'false');
+    badge.focus();
+  });
+  panel.append(close, heading);
+  const add = (label: string, value: string) => {
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = 'margin-top:10px!important;';
+    const key = document.createElement('div');
+    key.style.cssText = 'font-size:10px!important;font-weight:800!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#6355a8!important;';
+    key.textContent = label;
+    const text = document.createElement('div');
+    text.textContent = value;
+    wrapper.append(key, text);
+    panel.append(wrapper);
+  };
+  add('Finalized claim', claim.quote);
+  add('Claim class', claim.claim_class);
+  add('Challenge', claim.challenge_statement);
+  add('Rationale', claim.rationale || 'No rationale recorded.');
+  add('Revision', String(claim.revision));
+  add('Claim key', claim.claim_key);
+  let evidence = 'No supplemental evidence URLs recorded.';
+  try {
+    const urls = JSON.parse(claim.evidence_urls_json || '[]');
+    if (Array.isArray(urls) && urls.length) evidence = urls.map((url) => String(url)).join('\n');
+  } catch { evidence = 'Evidence metadata unavailable.'; }
+  add('Evidence', evidence);
+  document.documentElement.appendChild(panel);
+  activeProvenance = panel;
+  debug('provenance-opened', { claimKey: claim.claim_key });
+  close.focus();
+  badge.setAttribute('aria-expanded', 'true');
 }
 
 function annotate(claim: MarginClaim, ranges: Range[], aggregateCount = 1) {
@@ -127,10 +190,12 @@ function annotate(claim: MarginClaim, ranges: Range[], aggregateCount = 1) {
   badge.textContent = aggregateCount > 1 ? `M · ${claim.status} · ${aggregateCount} claims` : `M · ${claim.status}`;
   badge.setAttribute('aria-label', aggregateCount > 1 ? `MARGIN ${claim.status}, ${aggregateCount} claims` : `MARGIN ${claim.status}`);
   badge.title = aggregateCount > 1 ? `${aggregateCount} MARGIN claims on this text. ${claim.rationale || ''}` : (claim.rationale || 'Open MARGIN claim');
+  badge.setAttribute('aria-expanded', 'false');
   badge.style.top = `${Math.max(0, rect.bottom + window.scrollY + 3)}px`;
   badge.style.left = `${Math.max(4, Math.min(document.documentElement.scrollWidth - 120, rect.left + window.scrollX))}px`;
   badge.addEventListener('click', (event) => {
     event.preventDefault(); event.stopPropagation();
+    showProvenance(claim, badge);
     void sendRuntimeMessage({ type: 'OPEN_CLAIM', claim }).catch(() => {
       // The extension may have been reloaded while this page stayed open.
     });
