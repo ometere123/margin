@@ -144,7 +144,8 @@ On 2026-09-28, a fresh controlled claim was submitted and resolved on the canoni
 - Appeal: `0x783ca8a0f8090e22b2cd336a56f4f891563a2ea16a2b53a285405b4530c51074` — finalized successfully with a 1 GEN appeal bond; canonical readback `APPEALED`.
 - An initial appeal-resolution attempt was canceled because the adjudication source manifest was unchanged: `0x6b776df2ffe09a9846247e93c40785bf29ed2949caaafa78a8c80d8e141d548b`.
 - After publishing a bounded evidence revision, appeal resolution finalized successfully in `0xc7e2efd2eadd3caa74e630e07d1c6f083446f2da4ff1e350e090f8e862b066e2`. Canonical readback is now `RESOLVED / SUPPORTED`, appeal count `1`.
-- The recorded appeal deadline is `2026-09-28T15:50:03.801109+00:00`. Settlement has deliberately not been submitted before that deadline; settlement and credit readback remain outstanding.
+- The recorded appeal deadline was `2026-09-28T15:50:03.801109+00:00`. After that deadline, settlement finalized in `0xfd47b54aef4dd17935510c6e53913f0966e45488c2320dcee05c378f18b6b537`. Canonical readback is `SETTLED / SUPPORTED`; publisher credit was `3 GEN` before withdrawal and challenger credit was `0`.
+- Publisher withdrawal finalized in `0x5fb35a14df27044f0e2ff780d23e2bd9b6dd53a5caa6eb718e48fc6847a567e7`. Final readback shows publisher and challenger credits both `0` and `settled: true`.
 
 The public domain proof for this controlled sequence is `https://margin-signer.vercel.app/.well-known/margin.json`, bound to nonce `assured-appeal-fresh-20260928` and the fresh claim key above. The signer/fixture deployment was updated through the existing Vercel project; no contract redeployment occurred.
 
@@ -153,6 +154,8 @@ The public domain proof for this controlled sequence is `https://margin-signer.v
 The separate reference consumer was deployed at `0x2885169713d79cb2FC463Dc624Ea5fc08b59d044` by finalized transaction `0x84ba75b54e4f58b5550388b9a474c31099b8626f55b8c8041081ed886a27c6a4`. Its `execute_if_supported` call against the canonical MARGIN contract and the settled `CONTRADICTED` claim finalized in `0xb7c25973b255b6148b0e156db42ef6128bb22c0dc89ba15be828cc440b78ebd0` with the expected contract error `protected action requires a SUPPORTED assured claim`. `has_executed` was `false` both before and after the call. This is a negative-gate proof that the consumer reads canonical MARGIN state and does not trust a caller-supplied/frontend status.
 
 The same consumer was then exercised against the positive settled claim `09c8cdd7a1ad5716bcafadc38458685340400da3682436e4a1f86319b82b5a9c`. The call finalized successfully in `0x167af481d43b97c30f5a35b234c633112e8b4fcf7af9500e85241a4fbe0e9052`, and canonical `has_executed` readback is `true`.
+
+The consumer was also exercised against the fresh settled `SUPPORTED` claim above. A first CLI attempt passed both arguments as one string and finalized with the observed missing-argument contract error in `0x37a14b5422fea161601178f7a398cafb9d73bd055e9e098fbc51e1b0a172242e`; it did not change consumer state. The corrected two-argument call finalized successfully in `0x81264b2151b885d15c14ef53e92ad8c4a864c464ed015c147d8a784c71d49fb1`, and canonical `has_executed` readback is `true`.
 
 ## Fee profile
 
