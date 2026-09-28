@@ -53,6 +53,8 @@ Use a highlighted compatibility/specification claim where authoritative document
 
 Use genuinely conflicting/insufficient sources. Confirm the system does not force a binary answer.
 
+Controlled attempt observed on 2026-09-28: submit transaction `0x7982b75f18509552d58c8b8b820c5840a929d4fb476305d70e584d8f622ee410` for claim key `a5d8258b9e981c5065e1bca580a5f1ee42311b6b88cddcb3fe3ac846a95cff1c` reached `FINALIZED / ERROR`. The signer displayed the execution failure and did not enable resolution. A canonical `get_claim` read at `LATEST_FINAL` returned `{}`, confirming that no claim was created. This is recorded as an execution-error result, not as live `INCONCLUSIVE` evidence.
+
 ### STALE
 
 Use a disposable/static test page or archived fixture, change/remove the highlighted text, omit archive evidence, then re-resolve.

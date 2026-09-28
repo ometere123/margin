@@ -73,7 +73,7 @@ The corrected contract deployment is real and finalized. The following remain op
 - Live Assured Claims have now passed registration, challenge, resolution, post-deadline settlement and withdrawal for both `CONTRADICTED` and `SUPPORTED` outcomes. Canonical readbacks are settled with zero remaining credits after withdrawal.
 - The separate consumer was exercised against both states: it rejected the settled contradicted claim and successfully executed against the settled supported claim.
 - live wallet-to-chain end-to-end verification is now recorded: fresh submit `0xaa2e1205bbb1680d03d4ccba35fb615115a64f899f486b4e3eca71a17605e2af` and resolve `0xd9b7c3743d60a6230d2a119c3f57be002e04d793b8de0f0cad7a898dccf83836` both finalized successfully through the production signer and injected wallet;
-- live fee profiling and all-four-verdict evidence;
+- live fee profiling and live `INCONCLUSIVE`/`STALE` verdict evidence. A controlled conflicting-source attempt was finalized as `ERROR` (`0x7982b75f18509552d58c8b8b820c5840a929d4fb476305d70e584d8f622ee410`) and created no claim; it is not counted as `INCONCLUSIVE` evidence;
 - automated browser E2E and hostile-page matrix.
 
 ## Production configuration hardening
