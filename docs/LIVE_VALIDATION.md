@@ -93,6 +93,7 @@ The optional application-level Assured Claim path has now been exercised on the 
 - Confirm ambiguous anchors do not attach to arbitrary text.
 - Confirm normal page visits create no GenLayer writes.
 - Confirm page with no claims causes only a read.
+- Live browser-aligned read/anchor check completed for `https://www.rfc-editor.org/info/rfc9110/`: the finalized claim key `cd77ff5d309f9a6cf60f51b7afbc2ca90b91cdcf80c613da1aee3d9fb191446b` was returned and rendered as a visible `M · SUPPORTED` badge with `data-margin-claim` set to that key. The quote was matched across the RFC Editor's zero-width `<wbr>` split. CSS Custom Highlight was unavailable in the inspected session, but the independent badge proof succeeded.
 
 ## Signer
 

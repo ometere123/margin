@@ -36,7 +36,19 @@ The earlier deployment at `0xecE43547EcFbFB082B4Bfb62D3bdEb6dBf0B8059` and its t
 - Direct Mode: 11/11 passed under the repository's stable `v0.2.12` runner in WSL
 - Static lint: PASS with `genvm-lint 0.11.1rc2`
 - Full linter SDK validation remains environment-limited by the unavailable/corrupt runner archive; no validation pass is claimed here.
-- The extension and signer build successfully locally. The signer has no editable contract-address UI and does not accept a contract query override. The production wallet path uses ordinary EIP-1193 directly; the installed `genlayer-js@1.1.8` Snap-oriented `client.connect()` helper is intentionally not used. The signer provider regression test rejects all Snap RPC methods. Its finalization helper uses the actual Studionet receipt shape (`consensus_data.*.execution_result`), because this SDK version does not export `isSuccessful()` and does not populate the older `txExecutionResultName` field for Studio receipts. Transaction IDs are persisted before polling, with explorer links and resumable tracking after polling failures. A real Chromium wallet/annotation session remains unverified in this environment.
+- The extension and signer build successfully locally. The signer has no editable contract-address UI and does not accept a contract query override. The production wallet path uses ordinary EIP-1193 directly; the installed `genlayer-js@1.1.8` Snap-oriented `client.connect()` helper is intentionally not used. The signer provider regression test rejects all Snap RPC methods. Its finalization helper uses the actual Studionet receipt shape (`consensus_data.*.execution_result`), because this SDK version does not export `isSuccessful()` and does not populate the older `txExecutionResultName` field for Studio receipts. Transaction IDs are persisted before polling, with explorer links and resumable tracking after polling failures. A live Chromium read/anchor check now finds the finalized browser-aligned claim on the RFC page and renders a visible `data-margin-claim` badge; a live wallet-to-chain session remains separate evidence and is not inferred from this read check.
+
+## Live browser annotation evidence
+
+On 2026-09-28, the built unpacked extension was loaded in Chromium and `https://www.rfc-editor.org/info/rfc9110/` was inspected after the finalized contract read. The extension rendered:
+
+- Claim key: `cd77ff5d309f9a6cf60f51b7afbc2ca90b91cdcf80c613da1aee3d9fb191446b`
+- Badge attribute: `data-margin-claim="cd77ff5d309f9a6cf60f51b7afbc2ca90b91cdcf80c613da1aee3d9fb191446b"`
+- Badge text: `M · SUPPORTED`
+- Badge geometry: non-zero (`92.78 × 17.99` CSS pixels in the inspected viewport)
+- The exact quote was matched across the RFC Editor's zero-width `<wbr>` split; no synthetic whitespace was introduced.
+
+The browser exposed no CSS Custom Highlight registry in this session, so the independent badge proof is the authoritative visible check here; CSS Highlight remains an optional enhancement. The richer side-panel provenance and real wallet-to-chain lifecycle remain separately account/browser dependent.
 
 The corrected contract has two fresh normal-claim lifecycles recorded. The `/rfc/rfc9110/` claim submitted with `0xe5e82dafcc335f8906efb5854267b524648f9490b81df718129acd63c908ba2e` and resolved with `0x6de269fe99104bed617c1b891b6d191ffe26f9f0ec2c0395539a6598940f3ffd` finalized `SUPPORTED`. The browser-aligned `/info/rfc9110/` claim submitted with `0x3c8172c9919ee95a19f8b55e8f55c5a98304892061efe6581b37942385f263cd` and resolved with `0x42f5004557bc12a3d4f6a7dd2b30532989a4732524196523b92c4ce1e2904247` also finalized `SUPPORTED`, revision `1`, with source-manifest digest `452a5215fca972d2646684809863ba96e059a4ef159f122b71272b25ee84a153`.
 

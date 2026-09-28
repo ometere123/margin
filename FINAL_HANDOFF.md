@@ -2,14 +2,14 @@
 
 ## Current live status (2026-09-28)
 
-The corrected Studionet deployment and one corrected-contract normal claim lifecycle are complete. Use [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md) as the authoritative live record; browser annotation evidence and the optional Assured Claim live path remain open.
+The corrected Studionet deployment and corrected-contract normal claim lifecycles are complete. Use [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md) as the authoritative live record. The browser-aligned finalized claim has now been read and visibly rendered by the built extension on the RFC page; the optional Assured Claim path is recorded separately.
 
 - Network: Studionet, chain `61999`, RPC `https://studio.genlayer.com/api`.
 - Contract: `0xb4161203706B2428D5FbC5B7e114b09d1De32960`.
 - Deployment: `0xe72cb9b184b2cd98f2b86182c7b2bd0df3091ed71bc50417dac6cbffef13e27b`, `FINALIZED / MAJORITY_AGREE / SUCCESS`.
 - Source commit: `552a6810742bd28ed0fc9eac80f07e69e95f8791`.
 - Runtime identity: `chain_id=61999`, `network=studionet`, `rpc=https://studio.genlayer.com/api`.
-- A corrected-contract normal claim is finalized as `SUPPORTED`; browser annotation rendering is not claimed yet.
+- A corrected-contract browser-aligned normal claim is finalized as `SUPPORTED` and has been rendered as a visible claim-keyed badge by the built extension on `https://www.rfc-editor.org/info/rfc9110/`. See [`SUBMISSION.md`](SUBMISSION.md) for the exact observed claim key and geometry.
 
 The earlier environment-bound checklist below is historical context. It is not permission to overwrite the final deployment record or claim that browser-wallet verification occurred when it has not.
 
@@ -71,17 +71,17 @@ The corrected contract deployment is real and finalized. The following remain op
 
 - corrected-contract Assured Claim live transactions;
 - consumer deployment/exercise and bond withdrawal readback;
-- live browser + wallet end-to-end annotation verification;
+- live wallet-to-chain end-to-end verification, including a fresh submit/resolve session;
 - live fee profiling and all-four-verdict evidence;
 - automated browser E2E and hostile-page matrix.
 
 ## Production configuration hardening
 
-The canonical static signer is `https://margin-signer.vercel.app/`. Its Vite production build receives the public `VITE_MARGIN_CONTRACT_ADDRESS` value for the canonical Studionet deployment. The signer no longer asks normal users to save a contract address and ignores incoming contract query parameters. The extension release similarly embeds the canonical contract and signer origin; Options is informational rather than an infrastructure editor. The corrected signer deployment is live; browser-wallet verification remains open.
+The canonical static signer is `https://margin-signer.vercel.app/`. Its Vite production build receives the public `VITE_MARGIN_CONTRACT_ADDRESS` value for the canonical Studionet deployment. The signer no longer asks normal users to save a contract address and ignores incoming contract query parameters. The extension release similarly embeds the canonical contract and signer origin; Options is informational rather than an infrastructure editor. The corrected signer deployment is live. The finalized RFC claim has also been proven through the extension's live read/anchor/badge path; browser-wallet submit/resolve evidence remains separate.
 
 The signer must use the injected EIP-1193 provider directly. In `genlayer-js@1.1.8`, `client.connect('studionet')` enters the legacy GenLayer Snap path (`wallet_getSnaps` / `wallet_requestSnaps`); production MARGIN therefore constructs the provider-backed client without calling that helper. `signer/src/wallet.test.ts` guards this boundary.
 
-The same SDK's Studio finalization response is shaped differently from older receipt examples: it reports `statusName: FINALIZED` and execution outcomes under `consensus_data.leader_receipt[].execution_result` / `consensus_data.validators[].execution_result`. It does not export `isSuccessful()` and may omit `txExecutionResultName`. The signer therefore checks the complete observed execution vector for `SUCCESS`, accepts a null application return, persists each returned transaction ID before polling, and reports resumable tracking instead of calling a submitted transaction failed when polling itself errors.
+The same SDK's Studio finalization response is shaped differently from older receipt examples: it reports `statusName: FINALIZED` and execution outcomes under `consensus_data.leader_receipt[].execution_result` / `consensus_data.validators[].execution_result`. It does not export `isSuccessful()` and may omit `txExecutionResultName`. The signer therefore checks accepted consensus plus the canonical leader execution result, accepts a null application return, persists each returned transaction ID before polling, and reports resumable tracking instead of calling a submitted transaction failed when polling itself errors. Minority validator errors are not treated as canonical transaction failure.
 
 No success evidence for those steps has been fabricated.
 
