@@ -29,10 +29,10 @@ print('GenLayer CLI pin: 0.39.1')
 PYCLI
 
 echo "[5/5] Shared protocol TypeScript (when global tsc is present)"
-if command -v tsc >/dev/null 2>&1; then
+if command -v tsc >/dev/null 2>&1 && tsc --version >/dev/null 2>&1; then
   tsc --noEmit --target ES2022 --module ESNext --moduleResolution Bundler --lib ES2022,DOM,DOM.Iterable shared/protocol.ts
 else
-  echo "tsc not installed globally; skipped shared protocol compile"
+  echo "runnable tsc not available in this shell; skipped shared protocol compile"
 fi
 
 echo "Offline preflight passed. Full npm/GenVM/live checks are separate."
