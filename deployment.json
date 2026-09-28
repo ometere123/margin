@@ -3,12 +3,12 @@
   "chainId": 61999,
   "rpc": "https://studio.genlayer.com/api",
   "explorer": "https://explorer-studio.genlayer.com",
-  "contractAddress": "0xC3E6E1C2102187F3558aDb593dC29D7acf3d2310",
-  "deploymentTx": "0xd3fe4c48c9195cb07a2d9e948a278313868b52c525c7295de597bdd09bc9e3f0",
+  "contractAddress": "0x6525B4a5d9CEd32f440D47b0Bf966C2D25d1Fcb0",
+  "deploymentTx": "0xe839f83f73e6c461f4740d561c108154ee40fc5a3f9aa5b96b0cd00f9a1a7675",
   "deploymentStatus": "FINALIZED / MAJORITY_AGREE / SUCCESS",
-  "sourceCommit": "7f9541847b19ec34194b68ab5fbb8f72b16b6932",
-  "sourceBytes": 41452,
-  "sourceSha256": "2edb88db22e224ff30f98678069c84621ca1ad7d67beb5a64ec913d6fbafef54",
+  "sourceCommit": "d781a9ef417d2e3e2fd2915086a3b43129ffa5a6",
+  "sourceBytes": 45774,
+  "sourceSha256": "bdfadc8351078bd331f901648976671dca59308a297a54572212289e18cf8a33",
   "signerUrl": "https://margin-signer.vercel.app/",
   "runtimeIdentity": {
     "chain_id": 61999,
@@ -171,14 +171,14 @@
   },
   "liveEvidence": {
     "canonicalDeploymentChecks": {
-      "contractAddress": "0xC3E6E1C2102187F3558aDb593dC29D7acf3d2310",
-      "deploymentTx": "0xd3fe4c48c9195cb07a2d9e948a278313868b52c525c7295de597bdd09bc9e3f0",
+      "contractAddress": "0x6525B4a5d9CEd32f440D47b0Bf966C2D25d1Fcb0",
+      "deploymentTx": "0xe839f83f73e6c461f4740d561c108154ee40fc5a3f9aa5b96b0cd00f9a1a7675",
       "networkReadback": {
         "chain_id": 61999,
         "network": "studionet",
         "rpc": "https://studio.genlayer.com/api"
       },
-      "sourceCommit": "7f9541847b19ec34194b68ab5fbb8f72b16b6932"
+      "sourceCommit": "d781a9ef417d2e3e2fd2915086a3b43129ffa5a6"
     },
     "sameSourceAppeal": {
       "claimKey": "274e16c4d7acfaf0f3a3bb4699485b59baad9284c273ae1153f828e42cbb924f",
@@ -206,10 +206,17 @@
       "settlementNote": "After the recorded appeal deadline, settlement finalized the 3 GEN SUPPORTED payout to publisher credit. Publisher withdrawal then finalized successfully; canonical readback shows SETTLED / SUPPORTED with both credits at zero."
     },
     "consumerDeployment": {
-      "contractAddress": "0x26a0ee4a03c39887B1d6284609286eFC7be314F8",
-      "deploymentTx": "0x7c11d48b9e9bf6e5511c6097d8b7872577e11ee14b95c4cf2edcd0eb121afa68",
-      "boundMarginAddress": "0xC3E6E1C2102187F3558aDb593dC29D7acf3d2310",
+      "contractAddress": "0xfAE0De6115e46F56034772CeD5c0C6684E009bd8",
+      "deploymentTx": "0x828cdb7b87486d70b530bfa3a4458458f32185091cac666ac7ec9cd504f7189a",
+      "boundMarginAddress": "0x6525B4a5d9CEd32f440D47b0Bf966C2D25d1Fcb0",
       "deploymentFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS"
+    },
+    "freshExternalBrowserChallenge": {
+      "contractAddress": "0x6525B4a5d9CEd32f440D47b0Bf966C2D25d1Fcb0",
+      "signerUrl": "https://margin-signer.vercel.app/",
+      "signerDeployment": "dpl_2kYaztcwUAcAWNHgaoEkXicsTPkx",
+      "status": "NOT_RUN",
+      "blocker": "Chromium-control service could not load its browser request-header policy; no browser transaction or badge result is claimed for this deployment."
     },
     "freshPositiveConsumerExercise": {
       "consumerAddress": "0x26a0ee4a03c39887B1d6284609286eFC7be314F8",

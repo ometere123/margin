@@ -170,7 +170,15 @@ On 2026-09-28, the production signer was exercised through the real browser flow
 
 ## Downstream consumer evidence
 
-### Final canonical contract correction
+### Final validator-equivalence deployment
+
+The final validator-equivalence correction was deployed to `0x6525B4a5d9CEd32f440D47b0Bf966C2D25d1Fcb0` in transaction `0xe839f83f73e6c461f4740d561c108154ee40fc5a3f9aa5b96b0cd00f9a1a7675`, finalized `MAJORITY_AGREE / SUCCESS`. `network()` read back chain `61999`, network `studionet`, and RPC `https://studio.genlayer.com/api`. The corrected consumer was redeployed at `0xfAE0De6115e46F56034772CeD5c0C6684E009bd8` in transaction `0x828cdb7b87486d70b530bfa3a4458458f32185091cac666ac7ec9cd504f7189a`, with construction calldata bound to the new MARGIN address.
+
+The contract now requires exact agreement only on the bounded semantic status. Each validator independently fetches and substantively adjudicates the evidence, while candidate manifests, content digests and cited source indexes are validated structurally without byte-identical comparison. Storage is copied before entering the nondeterministic block to remove the storage-read warning.
+
+The production signer was redeployed at `https://margin-signer.vercel.app/` with `VITE_MARGIN_CONTRACT_ADDRESS` set to the new address; deployment `dpl_2kYaztcwUAcAWNHgaoEkXicsTPkx` returned HTTP 200, the new address was present in the bundle, the prior address was absent, and the deployed CSP/referrer headers remained enforced. The built extension also embeds the new address. A fresh external-domain browser challenge against this deployment remains unevaluated because the Chromium-control service could not load its browser request-header policy; no browser transaction or badge result is claimed for this deployment.
+
+### Historical prior canonical contract correction
 
 After the appeal-consensus and Assured resolver hardening, the canonical MARGIN deployment is `0xC3E6E1C2102187F3558aDb593dC29D7acf3d2310`, deployed by `0xd3fe4c48c9195cb07a2d9e948a278313868b52c525c7295de597bdd09bc9e3f0`. `network()` read back Studionet, chain `61999`, and `https://studio.genlayer.com/api`.
 

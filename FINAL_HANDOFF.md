@@ -5,9 +5,9 @@
 The corrected Studionet deployment and corrected-contract normal claim lifecycles are complete. Use [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md) as the authoritative live record. The browser-aligned finalized claim has now been read and visibly rendered by the built extension on the RFC page; the optional Assured Claim path is recorded separately.
 
 - Network: Studionet, chain `61999`, RPC `https://studio.genlayer.com/api`.
-- Contract: `0xC3E6E1C2102187F3558aDb593dC29D7acf3d2310`.
-- Deployment: `0xd3fe4c48c9195cb07a2d9e948a278313868b52c525c7295de597bdd09bc9e3f0`, `FINALIZED / MAJORITY_AGREE / SUCCESS`.
-- Deployment source commit: `7f9541847b19ec34194b68ab5fbb8f72b16b6932`.
+- Contract: `0x6525B4a5d9CEd32f440D47b0Bf966C2D25d1Fcb0`.
+- Deployment: `0xe839f83f73e6c461f4740d561c108154ee40fc5a3f9aa5b96b0cd00f9a1a7675`, `FINALIZED / MAJORITY_AGREE / SUCCESS`.
+- Deployment source commit: `d781a9ef417d2e3e2fd2915086a3b43129ffa5a6`.
 - Runtime identity: `chain_id=61999`, `network=studionet`, `rpc=https://studio.genlayer.com/api`.
 - A corrected-contract browser-aligned normal claim is finalized as `SUPPORTED` and has been rendered as a visible claim-keyed badge by the built extension on `https://www.rfc-editor.org/info/rfc9110/`. See [`SUBMISSION.md`](SUBMISSION.md) for the exact observed claim key and geometry.
 
@@ -79,7 +79,7 @@ The corrected contract deployment is real and finalized. The following evidence 
 
 ## Production configuration hardening
 
-The canonical static signer is `https://margin-signer.vercel.app/`. Its Vite production build receives the public `VITE_MARGIN_CONTRACT_ADDRESS` value for the canonical Studionet deployment. The signer no longer asks normal users to save a contract address and ignores incoming contract query parameters. The extension release similarly embeds the canonical contract and signer origin; Options is informational rather than an infrastructure editor. The current corrected signer deployment `dpl_CusQjTanPdaNEcJmaDtj8WC3iBhR` is live. Its response was checked after that deployment and returned the intended CSP, clickjacking, MIME, referrer and permissions headers; the deployed bundle contains the canonical contract address. The static deployment uses the repository-root `vercel.json` because the signer imports the shared protocol module. The finalized RFC claim has been proven through the extension's live read/anchor/badge path, and a separate real production signer session completed Submit and Resolve through the injected wallet; exact hashes and canonical readbacks are recorded in `docs/LIVE_VALIDATION.md`.
+The canonical static signer is `https://margin-signer.vercel.app/`. Its Vite production build receives the public `VITE_MARGIN_CONTRACT_ADDRESS` value for the canonical Studionet deployment. The signer no longer asks normal users to save a contract address and ignores incoming contract query parameters. The extension release similarly embeds the canonical contract and signer origin; Options is informational rather than an infrastructure editor. The latest signer deployment `dpl_2kYaztcwUAcAWNHgaoEkXicsTPkx` is live with the new contract address. Its response returned the intended CSP and `Referrer-Policy: no-referrer`; the deployed bundle contains the canonical contract address. The static deployment uses the repository-root `vercel.json` because the signer imports the shared protocol module. The previous RFC browser evidence remains recorded for the preceding deployment; a fresh browser run against this new deployment was not completed because the Chromium-control service was unavailable in this session.
 
 The signer must use the injected EIP-1193 provider directly. In `genlayer-js@1.1.8`, `client.connect('studionet')` enters the legacy GenLayer Snap path (`wallet_getSnaps` / `wallet_requestSnaps`); production MARGIN therefore constructs the provider-backed client without calling that helper. `signer/src/wallet.test.ts` guards this boundary.
 

@@ -7,17 +7,25 @@ MARGIN is a browser-native annotation layer: the extension anchors an explicit c
 - Network: Studionet
 - Chain ID: `61999`
 - RPC: `https://studio.genlayer.com/api`
-- Contract: [`0xC3E6E1C2102187F3558aDb593dC29D7acf3d2310`](https://explorer-studio.genlayer.com/address/0xC3E6E1C2102187F3558aDb593dC29D7acf3d2310)
-- Deployment transaction: [`0xd3fe4c48c9195cb07a2d9e948a278313868b52c525c7295de597bdd09bc9e3f0`](https://explorer-studio.genlayer.com/tx/0xd3fe4c48c9195cb07a2d9e948a278313868b52c525c7295de597bdd09bc9e3f0)
+- Contract: [`0x6525B4a5d9CEd32f440D47b0Bf966C2D25d1Fcb0`](https://explorer-studio.genlayer.com/address/0x6525B4a5d9CEd32f440D47b0Bf966C2D25d1Fcb0)
+- Deployment transaction: [`0xe839f83f73e6c461f4740d561c108154ee40fc5a3f9aa5b96b0cd00f9a1a7675`](https://explorer-studio.genlayer.com/tx/0xe839f83f73e6c461f4740d561c108154ee40fc5a3f9aa5b96b0cd00f9a1a7675)
 - Result: `FINALIZED / MAJORITY_AGREE / SUCCESS`
-- Deployment source commit: `7f9541847b19ec34194b68ab5fbb8f72b16b6932`
-- Source: 41,452 bytes; SHA-256 `2edb88db22e224ff30f98678069c84621ca1ad7d67beb5a64ec913d6fbafef54`
+- Deployment source commit: `d781a9ef417d2e3e2fd2915086a3b43129ffa5a6`
+- Source: 45,774 bytes; SHA-256 `bdfadc8351078bd331f901648976671dca59308a297a54572212289e18cf8a33`
 - Runtime identity: `chain_id=61999`, `network=studionet`, `rpc=https://studio.genlayer.com/api`
 - Production signer: [`https://margin-signer.vercel.app/`](https://margin-signer.vercel.app/) — redeployed with the corrected public contract configuration.
 
 The previous contract `0x03fE...D57C` and its earlier live claim evidence remain historical and are not evidence for the corrected storage schema.
 
-The immediately preceding corrected deployment `0xb4161203706B2428D5FbC5B7e114b09d1De32960` is also historical after the final appeal-consensus correction. Its claim and browser evidence remain retained below as historical evidence.
+The immediately preceding corrected deployment `0xC3E6E1C2102187F3558aDb593dC29D7acf3d2310` is historical after the validator-equivalence correction. Its claim and browser evidence remain retained below as historical evidence.
+
+## Final validator-equivalence correction
+
+The final contract changes consensus validation so validators still independently fetch and adjudicate the bounded evidence, but do not require byte-identical source manifests, content digests, or supporting/contradicting index arrays. They must agree exactly on the bounded status and satisfy deterministic semantic conditions for that status. Storage records are copied before entering nondeterministic execution to avoid storage-read warnings.
+
+The corrected reference consumer is now deployed at `0xfAE0De6115e46F56034772CeD5c0C6684E009bd8`, bound at construction to the final MARGIN address. Its deployment transaction is `0x828cdb7b87486d70b530bfa3a4458458f32185091cac666ac7ec9cd504f7189a`.
+
+The fresh external-domain browser challenge requested for this deployment was not claimed: Chromium control was unavailable in this session. Prior browser annotation evidence remains historical evidence for the previous canonical deployment and is not substituted for the new browser proof.
 
 ## Historical live claim (previous contract only)
 
