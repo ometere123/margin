@@ -196,7 +196,7 @@ def test_manifest_is_committed_and_unchanged_refresh_is_rejected(direct_vm, dire
         contract.resolve_claim(key)
 
 
-def test_assured_claim_domain_proof_and_bond_lifecycle(direct_vm, direct_deploy, direct_alice, direct_bob):
+def test_assured_claim_domain_proof_and_bond_lifecycle(direct_vm, direct_deploy, direct_alice, direct_bob, direct_charlie):
     contract = direct_deploy("contracts/margin.py")
     direct_vm.sender = direct_alice
     key = submit(contract)
@@ -217,6 +217,14 @@ def test_assured_claim_domain_proof_and_bond_lifecycle(direct_vm, direct_deploy,
     direct_vm.sender = direct_bob
     direct_vm.value = 1
     contract.challenge_assured_claim(key)
+
+    # A third party cannot consume the adjudication before the Assured wrapper
+    # resolves it, even though the ordinary resolver remains permissionless for
+    # normal claims.
+    direct_vm.sender = direct_charlie
+    with direct_vm.expect_revert("ordinary resolution cannot consume an assured lifecycle"):
+        contract.resolve_claim(key)
+    assert contract.get_assured_claim(key)["state"] == "CHALLENGED"
     assert contract.get_assured_claim(key)["state"] == "CHALLENGED"
     body = "Support matrix: Runtime 4.2 requires Node 20 or newer. Node 18 is unsupported."
     direct_vm.mock_web(r"https://example\.com/docs/runtime", {"status": 200, "body": body})
@@ -349,8 +357,17 @@ def test_assured_appeal_requires_new_source_and_settles_once(direct_vm, direct_d
     with direct_vm.expect_revert("assured claim is not appealable"):
         contract.appeal_assured_claim(key, "A duplicate appeal must be rejected.")
 
+    # The same third-party front-running protection applies after the appeal is
+    # opened; the appeal wrapper owns the next adjudication transition.
+    with direct_vm.expect_revert("ordinary resolution cannot consume an assured lifecycle"):
+        contract.resolve_claim(key)
+    assert contract.get_assured_claim(key)["state"] == "APPEALED"
+
+    # A valid one-shot appeal is meaningful even when the public source
+    # manifest is unchanged: the bounded appeal contention is new protocol
+    # input and is included in the adjudication context digest.
+    body_two = body_one
     direct_vm.clear_mocks()
-    body_two = "Updated support matrix says Node 18 is supported."
     direct_vm.mock_web(r"https://example\.com/docs/runtime", {"status": 200, "body": body_two})
     direct_vm.mock_web(r"https://example\.com/docs/support", {"status": 200, "body": body_two})
     records_two = [
@@ -358,9 +375,10 @@ def test_assured_appeal_requires_new_source_and_settles_once(direct_vm, direct_d
         {"kind": "EVIDENCE", "url": "https://example.com/docs/support", "fetch_status": "OK", "content_digest": hashlib.sha256(body_two.encode()).hexdigest(), "provenance": "PUBLIC_SOURCE"},
     ]
     digest_two = hashlib.sha256(json.dumps({"v": 2, "sources": records_two}, separators=(",", ":"), sort_keys=True).encode()).hexdigest()
-    direct_vm.mock_llm(r".*MARGIN web-claim challenge.*", json.dumps({"status": "SUPPORTED", "rationale": "Updated evidence.", "claim_present": True, "supporting_source_indexes": [0], "contradicting_source_indexes": [], "historical_evidence_used": False, "source_manifest_digest": digest_two}))
+    direct_vm.mock_llm(r".*MARGIN web-claim challenge.*", json.dumps({"status": "SUPPORTED", "rationale": "The appeal contention warrants reconsideration.", "claim_present": True, "supporting_source_indexes": [0], "contradicting_source_indexes": [], "historical_evidence_used": False, "source_manifest_digest": digest_two}))
     contract.resolve_assured_appeal(key)
     assert contract.get_assured_claim(key)["final_status"] == "SUPPORTED"
+    assert contract.get_assured_claim(key)["appeal_context_digest"]
     direct_vm.warp("2999-01-01T02:00:00+00:00")
     contract.settle_assured_claim(key)
     with direct_vm.expect_revert("not ready for settlement"):

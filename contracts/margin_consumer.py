@@ -18,19 +18,16 @@ class MarginInterface:
 
 
 class MarginConsumer(gl.Contract):
+    canonical_margin_address: Address
     executed_claims: TreeMap[str, str]
 
-    def __init__(self):
-        pass
+    def __init__(self, canonical_margin_address: str):
+        self.canonical_margin_address = Address(str(canonical_margin_address).strip())
 
     @gl.public.write
-    def execute_if_supported(self, margin_address: str, claim_key: str) -> None:
+    def execute_if_supported(self, claim_key: str) -> None:
         claim_key = str(claim_key).strip().lower()
-        # GenLayer decodes an address argument before invoking the method.
-        # Passing it through Address(...) again fails at runtime because the
-        # decoded value is already an Address object.  The interface accepts
-        # that decoded address directly.
-        margin = MarginInterface(margin_address)
+        margin = MarginInterface(self.canonical_margin_address)
         receipt = margin.view().get_assured_claim(claim_key)
         if not isinstance(receipt, dict) or receipt.get("state") != "SETTLED":
             raise gl.vm.UserError("assured claim is not finalized")
