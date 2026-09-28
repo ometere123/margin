@@ -44,6 +44,27 @@
       "status": "SUPPORTED",
       "revision": 1,
       "sourceManifestDigest": "452a5215fca972d2646684809863ba96e059a4ef159f122b71272b25ee84a153"
+    },
+    "assuredClaim": {
+      "claimKey": "86260d481ffc15e272e1954c5292bd060a3293a502993333ec4a32c8594a4b72",
+      "canonicalUrl": "https://margin-signer.vercel.app/fixtures/claim.html",
+      "domainProofUrl": "https://margin-signer.vercel.app/.well-known/margin.json",
+      "domainProofDigest": "088b665050431b27899232eaf324c46105034857866a410aa2eba2fcff42d043",
+      "publisher": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+      "challenger": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+      "publisherBond": 1,
+      "challengeBond": 1,
+      "registerTx": "0xbb9b0c865640afff0b6312ffcd49fbdf229584c3b86136ec0ded1534b305d979",
+      "registerFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "challengeTx": "0xac2cc1ce571b4647361b0e84ac47fd5b158b4dc10916a5bf7e65d28971dab240",
+      "challengeFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "resolveTx": "0x0af5540e19cb92de18b8c2c174ea2b7b164abde21a67ddc1a46928daeb5c1f9b",
+      "resolveFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "finalStatus": "CONTRADICTED",
+      "state": "RESOLVED",
+      "appealDeadline": "2026-09-28T09:31:03.317955+00:00",
+      "settled": false,
+      "settlementNote": "Settlement intentionally remains pending until the recorded appeal deadline."
     }
   },
   "toolVersions": {

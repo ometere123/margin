@@ -76,7 +76,7 @@ Resolve one claim multiple times after source changes. Verify:
 - Verify the extension displays `LATEST_FINAL`, not an optimistic/unfinalized state.
 - Exercise one network-level appeal of a resolution transaction with the current SDK/Studio tooling and document the resulting identity/finality behavior.
 
-The optional application-level Assured Claim appeal/settlement path is separate from a GenLayer transaction-level appeal and still requires a dedicated live run.
+The optional application-level Assured Claim path has now been exercised on the corrected deployment through registration, a separate funded challenger and resolution. The one-hour application appeal window remains a separate lifecycle from a GenLayer transaction-level appeal; settlement must wait for the recorded deadline.
 
 ## Browser extension
 
@@ -104,6 +104,20 @@ The optional application-level Assured Claim appeal/settlement path is separate 
 - Submit claim and record fee estimate + actual result.
 - Resolve claim and record fee estimate + actual result.
 - Refresh original page and verify annotation is sourced from finalized contract state.
+
+## Live Assured Claim evidence
+
+The controlled claim at `https://margin-signer.vercel.app/fixtures/claim.html` was registered against the public proof at `https://margin-signer.vercel.app/.well-known/margin.json`.
+
+- Claim key: `86260d481ffc15e272e1954c5292bd060a3293a502993333ec4a32c8594a4b72`
+- Publisher: `0xb29Ead15B1E8A2420faE84de974088f67a15ccC2`
+- Challenger: `0xac3AC69dC0Bde389256dD6748C75817ead9286D9`
+- Registration bond: 1 GEN; registration tx: `0xbb9b0c865640afff0b6312ffcd49fbdf229584c3b86136ec0ded1534b305d979`
+- Challenge bond: 1 GEN; challenge tx: `0xac2cc1ce571b4647361b0e84ac47fd5b158b4dc10916a5bf7e65d28971dab240`
+- Resolution tx: `0x0af5540e19cb92de18b8c2c174ea2b7b164abde21a67ddc1a46928daeb5c1f9b`
+- All three transactions finalized `MAJORITY_AGREE / SUCCESS`.
+- Canonical readback: `RESOLVED`, final status `CONTRADICTED`, proof digest `088b665050431b27899232eaf324c46105034857866a410aa2eba2fcff42d043`.
+- Settlement was not claimed before the contract-reported appeal deadline; no settlement success is claimed here.
 
 ## Fee profile
 
