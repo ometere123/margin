@@ -118,6 +118,95 @@ class Margin(gl.Contract):
         )
         return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
+    def _expected_source_identities(
+        self, canonical_url: str, archive_url: str, evidence_urls: list[str]
+    ) -> list[tuple[str, str]]:
+        identities: list[tuple[str, str]] = [("PRIMARY", canonical_url)]
+        if archive_url != "":
+            identities.append(("ARCHIVE", archive_url))
+        identities.extend(("EVIDENCE", url) for url in evidence_urls)
+        return identities
+
+    def _consensus_candidate_is_valid(
+        self,
+        candidate: dict[str, typing.Any],
+        expected_status: str,
+        expected_source_identities: list[tuple[str, str]],
+        appeal_reason: str,
+        appeal_count: int,
+    ) -> bool:
+        """Validate a candidate without requiring byte-identical observations.
+
+        Validators independently fetch and adjudicate the bounded evidence. The
+        observations may legitimately differ in rendered bytes, content digest,
+        fetch timing, or which adequate source/index they cite. Consensus binds
+        the final semantic status and validates each candidate's own bounded
+        manifest/index relationships instead of comparing incidental render data.
+        """
+        if not isinstance(candidate, dict):
+            return False
+        status = str(candidate.get("status", "")).upper().strip()
+        if status != expected_status or status not in ALLOWED_RESULTS:
+            return False
+        claim_present = candidate.get("claim_present")
+        historical_used = candidate.get("historical_evidence_used")
+        if not isinstance(claim_present, bool) or not isinstance(historical_used, bool):
+            return False
+
+        manifest = candidate.get("source_manifest")
+        if not isinstance(manifest, list) or len(manifest) != len(expected_source_identities):
+            return False
+        for index, expected in enumerate(expected_source_identities):
+            record = manifest[index]
+            if not isinstance(record, dict):
+                return False
+            if (record.get("kind"), record.get("url")) != expected:
+                return False
+            if record.get("fetch_status") not in ("OK", "UNAVAILABLE"):
+                return False
+            digest = record.get("content_digest")
+            if not isinstance(digest, str):
+                return False
+            if digest != "" and (len(digest) != 64 or any(char not in "0123456789abcdef" for char in digest)):
+                return False
+            if record.get("fetch_status") == "OK" and digest == "":
+                return False
+
+        manifest_digest = candidate.get("source_manifest_digest")
+        if not isinstance(manifest_digest, str) or self._source_manifest_digest(manifest) != manifest_digest:
+            return False
+        context_digest = candidate.get("adjudication_context_digest")
+        if not isinstance(context_digest, str):
+            return False
+        if self._adjudication_context_digest(manifest_digest, appeal_reason, appeal_count) != context_digest:
+            return False
+
+        def valid_indexes(raw: typing.Any) -> typing.Optional[list[int]]:
+            if not isinstance(raw, list):
+                return None
+            indexes: list[int] = []
+            for value in raw:
+                if not isinstance(value, int) or value < 0 or value >= len(manifest) or value in indexes:
+                    return None
+                if manifest[value].get("fetch_status") != "OK":
+                    return None
+                indexes.append(value)
+            return indexes
+
+        supporting = valid_indexes(candidate.get("supporting_source_indexes"))
+        contradicting = valid_indexes(candidate.get("contradicting_source_indexes"))
+        if supporting is None or contradicting is None or set(supporting).intersection(contradicting):
+            return False
+        if status in ("SUPPORTED", "CONTRADICTED") and not claim_present:
+            return False
+        if status == "STALE" and claim_present:
+            return False
+        if status == "SUPPORTED" and len(supporting) == 0:
+            return False
+        if status == "CONTRADICTED" and len(contradicting) == 0:
+            return False
+        return True
+
     def _source_record(
         self, kind: str, url: str, fetch_status: str, body: str = ""
     ) -> dict[str, str]:
@@ -681,7 +770,10 @@ class Margin(gl.Contract):
         claim_key = str(claim_key).strip().lower()
         if claim_key not in self.claims:
             raise gl.vm.UserError("unknown claim")
-        stored = self.claims[claim_key]
+        # Copy the complete storage record before entering the nondeterministic
+        # adjudication block. Keeping a live storage proxy in that scope causes
+        # GenVM to emit a nondeterministic storage-read warning.
+        stored = gl.storage.copy_to_memory(self.claims[claim_key])
         if int(stored.revision) >= MAX_REVISIONS:
             raise gl.vm.UserError("maximum decision revisions reached")
         if appeal_reason != "" and (appeal_count != 1 or len(appeal_reason) < 12 or len(appeal_reason) > 1000):
@@ -694,7 +786,7 @@ class Margin(gl.Contract):
             except ValueError:
                 raise gl.vm.UserError("stored resolution timestamp is invalid")
 
-        claim = gl.storage.copy_to_memory(stored)
+        claim = stored
         evidence_urls = self._parse_evidence_urls(claim.evidence_urls_json)
         canonical_url = claim.canonical_url
         archive_url = claim.archive_url
@@ -852,16 +944,19 @@ SOURCE MANIFEST COMMITMENT:
             if status not in ALLOWED_RESULTS:
                 return False
             independent = judge()
-            # Every consequential field is independently recomputed. Rationale may vary.
+            expected_sources = self._expected_source_identities(canonical_url, archive_url, evidence_urls)
+            independent_status = str(independent.get("status", "")).upper()
+            # Exact agreement is required for the bounded semantic verdict. The
+            # source observations and cited indexes are validated independently,
+            # but are not required to be byte-identical across validators.
             return (
-                independent.get("status") == status
-                and candidate.get("source_manifest_digest") == independent.get("source_manifest_digest")
-                and candidate.get("claim_present") == independent.get("claim_present")
-                and candidate.get("supporting_source_indexes") == independent.get("supporting_source_indexes")
-                and candidate.get("contradicting_source_indexes") == independent.get("contradicting_source_indexes")
-                and candidate.get("historical_evidence_used") == independent.get("historical_evidence_used")
-                and candidate.get("source_manifest") == independent.get("source_manifest")
-                and candidate.get("adjudication_context_digest") == independent.get("adjudication_context_digest")
+                independent_status == status
+                and self._consensus_candidate_is_valid(
+                    candidate, status, expected_sources, appeal_reason, appeal_count
+                )
+                and self._consensus_candidate_is_valid(
+                    independent, independent_status, expected_sources, appeal_reason, appeal_count
+                )
             )
 
         decision = gl.vm.run_nondet_unsafe(judge, validate)

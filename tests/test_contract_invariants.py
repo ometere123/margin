@@ -18,7 +18,7 @@ class ContractInvariantTests(unittest.TestCase):
         validator = re.search(r"def validate\(leader_result\).*?decision =", SOURCE, re.S)
         self.assertIsNotNone(validator)
         self.assertIn("independent = judge()", validator.group(0))
-        self.assertIn('independent.get("status") == status', validator.group(0))
+        self.assertIn("independent_status == status", validator.group(0))
 
     def test_no_leader_shape_only_validation(self):
         self.assertIn("gl.vm.run_nondet_unsafe(judge, validate)", SOURCE)
@@ -73,8 +73,11 @@ class ContractInvariantTests(unittest.TestCase):
 
     def test_evidence_manifest_is_validator_bound(self):
         self.assertIn("source_manifest_digest", SOURCE)
-        self.assertIn('candidate.get("source_manifest") == independent.get("source_manifest")', SOURCE)
-        self.assertIn('candidate.get("contradicting_source_indexes") == independent.get("contradicting_source_indexes")', SOURCE)
+        self.assertIn("_consensus_candidate_is_valid", SOURCE)
+        self.assertIn("independent_status == status", SOURCE)
+        self.assertNotIn('candidate.get("source_manifest") == independent.get("source_manifest")', SOURCE)
+        self.assertNotIn('candidate.get("contradicting_source_indexes") == independent.get("contradicting_source_indexes")', SOURCE)
+        self.assertIn("source observations and cited indexes are validated independently", SOURCE)
         self.assertIn("source manifest unchanged; no new revision", SOURCE)
 
     def test_assured_claim_has_domain_proof_and_bond_lifecycle(self):

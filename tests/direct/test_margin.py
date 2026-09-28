@@ -167,6 +167,53 @@ def test_resolve_stores_independently_validated_status(direct_vm, direct_deploy,
     assert history[0]["status"] == "CONTRADICTED"
 
 
+def test_consensus_semantics_tolerate_validator_observation_variation(direct_vm, direct_deploy, direct_alice):
+    """Only the bounded verdict must agree; harmless observations may differ."""
+    contract = direct_deploy("contracts/margin.py")
+    identities = contract._expected_source_identities(
+        URL, "", ["https://example.com/docs/support"]
+    )
+
+    leader_manifest = [
+        {"kind": "PRIMARY", "url": URL, "fetch_status": "OK", "content_digest": "a" * 64, "provenance": "PUBLIC_SOURCE"},
+        {"kind": "EVIDENCE", "url": "https://example.com/docs/support", "fetch_status": "OK", "content_digest": "b" * 64, "provenance": "PUBLIC_SOURCE"},
+    ]
+    validator_manifest = [
+        {"kind": "PRIMARY", "url": URL, "fetch_status": "OK", "content_digest": "c" * 64, "provenance": "PUBLIC_SOURCE"},
+        {"kind": "EVIDENCE", "url": "https://example.com/docs/support", "fetch_status": "OK", "content_digest": "d" * 64, "provenance": "PUBLIC_SOURCE"},
+    ]
+
+    def candidate(manifest, supporting, contradicting, status="SUPPORTED", claim_present=True):
+        digest = contract._source_manifest_digest(manifest)
+        return {
+            "status": status,
+            "rationale": "bounded explanation",
+            "claim_present": claim_present,
+            "supporting_source_indexes": supporting,
+            "contradicting_source_indexes": contradicting,
+            "historical_evidence_used": False,
+            "source_manifest_digest": digest,
+            "source_manifest": manifest,
+            "adjudication_context_digest": contract._adjudication_context_digest(digest, "", 0),
+        }
+
+    leader = candidate(leader_manifest, [0], [])
+    validator = candidate(validator_manifest, [1], [])
+    assert contract._consensus_candidate_is_valid(leader, "SUPPORTED", identities, "", 0)
+    assert contract._consensus_candidate_is_valid(validator, "SUPPORTED", identities, "", 0)
+
+    # A wrong bounded verdict is still rejected even when its own observation
+    # and source/index rendering are internally consistent.
+    wrong = candidate(leader_manifest, [], [1], status="CONTRADICTED")
+    assert not contract._consensus_candidate_is_valid(wrong, "SUPPORTED", identities, "", 0)
+
+    # Status-specific semantic guards remain fail-closed.
+    no_support = candidate(leader_manifest, [], [], status="SUPPORTED")
+    stale_with_claim = candidate(leader_manifest, [], [], status="STALE", claim_present=True)
+    assert not contract._consensus_candidate_is_valid(no_support, "SUPPORTED", identities, "", 0)
+    assert not contract._consensus_candidate_is_valid(stale_with_claim, "STALE", identities, "", 0)
+
+
 def test_network_metadata_is_studionet(direct_vm, direct_deploy):
     contract = direct_deploy("contracts/margin.py")
     network = contract.network()
