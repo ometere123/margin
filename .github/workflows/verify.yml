@@ -9,6 +9,10 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --upgrade pip pytest
       # Switch to npm ci once a lockfile has been generated and committed in a networked environment.
       - run: npm install
       - run: npm run cli:check
