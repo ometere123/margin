@@ -26,7 +26,11 @@ class MarginConsumer(gl.Contract):
     @gl.public.write
     def execute_if_supported(self, margin_address: str, claim_key: str) -> None:
         claim_key = str(claim_key).strip().lower()
-        margin = MarginInterface(Address(margin_address))
+        # GenLayer decodes an address argument before invoking the method.
+        # Passing it through Address(...) again fails at runtime because the
+        # decoded value is already an Address object.  The interface accepts
+        # that decoded address directly.
+        margin = MarginInterface(margin_address)
         receipt = margin.view().get_assured_claim(claim_key)
         if not isinstance(receipt, dict) or receipt.get("state") != "SETTLED":
             raise gl.vm.UserError("assured claim is not finalized")

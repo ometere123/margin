@@ -69,8 +69,8 @@ Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat th
 
 The corrected contract deployment is real and finalized. The following remain open and must not be represented as completed:
 
-- Assured Claim appeal/settlement after the recorded appeal window;
-- consumer deployment/exercise and bond withdrawal readback;
+- A live Assured Claim has now passed registration, challenge, resolution, post-deadline settlement and challenger withdrawal; canonical readback is `SETTLED / CONTRADICTED` with zero remaining credits.
+- The separate consumer was deployed and its negative gate was exercised against that settled contradicted claim; a positive consumer execution still requires a separately settled `SUPPORTED` Assured Claim.
 - live wallet-to-chain end-to-end verification, including a fresh submit/resolve session;
 - live fee profiling and all-four-verdict evidence;
 - automated browser E2E and hostile-page matrix.

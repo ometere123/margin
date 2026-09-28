@@ -72,6 +72,8 @@ class ContractInvariantTests(unittest.TestCase):
 
     def test_consumer_reads_finalized_state_from_contract(self):
         self.assertIn("get_assured_claim", CONSUMER_SOURCE)
+        self.assertIn("margin = MarginInterface(margin_address)", CONSUMER_SOURCE)
+        self.assertNotIn("MarginInterface(Address(margin_address))", CONSUMER_SOURCE)
         self.assertIn('receipt.get("state") != "SETTLED"', CONSUMER_SOURCE)
         self.assertIn('receipt.get("final_status") != "SUPPORTED"', CONSUMER_SOURCE)
 

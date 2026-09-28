@@ -63,8 +63,26 @@
       "finalStatus": "CONTRADICTED",
       "state": "RESOLVED",
       "appealDeadline": "2026-09-28T09:31:03.317955+00:00",
-      "settled": false,
-      "settlementNote": "Settlement intentionally remains pending until the recorded appeal deadline."
+      "settleTx": "0xa4bff00ddba0254be669092d1a965ab748d02c091a98c36ec15c64343bd2755b",
+      "settleFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "withdrawalTx": "0x8314aa27ad1a2c95d1be6910cccff22e430495c28691888f0cb828bb2ddf4990",
+      "withdrawalFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "settled": true,
+      "challengerCreditAfterWithdrawal": 0,
+      "publisherCreditAfterWithdrawal": 0,
+      "settlementNote": "After the recorded appeal deadline, settlement paid the 2 GEN contradicted-claim challenger payout. The challenger withdrawal finalized successfully and canonical readback shows both credits at zero."
+    },
+    "consumer": {
+      "contractAddress": "0x2885169713d79cb2FC463Dc624Ea5fc08b59d044",
+      "deploymentTx": "0x84ba75b54e4f58b5550388b9a474c31099b8626f55b8c8041081ed886a27c6a4",
+      "deploymentFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "claimKey": "86260d481ffc15e272e1954c5292bd060a3293a502993333ec4a32c8594a4b72",
+      "preExerciseHasExecuted": false,
+      "exerciseTx": "0xb7c25973b255b6148b0e156db42ef6128bb22c0dc89ba15be828cc440b78ebd0",
+      "exerciseFinality": "FINALIZED / MAJORITY_AGREE / CONTRACT_ERROR",
+      "exerciseResult": "protected action requires a SUPPORTED assured claim",
+      "postExerciseHasExecuted": false,
+      "canonicalClaimState": "SETTLED / CONTRADICTED"
     }
   },
   "toolVersions": {

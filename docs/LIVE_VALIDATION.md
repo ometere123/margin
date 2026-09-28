@@ -116,9 +116,13 @@ The controlled claim at `https://margin-signer.vercel.app/fixtures/claim.html` w
 - Registration bond: 1 GEN; registration tx: `0xbb9b0c865640afff0b6312ffcd49fbdf229584c3b86136ec0ded1534b305d979`
 - Challenge bond: 1 GEN; challenge tx: `0xac2cc1ce571b4647361b0e84ac47fd5b158b4dc10916a5bf7e65d28971dab240`
 - Resolution tx: `0x0af5540e19cb92de18b8c2c174ea2b7b164abde21a67ddc1a46928daeb5c1f9b`
-- All three transactions finalized `MAJORITY_AGREE / SUCCESS`.
-- Canonical readback: `RESOLVED`, final status `CONTRADICTED`, proof digest `088b665050431b27899232eaf324c46105034857866a410aa2eba2fcff42d043`.
-- Settlement was not claimed before the contract-reported appeal deadline; no settlement success is claimed here.
+- All registration, challenge and resolution transactions finalized `MAJORITY_AGREE / SUCCESS`.
+- Canonical readback before settlement: `RESOLVED`, final status `CONTRADICTED`, proof digest `088b665050431b27899232eaf324c46105034857866a410aa2eba2fcff42d043`.
+- After the recorded appeal deadline, settlement finalized in `0xa4bff00ddba0254be669092d1a965ab748d02c091a98c36ec15c64343bd2755b` (`FINALIZED / MAJORITY_AGREE / SUCCESS`). The 2 GEN contradicted-claim challenger payout was then withdrawn in `0x8314aa27ad1a2c95d1be6910cccff22e430495c28691888f0cb828bb2ddf4990`, also finalized successfully. Readback shows `SETTLED`, `CONTRADICTED`, and both publisher/challenger credits at `0` after withdrawal.
+
+## Downstream consumer evidence
+
+The separate reference consumer was deployed at `0x2885169713d79cb2FC463Dc624Ea5fc08b59d044` by finalized transaction `0x84ba75b54e4f58b5550388b9a474c31099b8626f55b8c8041081ed886a27c6a4`. Its `execute_if_supported` call against the canonical MARGIN contract and the settled `CONTRADICTED` claim finalized in `0xb7c25973b255b6148b0e156db42ef6128bb22c0dc89ba15be828cc440b78ebd0` with the expected contract error `protected action requires a SUPPORTED assured claim`. `has_executed` was `false` both before and after the call. This is a negative-gate proof that the consumer reads canonical MARGIN state and does not trust a caller-supplied/frontend status.
 
 ## Fee profile
 
