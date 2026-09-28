@@ -63,6 +63,7 @@ Do not run bare `genlayer ...` commands from this repo.
 - Studionet network info and deployed `network()` readback: `61999`, `studionet`, `https://studio.genlayer.com/api`.
 - Extension/signer typecheck, tests and builds: PASS on the current committed source; extension tests `12/12`, signer tests `15/15`, source invariants `12/12`.
 - Reproducible extension archive: `MARGIN-extension-v0.1.0.zip`, SHA-256 `66f245a1a14969b061c11b6bfa43c72140356a2232f447787273b73e86f664d9`, produced by `npm run zip` from `extension/dist`; repeated generation with unchanged sources matched this hash.
+- GitHub Actions `verify` is green for the current HEAD `9546503d7f6204a12ef6012b25449263ee2001a0` (run `36467271066`).
 
 Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat the checks that do not require package downloads.
 
