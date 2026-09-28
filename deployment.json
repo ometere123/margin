@@ -1,0 +1,35 @@
+{
+  "network": "studionet",
+  "chainId": 61999,
+  "rpc": "https://studio.genlayer.com/api",
+  "explorer": "https://explorer-studio.genlayer.com",
+  "contractAddress": "0x03fE368186822d745b4DB8e4A49f8F43e867D57C",
+  "deploymentTx": "0xde6118bd3f5208c0b01f99ba085c7630e8fefc20811b3cd807d2b69e285082e9",
+  "deploymentStatus": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+  "sourceCommit": "a18eba60cdb1b26c55692cb8dbc6f26d08ea1359",
+  "sourceBytes": 16762,
+  "sourceSha256": "5d4330301fa51c8ae7f7253c1f4d6730d0a91746e5479e8b269c60a7f52b954b",
+  "runtimeIdentity": {
+    "chain_id": 61999,
+    "network": "studionet",
+    "rpc": "https://studio.genlayer.com/api"
+  },
+  "liveEvidence": {
+    "claim": {
+      "pageUrl": "https://www.rfc-editor.org/rfc/rfc9110",
+      "pageKey": "e593c606c957bfa3dc85eb280e67319b7f5e0060b4404759580d2667b512fe7e",
+      "claimKey": "72aac182216660f528b586f9e6816a7bb9beaccf5d8419f0050465189a7708e4",
+      "submitTx": "0x3566ff81712e5b461a1f7e7dfe52a47eac49a6e289aedb6dcaac1f67d2605ed7",
+      "submitStatus": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "resolveTx": "0x9411abcfe550b88b3d4e68bb54e22d1222da64616e7449e27d07aef29a5e013e",
+      "resolveStatus": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "finalVerdict": "SUPPORTED",
+      "revision": 1
+    }
+  },
+  "toolVersions": {
+    "genlayerCli": "0.39.1",
+    "genvmLint": "0.11.1rc2",
+    "directModeRunner": "v0.2.12"
+  }
+}

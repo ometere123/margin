@@ -1,5 +1,18 @@
 # MARGIN final handoff status
 
+## Current live status (2026-09-28)
+
+The canonical Studionet deployment is complete for the contract path. Use [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md) as the authoritative live record:
+
+- Network: Studionet, chain `61999`, RPC `https://studio.genlayer.com/api`.
+- Contract: `0x03fE368186822d745b4DB8e4A49f8F43e867D57C`.
+- Deployment: `0xde6118bd3f5208c0b01f99ba085c7630e8fefc20811b3cd807d2b69e285082e9`, `FINALIZED / MAJORITY_AGREE / SUCCESS`.
+- Source commit: `a18eba60cdb1b26c55692cb8dbc6f26d08ea1359`.
+- Live claim submission: `0x3566ff81712e5b461a1f7e7dfe52a47eac49a6e289aedb6dcaac1f67d2605ed7`.
+- Live resolution: `0x9411abcfe550b88b3d4e68bb54e22d1222da64616e7449e27d07aef29a5e013e`, finalized `SUPPORTED`.
+
+The earlier environment-bound checklist below is historical context. It is not permission to overwrite the final deployment record or claim that browser-wallet verification occurred when it has not.
+
 MARGIN has been pushed to the environment boundary available in this build session. Continue **in place**; do not re-scaffold it.
 
 ## What is already implemented

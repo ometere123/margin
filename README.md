@@ -124,12 +124,13 @@ The exact command flags should still be checked against `npm exec -- genlayer <c
 2. Run `npm run cli:check` and require it to report local GenLayer CLI `0.39.1`.
 3. For every CLI operation use `npm exec -- genlayer ...` (or `npm run genlayer -- ...`). **Do not use a bare/global `genlayer` command**, even if the machine has `0.40.0rc2` globally.
 4. Lint `contracts/margin.py` with the compatible GenVM linter.
-5. Deploy `contracts/margin.py` to Studionet `61999` using the local CLI.
-6. Record the deployed address.
-7. Open MARGIN extension options and save that address.
-8. Deploy `signer/dist` as a static site (Vercel is fine) and set that URL in extension options.
-9. Fund the wallet from the Studionet faucet.
-10. Run the scenarios in `docs/LIVE_VALIDATION.md`.
+5. The current canonical deployment is recorded in [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md).
+6. Open MARGIN extension options and save the recorded contract address.
+7. Deploy `signer/dist` as a static site (Vercel is fine) and set that URL in extension options.
+8. Fund the wallet from the Studionet faucet.
+9. Run the scenarios in `docs/LIVE_VALIDATION.md`.
+
+Current canonical contract: `0x03fE368186822d745b4DB8e4A49f8F43e867D57C` on Studionet 61999. It was deployed from source commit `a18eba60cdb1b26c55692cb8dbc6f26d08ea1359`; see [`SUBMISSION.md`](SUBMISSION.md) for the finalized deployment and claim-resolution transactions.
 
 ## Evidence model
 
@@ -154,14 +155,11 @@ This follows the important GenLayer rule that validators must independently veri
 
 ## What remains intentionally environment-specific
 
-This ZIP is designed so another agent only has to finish things that require the live environment:
+This repository is built so another agent only has to finish things that require the live browser environment:
 
-- current GenVM lint/runtime corrections, if the live stable runner exposes an API mismatch;
-- deploy to 61999;
-- measure live fee profiles;
-- exercise finality and transaction-level appeals;
 - load the unpacked extension in Chrome and test against real pages;
 - deploy the static signer and set its production URL;
-- replace any SDK call whose exact signature has changed in the installed stable release.
+- exercise the complete browser-wallet-to-annotation flow;
+- measure representative fee profiles and transaction-level appeals where supported by the stable tooling.
 
 The product architecture should not be redesigned to complete those steps.
