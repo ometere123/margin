@@ -150,6 +150,16 @@ On 2026-09-28, a fresh controlled claim was submitted and resolved on the canoni
 
 The public domain proof for this controlled sequence is `https://margin-signer.vercel.app/.well-known/margin.json`, bound to nonce `assured-appeal-fresh-20260928` and the fresh claim key above. The signer/fixture deployment was updated through the existing Vercel project; no contract redeployment occurred.
 
+### Fresh real browser wallet lifecycle evidence
+
+On 2026-09-28, the production signer was exercised through the real browser flow with the injected EIP-1193 wallet on Studionet. No contract or Snap configuration was changed. For claim `83d48bcd1f55ef81a63d27f5dc5c0d9b8b8b0cc1183a0c5791674889bad776a5` on `https://www.rfc-editor.org/info/rfc9110/`:
+
+- Submit was approved in the wallet and finalized successfully as `0xaa2e1205bbb1680d03d4ccba35fb615115a64f899f486b4e3eca71a17605e2af`.
+- The signer persisted and displayed the submit transaction with a Studionet Explorer link before finality; canonical `get_claim` readback confirmed the claim existed with status `OPEN`, revision `0`.
+- Resolve was approved in the wallet and finalized successfully as `0xd9b7c3743d60a6230d2a119c3f57be002e04d793b8de0f0cad7a898dccf83836`.
+- The signer displayed `Resolution finalized ✓` and `SUPPORTED`. Canonical `get_claim_status` readback returned `SUPPORTED`, revision `1`, resolved at `2026-09-28T16:16:52.113579+00:00`, with source-manifest digest `452a5215fca972d2646684809863ba96e059a4ef159f122b71272b25ee84a153`.
+- The same signer session retained separate Submit and Resolve transaction provenance links. No duplicate submission was made after a transaction ID existed.
+
 ## Downstream consumer evidence
 
 The separate reference consumer was deployed at `0x2885169713d79cb2FC463Dc624Ea5fc08b59d044` by finalized transaction `0x84ba75b54e4f58b5550388b9a474c31099b8626f55b8c8041081ed886a27c6a4`. Its `execute_if_supported` call against the canonical MARGIN contract and the settled `CONTRADICTED` claim finalized in `0xb7c25973b255b6148b0e156db42ef6128bb22c0dc89ba15be828cc440b78ebd0` with the expected contract error `protected action requires a SUPPORTED assured claim`. `has_executed` was `false` both before and after the call. This is a negative-gate proof that the consumer reads canonical MARGIN state and does not trust a caller-supplied/frontend status.
