@@ -5,6 +5,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = (ROOT / "contracts" / "margin.py").read_text()
 SIGNER_SOURCE = (ROOT / "signer" / "src" / "main.ts").read_text()
+SIGNER_HEADERS = (ROOT / "signer" / "vercel.json").read_text()
 SHARED_SOURCE = (ROOT / "shared" / "protocol.ts").read_text()
 CONSUMER_SOURCE = (ROOT / "contracts" / "margin_consumer.py").read_text()
 
@@ -54,6 +55,15 @@ class ContractInvariantTests(unittest.TestCase):
         self.assertNotIn("localStorage.setItem('marginContract'", SIGNER_SOURCE)
         self.assertNotIn("params.get('contract')", SIGNER_SOURCE)
         self.assertIn("MARGIN_CONTRACT_ADDRESS", SHARED_SOURCE)
+
+    def test_signer_headers_keep_static_wallet_surface_hardened(self):
+        self.assertIn("Content-Security-Policy", SIGNER_HEADERS)
+        self.assertIn("frame-ancestors 'none'", SIGNER_HEADERS)
+        self.assertIn("connect-src 'self' https://studio.genlayer.com", SIGNER_HEADERS)
+        self.assertIn("X-Content-Type-Options", SIGNER_HEADERS)
+        self.assertIn("Referrer-Policy", SIGNER_HEADERS)
+        self.assertIn("Permissions-Policy", SIGNER_HEADERS)
+        self.assertNotIn("unsafe-eval", SIGNER_HEADERS)
 
     def test_evidence_manifest_is_validator_bound(self):
         self.assertIn("source_manifest_digest", SOURCE)
