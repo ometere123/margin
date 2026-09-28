@@ -2,6 +2,8 @@ import { createClient } from 'genlayer-js';
 import { studionet } from 'genlayer-js/chains';
 import { TransactionHashVariant } from 'genlayer-js/types';
 import { canonicalizeUrl, claimKeyFor, decodeDraft, MARGIN_CHAIN_ID, MARGIN_NETWORK_NAME, MARGIN_RPC_URL, pageKeyFor, type ClaimDraft, type MarginClaim } from '../../shared/protocol';
+import { executionSummary, isSuccessfulFinalizedReceipt, pendingStorageKey, trackingFailureMessage, type PendingTransaction } from './transaction';
+import { createProviderBackedClient } from './wallet';
 import './style.css';
 
 declare global {
@@ -22,14 +24,18 @@ let draftVerified = false;
 let contractVerified = false;
 let draftError = '';
 let contractError = '';
+let pendingTransaction: PendingTransaction | null = null;
 
 
 function esc(v: string) { return v.replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]!)); }
 function validAddress(v: string): v is `0x${string}` { return /^0x[0-9a-fA-F]{40}$/.test(v); }
 
+function explorerUrl(txId: string) { return `https://explorer-studio.genlayer.com/tx/${encodeURIComponent(txId)}`; }
+
 function render(message = '') {
   const ready = draftVerified && contractVerified;
-  app.innerHTML = `<main><header><div><div class="wordmark">MARGIN</div><div class="sub">wallet signer</div></div><span class="pill">Studionet · ${MARGIN_CHAIN_ID}</span></header>${message ? `<div class="notice">${esc(message)}</div>` : ''}${contractError ? `<div class="notice">${esc(contractError)}</div>` : ''}${draftError ? `<div class="notice">${esc(draftError)}</div>` : ''}<section><div class="eyebrow">Deployment</div><div class="row"><strong>Contract</strong><span class="hash">${validAddress(contractAddress) ? `${esc(contractAddress.slice(0,8))}…${esc(contractAddress.slice(-6))}` : 'missing configuration'}</span><span class="meta">${contractVerified ? 'Verified ✓' : 'Verifying…'}</span></div><small>Studionet · ${MARGIN_CHAIN_ID} · ${MARGIN_RPC_URL}</small></section>${draft ? `<section><div class="eyebrow">Highlighted claim</div><blockquote>${esc(draft.anchor.exact)}</blockquote><div class="meta">${esc(draft.claimClass)} · ${esc(draft.canonicalUrl)}</div><h3>Challenge</h3><p>${esc(draft.challengeStatement)}</p><div class="eyebrow">Public evidence</div><p>${draft.evidenceUrls.length ? draft.evidenceUrls.map((url) => esc(url)).join('<br>') : 'No additional evidence URLs supplied.'}</p>${draft.archiveUrl ? `<div class="eyebrow">Archive</div><p>${esc(draft.archiveUrl)}</p>` : ''}<div class="eyebrow">Claim key</div><div class="hash">${esc(draft.claimKey)}</div></section>` : `<section><h3>No challenge draft</h3><p>Start from the MARGIN extension by highlighting a public claim.</p></section>`}<section><div class="row"><button id="connect" class="dark">${account ? esc(account.slice(0,8)+'…'+account.slice(-6)) : 'Connect wallet'}</button>${draft ? `<button id="submit" class="accent" ${ready ? '' : 'disabled'}>Submit challenge</button><button id="resolve" ${ready ? '' : 'disabled'}>Resolve</button>` : ''}</div><div id="status"></div></section>${lastTx ? `<section><div class="eyebrow">Latest transaction</div><div class="hash">${esc(lastTx)}</div></section>` : ''}</main>`;
+  const pending = pendingTransaction ? `<section><div class="eyebrow">Transaction tracking</div><p>${esc(pendingTransaction.label)} submitted. You can safely resume tracking without submitting again.</p><div class="hash">${esc(pendingTransaction.id)}</div><a href="${explorerUrl(pendingTransaction.id)}" target="_blank" rel="noreferrer">View transaction</a><br><button id="resume" class="dark">Resume tracking</button></section>` : '';
+  app.innerHTML = `<main><header><div><div class="wordmark">MARGIN</div><div class="sub">wallet signer</div></div><span class="pill">Studionet · ${MARGIN_CHAIN_ID}</span></header>${message ? `<div class="notice">${esc(message)}</div>` : ''}${contractError ? `<div class="notice">${esc(contractError)}</div>` : ''}${draftError ? `<div class="notice">${esc(draftError)}</div>` : ''}<section><div class="eyebrow">Deployment</div><div class="row"><strong>Contract</strong><span class="hash">${validAddress(contractAddress) ? `${esc(contractAddress.slice(0,8))}…${esc(contractAddress.slice(-6))}` : 'missing configuration'}</span><span class="meta">${contractVerified ? 'Verified ✓' : 'Verifying…'}</span></div><small>Studionet · ${MARGIN_CHAIN_ID} · ${MARGIN_RPC_URL}</small></section>${draft ? `<section><div class="eyebrow">Highlighted claim</div><blockquote>${esc(draft.anchor.exact)}</blockquote><div class="meta">${esc(draft.claimClass)} · ${esc(draft.canonicalUrl)}</div><h3>Challenge</h3><p>${esc(draft.challengeStatement)}</p><div class="eyebrow">Public evidence</div><p>${draft.evidenceUrls.length ? draft.evidenceUrls.map((url) => esc(url)).join('<br>') : 'No additional evidence URLs supplied.'}</p>${draft.archiveUrl ? `<div class="eyebrow">Archive</div><p>${esc(draft.archiveUrl)}</p>` : ''}<div class="eyebrow">Claim key</div><div class="hash">${esc(draft.claimKey)}</div></section>` : `<section><h3>No challenge draft</h3><p>Start from the MARGIN extension by highlighting a public claim.</p></section>`}<section><div class="row"><button id="connect" class="dark">${account ? esc(account.slice(0,8)+'…'+account.slice(-6)) : 'Connect wallet'}</button>${draft ? `<button id="submit" class="accent" ${ready ? '' : 'disabled'}>Submit challenge</button><button id="resolve" ${ready ? '' : 'disabled'}>Resolve</button>` : ''}</div><div id="status"></div></section>${lastTx ? `<section><div class="eyebrow">Latest transaction</div><div class="hash">${esc(lastTx)}</div><a href="${explorerUrl(lastTx)}" target="_blank" rel="noreferrer">View transaction</a></section>` : ''}${pending}</main>`;
   bind();
 }
 
@@ -90,9 +96,7 @@ async function connect() {
 async function walletClient() {
   if (!account) await connect();
   if (!account || !window.ethereum) throw new Error('Wallet is not connected.');
-  const client = createClient({ chain: studionet, account, provider: window.ethereum as any });
-  await client.connect('studionet');
-  return client;
+  return createProviderBackedClient(account, window.ethereum);
 }
 
 async function waitForFinalizedSuccess(client: any, txId: string, label: string) {
@@ -101,10 +105,35 @@ async function waitForFinalizedSuccess(client: any, txId: string, label: string)
     status: 'FINALIZED',
     fullTransaction: true,
   });
-  if (String(tx.txExecutionResultName || '') !== 'FINISHED_WITH_RETURN') {
-    throw new Error(`${label} failed: ${tx.statusName || tx.status} / ${tx.txExecutionResultName || tx.txExecutionResult}`);
+  if (!isSuccessfulFinalizedReceipt(tx)) {
+    throw new Error(`${label} failed: ${tx.statusName || tx.status} / ${executionSummary(tx)}`);
   }
   return tx;
+}
+
+function savePending(label: PendingTransaction['label'], txId: string) {
+  pendingTransaction = { id: txId, label, claimKey: draft!.claimKey };
+  sessionStorage.setItem(pendingStorageKey(draft!.claimKey), JSON.stringify(pendingTransaction));
+  lastTx = txId;
+}
+
+function clearPending() {
+  if (draft) sessionStorage.removeItem(pendingStorageKey(draft.claimKey));
+  pendingTransaction = null;
+}
+
+async function trackPending() {
+  if (!pendingTransaction) return;
+  const tracked = pendingTransaction;
+  const client = await walletClient();
+  setStatus(`<div class="pending">Resuming ${esc(tracked.label.toLowerCase())} finalization tracking…</div>`);
+  try {
+    await waitForFinalizedSuccess(client, tracked.id, tracked.label);
+    clearPending();
+    setStatus(`<div class="ok">${esc(tracked.label)} finalized successfully. <a href="${explorerUrl(tracked.id)}" target="_blank" rel="noreferrer">View transaction</a></div>`);
+  } catch (error) {
+    setStatus(`<div class="bad">${esc(trackingFailureMessage(tracked.label, tracked.id))}</div>`);
+  }
 }
 
 async function submitClaim() {
@@ -123,9 +152,15 @@ async function submitClaim() {
   } as const;
   setStatus('<div class="pending">Confirm the transaction in your wallet…</div>');
   const txId = await client.writeContract({ ...call, value: 0n } as any);
-  lastTx = txId;
+  savePending('Submission', txId);
   setStatus('<div class="pending">Waiting for finalization…</div>');
-  await waitForFinalizedSuccess(client, txId, 'Submission');
+  try { await waitForFinalizedSuccess(client, txId, 'Submission'); }
+  catch (error) {
+    if (String((error as Error).message || error).includes(' failed:')) throw error;
+    setStatus(`<div class="bad">${esc(trackingFailureMessage('Challenge', txId))}<br><a href="${explorerUrl(txId)}" target="_blank" rel="noreferrer">View transaction</a></div>`);
+    return;
+  }
+  clearPending();
   setStatus('<div class="ok">Challenge stored. You can now resolve it or return to the page and refresh annotations.</div>');
 }
 
@@ -141,9 +176,15 @@ async function resolveClaim() {
   const call = { address: contractAddress, functionName: 'resolve_claim', args: [draft.claimKey] } as const;
   setStatus('<div class="pending">Confirm resolution transaction…</div>');
   const txId = await client.writeContract({ ...call, value: 0n } as any);
-  lastTx = txId;
+  savePending('Resolution', txId);
   setStatus('<div class="pending">Validators are resolving the claim. Waiting for finalization…</div>');
-  await waitForFinalizedSuccess(client, txId, 'Resolution');
+  try { await waitForFinalizedSuccess(client, txId, 'Resolution'); }
+  catch (error) {
+    if (String((error as Error).message || error).includes(' failed:')) throw error;
+    setStatus(`<div class="bad">${esc(trackingFailureMessage('Resolution', txId))}<br><a href="${explorerUrl(txId)}" target="_blank" rel="noreferrer">View transaction</a></div>`);
+    return;
+  }
+  clearPending();
   const resolved = await readClient.readContract({ address: contractAddress, functionName: 'get_claim', args: [draft.claimKey], transactionHashVariant: TransactionHashVariant.LATEST_FINAL }) as unknown as MarginClaim;
   setStatus(`<div class="ok"><strong>${esc(String(resolved.status))}</strong><br>${esc(String(resolved.rationale || ''))}</div>`);
 }
@@ -152,6 +193,7 @@ function bind() {
   document.querySelector('#connect')?.addEventListener('click', () => connect().catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`)));
   document.querySelector('#submit')?.addEventListener('click', () => submitClaim().catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`)));
   document.querySelector('#resolve')?.addEventListener('click', () => resolveClaim().catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`)));
+  document.querySelector('#resume')?.addEventListener('click', () => trackPending().catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`)));
 }
 
 async function initialize() {
@@ -162,6 +204,12 @@ async function initialize() {
     catch (error) { contractError = `Canonical deployment verification failed: ${String((error as Error).message || error)}`; }
   }
   await verifyDraft();
+  if (draft) {
+    try {
+      const stored = sessionStorage.getItem(pendingStorageKey(draft.claimKey));
+      if (stored) { pendingTransaction = JSON.parse(stored) as PendingTransaction; lastTx = pendingTransaction.id; }
+    } catch { pendingTransaction = null; }
+  }
   render();
 }
 void initialize();

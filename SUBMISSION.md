@@ -30,10 +30,10 @@ The earlier deployment at `0xecE43547EcFbFB082B4Bfb62D3bdEb6dBf0B8059` and its t
 ## Verification status
 
 - Local CLI: `0.39.1`
-- `npm run verify`: PASS (extension tests: 3; source invariant tests: 7)
+- `npm run verify`: PASS (extension tests: 3; signer transaction/wallet tests: 6; source invariant tests: 8)
 - Direct Mode: 8/8 passed under the repository's stable `v0.2.12` runner in WSL
 - Static lint: PASS with `genvm-lint 0.11.1rc2`
 - Full linter SDK validation remains environment-limited by the unavailable/corrupt runner archive; no validation pass is claimed here.
-- Browser extension and signer bundles build successfully. The signer is deployed at `https://margin-signer.vercel.app/`; the built signer has no editable contract-address UI and does not accept a contract query override. A Chromium wallet/annotation session remains a separate manual verification step.
+- Browser extension and signer bundles build successfully. The signer is deployed at `https://margin-signer.vercel.app/`; the built signer has no editable contract-address UI and does not accept a contract query override. The production wallet path uses ordinary EIP-1193 directly; the installed `genlayer-js@1.1.8` Snap-oriented `client.connect()` helper is intentionally not used. The signer provider regression test exercises write preparation and rejects all Snap RPC methods. Its finalization helper uses the actual Studionet receipt shape (`consensus_data.*.execution_result`), because this SDK version does not export `isSuccessful()` and does not populate the older `txExecutionResultName` field for Studio receipts. Transaction IDs are persisted before polling, with explorer links and resumable tracking after polling failures. A Chromium wallet/annotation session remains a separate manual verification step.
 
 MARGIN's verdict is a bounded result for the challenged claim and independently inspectable public source. It is not a universal truth score or historical proof of what a page previously displayed.

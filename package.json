@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "build": "npm run build -w extension && npm run build -w signer",
-    "test": "npm run test -w extension && python3 -m pytest tests/test_contract_invariants.py -q",
+    "test": "npm run test -w extension && npm run test -w signer && python3 -m pytest tests/test_contract_invariants.py -q",
     "typecheck": "npm run typecheck -w extension && npm run typecheck -w signer",
     "verify": "npm run typecheck && npm run test && npm run build",
     "zip": "bash scripts/make-zip.sh",
