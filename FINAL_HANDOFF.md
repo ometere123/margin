@@ -70,15 +70,15 @@ Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat th
 
 The corrected contract deployment is real and finalized. The following remain open and must not be represented as completed:
 
-- A live Assured Claim has now passed registration, challenge, resolution, post-deadline settlement and challenger withdrawal; canonical readback is `SETTLED / CONTRADICTED` with zero remaining credits.
-- The separate consumer was deployed and its negative gate was exercised against that settled contradicted claim; a positive consumer execution still requires a separately settled `SUPPORTED` Assured Claim.
+- Live Assured Claims have now passed registration, challenge, resolution, post-deadline settlement and withdrawal for both `CONTRADICTED` and `SUPPORTED` outcomes. Canonical readbacks are settled with zero remaining credits after withdrawal.
+- The separate consumer was exercised against both states: it rejected the settled contradicted claim and successfully executed against the settled supported claim.
 - live wallet-to-chain end-to-end verification, including a fresh submit/resolve session;
 - live fee profiling and all-four-verdict evidence;
 - automated browser E2E and hostile-page matrix.
 
 ## Production configuration hardening
 
-The canonical static signer is `https://margin-signer.vercel.app/`. Its Vite production build receives the public `VITE_MARGIN_CONTRACT_ADDRESS` value for the canonical Studionet deployment. The signer no longer asks normal users to save a contract address and ignores incoming contract query parameters. The extension release similarly embeds the canonical contract and signer origin; Options is informational rather than an infrastructure editor. The corrected signer deployment `dpl_J7KtLx84EyNegfDbvgdhZTwjSYWm` is live. Its response was checked after that deployment and returned the intended CSP, clickjacking, MIME, referrer and permissions headers; the deployed bundle contains the canonical contract address. The static deployment uses the repository-root `vercel.json` because the signer imports the shared protocol module. The finalized RFC claim has also been proven through the extension's live read/anchor/badge path; browser-wallet submit/resolve evidence remains separate.
+The canonical static signer is `https://margin-signer.vercel.app/`. Its Vite production build receives the public `VITE_MARGIN_CONTRACT_ADDRESS` value for the canonical Studionet deployment. The signer no longer asks normal users to save a contract address and ignores incoming contract query parameters. The extension release similarly embeds the canonical contract and signer origin; Options is informational rather than an infrastructure editor. The corrected signer deployment `dpl_AYEu4YR8w4ZwdRGVJ4Vqn1L3UYqQ` is live. Its response was checked after that deployment and returned the intended CSP, clickjacking, MIME, referrer and permissions headers; the deployed bundle contains the canonical contract address. The static deployment uses the repository-root `vercel.json` because the signer imports the shared protocol module. The finalized RFC claim has also been proven through the extension's live read/anchor/badge path; browser-wallet submit/resolve evidence remains separate.
 
 The signer must use the injected EIP-1193 provider directly. In `genlayer-js@1.1.8`, `client.connect('studionet')` enters the legacy GenLayer Snap path (`wallet_getSnaps` / `wallet_requestSnaps`); production MARGIN therefore constructs the provider-backed client without calling that helper. `signer/src/wallet.test.ts` guards this boundary.
 
