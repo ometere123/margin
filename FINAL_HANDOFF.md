@@ -69,11 +69,11 @@ Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat th
 
 ## Remaining verification boundary
 
-The corrected contract deployment is real and finalized. The following remain open and must not be represented as completed:
+The corrected contract deployment is real and finalized. The following evidence boundaries remain explicit and must not be overstated:
 
-- Live Assured Claims have now passed registration, challenge, resolution, post-deadline settlement and withdrawal for both `CONTRADICTED` and `SUPPORTED` outcomes. Canonical readbacks are settled with zero remaining credits after withdrawal.
-- The separate consumer was exercised against both states: it rejected the settled contradicted claim and successfully executed against the settled supported claim.
-- live wallet-to-chain end-to-end verification is now recorded: fresh submit `0xaa2e1205bbb1680d03d4ccba35fb615115a64f899f486b4e3eca71a17605e2af` and resolve `0xd9b7c3743d60a6230d2a119c3f57be002e04d793b8de0f0cad7a898dccf83836` both finalized successfully through the production signer and injected wallet;
+- The earlier live Assured settlement, consumer, wallet and browser evidence belongs to the immediately preceding deployment and is retained as historical evidence. The current deployment has fresh same-source appeal resolution evidence; settlement/withdrawal are pending the recorded appeal deadline.
+- The corrected consumer is newly deployed against the current MARGIN address and its construction calldata binds that address; a fresh positive exercise is pending the current Assured settlement.
+- Live wallet-to-chain end-to-end verification remains recorded for the preceding deployment; this source-only round did not redo the browser matrix.
 - live fee profiling. Live `INCONCLUSIVE` evidence is now recorded for claim `6e886a73a2573cdffb6d74b328215dff6cbd0b8f32e7b5d8141d862ccb1d8cf3`: submit `0x4d1ee62a832e0d4fcb548d7b1c71cccdd4a69650a70f0ce823f61b3c6c1aa777`, resolve `0x04e6245f7a2f44d333e885a7ccbe3e8602fd87dca2990e3de2c0a52e1fe19df8`, and canonical `INCONCLUSIVE` readback. The controlled `STALE` lifecycle is also recorded with submit `0xa3300ccffe62e6f3641c0f1f7b314555f73a7a2e72333bf3f1c8a27bd6f8b166`, resolve `0x14a0d173311ef22c283c07cae4bf9fa2a79fc778f619adcfd41430cd19754e3a`, and canonical `STALE` readback;
 - automated browser E2E and hostile-page matrix.
 
