@@ -5,7 +5,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = (ROOT / "contracts" / "margin.py").read_text()
 SIGNER_SOURCE = (ROOT / "signer" / "src" / "main.ts").read_text()
-SIGNER_HEADERS = (ROOT / "signer" / "vercel.json").read_text()
+SIGNER_HEADERS = (ROOT / "vercel.json").read_text()
 SHARED_SOURCE = (ROOT / "shared" / "protocol.ts").read_text()
 CONSUMER_SOURCE = (ROOT / "contracts" / "margin_consumer.py").read_text()
 
