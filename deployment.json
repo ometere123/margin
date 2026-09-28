@@ -3,12 +3,12 @@
   "chainId": 61999,
   "rpc": "https://studio.genlayer.com/api",
   "explorer": "https://explorer-studio.genlayer.com",
-  "contractAddress": "0xb4161203706B2428D5FbC5B7e114b09d1De32960",
-  "deploymentTx": "0xe72cb9b184b2cd98f2b86182c7b2bd0df3091ed71bc50417dac6cbffef13e27b",
+  "contractAddress": "0xC3E6E1C2102187F3558aDb593dC29D7acf3d2310",
+  "deploymentTx": "0xd3fe4c48c9195cb07a2d9e948a278313868b52c525c7295de597bdd09bc9e3f0",
   "deploymentStatus": "FINALIZED / MAJORITY_AGREE / SUCCESS",
-  "sourceCommit": "552a6810742bd28ed0fc9eac80f07e69e95f8791",
-  "sourceBytes": 38765,
-  "sourceSha256": "aaa87487cd226dc665e4ab73405153c583d1757cd80a4b022989df156f9e5993",
+  "sourceCommit": "7f9541847b19ec34194b68ab5fbb8f72b16b6932",
+  "sourceBytes": 41452,
+  "sourceSha256": "2edb88db22e224ff30f98678069c84621ca1ad7d67beb5a64ec913d6fbafef54",
   "signerUrl": "https://margin-signer.vercel.app/",
   "runtimeIdentity": {
     "chain_id": 61999,
@@ -20,7 +20,7 @@
     "deploymentTx": "0xde6118bd3f5208c0b01f99ba085c7630e8fefc20811b3cd807d2b69e285082e9",
     "status": "historical"
   },
-  "liveEvidence": {
+  "historicalEvidence": {
     "normalClaim": {
       "claimKey": "27a215c4cfe5d008e90ea65093c822f6af2133b2872e65cee69f06bf31861a69",
       "pageKey": "50b4ec7a293d091d0f8e13a613cd51900d43c8fc5d8dc16d12ce167b55a96cd2",
@@ -167,6 +167,40 @@
       "postExerciseHasExecuted": true,
       "malformedArgumentAttemptTx": "0x37a14b5422fea161601178f7a398cafb9d73bd055e9e098fbc51e1b0a172242e",
       "malformedArgumentAttemptState": "FINALIZED / MAJORITY_AGREE / contract error; no consumer state change"
+    }
+  },
+  "liveEvidence": {
+    "canonicalDeploymentChecks": {
+      "contractAddress": "0xC3E6E1C2102187F3558aDb593dC29D7acf3d2310",
+      "deploymentTx": "0xd3fe4c48c9195cb07a2d9e948a278313868b52c525c7295de597bdd09bc9e3f0",
+      "networkReadback": {
+        "chain_id": 61999,
+        "network": "studionet",
+        "rpc": "https://studio.genlayer.com/api"
+      },
+      "sourceCommit": "7f9541847b19ec34194b68ab5fbb8f72b16b6932"
+    },
+    "sameSourceAppeal": {
+      "claimKey": "274e16c4d7acfaf0f3a3bb4699485b59baad9284c273ae1153f828e42cbb924f",
+      "submitTx": "0x572c6178076e3df97f895e003b462953545f4fed5660b1f029de649348deee59",
+      "registerTx": "0x82b3b8f11268288fb404bd22fe2813aa33adba11d69c1934ed54d667deed902b",
+      "challengeTx": "0x1e6c180ab2499b00e25b811dd4cdbb680023beb93758cfccb9b0df713582f4eb",
+      "initialResolveTx": "0xe50313936f4ea26b6d96ae85bf53a7a33aee37ee4a9c46dcdcfcb91f9d16fcc1",
+      "appealTx": "0x571c66cd65a1ee4809abed9e2c10ffd223867c3ca0d9e64d4e680de47458e947",
+      "appealResolveTx": "0xa35cd6cfdf68b0b65a901298bdfd4bad2afde0491d71fe7802d94c2cde7c62e7",
+      "appealResolveFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "sourceManifestUnchanged": true,
+      "appealCount": 1,
+      "finalStatus": "SUPPORTED",
+      "state": "RESOLVED",
+      "appealDeadline": "2026-09-28T20:47:40.898505+00:00",
+      "settlement": "pending appeal deadline"
+    },
+    "consumerDeployment": {
+      "contractAddress": "0x26a0ee4a03c39887B1d6284609286eFC7be314F8",
+      "deploymentTx": "0x7c11d48b9e9bf6e5511c6097d8b7872577e11ee14b95c4cf2edcd0eb121afa68",
+      "boundMarginAddress": "0xC3E6E1C2102187F3558aDb593dC29D7acf3d2310",
+      "deploymentFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS"
     }
   },
   "toolVersions": {

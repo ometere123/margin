@@ -7,15 +7,17 @@ MARGIN is a browser-native annotation layer: the extension anchors an explicit c
 - Network: Studionet
 - Chain ID: `61999`
 - RPC: `https://studio.genlayer.com/api`
-- Contract: [`0xb4161203706B2428D5FbC5B7e114b09d1De32960`](https://explorer-studio.genlayer.com/address/0xb4161203706B2428D5FbC5B7e114b09d1De32960)
-- Deployment transaction: [`0xe72cb9b184b2cd98f2b86182c7b2bd0df3091ed71bc50417dac6cbffef13e27b`](https://explorer-studio.genlayer.com/tx/0xe72cb9b184b2cd98f2b86182c7b2bd0df3091ed71bc50417dac6cbffef13e27b)
+- Contract: [`0xC3E6E1C2102187F3558aDb593dC29D7acf3d2310`](https://explorer-studio.genlayer.com/address/0xC3E6E1C2102187F3558aDb593dC29D7acf3d2310)
+- Deployment transaction: [`0xd3fe4c48c9195cb07a2d9e948a278313868b52c525c7295de597bdd09bc9e3f0`](https://explorer-studio.genlayer.com/tx/0xd3fe4c48c9195cb07a2d9e948a278313868b52c525c7295de597bdd09bc9e3f0)
 - Result: `FINALIZED / MAJORITY_AGREE / SUCCESS`
-- Source commit: `552a6810742bd28ed0fc9eac80f07e69e95f8791`
-- Source: 38,765 bytes; SHA-256 `aaa87487cd226dc665e4ab73405153c583d1757cd80a4b022989df156f9e5993`
+- Deployment source commit: `7f9541847b19ec34194b68ab5fbb8f72b16b6932`
+- Source: 41,452 bytes; SHA-256 `2edb88db22e224ff30f98678069c84621ca1ad7d67beb5a64ec913d6fbafef54`
 - Runtime identity: `chain_id=61999`, `network=studionet`, `rpc=https://studio.genlayer.com/api`
 - Production signer: [`https://margin-signer.vercel.app/`](https://margin-signer.vercel.app/) — redeployed with the corrected public contract configuration.
 
 The previous contract `0x03fE...D57C` and its earlier live claim evidence remain historical and are not evidence for the corrected storage schema.
+
+The immediately preceding corrected deployment `0xb4161203706B2428D5FbC5B7e114b09d1De32960` is also historical after the final appeal-consensus correction. Its claim and browser evidence remain retained below as historical evidence.
 
 ## Historical live claim (previous contract only)
 

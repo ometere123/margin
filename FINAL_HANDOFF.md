@@ -5,9 +5,9 @@
 The corrected Studionet deployment and corrected-contract normal claim lifecycles are complete. Use [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md) as the authoritative live record. The browser-aligned finalized claim has now been read and visibly rendered by the built extension on the RFC page; the optional Assured Claim path is recorded separately.
 
 - Network: Studionet, chain `61999`, RPC `https://studio.genlayer.com/api`.
-- Contract: `0xb4161203706B2428D5FbC5B7e114b09d1De32960`.
-- Deployment: `0xe72cb9b184b2cd98f2b86182c7b2bd0df3091ed71bc50417dac6cbffef13e27b`, `FINALIZED / MAJORITY_AGREE / SUCCESS`.
-- Source commit: `552a6810742bd28ed0fc9eac80f07e69e95f8791`.
+- Contract: `0xC3E6E1C2102187F3558aDb593dC29D7acf3d2310`.
+- Deployment: `0xd3fe4c48c9195cb07a2d9e948a278313868b52c525c7295de597bdd09bc9e3f0`, `FINALIZED / MAJORITY_AGREE / SUCCESS`.
+- Deployment source commit: `7f9541847b19ec34194b68ab5fbb8f72b16b6932`.
 - Runtime identity: `chain_id=61999`, `network=studionet`, `rpc=https://studio.genlayer.com/api`.
 - A corrected-contract browser-aligned normal claim is finalized as `SUPPORTED` and has been rendered as a visible claim-keyed badge by the built extension on `https://www.rfc-editor.org/info/rfc9110/`. See [`SUBMISSION.md`](SUBMISSION.md) for the exact observed claim key and geometry.
 

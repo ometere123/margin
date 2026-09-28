@@ -170,6 +170,14 @@ On 2026-09-28, the production signer was exercised through the real browser flow
 
 ## Downstream consumer evidence
 
+### Final canonical contract correction
+
+After the appeal-consensus and Assured resolver hardening, the canonical MARGIN deployment is `0xC3E6E1C2102187F3558aDb593dC29D7acf3d2310`, deployed by `0xd3fe4c48c9195cb07a2d9e948a278313868b52c525c7295de597bdd09bc9e3f0`. `network()` read back Studionet, chain `61999`, and `https://studio.genlayer.com/api`.
+
+The affected live same-source appeal sequence used claim `274e16c4d7acfaf0f3a3bb4699485b59baad9284c273ae1153f828e42cbb924f`: submit `0x572c6178076e3df97f895e003b462953545f4fed5660b1f029de649348deee59`, register `0x82b3b8f11268288fb404bd22fe2813aa33adba11d69c1934ed54d667deed902b`, challenge `0x1e6c180ab2499b00e25b811dd4cdbb680023beb93758cfccb9b0df713582f4eb`, initial resolve `0xe50313936f4ea26b6d96ae85bf53a7a33aee37ee4a9c46dcdcfcb91f9d16fcc1`, appeal `0x571c66cd65a1ee4809abed9e2c10ffd223867c3ca0d9e64d4e680de47458e947`, and appeal resolve `0xa35cd6cfdf68b0b65a901298bdfd4bad2afde0491d71fe7802d94c2cde7c62e7`. The appeal resolved `SUPPORTED` with appeal count `1`, a new appeal-context digest, and the same source-manifest digest as the initial resolution. The recorded appeal deadline is `2026-09-28T20:47:40.898505+00:00`; settlement and withdrawal remain pending until that deadline has elapsed.
+
+The corrected reference consumer was deployed at `0x26a0ee4a03c39887B1d6284609286eFC7be314F8` by `0x7c11d48b9e9bf6e5511c6097d8b7872577e11ee14b95c4cf2edcd0eb121afa68`, bound at construction to the canonical MARGIN address above. Its protected method accepts only a claim key, so callers cannot substitute a fake MARGIN address.
+
 The separate reference consumer was deployed at `0x2885169713d79cb2FC463Dc624Ea5fc08b59d044` by finalized transaction `0x84ba75b54e4f58b5550388b9a474c31099b8626f55b8c8041081ed886a27c6a4`. Its `execute_if_supported` call against the canonical MARGIN contract and the settled `CONTRADICTED` claim finalized in `0xb7c25973b255b6148b0e156db42ef6128bb22c0dc89ba15be828cc440b78ebd0` with the expected contract error `protected action requires a SUPPORTED assured claim`. `has_executed` was `false` both before and after the call. This is a negative-gate proof that the consumer reads canonical MARGIN state and does not trust a caller-supplied/frontend status.
 
 The same consumer was then exercised against the positive settled claim `09c8cdd7a1ad5716bcafadc38458685340400da3682436e4a1f86319b82b5a9c`. The call finalized successfully in `0x167af481d43b97c30f5a35b234c633112e8b4fcf7af9500e85241a4fbe0e9052`, and canonical `has_executed` readback is `true`.

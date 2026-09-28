@@ -69,7 +69,7 @@ MARGIN does not use fuzzy status tolerance.
 
 ## 5. Revision model
 
-A claim may be re-resolved up to five times, but unchanged source manifests are rejected, immediate refreshes after the first decision are restricted to the original challenger, and other refreshes require a cooldown. Each accepted resolution stores its ordered evidence manifest and is appended to immutable keyed history before the latest status is updated. This prevents a stranger from trivially burning all revision capacity.
+A claim may be re-resolved up to five times, but unchanged source manifests are rejected, immediate refreshes after the first decision are restricted to the original challenger, and other refreshes require a cooldown. Assured Claims use an internal resolver and cannot be consumed by ordinary `resolve_claim` while challenged or appealed. Their single bonded appeal adds a bounded, untrusted appeal contention to the adjudication context, so the same source manifest can be reconsidered exactly once without becoming an instruction to validators. Each accepted resolution stores its ordered evidence manifest and is appended to immutable keyed history before the latest status is updated. This prevents a stranger from trivially burning all revision capacity.
 
 The current extension renders the latest finalized status.
 
