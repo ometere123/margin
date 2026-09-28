@@ -12,6 +12,8 @@ export type PendingTransaction = {
   id: string;
   label: 'Submission' | 'Resolution';
   claimKey: string;
+  state?: 'submitted' | 'finalized' | 'failed' | 'tracking-interrupted';
+  verdict?: string;
 };
 
 const SUCCESS_EXECUTION = new Set(['SUCCESS', 'FINISHED_WITH_RETURN']);
@@ -48,4 +50,12 @@ export function trackingFailureMessage(label: string, txId: string): string {
 
 export function pendingStorageKey(claimKey: string): string {
   return `margin.pendingTransaction.${claimKey}`;
+}
+
+export function transactionsStorageKey(claimKey: string): string {
+  return `margin.transactions.${claimKey}`;
+}
+
+export function disconnectStorageKey(): string {
+  return 'margin.explicitDisconnect';
 }
