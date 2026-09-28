@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "MARGIN",
+  "version": "0.1.0",
+  "description": "Consensus-backed annotations for narrowly scoped public web claims.",
+  "permissions": ["storage", "contextMenus", "sidePanel", "tabs", "activeTab"],
+  "host_permissions": [
+    "https://studio.genlayer.com/*",
+    "http://localhost:5174/*",
+    "https://*/*",
+    "http://*/*"
+  ],
+  "background": {"service_worker": "background.js", "type": "module"},
+  "content_scripts": [{
+    "matches": ["http://*/*", "https://*/*"],
+    "js": ["content.js"],
+    "css": ["content.css"],
+    "run_at": "document_idle"
+  }],
+  "side_panel": {"default_path": "sidepanel.html"},
+  "options_page": "options.html",
+  "action": {"default_title": "Open MARGIN"},
+  "minimum_chrome_version": "114"
+}

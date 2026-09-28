@@ -1,0 +1,8 @@
+node_modules/
+extension/dist/
+signer/dist/
+*.zip
+.env
+.DS_Store
+__pycache__/
+*.pyc

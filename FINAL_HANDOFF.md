@@ -1,0 +1,92 @@
+# MARGIN final handoff status
+
+MARGIN has been pushed to the environment boundary available in this build session. Continue **in place**; do not re-scaffold it.
+
+## What is already implemented
+
+- Chromium Manifest V3 browser extension as the primary product surface.
+- Text-selection capture with canonical URL, exact/prefix/suffix anchor and local page digest.
+- Challenge composer for five bounded claim classes and up to three public evidence URLs plus an optional public archive URL.
+- Canonical page key and claim key generation, with both keys recomputed and enforced by the Intelligent Contract.
+- GenLayer Intelligent Contract with bounded page index, bounded revision history, public views, deterministic submission validation and non-deterministic web/LLM resolution.
+- Independent validator re-execution of the evidence task; decision-bearing status must match exactly.
+- Bounded results: `SUPPORTED`, `CONTRADICTED`, `INCONCLUSIVE`, `STALE`.
+- Read-only extension state uses finalized GenLayer reads rather than a MARGIN backend.
+- Static wallet signer for injected EIP-1193 wallets, transaction fee estimation, writes and finalization.
+- Webpage annotation rendering anchored back beside the challenged text.
+- Prompt-injection treatment: fetched pages are explicitly untrusted evidence and cannot redefine adjudication instructions.
+- Source-level and direct-mode test suites, controlled public-fixture pages, architecture/threat/live-validation documentation.
+
+## Fixed network invariant
+
+MARGIN targets **GenLayer Studionet only**:
+
+- Chain ID: `61999`
+- RPC: `https://studio.genlayer.com/api`
+- preset: `studionet`
+- explorer: `https://explorer-studio.genlayer.com`
+
+Do not introduce a fallback to another GenLayer environment.
+
+## Fixed CLI invariant
+
+Studionet 61999 work in this repository must use **GenLayer CLI `0.39.1` locally**. The root `package.json` pins `genlayer: "0.39.1"` exactly and `.genlayer-cli-version` records the same invariant.
+
+The user's machine may have a global `0.40.0rc2` CLI. **Ignore the global binary.** After dependency installation:
+
+- run `npm run cli:check`;
+- verify with `npm exec -- genlayer --version`;
+- use `npm exec -- genlayer ...` (or `npm run genlayer -- ...`) for every GenLayer CLI command.
+
+Do not run bare `genlayer ...` commands from this repo.
+
+## Checks completed in the originating environment
+
+- `python3 -m py_compile` on the contract and Python tests: PASS.
+- source invariant suite: PASS.
+- repository-wide forbidden-chain scan: PASS.
+- shared `protocol.ts` compile with the available global TypeScript compiler: PASS.
+- a temporary-module-shim TypeScript pass over extension/signer source was also completed successfully during development.
+- JS/Python canonical-JSON claim-key parity was checked, including Unicode input: PASS.
+
+Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat the checks that do not require package downloads.
+
+## Environment boundary reached here
+
+The build container could not reach npm, so the following must **not** be represented as completed yet:
+
+- fresh `npm install` / `npm ci`;
+- real `npm run verify` against downloaded dependencies;
+- actual extension/signer production bundles;
+- GenVM linter execution with the current downloaded toolchain;
+- Direct Mode execution with the downloaded GenLayer testing suite;
+- deployment to Studionet;
+- live validator/finality/appeal exercise;
+- live browser + wallet end-to-end verification;
+- live fee profiling.
+
+No success evidence for those steps has been fabricated.
+
+## Exact continuation sequence
+
+1. Read `README.md`, `docs/ARCHITECTURE.md`, `docs/THREAT_MODEL.md`, `docs/LIVE_VALIDATION.md`, then `CODEX.md` or `CLAUDE.md`.
+2. Run `bash scripts/offline-preflight.sh`.
+3. Install Node 20+ dependencies with `npm install`. This installs the repo-local `genlayer@0.39.1`. Immediately run `npm run cli:check` and `npm exec -- genlayer --version`; both must resolve to `0.39.1`. Then run `npm run verify`. Repair only real SDK/API drift; preserve the architecture. Do not use the machine's global GenLayer CLI.
+4. Create a Python environment, install `requirements.txt`, run the current `genvm-lint check contracts/margin.py`, then run `pytest tests/direct -v`.
+5. Deploy `contracts/margin.py` to Studionet and write the real address/transaction/tool versions to a new `deployment.json` (never overwrite the example with invented data).
+6. Serve or deploy the static signer and configure its real production origin/CSP.
+7. Build the extension and load `extension/dist` unpacked in Chromium.
+8. Exercise the controlled fixtures and the full matrix in `docs/LIVE_VALIDATION.md`, including prompt injection, changed-page/stale behavior, duplicate claims, forged keys, repeated text, canonical URLs, SPA/DOM mutation, wallet mismatch, finality and an actual protocol appeal where supported.
+9. Record representative fee measurements for submission, normal resolution, maximum-evidence resolution and appeal/finality paths.
+10. Replace this status file with a truthful final report containing only real live evidence and remaining account-specific steps.
+
+## Architecture that must not be weakened
+
+- No central MARGIN backend deciding claim status.
+- No server-side browsing-history collection.
+- No generic “truth score”.
+- No politics, medical claims or personal allegations in v0.1 scope.
+- No use of the local page digest as proof of historical public content.
+- No validator that merely checks the leader output schema.
+- No annotations from accepted/pending state when finalized state is required.
+- No arbitrary claim/page keys supplied by the client without on-chain payload binding.

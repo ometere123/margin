@@ -1,0 +1,81 @@
+# Architecture
+
+## 1. Surfaces
+
+### Browser extension
+
+The extension is the real MARGIN user interface. It does four jobs:
+
+1. capture an exact highlighted claim without uploading ordinary browsing history;
+2. create a resilient text quote anchor (`exact`, `prefix`, `suffix`);
+3. read finalized claims for the current canonical URL from GenLayer;
+4. render claim markers beside matched text without rewriting the webpage's HTML structure.
+
+The extension uses a small DOM badge and a conservative anchor resolver. If an anchor cannot be located unambiguously, MARGIN does not guess.
+
+### Signer DApp
+
+The signer exists only because injected EIP-1193 wallets are not reliably exposed inside Chrome extension pages. It receives a fully formed draft through a URL-safe payload and asks the wallet to submit it.
+
+It has no database and no authority over extension annotations. Finalized on-chain state is authoritative.
+
+### Intelligent Contract
+
+The contract owns challenge state and resolution history. It does not own browser data or user identity.
+
+## 2. Canonical page identity
+
+The client canonicalizes URLs by:
+
+- removing fragments;
+- dropping common tracking parameters;
+- sorting remaining query parameters;
+- normalizing default HTTP(S) ports.
+
+A same-origin `<link rel=canonical>` may be used. Cross-origin canonical hints are ignored.
+
+`page_key = SHA256(canonical_url)`
+
+The contract treats `page_key` as an index hint, not as proof. The extension always filters returned claims by exact `canonical_url`, so a malicious caller cannot make a foreign-page claim appear merely by forging another page key.
+
+## 3. Claim identity
+
+`claim_key` commits to:
+
+- canonical URL;
+- page key;
+- exact/prefix/suffix anchor;
+- local page digest;
+- claim class;
+- challenge statement;
+- sorted evidence URLs;
+- archive URL.
+
+Changing evidence or wording therefore creates a different claim.
+
+## 4. Adjudication
+
+The contract fetches:
+
+- the current primary page;
+- optional archive URL;
+- up to three evidence URLs.
+
+Source text is explicitly treated as untrusted prompt material. The leader must return exactly one bounded status and a concise rationale. A validator independently re-fetches/re-runs the same evidence task and accepts only if the decision-bearing status matches exactly.
+
+MARGIN does not use fuzzy status tolerance.
+
+## 5. Revision model
+
+A claim may be re-resolved up to five times. Each resolution is appended to immutable keyed history before the latest status is updated. This supports pages/evidence changing over time without pretending that the old decision never existed.
+
+The current extension renders the latest finalized status.
+
+## 6. No MARGIN backend
+
+There is no MARGIN indexing server in v0.1. Per-page keys make finalized state directly queryable from the Intelligent Contract. This is deliberate:
+
+- no browsing-history collection;
+- no central verdict API;
+- no backend that can silently suppress claims;
+- fewer trust assumptions.
