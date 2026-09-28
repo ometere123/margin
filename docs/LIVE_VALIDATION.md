@@ -76,7 +76,7 @@ Resolve one claim multiple times after source changes. Verify:
 - Verify the extension displays `LATEST_FINAL`, not an optimistic/unfinalized state.
 - Exercise one network-level appeal of a resolution transaction with the current SDK/Studio tooling and document the resulting identity/finality behavior.
 
-The optional application-level Assured Claim path has now been exercised on the corrected deployment through registration, a separate funded challenger and resolution. The one-hour application appeal window remains a separate lifecycle from a GenLayer transaction-level appeal; settlement must wait for the recorded deadline.
+The optional application-level Assured Claim path has now been exercised on the corrected deployment through registration, a separate funded challenger, resolution, post-deadline settlement and challenger withdrawal. The one-hour application appeal window remains a separate lifecycle from a GenLayer transaction-level appeal.
 
 ## Browser extension
 

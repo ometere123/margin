@@ -169,7 +169,7 @@ The corrected contract is deployed, corrected-contract normal claim lifecycles a
 
 - complete a fresh wallet-to-chain submit/resolve session from the extension;
 - exercise the Assured Claim appeal and post-deadline settlement path;
-- deploy/exercise the reference consumer and record its canonical readback;
+- deploy/exercise the reference consumer and record its canonical readback (including the settled-CONTRADICTED negative gate; a positive consumer call requires a separately settled SUPPORTED Assured Claim);
 - measure representative fee profiles and transaction-level appeals where supported by the stable tooling.
 
 The product architecture should not be redesigned to complete those steps.
