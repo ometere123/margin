@@ -190,14 +190,17 @@ let cachedClaims: MarginClaim[] = [];
 let lastCanonical = '';
 let reanchorTimer: number | undefined;
 let emptyReadRetryTimer: number | undefined;
+let emptyReadRetries = 0;
+const MAX_EMPTY_READ_RETRIES = 2;
 
 function scheduleEmptyReadRetry() {
-  if (emptyReadRetryTimer !== undefined) return;
+  if (emptyReadRetryTimer !== undefined || emptyReadRetries >= MAX_EMPTY_READ_RETRIES) return;
   // pageClaims suppresses a cold-cache retry for the gateway cooldown. Retry
   // once after that window so a transient 429/HTML response cannot permanently
   // hide a finalized annotation on an otherwise unchanged page.
   emptyReadRetryTimer = window.setTimeout(() => {
     emptyReadRetryTimer = undefined;
+    emptyReadRetries += 1;
     void refresh();
   }, 16_000);
 }
@@ -250,6 +253,7 @@ async function refresh() {
     else if (emptyReadRetryTimer !== undefined) {
       window.clearTimeout(emptyReadRetryTimer);
       emptyReadRetryTimer = undefined;
+      emptyReadRetries = 0;
     }
   } catch {
     // A transient gateway/rate-limit failure must not create an unhandled
@@ -267,6 +271,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     return true;
   }
   if (message?.type === 'REFRESH_ANNOTATIONS') {
+    emptyReadRetries = 0;
     refresh().then(() => {
       try { sendResponse({ ok: true }); } catch {}
     }).catch(() => {
@@ -298,5 +303,8 @@ domObserver.observe(document.documentElement, { childList: true, subtree: true, 
 window.setInterval(() => {
   if (!extensionContextIsAlive()) return;
   const canonical = preferredCanonicalUrl();
-  if (canonical !== lastCanonical) void refresh();
+  if (canonical !== lastCanonical) {
+    emptyReadRetries = 0;
+    void refresh();
+  }
 }, 3000);

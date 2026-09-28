@@ -73,3 +73,10 @@ export function transactionsStorageKey(claimKey: string): string {
 export function disconnectStorageKey(): string {
   return 'margin.explicitDisconnect';
 }
+
+/** A recovered transaction must remain associated with the account that submitted it. */
+export function pendingAccountMatches(expected: string | undefined, actual: string | null): boolean {
+  if (!expected) return true;
+  if (!actual) return false;
+  return expected.toLowerCase() === actual.toLowerCase();
+}

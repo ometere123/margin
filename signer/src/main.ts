@@ -2,7 +2,7 @@ import { createClient } from 'genlayer-js';
 import { studionet } from 'genlayer-js/chains';
 import { TransactionHashVariant } from 'genlayer-js/types';
 import { canonicalizeUrl, claimKeyFor, decodeDraft, MARGIN_CHAIN_ID, MARGIN_NETWORK_NAME, MARGIN_RPC_URL, pageKeyFor, type ClaimDraft, type MarginClaim } from '../../shared/protocol';
-import { disconnectStorageKey, executionSummary, isSuccessfulFinalizedReceipt, trackingFailureMessage, transactionsStorageKey, type PendingTransaction } from './transaction';
+import { disconnectStorageKey, executionSummary, isSuccessfulFinalizedReceipt, pendingAccountMatches, trackingFailureMessage, transactionsStorageKey, type PendingTransaction } from './transaction';
 import { createProviderBackedClient } from './wallet';
 import { accountFromProvider, accountRequestMethod, isStudionetChainHex, shouldAutoRestore } from './session';
 import './style.css';
@@ -176,6 +176,11 @@ function updateTransaction(txId: string, patch: Partial<PendingTransaction>) {
 }
 
 async function trackTransaction(tracked: PendingTransaction): Promise<any | null> {
+  if (!pendingAccountMatches(tracked.account, account)) {
+    updateTransaction(tracked.id, { state: 'tracking-interrupted' });
+    setStatus(`<div class="bad">Switch back to the submitting wallet account to resume tracking.<br>${txLink(tracked.id)}</div>`);
+    return null;
+  }
   if (!account || !chainCorrect) {
     setStatus(`<div class="bad">Connect the wallet on Studionet 61999 to resume tracking.<br>${txLink(tracked.id)}</div>`);
     return null;

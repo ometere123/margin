@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { executionSummary, isSuccessfulFinalizedReceipt, pendingStorageKey, trackingFailureMessage } from './transaction';
+import { executionSummary, isSuccessfulFinalizedReceipt, pendingAccountMatches, pendingStorageKey, trackingFailureMessage } from './transaction';
 
 const successful = {
   statusName: 'FINALIZED',
@@ -45,6 +45,12 @@ describe('transaction finality handling', () => {
     expect(trackingFailureMessage('Challenge', id)).toContain(id);
     expect(trackingFailureMessage('Challenge', id)).not.toContain('Submission failed');
     expect(pendingStorageKey('claim')).toBe('margin.pendingTransaction.claim');
+  });
+
+  it('does not resume a pending transaction under a different wallet account', () => {
+    expect(pendingAccountMatches('0xAa00000000000000000000000000000000000001', '0xaa00000000000000000000000000000000000001')).toBe(true);
+    expect(pendingAccountMatches('0xAa00000000000000000000000000000000000001', '0xbb00000000000000000000000000000000000002')).toBe(false);
+    expect(pendingAccountMatches(undefined, null)).toBe(true);
   });
 
   it('supports the SDK legacy success fallback when available', () => {
