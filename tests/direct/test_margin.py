@@ -240,6 +240,14 @@ def test_assured_claim_domain_proof_and_bond_lifecycle(direct_vm, direct_deploy,
     assert assured["settled"] is True
     assert assured["challenger_credit"] == 2
 
+    # Settlement credits are withdrawable exactly once; a replay cannot pay out
+    # again after the canonical credit has been cleared.
+    direct_vm.sender = direct_bob
+    contract.withdraw_assured_credit(key)
+    assert contract.get_assured_claim(key)["challenger_credit"] == 0
+    with direct_vm.expect_revert("no assured claim credit"):
+        contract.withdraw_assured_credit(key)
+
 
 def test_assured_appeal_requires_new_source_and_settles_once(direct_vm, direct_deploy, direct_alice, direct_bob):
     contract = direct_deploy("contracts/margin.py")
