@@ -6,6 +6,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = (ROOT / "contracts" / "margin.py").read_text()
 SIGNER_SOURCE = (ROOT / "signer" / "src" / "main.ts").read_text()
 SHARED_SOURCE = (ROOT / "shared" / "protocol.ts").read_text()
+CONSUMER_SOURCE = (ROOT / "contracts" / "margin_consumer.py").read_text()
 
 class ContractInvariantTests(unittest.TestCase):
     def test_chain_is_61999(self):
@@ -53,6 +54,26 @@ class ContractInvariantTests(unittest.TestCase):
         self.assertNotIn("localStorage.setItem('marginContract'", SIGNER_SOURCE)
         self.assertNotIn("params.get('contract')", SIGNER_SOURCE)
         self.assertIn("MARGIN_CONTRACT_ADDRESS", SHARED_SOURCE)
+
+    def test_evidence_manifest_is_validator_bound(self):
+        self.assertIn("source_manifest_digest", SOURCE)
+        self.assertIn('candidate.get("source_manifest") == independent.get("source_manifest")', SOURCE)
+        self.assertIn('candidate.get("contradicting_source_indexes") == independent.get("contradicting_source_indexes")', SOURCE)
+        self.assertIn("source manifest unchanged; no new revision", SOURCE)
+
+    def test_assured_claim_has_domain_proof_and_bond_lifecycle(self):
+        self.assertIn("register_assured_claim", SOURCE)
+        self.assertIn("@gl.public.write.payable", SOURCE)
+        self.assertIn("/.well-known/margin.json", SOURCE)
+        self.assertIn("challenge_assured_claim", SOURCE)
+        self.assertIn("appeal_assured_claim", SOURCE)
+        self.assertIn("settle_assured_claim", SOURCE)
+        self.assertIn("withdraw_assured_credit", SOURCE)
+
+    def test_consumer_reads_finalized_state_from_contract(self):
+        self.assertIn("get_assured_claim", CONSUMER_SOURCE)
+        self.assertIn('receipt.get("state") != "SETTLED"', CONSUMER_SOURCE)
+        self.assertIn('receipt.get("final_status") != "SUPPORTED"', CONSUMER_SOURCE)
 
 if __name__ == '__main__':
     unittest.main()

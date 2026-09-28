@@ -142,9 +142,21 @@ def test_resolve_stores_independently_validated_status(direct_vm, direct_deploy,
         "status": 200,
         "body": "Support matrix: Runtime 4.2 requires Node 20 or newer. Node 18 is unsupported.",
     })
+    body = "Support matrix: Runtime 4.2 requires Node 20 or newer. Node 18 is unsupported."
+    source_records = [
+        {"kind": "PRIMARY", "url": URL, "fetch_status": "OK", "content_digest": hashlib.sha256(body.encode()).hexdigest(), "provenance": "PUBLIC_SOURCE"},
+        {"kind": "EVIDENCE", "url": "https://example.com/docs/support", "fetch_status": "OK", "content_digest": hashlib.sha256(body.encode()).hexdigest(), "provenance": "PUBLIC_SOURCE"},
+    ]
+    manifest_payload = json.dumps({"v": 2, "sources": source_records}, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
+    manifest_digest = hashlib.sha256(manifest_payload.encode()).hexdigest()
     direct_vm.mock_llm(r".*MARGIN web-claim challenge.*", json.dumps({
         "status": "CONTRADICTED",
         "rationale": "The authoritative support matrix requires Node 20 or newer.",
+        "claim_present": True,
+        "supporting_source_indexes": [],
+        "contradicting_source_indexes": [0],
+        "historical_evidence_used": False,
+        "source_manifest_digest": manifest_digest,
     }))
     contract.resolve_claim(key)
     claim = contract.get_claim(key)
@@ -160,3 +172,117 @@ def test_network_metadata_is_studionet(direct_vm, direct_deploy):
     network = contract.network()
     assert network["chain_id"] == 61999
     assert network["network"] == "studionet"
+
+
+def test_manifest_is_committed_and_unchanged_refresh_is_rejected(direct_vm, direct_deploy, direct_alice):
+    contract = direct_deploy("contracts/margin.py")
+    direct_vm.sender = direct_alice
+    key = submit(contract)
+    body = "Support matrix: Runtime 4.2 requires Node 20 or newer. Node 18 is unsupported."
+    direct_vm.mock_web(r".*example\.com.*", {"status": 200, "body": body})
+    records = [
+        {"kind": "PRIMARY", "url": URL, "fetch_status": "OK", "content_digest": hashlib.sha256(body.encode()).hexdigest(), "provenance": "PUBLIC_SOURCE"},
+        {"kind": "EVIDENCE", "url": "https://example.com/docs/support", "fetch_status": "OK", "content_digest": hashlib.sha256(body.encode()).hexdigest(), "provenance": "PUBLIC_SOURCE"},
+    ]
+    digest = hashlib.sha256(json.dumps({"v": 2, "sources": records}, separators=(",", ":"), sort_keys=True).encode()).hexdigest()
+    direct_vm.mock_llm(r".*MARGIN web-claim challenge.*", json.dumps({
+        "status": "CONTRADICTED", "rationale": "The support matrix contradicts the claim.",
+        "claim_present": True, "supporting_source_indexes": [], "contradicting_source_indexes": [0],
+        "historical_evidence_used": False, "source_manifest_digest": digest,
+    }))
+    contract.resolve_claim(key)
+    assert contract.get_claim(key)["source_manifest_digest"] == digest
+    with direct_vm.expect_revert("source manifest unchanged"):
+        contract.resolve_claim(key)
+
+
+def test_assured_claim_domain_proof_and_bond_lifecycle(direct_vm, direct_deploy, direct_alice, direct_bob):
+    contract = direct_deploy("contracts/margin.py")
+    direct_vm.sender = direct_alice
+    key = submit(contract)
+    publisher = "0x" + direct_alice.hex()
+    expiry = "2999-01-01T00:00:00+00:00"
+    proof = json.dumps({
+        "protocol_version": 2,
+        "domain": "example.com",
+        "publisher_wallet": publisher,
+        "nonce": "publisher-nonce-1",
+        "claim_key": key,
+        "expiry": expiry,
+    })
+    direct_vm.mock_web(r".*example\.com/\.well-known/margin\.json", {"status": 200, "body": proof})
+    direct_vm.value = 1
+    contract.register_assured_claim(key, "https://example.com/.well-known/margin.json", "publisher-nonce-1", expiry)
+    assert contract.get_assured_claim(key)["state"] == "REGISTERED"
+    direct_vm.sender = direct_bob
+    direct_vm.value = 1
+    contract.challenge_assured_claim(key)
+    assert contract.get_assured_claim(key)["state"] == "CHALLENGED"
+    body = "Support matrix: Runtime 4.2 requires Node 20 or newer. Node 18 is unsupported."
+    direct_vm.mock_web(r"https://example\.com/docs/runtime", {"status": 200, "body": body})
+    direct_vm.mock_web(r"https://example\.com/docs/support", {"status": 200, "body": body})
+    records = [
+        {"kind": "PRIMARY", "url": URL, "fetch_status": "OK", "content_digest": hashlib.sha256(body.encode()).hexdigest(), "provenance": "PUBLIC_SOURCE"},
+        {"kind": "EVIDENCE", "url": "https://example.com/docs/support", "fetch_status": "OK", "content_digest": hashlib.sha256(body.encode()).hexdigest(), "provenance": "PUBLIC_SOURCE"},
+    ]
+    digest = hashlib.sha256(json.dumps({"v": 2, "sources": records}, separators=(",", ":"), sort_keys=True).encode()).hexdigest()
+    direct_vm.mock_llm(r".*MARGIN web-claim challenge.*", json.dumps({
+        "status": "CONTRADICTED", "rationale": "The support matrix contradicts the claim.",
+        "claim_present": True, "supporting_source_indexes": [], "contradicting_source_indexes": [0],
+        "historical_evidence_used": False, "source_manifest_digest": digest,
+    }))
+    contract.resolve_assured_claim(key)
+    assert contract.get_assured_claim(key)["state"] == "RESOLVED"
+    direct_vm.warp("2999-01-01T02:00:00+00:00")
+    contract.settle_assured_claim(key)
+    assured = contract.get_assured_claim(key)
+    assert assured["state"] == "SETTLED"
+    assert assured["settled"] is True
+    assert assured["challenger_credit"] == 2
+
+
+def test_assured_appeal_requires_new_source_and_settles_once(direct_vm, direct_deploy, direct_alice, direct_bob):
+    contract = direct_deploy("contracts/margin.py")
+    direct_vm.sender = direct_alice
+    key = submit(contract)
+    publisher = "0x" + direct_alice.hex()
+    expiry = "2999-01-01T00:00:00+00:00"
+    proof = json.dumps({"protocol_version": 2, "domain": "example.com", "publisher_wallet": publisher, "nonce": "appeal-nonce", "claim_key": key, "expiry": expiry})
+    direct_vm.mock_web(r".*well-known/margin\.json", {"status": 200, "body": proof})
+    direct_vm.value = 1
+    contract.register_assured_claim(key, "https://example.com/.well-known/margin.json", "appeal-nonce", expiry)
+    direct_vm.sender = direct_bob
+    direct_vm.value = 1
+    contract.challenge_assured_claim(key)
+
+    body_one = "Initial support matrix contradicts Node 18."
+    direct_vm.mock_web(r"https://example\.com/docs/runtime", {"status": 200, "body": body_one})
+    direct_vm.mock_web(r"https://example\.com/docs/support", {"status": 200, "body": body_one})
+    records_one = [
+        {"kind": "PRIMARY", "url": URL, "fetch_status": "OK", "content_digest": hashlib.sha256(body_one.encode()).hexdigest(), "provenance": "PUBLIC_SOURCE"},
+        {"kind": "EVIDENCE", "url": "https://example.com/docs/support", "fetch_status": "OK", "content_digest": hashlib.sha256(body_one.encode()).hexdigest(), "provenance": "PUBLIC_SOURCE"},
+    ]
+    digest_one = hashlib.sha256(json.dumps({"v": 2, "sources": records_one}, separators=(",", ":"), sort_keys=True).encode()).hexdigest()
+    direct_vm.mock_llm(r".*MARGIN web-claim challenge.*", json.dumps({"status": "CONTRADICTED", "rationale": "Initial evidence.", "claim_present": True, "supporting_source_indexes": [], "contradicting_source_indexes": [0], "historical_evidence_used": False, "source_manifest_digest": digest_one}))
+    contract.resolve_assured_claim(key)
+
+    direct_vm.value = 1
+    contract.appeal_assured_claim(key, "A new authoritative support matrix is now available.")
+    assert contract.get_assured_claim(key)["state"] == "APPEALED"
+
+    direct_vm.clear_mocks()
+    body_two = "Updated support matrix says Node 18 is supported."
+    direct_vm.mock_web(r"https://example\.com/docs/runtime", {"status": 200, "body": body_two})
+    direct_vm.mock_web(r"https://example\.com/docs/support", {"status": 200, "body": body_two})
+    records_two = [
+        {"kind": "PRIMARY", "url": URL, "fetch_status": "OK", "content_digest": hashlib.sha256(body_two.encode()).hexdigest(), "provenance": "PUBLIC_SOURCE"},
+        {"kind": "EVIDENCE", "url": "https://example.com/docs/support", "fetch_status": "OK", "content_digest": hashlib.sha256(body_two.encode()).hexdigest(), "provenance": "PUBLIC_SOURCE"},
+    ]
+    digest_two = hashlib.sha256(json.dumps({"v": 2, "sources": records_two}, separators=(",", ":"), sort_keys=True).encode()).hexdigest()
+    direct_vm.mock_llm(r".*MARGIN web-claim challenge.*", json.dumps({"status": "SUPPORTED", "rationale": "Updated evidence.", "claim_present": True, "supporting_source_indexes": [0], "contradicting_source_indexes": [], "historical_evidence_used": False, "source_manifest_digest": digest_two}))
+    contract.resolve_assured_appeal(key)
+    assert contract.get_assured_claim(key)["final_status"] == "SUPPORTED"
+    direct_vm.warp("2999-01-01T02:00:00+00:00")
+    contract.settle_assured_claim(key)
+    with direct_vm.expect_revert("not ready for settlement"):
+        contract.settle_assured_claim(key)
