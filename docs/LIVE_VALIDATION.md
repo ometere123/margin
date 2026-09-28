@@ -133,6 +133,21 @@ A second controlled Assured Claim was created specifically to prove the positive
 - After the appeal deadline, settlement finalized in `0xbc9c39d5b0273868fdcc8dc8f3f898995f0461db03c7c31559d1073c1f4e83e4` (`FINALIZED / MAJORITY_AGREE / SUCCESS`). Publisher withdrawal finalized in `0xb913996d7b635a0aa61f3db84e6550577c67dc89f352fc46f083d1614816b675` with the same finality. Canonical readback is `SETTLED / SUPPORTED`, with publisher and challenger credits both `0` after withdrawal.
 - The positive consumer call finalized in `0x167af481d43b97c30f5a35b234c633112e8b4fcf7af9500e85241a4fbe0e9052` (`FINALIZED / MAJORITY_AGREE / SUCCESS`). Its canonical `has_executed` readback changed from `false` to `true`.
 
+### Fresh browser/appeal lifecycle evidence
+
+On 2026-09-28, a fresh controlled claim was submitted and resolved on the canonical Studionet deployment before being registered as a new Assured Claim. The fresh claim key is `274e16c4d7acfaf0f3a3bb4699485b59baad9284c273ae1153f828e42cbb924f`.
+
+- Normal claim submit: `0xd6f9ebc814c3b8cb3b8fe1a2cb65b32eabd07d9dd389bd7cf1c4152b528433e4` — finalized `MAJORITY_AGREE / SUCCESS`.
+- Assured registration: `0x680e216d36c2c94b476f14a207b0568d69c4672b454313df2b685cf2816fd172` — finalized successfully with a 1 GEN publisher bond.
+- Assured challenge: `0x8cab7fbc07298b22433668ffd5b7c78462acc2399ceb6916041c9155522e08a7` — finalized successfully with a 1 GEN challenger bond.
+- First Assured resolution: `0x12d76a5647154f9e7c5d79a14e36adc367f3c88676482620d9be21379628ba43` — finalized successfully; canonical readback `RESOLVED / SUPPORTED`.
+- Appeal: `0x783ca8a0f8090e22b2cd336a56f4f891563a2ea16a2b53a285405b4530c51074` — finalized successfully with a 1 GEN appeal bond; canonical readback `APPEALED`.
+- An initial appeal-resolution attempt was canceled because the adjudication source manifest was unchanged: `0x6b776df2ffe09a9846247e93c40785bf29ed2949caaafa78a8c80d8e141d548b`.
+- After publishing a bounded evidence revision, appeal resolution finalized successfully in `0xc7e2efd2eadd3caa74e630e07d1c6f083446f2da4ff1e350e090f8e862b066e2`. Canonical readback is now `RESOLVED / SUPPORTED`, appeal count `1`.
+- The recorded appeal deadline is `2026-09-28T15:50:03.801109+00:00`. Settlement has deliberately not been submitted before that deadline; settlement and credit readback remain outstanding.
+
+The public domain proof for this controlled sequence is `https://margin-signer.vercel.app/.well-known/margin.json`, bound to nonce `assured-appeal-fresh-20260928` and the fresh claim key above. The signer/fixture deployment was updated through the existing Vercel project; no contract redeployment occurred.
+
 ## Downstream consumer evidence
 
 The separate reference consumer was deployed at `0x2885169713d79cb2FC463Dc624Ea5fc08b59d044` by finalized transaction `0x84ba75b54e4f58b5550388b9a474c31099b8626f55b8c8041081ed886a27c6a4`. Its `execute_if_supported` call against the canonical MARGIN contract and the settled `CONTRADICTED` claim finalized in `0xb7c25973b255b6148b0e156db42ef6128bb22c0dc89ba15be828cc440b78ebd0` with the expected contract error `protected action requires a SUPPORTED assured claim`. `has_executed` was `false` both before and after the call. This is a negative-gate proof that the consumer reads canonical MARGIN state and does not trust a caller-supplied/frontend status.
