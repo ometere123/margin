@@ -130,7 +130,7 @@ function clearAnnotations() {
   activeHighlight = null;
 }
 
-function annotate(claim: MarginClaim, ranges: Range[]) {
+function annotate(claim: MarginClaim, ranges: Range[], aggregateCount = 1) {
   if (claim.canonical_url !== preferredCanonicalUrl()) return;
   const range = findRange(claim.quote, claim.prefix, claim.suffix);
   if (!range) return;
@@ -140,8 +140,9 @@ function annotate(claim: MarginClaim, ranges: Range[]) {
   const badge = document.createElement('button');
   badge.className = 'margin-badge';
   badge.dataset.status = claim.status;
-  badge.textContent = `M · ${claim.status}`;
-  badge.title = claim.rationale || 'Open MARGIN claim';
+  badge.textContent = aggregateCount > 1 ? `M · ${claim.status} · ${aggregateCount} claims` : `M · ${claim.status}`;
+  badge.setAttribute('aria-label', aggregateCount > 1 ? `MARGIN ${claim.status}, ${aggregateCount} claims` : `MARGIN ${claim.status}`);
+  badge.title = aggregateCount > 1 ? `${aggregateCount} MARGIN claims on this text. ${claim.rationale || ''}` : (claim.rationale || 'Open MARGIN claim');
   badge.style.top = `${Math.max(0, rect.bottom + window.scrollY + 3)}px`;
   badge.style.left = `${Math.max(4, Math.min(document.documentElement.scrollWidth - 120, rect.left + window.scrollX))}px`;
   badge.addEventListener('click', (event) => {
@@ -168,7 +169,7 @@ function renderClaims(claims: MarginClaim[]) {
   }
   for (const list of grouped.values()) {
     list.sort((a, b) => String(b.resolved_at || b.created_at).localeCompare(String(a.resolved_at || a.created_at)));
-    annotate(list[0], ranges);
+    annotate(list[0], ranges, list.length);
   }
   const HighlightCtor = (globalThis as any).Highlight;
   const cssHighlights = (globalThis as any).CSS?.highlights;
