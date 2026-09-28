@@ -33,13 +33,14 @@ Mitigations:
 
 - signer receives an already formed draft but independently re-derives both `page_key` and `claim_key` before enabling writes;
 - it shows the highlighted claim, class, challenge, public evidence, archive and key before signing;
-- a locally saved contract address takes precedence over a different address injected by an incoming signer link;
+- the production signer uses a release-configured canonical contract address and ignores contract-address query parameters;
+- the extension uses the same release configuration and does not expose editable contract/RPC/signer settings to normal users;
 - it reads the target contract's `network()` view and refuses writes unless the contract identifies itself as Studionet 61999;
 - it uses injected EIP-1193 only;
 - network is fixed to Studionet 61999;
 - extension never trusts signer-returned verdict data.
 
-Production hardening should add CSP, an audited production origin, and signed release artifacts.
+Production hardening uses a static Vercel origin with CSP/security headers, `Referrer-Policy: no-referrer`, public build-time contract configuration, and wallet approval. The Vite variable is not a secret; network identity verification and contract-side payload checks remain the security boundaries.
 
 ## Spam / state growth
 

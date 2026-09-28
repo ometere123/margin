@@ -15,7 +15,7 @@ The extension uses a small DOM badge and a conservative anchor resolver. If an a
 
 ### Signer DApp
 
-The signer exists only because injected EIP-1193 wallets are not reliably exposed inside Chrome extension pages. It receives a fully formed draft through a URL-safe payload and asks the wallet to submit it.
+The signer exists only because injected EIP-1193 wallets are not reliably exposed inside Chrome extension pages. It receives a fully formed draft through a URL-safe payload and asks the wallet to submit it. Its release build receives the public canonical contract through `VITE_MARGIN_CONTRACT_ADDRESS`; normal users do not edit infrastructure configuration.
 
 It has no database and no authority over extension annotations. Finalized on-chain state is authoritative.
 

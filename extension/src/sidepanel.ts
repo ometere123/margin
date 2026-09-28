@@ -1,4 +1,4 @@
-import { CLAIM_CLASSES, canonicalizeUrl, claimKeyFor, encodeDraft, pageKeyFor, type ClaimClass, type ClaimDraft, type MarginClaim } from '../../shared/protocol';
+import { CLAIM_CLASSES, MARGIN_SIGNER_URL, canonicalizeUrl, claimKeyFor, encodeDraft, pageKeyFor, type ClaimClass, type ClaimDraft, type MarginClaim } from '../../shared/protocol';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
@@ -18,7 +18,7 @@ function claimView(claim: MarginClaim) {
   });
 }
 
-async function draftView(seed: any, signerUrl: string, contractAddress: string) {
+async function draftView(seed: any) {
   const pageKey = await pageKeyFor(seed.canonicalUrl);
   shell(`<div class="card"><div class="muted">Highlighted on ${esc(seed.pageTitle || seed.canonicalUrl)}</div><div class="quote">${esc(seed.anchor.exact)}</div></div><div class="card"><label class="label">Claim class</label><select id="class">${CLAIM_CLASSES.map((x) => `<option>${x}</option>`).join('')}</select><label class="label">What exactly is wrong with this claim?</label><textarea id="statement" maxlength="1600" placeholder="State one precise, falsifiable objection. Do not ask validators to rate the whole site."></textarea><label class="label">Evidence URLs <span class="muted">(up to 3, one per line)</span></label><textarea id="evidence" placeholder="https://docs.example.com/...\nhttps://github.com/..." ></textarea><label class="label">Archive URL <span class="muted">(optional)</span></label><input id="archive" placeholder="https://web.archive.org/..."><div id="formError" style="margin-top:10px"></div></div><button id="continue" class="primary">Continue to wallet signer</button><p class="muted">The signer is a small web surface because injected wallets are not reliably available inside Chrome extension pages. The claim is still read directly from Studionet after signing.</p>`);
 
@@ -45,9 +45,8 @@ async function draftView(seed: any, signerUrl: string, contractAddress: string) 
       };
       const draft: ClaimDraft = { ...withoutKey, claimKey: await claimKeyFor(withoutKey) };
       await chrome.storage.session.set({ pendingDraft: draft });
-      const target = new URL(signerUrl || 'http://localhost:5174/');
+      const target = new URL(MARGIN_SIGNER_URL);
       target.searchParams.set('draft', encodeDraft(draft));
-      if (/^0x[0-9a-fA-F]{40}$/.test(contractAddress)) target.searchParams.set('contract', contractAddress);
       await chrome.tabs.create({ url: target.toString() });
     } catch (error) {
       err.innerHTML = `<div class="error">${esc(String((error as Error).message || error))}</div>`;
@@ -58,7 +57,7 @@ async function draftView(seed: any, signerUrl: string, contractAddress: string) 
 async function main() {
   const state = await chrome.runtime.sendMessage({ type: 'GET_PANEL_STATE' });
   if (state?.selectedClaim) return claimView(state.selectedClaim as MarginClaim);
-  if (state?.pendingDraft?.canonicalUrl) return draftView(state.pendingDraft, state.config?.signerUrl || 'http://localhost:5174/', state.config?.contractAddress || '');
+  if (state?.pendingDraft?.canonicalUrl) return draftView(state.pendingDraft);
   if (state?.panelError) return shell(`<div class="error">${esc(state.panelError)}</div>`);
   shell(`<div class="card"><div class="claim-title">Challenge a web claim</div><p class="muted">Highlight a narrow factual statement on a public webpage, right-click, then choose <strong>Challenge with MARGIN</strong>.</p></div><div class="card"><div class="claim-title">What MARGIN is for</div><p class="muted">Technical, licence, compatibility, pricing and documentation claims with independently inspectable public evidence. It is intentionally not a general-purpose truth score.</p></div>`);
 }

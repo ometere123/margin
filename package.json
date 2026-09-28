@@ -15,6 +15,7 @@
     "preflight:offline": "bash scripts/offline-preflight.sh",
     "test:direct": "pytest tests/direct -v",
     "lint:contract": "genvm-lint check contracts/margin.py",
+    "cli": "npm run cli:check",
     "cli:check": "node scripts/check-genlayer-cli.mjs",
     "genlayer": "genlayer"
   },

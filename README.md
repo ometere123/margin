@@ -121,14 +121,14 @@ The exact command flags should still be checked against `npm exec -- genlayer <c
 ## Live deployment path
 
 1. Run `npm install` in the repository root. The repo pins the **local** npm package `genlayer` to exactly `0.39.1` in `devDependencies` and `.genlayer-cli-version`.
-2. Run `npm run cli:check` and require it to report local GenLayer CLI `0.39.1`.
+2. Run `npm run cli` and require it to report local GenLayer CLI `0.39.1`.
 3. For every CLI operation use `npm exec -- genlayer ...` (or `npm run genlayer -- ...`). **Do not use a bare/global `genlayer` command**, even if the machine has `0.40.0rc2` globally.
 4. Lint `contracts/margin.py` with the compatible GenVM linter.
 5. The current canonical deployment is recorded in [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md).
-6. Open MARGIN extension options and save the recorded contract address.
-7. Deploy `signer/dist` as a static site (Vercel is fine) and set that URL in extension options.
+6. Build the extension; its release configuration contains the canonical public contract and signer origin.
+7. Deploy `signer/dist` as a static site with public Vite configuration `VITE_MARGIN_CONTRACT_ADDRESS` set to the canonical address. This is public configuration, not a secret.
 8. Fund the wallet from the Studionet faucet.
-9. Run the scenarios in `docs/LIVE_VALIDATION.md`.
+9. Run the scenarios in `docs/LIVE_VALIDATION.md`. Normal users never configure the contract, RPC, chain or signer URL.
 
 Current canonical contract: `0x03fE368186822d745b4DB8e4A49f8F43e867D57C` on Studionet 61999. It was deployed from source commit `a18eba60cdb1b26c55692cb8dbc6f26d08ea1359`; the production signer is [`https://margin-signer.vercel.app/`](https://margin-signer.vercel.app/). See [`SUBMISSION.md`](SUBMISSION.md) for finalized deployment and claim-resolution transactions.
 

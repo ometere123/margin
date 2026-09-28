@@ -1,7 +1,7 @@
 import { createClient } from 'genlayer-js';
 import { studionet } from 'genlayer-js/chains';
 import { TransactionHashVariant } from 'genlayer-js/types';
-import { canonicalizeUrl, claimKeyFor, decodeDraft, MARGIN_CHAIN_ID, MARGIN_RPC_URL, pageKeyFor, type ClaimDraft, type MarginClaim } from '../../shared/protocol';
+import { canonicalizeUrl, claimKeyFor, decodeDraft, MARGIN_CHAIN_ID, MARGIN_NETWORK_NAME, MARGIN_RPC_URL, pageKeyFor, type ClaimDraft, type MarginClaim } from '../../shared/protocol';
 import './style.css';
 
 declare global {
@@ -11,27 +11,25 @@ declare global {
 const app = document.querySelector<HTMLDivElement>('#app')!;
 const params = new URLSearchParams(location.search);
 const encoded = params.get('draft') || '';
-const storedAddress = (localStorage.getItem('marginContract') || '').trim();
-const queryAddress = (params.get('contract') || '').trim();
-const configuredAddress = (storedAddress || queryAddress).trim();
+const configuredAddress = String(import.meta.env.VITE_MARGIN_CONTRACT_ADDRESS || '').trim();
 let draft: ClaimDraft | null = null;
 try { if (encoded) draft = decodeDraft(encoded); } catch {}
 
 let account: `0x${string}` | null = null;
-let contractAddress = configuredAddress;
+const contractAddress = configuredAddress;
 let lastTx = '';
 let draftVerified = false;
+let contractVerified = false;
 let draftError = '';
-let contractWarning = storedAddress && queryAddress && storedAddress.toLowerCase() !== queryAddress.toLowerCase()
-  ? 'Ignored a different contract address supplied by the incoming link; the locally saved contract remains active.'
-  : '';
+let contractError = '';
 
 
 function esc(v: string) { return v.replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]!)); }
 function validAddress(v: string): v is `0x${string}` { return /^0x[0-9a-fA-F]{40}$/.test(v); }
 
 function render(message = '') {
-  app.innerHTML = `<main><header><div><div class="wordmark">MARGIN</div><div class="sub">wallet signer</div></div><span class="pill">Studionet · ${MARGIN_CHAIN_ID}</span></header>${message ? `<div class="notice">${esc(message)}</div>` : ''}${contractWarning ? `<div class="notice">${esc(contractWarning)}</div>` : ''}${draftError ? `<div class="notice">${esc(draftError)}</div>` : ''}<section><label>Contract address</label><div class="row"><input id="contract" value="${esc(contractAddress)}" placeholder="0x…"><button id="save">Save</button></div><small>Fixed RPC: ${MARGIN_RPC_URL}</small></section>${draft ? `<section><div class="eyebrow">Highlighted claim</div><blockquote>${esc(draft.anchor.exact)}</blockquote><div class="meta">${esc(draft.claimClass)} · ${esc(draft.canonicalUrl)}</div><h3>Challenge</h3><p>${esc(draft.challengeStatement)}</p><div class="eyebrow">Public evidence</div><p>${draft.evidenceUrls.length ? draft.evidenceUrls.map((url) => esc(url)).join('<br>') : 'No additional evidence URLs supplied.'}</p>${draft.archiveUrl ? `<div class="eyebrow">Archive</div><p>${esc(draft.archiveUrl)}</p>` : ''}<div class="eyebrow">Claim key</div><div class="hash">${esc(draft.claimKey)}</div></section>` : `<section><h3>No challenge draft</h3><p>Start from the MARGIN extension by highlighting a public claim.</p></section>`}<section><div class="row"><button id="connect" class="dark">${account ? esc(account.slice(0,8)+'…'+account.slice(-6)) : 'Connect wallet'}</button>${draft ? `<button id="submit" class="accent" ${draftVerified ? '' : 'disabled'}>Submit challenge</button><button id="resolve" ${draftVerified ? '' : 'disabled'}>Resolve</button>` : ''}</div><div id="status"></div></section>${lastTx ? `<section><div class="eyebrow">Latest transaction</div><div class="hash">${esc(lastTx)}</div></section>` : ''}</main>`;
+  const ready = draftVerified && contractVerified;
+  app.innerHTML = `<main><header><div><div class="wordmark">MARGIN</div><div class="sub">wallet signer</div></div><span class="pill">Studionet · ${MARGIN_CHAIN_ID}</span></header>${message ? `<div class="notice">${esc(message)}</div>` : ''}${contractError ? `<div class="notice">${esc(contractError)}</div>` : ''}${draftError ? `<div class="notice">${esc(draftError)}</div>` : ''}<section><div class="eyebrow">Deployment</div><div class="row"><strong>Contract</strong><span class="hash">${validAddress(contractAddress) ? `${esc(contractAddress.slice(0,8))}…${esc(contractAddress.slice(-6))}` : 'missing configuration'}</span><span class="meta">${contractVerified ? 'Verified ✓' : 'Verifying…'}</span></div><small>Studionet · ${MARGIN_CHAIN_ID} · ${MARGIN_RPC_URL}</small></section>${draft ? `<section><div class="eyebrow">Highlighted claim</div><blockquote>${esc(draft.anchor.exact)}</blockquote><div class="meta">${esc(draft.claimClass)} · ${esc(draft.canonicalUrl)}</div><h3>Challenge</h3><p>${esc(draft.challengeStatement)}</p><div class="eyebrow">Public evidence</div><p>${draft.evidenceUrls.length ? draft.evidenceUrls.map((url) => esc(url)).join('<br>') : 'No additional evidence URLs supplied.'}</p>${draft.archiveUrl ? `<div class="eyebrow">Archive</div><p>${esc(draft.archiveUrl)}</p>` : ''}<div class="eyebrow">Claim key</div><div class="hash">${esc(draft.claimKey)}</div></section>` : `<section><h3>No challenge draft</h3><p>Start from the MARGIN extension by highlighting a public claim.</p></section>`}<section><div class="row"><button id="connect" class="dark">${account ? esc(account.slice(0,8)+'…'+account.slice(-6)) : 'Connect wallet'}</button>${draft ? `<button id="submit" class="accent" ${ready ? '' : 'disabled'}>Submit challenge</button><button id="resolve" ${ready ? '' : 'disabled'}>Resolve</button>` : ''}</div><div id="status"></div></section>${lastTx ? `<section><div class="eyebrow">Latest transaction</div><div class="hash">${esc(lastTx)}</div></section>` : ''}</main>`;
   bind();
 }
 
@@ -65,7 +63,7 @@ async function verifyContractTarget(address: `0x${string}`): Promise<void> {
     address, functionName: 'network', args: [],
     transactionHashVariant: TransactionHashVariant.LATEST_FINAL,
   }) as any;
-  if (Number(network?.chain_id) !== MARGIN_CHAIN_ID || String(network?.network) !== 'studionet') {
+  if (Number(network?.chain_id) !== MARGIN_CHAIN_ID || String(network?.network) !== MARGIN_NETWORK_NAME || String(network?.rpc || '') !== MARGIN_RPC_URL) {
     throw new Error('Configured contract did not identify itself as the MARGIN Studionet contract.');
   }
 }
@@ -112,7 +110,7 @@ async function waitForFinalizedSuccess(client: any, txId: string, label: string)
 async function submitClaim() {
   if (!draft) throw new Error('Missing challenge draft.');
   if (!draftVerified) throw new Error(draftError || 'Draft integrity has not been verified.');
-  if (!validAddress(contractAddress)) throw new Error('Set the deployed MARGIN contract address first.');
+  if (!contractVerified || !validAddress(contractAddress)) throw new Error('The canonical MARGIN deployment is not verified.');
   await verifyContractTarget(contractAddress);
   const client = await walletClient();
   const call = {
@@ -134,7 +132,7 @@ async function submitClaim() {
 async function resolveClaim() {
   if (!draft) throw new Error('Missing challenge draft.');
   if (!draftVerified) throw new Error(draftError || 'Draft integrity has not been verified.');
-  if (!validAddress(contractAddress)) throw new Error('Set the deployed MARGIN contract address first.');
+  if (!contractVerified || !validAddress(contractAddress)) throw new Error('The canonical MARGIN deployment is not verified.');
   await verifyContractTarget(contractAddress);
   const readClient = createClient({ chain: studionet });
   const existing = await readClient.readContract({ address: contractAddress, functionName: 'get_claim', args: [draft.claimKey], transactionHashVariant: TransactionHashVariant.LATEST_FINAL }) as unknown as MarginClaim;
@@ -151,14 +149,19 @@ async function resolveClaim() {
 }
 
 function bind() {
-  document.querySelector('#save')?.addEventListener('click', () => {
-    const v = (document.querySelector<HTMLInputElement>('#contract')!.value || '').trim();
-    if (!validAddress(v)) return setStatus('<div class="bad">Invalid contract address.</div>');
-    contractAddress = v; localStorage.setItem('marginContract', v); contractWarning = ''; render('Contract address saved locally.');
-  });
   document.querySelector('#connect')?.addEventListener('click', () => connect().catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`)));
   document.querySelector('#submit')?.addEventListener('click', () => submitClaim().catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`)));
   document.querySelector('#resolve')?.addEventListener('click', () => resolveClaim().catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`)));
 }
 
-void verifyDraft().then(() => render());
+async function initialize() {
+  if (!validAddress(contractAddress)) {
+    contractError = 'Signer deployment is missing VITE_MARGIN_CONTRACT_ADDRESS; writes are disabled.';
+  } else {
+    try { await verifyContractTarget(contractAddress); contractVerified = true; }
+    catch (error) { contractError = `Canonical deployment verification failed: ${String((error as Error).message || error)}`; }
+  }
+  await verifyDraft();
+  render();
+}
+void initialize();

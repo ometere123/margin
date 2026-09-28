@@ -4,6 +4,8 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = (ROOT / "contracts" / "margin.py").read_text()
+SIGNER_SOURCE = (ROOT / "signer" / "src" / "main.ts").read_text()
+SHARED_SOURCE = (ROOT / "shared" / "protocol.ts").read_text()
 
 class ContractInvariantTests(unittest.TestCase):
     def test_chain_is_61999(self):
@@ -44,6 +46,13 @@ class ContractInvariantTests(unittest.TestCase):
                 continue
             forbidden = '619' + '97'
             self.assertNotIn(forbidden, path.read_text(errors='ignore'), str(path))
+
+    def test_production_signer_uses_release_configuration(self):
+        self.assertIn("import.meta.env.VITE_MARGIN_CONTRACT_ADDRESS", SIGNER_SOURCE)
+        self.assertNotIn("localStorage.getItem('marginContract')", SIGNER_SOURCE)
+        self.assertNotIn("localStorage.setItem('marginContract'", SIGNER_SOURCE)
+        self.assertNotIn("params.get('contract')", SIGNER_SOURCE)
+        self.assertIn("MARGIN_CONTRACT_ADDRESS", SHARED_SOURCE)
 
 if __name__ == '__main__':
     unittest.main()

@@ -76,8 +76,7 @@ Resolve one claim multiple times after source changes. Verify:
 
 - Build with `npm run build -w extension`.
 - Load `extension/dist` unpacked.
-- Save the deployed contract address in Options.
-- Set production signer URL.
+- Build the extension with its release-configured Studionet contract and canonical signer origin. Normal users do not enter a contract address, RPC, chain ID or signer URL.
 - Verify right-click challenge on at least:
   - static HTML article;
   - documentation SPA;
@@ -92,7 +91,7 @@ Resolve one claim multiple times after source changes. Verify:
 ## Signer
 
 - Confirm a tampered draft fails the signer's local page/claim-key integrity check.
-- Confirm an incoming link cannot silently override an already saved contract address.
+- Confirm an incoming link cannot override the release-configured contract address.
 - Confirm the signer rejects a target whose `network()` view does not identify Studionet 61999.
 - Connect injected wallet.
 - Verify wallet chain is/adds 61999.

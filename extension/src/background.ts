@@ -1,13 +1,12 @@
 import { createClient } from 'genlayer-js';
 import { studionet } from 'genlayer-js/chains';
 import { TransactionHashVariant } from 'genlayer-js/types';
-import { canonicalizeUrl, pageKeyFor, MARGIN_CHAIN_ID, type MarginClaim } from '../../shared/protocol';
+import { canonicalizeUrl, pageKeyFor, MARGIN_CHAIN_ID, MARGIN_CONTRACT_ADDRESS, MARGIN_SIGNER_URL, type MarginClaim } from '../../shared/protocol';
 
 const readClient = createClient({ chain: studionet });
 
 async function settings() {
-  const values = await chrome.storage.local.get({ contractAddress: '', signerUrl: 'http://localhost:5174/' });
-  return values as { contractAddress: string; signerUrl: string };
+  return { contractAddress: MARGIN_CONTRACT_ADDRESS, signerUrl: MARGIN_SIGNER_URL };
 }
 
 async function getPageClaims(url: string): Promise<MarginClaim[]> {

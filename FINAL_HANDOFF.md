@@ -47,7 +47,7 @@ Studionet 61999 work in this repository must use **GenLayer CLI `0.39.1` locally
 
 The user's machine may have a global `0.40.0rc2` CLI. **Ignore the global binary.** After dependency installation:
 
-- run `npm run cli:check`;
+- run `npm run cli`;
 - verify with `npm exec -- genlayer --version`;
 - use `npm exec -- genlayer ...` (or `npm run genlayer -- ...`) for every GenLayer CLI command.
 
@@ -77,6 +77,10 @@ The build container could not reach npm, so the following must **not** be repres
 - live validator/finality/appeal exercise;
 - live browser + wallet end-to-end verification;
 - live fee profiling.
+
+## Production configuration hardening
+
+The canonical static signer is `https://margin-signer.vercel.app/`. Its Vite production build receives the public `VITE_MARGIN_CONTRACT_ADDRESS` value for the canonical Studionet deployment. The signer no longer asks normal users to save a contract address and ignores incoming contract query parameters. The extension release similarly embeds the canonical contract and signer origin; Options is informational rather than an infrastructure editor.
 
 No success evidence for those steps has been fabricated.
 
