@@ -1,5 +1,15 @@
 import { canonicalizeUrl, normalizeText, pageKeyFor, sha256Hex, type MarginClaim, type TextAnchor } from '../../shared/protocol';
 
+// Reloading an unpacked MV3 extension invalidates content-script contexts in
+// already-open tabs. Chrome rejects any promise that was still crossing the
+// runtime boundary at that moment. This is an expected lifecycle event, not a
+// page or protocol failure; suppress only this exact browser error.
+window.addEventListener('unhandledrejection', (event) => {
+  if (String(event.reason?.message || event.reason || '').includes('Extension context invalidated')) {
+    event.preventDefault();
+  }
+});
+
 function preferredCanonicalUrl(): string {
   const link = document.querySelector<HTMLLinkElement>('link[rel="canonical"][href]');
   try {
@@ -147,7 +157,9 @@ function annotate(claim: MarginClaim, ranges: Range[], aggregateCount = 1) {
   badge.style.left = `${Math.max(4, Math.min(document.documentElement.scrollWidth - 120, rect.left + window.scrollX))}px`;
   badge.addEventListener('click', (event) => {
     event.preventDefault(); event.stopPropagation();
-    chrome.runtime.sendMessage({ type: 'OPEN_CLAIM', claim });
+    void chrome.runtime.sendMessage({ type: 'OPEN_CLAIM', claim }).catch(() => {
+      // The extension may have been reloaded while this page stayed open.
+    });
   });
   document.documentElement.appendChild(badge);
   badges.set(claim.claim_key, badge);
@@ -174,14 +186,21 @@ function renderClaims(claims: MarginClaim[]) {
   const HighlightCtor = (globalThis as any).Highlight;
   const cssHighlights = (globalThis as any).CSS?.highlights;
   if (ranges.length && HighlightCtor && cssHighlights) {
-    activeHighlight = new HighlightCtor(...ranges);
-    cssHighlights.set('margin-claims', activeHighlight);
+    try {
+      activeHighlight = new HighlightCtor(...ranges);
+      cssHighlights.set('margin-claims', activeHighlight);
+    } catch {
+      // CSS highlight state can be invalidated during extension/page teardown.
+      activeHighlight = null;
+    }
   }
 }
 
 function scheduleReanchor() {
   if (reanchorTimer !== undefined) window.clearTimeout(reanchorTimer);
-  reanchorTimer = window.setTimeout(() => renderClaims(cachedClaims), 350);
+  reanchorTimer = window.setTimeout(() => {
+    try { renderClaims(cachedClaims); } catch { /* page is tearing down */ }
+  }, 350);
 }
 
 async function refresh() {
@@ -204,7 +223,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     return true;
   }
   if (message?.type === 'REFRESH_ANNOTATIONS') {
-    refresh().then(() => sendResponse({ ok: true })); return true;
+    refresh().then(() => sendResponse({ ok: true })).catch(() => sendResponse({ ok: false })); return true;
   }
   return false;
 });
