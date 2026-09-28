@@ -7,7 +7,7 @@ echo "[1/5] Python syntax"
 python3 -m py_compile contracts/margin.py tests/test_contract_invariants.py tests/direct/test_margin.py
 
 echo "[2/5] Source invariants"
-python3 -m unittest -q tests.test_contract_invariants
+python3 -m pytest tests/test_contract_invariants.py -q
 
 echo "[3/5] Network invariant"
 FORBIDDEN_CHAIN="619""97"

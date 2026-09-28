@@ -1,5 +1,6 @@
 from pathlib import Path
 import re
+import subprocess
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -41,8 +42,13 @@ class ContractInvariantTests(unittest.TestCase):
         self.assertIn("gl.nondet.web", SOURCE)
 
     def test_repository_does_not_reference_other_chain_id(self):
-        for path in ROOT.rglob('*'):
-            if not path.is_file() or any(part in {'.git', 'node_modules', '__pycache__'} for part in path.parts):
+        tracked = subprocess.check_output(
+            ['git', '-C', str(ROOT), 'ls-files', '--cached', '--others', '--exclude-standard'],
+            text=True,
+        ).splitlines()
+        for relative in tracked:
+            path = ROOT / relative
+            if not path.is_file():
                 continue
             if path.suffix in {'.zip', '.pyc'}:
                 continue
