@@ -165,10 +165,10 @@ This follows the important GenLayer rule that validators must independently veri
 
 ## What remains intentionally environment-specific
 
-The corrected contract is deployed, corrected-contract normal claim lifecycles are recorded in `deployment.json`, both a settled `CONTRADICTED` and a settled `SUPPORTED` Assured Claim path are recorded, the reference consumer has been exercised against both states, and the RFC browser-aligned claim has been read and visibly rendered by the built extension. The following evidence remains account/browser dependent and must not be inferred from unit tests:
+The corrected contract is deployed, corrected-contract normal claim lifecycles are recorded in `deployment.json`, live `SUPPORTED`, `CONTRADICTED`, `INCONCLUSIVE` and `STALE` outcomes are recorded, both a settled `CONTRADICTED` and a settled `SUPPORTED` Assured Claim path are recorded, the bounded Assured appeal and reference consumer have been exercised, and the RFC browser-aligned claim has been read and visibly rendered by the built extension. The following evidence remains account/browser dependent and must not be inferred from unit tests:
 
-- complete a fresh wallet-to-chain submit/resolve session from the extension;
-- exercise the Assured Claim appeal path;
-- measure representative fee profiles and transaction-level appeals where supported by the stable tooling.
+- repeat the complete wallet-to-chain submit/resolve session from a fresh browser profile if an independent reviewer requires it;
+- measure broader fee profiles and exercise a separate GenLayer transaction-level appeal where supported by the stable tooling;
+- complete the full automated browser E2E and hostile-page matrix described in `docs/LIVE_VALIDATION.md`.
 
 The product architecture should not be redesigned to complete those steps.
