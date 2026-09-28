@@ -94,6 +94,7 @@ The optional application-level Assured Claim path has now been exercised on the 
 - Confirm normal page visits create no GenLayer writes.
 - Confirm page with no claims causes only a read.
 - Live browser-aligned read/anchor check completed for `https://www.rfc-editor.org/info/rfc9110/`: the finalized claim key `cd77ff5d309f9a6cf60f51b7afbc2ca90b91cdcf80c613da1aee3d9fb191446b` was returned and rendered as a visible `M · SUPPORTED` badge with `data-margin-claim` set to that key. The quote was matched across the RFC Editor's zero-width `<wbr>` split. CSS Custom Highlight was unavailable in the inspected session, but the independent badge proof succeeded.
+- Final audit recheck: a controllable Chrome tab in the extension-enabled browser profile loaded the same RFC URL with the current built extension. A DOM query for `data-margin-claim="cd77ff5d309f9a6cf60f51b7afbc2ca90b91cdcf80c613da1aee3d9fb191446b"` returned exactly one element with text `M · SUPPORTED`. The canonical read immediately before this check returned the same claim key with status `SUPPORTED`, revision `1`, and source-manifest digest `452a5215fca972d2646684809863ba96e059a4ef159f122b71272b25ee84a153`.
 
 ## Signer
 
