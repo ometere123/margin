@@ -1,4 +1,13 @@
 import { canonicalizeUrl, normalizeText, pageKeyFor, sha256Hex, type MarginClaim, type TextAnchor } from '../../shared/protocol';
+import { findRangeDetailed } from './anchor';
+
+const marginContentGlobal = globalThis as typeof globalThis & { __MARGIN_CONTENT_ACTIVE__?: boolean };
+if (!marginContentGlobal.__MARGIN_CONTENT_ACTIVE__) {
+  marginContentGlobal.__MARGIN_CONTENT_ACTIVE__ = true;
+  bootstrapMarginContent();
+}
+
+function bootstrapMarginContent() {
 
 // Reloading an unpacked MV3 extension invalidates content-script contexts in
 // already-open tabs. Chrome rejects any promise that was still crossing the
@@ -71,87 +80,15 @@ async function captureSelection() {
   };
 }
 
-function textNodes(): Text[] {
-  const out: Text[] = [];
-  const walker = document.createTreeWalker(document.body || document.documentElement, NodeFilter.SHOW_TEXT, {
-    acceptNode(node) {
-      const parent = (node as Text).parentElement;
-      if (!parent || ['SCRIPT','STYLE','NOSCRIPT','TEXTAREA','INPUT'].includes(parent.tagName)) return NodeFilter.FILTER_REJECT;
-      return node.textContent?.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
-    },
-  });
-  let node: Node | null;
-  while ((node = walker.nextNode())) out.push(node as Text);
-  return out;
-}
-
-function findRange(exact: string, prefix: string, suffix: string): Range | null {
-  const nodes = textNodes();
-  type Point = { node: Text; offset: number };
-  const points: Point[] = [];
-  let normalized = '';
-  let previousWasSpace = true;
-
-  for (const node of nodes) {
-    const raw = node.textContent || '';
-    for (let i = 0; i < raw.length; i++) {
-      const ch = raw[i];
-      if (/\s/.test(ch)) {
-        if (!previousWasSpace) {
-          normalized += ' ';
-          points.push({ node, offset: i });
-          previousWasSpace = true;
-        }
-      } else {
-        normalized += ch;
-        points.push({ node, offset: i });
-        previousWasSpace = false;
-      }
-    }
-    if (!previousWasSpace) {
-      normalized += ' ';
-      points.push({ node, offset: raw.length });
-      previousWasSpace = true;
-    }
-  }
-
-  normalized = normalized.trimEnd();
-  points.length = normalized.length;
-  const needle = normalizeText(exact);
-  const pre = normalizeText(prefix).slice(-180);
-  const post = normalizeText(suffix).slice(0, 180);
-  if (!needle || normalized.length < needle.length) return null;
-
-  const matches: Array<{ start: number; score: number }> = [];
-  let from = 0;
-  while (from <= normalized.length - needle.length) {
-    const idx = normalized.indexOf(needle, from);
-    if (idx < 0) break;
-    const before = normalized.slice(Math.max(0, idx - pre.length), idx);
-    const after = normalized.slice(idx + needle.length, idx + needle.length + post.length);
-    let score = 0;
-    if (pre && before.endsWith(pre)) score += 2;
-    if (post && after.startsWith(post)) score += 2;
-    if (!pre && !post) score += 1;
-    matches.push({ start: idx, score });
-    from = idx + Math.max(1, needle.length);
-  }
-  if (matches.length === 0) return null;
-  matches.sort((a, b) => b.score - a.score);
-  if (matches.length > 1 && matches[0].score === matches[1].score) return null;
-
-  const winner = matches[0];
-  const first = points[winner.start];
-  const last = points[winner.start + needle.length - 1];
-  if (!first || !last) return null;
-  const range = document.createRange();
-  range.setStart(first.node, Math.min(first.offset, first.node.length));
-  range.setEnd(last.node, Math.min(last.offset + 1, last.node.length));
-  return range;
-}
-
 const badges = new Map<string, HTMLButtonElement>();
 let activeHighlight: any = null;
+let lastDiagnostics: Record<string, unknown> = {};
+const debugEnabled = new URLSearchParams(location.search).get('margin_debug') === '1';
+
+function debug(event: string, details: Record<string, unknown> = {}) {
+  lastDiagnostics = { event, ...details };
+  if (debugEnabled) console.debug('[MARGIN annotation]', lastDiagnostics);
+}
 
 function clearAnnotations() {
   for (const badge of badges.values()) badge.remove();
@@ -162,14 +99,30 @@ function clearAnnotations() {
 }
 
 function annotate(claim: MarginClaim, ranges: Range[], aggregateCount = 1) {
-  if (claim.canonical_url !== preferredCanonicalUrl()) return;
-  const range = findRange(claim.quote, claim.prefix, claim.suffix);
+  const canonical = preferredCanonicalUrl();
+  if (claim.canonical_url !== canonical) {
+    debug('canonical-filter', { claimKey: claim.claim_key, canonical, claimCanonical: claim.canonical_url });
+    return;
+  }
+  const match = findRangeDetailed(document, claim.quote, claim.prefix, claim.suffix);
+  debug('anchor-match', {
+    claimKey: claim.claim_key,
+    matchCount: match.matchCount,
+    winnerScore: match.winnerScore,
+    found: Boolean(match.range),
+    normalizedRangeText: match.normalizedRangeText,
+  });
+  const range = match.range;
   if (!range) return;
   ranges.push(range);
   const rect = range.getBoundingClientRect();
-  if (!rect.width && !rect.height) return;
+  if (!rect.width && !rect.height) {
+    debug('anchor-zero-rect', { claimKey: claim.claim_key, width: rect.width, height: rect.height });
+    return;
+  }
   const badge = document.createElement('button');
   badge.className = 'margin-badge';
+  badge.dataset.marginClaim = claim.claim_key;
   badge.dataset.status = claim.status;
   badge.textContent = aggregateCount > 1 ? `M · ${claim.status} · ${aggregateCount} claims` : `M · ${claim.status}`;
   badge.setAttribute('aria-label', aggregateCount > 1 ? `MARGIN ${claim.status}, ${aggregateCount} claims` : `MARGIN ${claim.status}`);
@@ -184,6 +137,7 @@ function annotate(claim: MarginClaim, ranges: Range[], aggregateCount = 1) {
   });
   document.documentElement.appendChild(badge);
   badges.set(claim.claim_key, badge);
+  debug('badge-added', { claimKey: claim.claim_key, badgeCount: badges.size, width: rect.width, height: rect.height });
 }
 
 let cachedClaims: MarginClaim[] = [];
@@ -244,10 +198,19 @@ async function refresh() {
   if (!extensionContextIsAlive()) return;
   try {
     const canonical = preferredCanonicalUrl();
-    const response = await sendRuntimeMessage<{ claims?: MarginClaim[] }>({ type: 'GET_PAGE_CLAIMS', url: canonical });
+    const derivedPageKey = await pageKeyFor(canonical);
+    const response = await sendRuntimeMessage<{ ok?: boolean; claims?: MarginClaim[]; error?: string }>({ type: 'GET_PAGE_CLAIMS', url: canonical });
     if (!response) return;
     cachedClaims = (response?.claims || []) as MarginClaim[];
     lastCanonical = canonical;
+    debug('page-read', {
+      canonicalUrl: canonical,
+      pageKey: derivedPageKey,
+      ok: response.ok !== false,
+      error: response.error || '',
+      claimCount: cachedClaims.length,
+      claimKeys: cachedClaims.map((claim) => claim.claim_key),
+    });
     renderClaims(cachedClaims);
     if (cachedClaims.length === 0) scheduleEmptyReadRetry();
     else if (emptyReadRetryTimer !== undefined) {
@@ -262,6 +225,14 @@ async function refresh() {
 }
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  if (message?.type === 'MARGIN_PING') {
+    try { sendResponse({ ok: true }); } catch {}
+    return false;
+  }
+  if (message?.type === 'MARGIN_DIAGNOSTICS') {
+    try { sendResponse({ ok: true, ...lastDiagnostics, canonicalUrl: preferredCanonicalUrl() }); } catch {}
+    return false;
+  }
   if (message?.type === 'CAPTURE_SELECTION') {
     captureSelection().then((payload) => {
       try { sendResponse({ ok: true, payload }); } catch {}
@@ -308,3 +279,4 @@ window.setInterval(() => {
     void refresh();
   }
 }, 3000);
+}

@@ -65,6 +65,10 @@ Injected browser wallets are not reliably injected into `chrome-extension://` pa
 
 The extension is still the primary product surface. Normal browsing and anchoring occur locally. Finalized page reads are cached, deduplicated and globally rate-limited so dynamic pages cannot turn mutation/SPA observation into an unbounded RPC loop; temporary gateway failures retain the last successful finalized result and allow only bounded cooldown retries until the user explicitly refreshes annotations. Context-menu actions open the side panel while the originating user gesture is still active. Annotation badges store the selected claim and the user can open the panel from the extension action; Chrome does not permit the service worker to open a side panel after a content-script message has crossed that boundary.
 
+The extension requests `storage` for local draft/session state, `contextMenus` and `sidePanel` for the challenge workflow, `tabs`/`activeTab` to address the originating public tab, and `scripting` only to recover a content script in an already-open HTTP(S) tab after an unpacked-extension reload. It does not inject into browser, extension, or local-file pages. During development, reload the unpacked extension and then reload the RFC page; the service worker also pings the active HTTP(S) tab and performs a guarded reinjection when the old content context has been invalidated.
+
+For a bounded annotation diagnostic, append `?margin_debug=1` to a supported page and inspect the content-script console, or send the internal `MARGIN_DIAGNOSTICS` message from the extension context. The diagnostic reports the canonical URL, derived page key, finalized read result, returned claim keys, anchor match count, normalized range text, range rectangle and badge count without changing protocol state.
+
 ## Repository
 
 ```text

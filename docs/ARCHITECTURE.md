@@ -13,6 +13,8 @@ The extension is the real MARGIN user interface. It does four jobs:
 
 The extension uses a small DOM badge and a conservative anchor resolver. If an anchor cannot be located unambiguously, MARGIN does not guess.
 
+The resolver builds a rendered text stream from visible text characters. It collapses whitespace that is actually present, treats `<br>`/block boundaries as explicit separators, and does not insert a separator at ordinary text-node or inline-element boundaries. This matters for pages such as RFC Editor, which can split `application-level` as `applicatio<wbr>n-level`; the resulting `Range` spans the real DOM nodes while the badge remains independent of CSS Custom Highlight support. The service worker exposes a bounded success/error result for finalized page reads, and the content script keeps diagnostics behind `margin_debug=1` rather than logging normal browsing activity.
+
 ### Signer DApp
 
 The signer exists only because injected EIP-1193 wallets are not reliably exposed inside Chrome extension pages. It receives a fully formed draft through a URL-safe payload and asks the wallet to submit it. Its release build receives the public canonical contract through `VITE_MARGIN_CONTRACT_ADDRESS`; normal users do not edit infrastructure configuration.

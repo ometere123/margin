@@ -26,8 +26,32 @@ async function fetchPageClaims(canonical: string): Promise<MarginClaim[]> {
 
 const readPageClaims = createPageClaimsReader(fetchPageClaims);
 
-async function getPageClaims(url: string): Promise<MarginClaim[]> {
-  return readPageClaims(canonicalizeUrl(url));
+const contentRecovery = new Map<number, Promise<boolean>>();
+
+async function ensureContentScript(tabId: number): Promise<boolean> {
+  const existing = contentRecovery.get(tabId);
+  if (existing) return existing;
+  const task = (async () => {
+    let tab: chrome.tabs.Tab;
+    try { tab = await chrome.tabs.get(tabId); } catch { return false; }
+    if (!tab.url || !/^https?:$/.test(new URL(tab.url).protocol)) return false;
+    try {
+      const response = await chrome.tabs.sendMessage(tabId, { type: 'MARGIN_PING' }, { frameId: 0 });
+      if (response?.ok) return true;
+    } catch {
+      // No receiver means the unpacked extension was reloaded while the tab
+      // remained open, or the static content script was not present yet.
+    }
+    try {
+      await chrome.scripting.insertCSS({ target: { tabId, frameIds: [0] }, files: ['content.css'] });
+      await chrome.scripting.executeScript({ target: { tabId, frameIds: [0] }, files: ['content.js'] });
+      return true;
+    } catch {
+      return false;
+    }
+  })().finally(() => contentRecovery.delete(tabId));
+  contentRecovery.set(tabId, task);
+  return task;
 }
 
 chrome.runtime.onInstalled.addListener(async () => {
@@ -42,6 +66,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   const panelOpen = chrome.sidePanel.open({ tabId: tab.id });
   try {
     await panelOpen;
+    await ensureContentScript(tab.id);
     const response = await chrome.tabs.sendMessage(tab.id, { type: 'CAPTURE_SELECTION' });
     if (!response?.ok) throw new Error(response?.error || 'Could not capture selection');
     await chrome.storage.session.set({ pendingDraft: response.payload, selectedClaim: null, panelError: '' });
@@ -52,7 +77,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message?.type === 'GET_PAGE_CLAIMS') {
-    getPageClaims(message.url).then((claims) => sendResponse({ claims })).catch((error) => sendResponse({ claims: [], error: String(error) }));
+    readPageClaims(canonicalizeUrl(message.url)).then((result) => sendResponse(result)).catch((error) => sendResponse({ ok: false, claims: [], error: String(error) }));
     return true;
   }
   if (message?.type === 'OPEN_CLAIM') {
@@ -77,4 +102,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
   return false;
+});
+
+chrome.tabs.onActivated.addListener(({ tabId }) => { void ensureContentScript(tabId); });
+chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+  if (changeInfo.status === 'complete') void ensureContentScript(tabId);
 });

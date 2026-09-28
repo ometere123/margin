@@ -10,6 +10,7 @@ describe('bounded finalized page reads', () => {
     const read = createPageClaimsReader(fetchClaims, () => now, 100, 0);
     const [first, second] = await Promise.all([read('https://example.com/'), read('https://example.com/')]);
     expect(first).toEqual(second);
+    expect(first).toEqual({ ok: true, claims: [claim('one')] });
     expect(fetchClaims).toHaveBeenCalledTimes(1);
     await read('https://example.com/');
     expect(fetchClaims).toHaveBeenCalledTimes(1);
@@ -26,7 +27,7 @@ describe('bounded finalized page reads', () => {
     const read = createPageClaimsReader(fetchClaims, () => now, 100, 0);
     await read('https://example.com/');
     now += 101;
-    await expect(read('https://example.com/')).resolves.toEqual([claim('one')]);
+    await expect(read('https://example.com/')).resolves.toMatchObject({ ok: false, claims: [claim('one')], error: expect.any(String) });
     expect(fetchClaims).toHaveBeenCalledTimes(2);
   });
 
@@ -34,12 +35,12 @@ describe('bounded finalized page reads', () => {
     let now = 1000;
     const fetchClaims = vi.fn().mockRejectedValue(new Error('Unexpected token < in JSON'));
     const read = createPageClaimsReader(fetchClaims, () => now, 100, 0);
-    await expect(read('https://example.com/')).resolves.toEqual([]);
+    await expect(read('https://example.com/')).resolves.toMatchObject({ ok: false, claims: [], error: expect.any(String) });
     now += 1;
-    await expect(read('https://example.com/')).resolves.toEqual([]);
+    await expect(read('https://example.com/')).resolves.toMatchObject({ ok: false, claims: [], error: expect.any(String) });
     expect(fetchClaims).toHaveBeenCalledTimes(1);
     now += 15_001;
-    await expect(read('https://example.com/')).resolves.toEqual([]);
+    await expect(read('https://example.com/')).resolves.toMatchObject({ ok: false, claims: [], error: expect.any(String) });
     expect(fetchClaims).toHaveBeenCalledTimes(2);
   });
 });

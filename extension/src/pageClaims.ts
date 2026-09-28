@@ -7,6 +7,9 @@ export const PAGE_CLAIMS_CACHE_TTL_MS = 15_000;
 export const PAGE_CLAIMS_MIN_RPC_INTERVAL_MS = 7_500;
 
 type CacheEntry = { claims: MarginClaim[]; fetchedAt: number };
+export type PageClaimsRead =
+  | { ok: true; claims: MarginClaim[] }
+  | { ok: false; claims: MarginClaim[]; error: string };
 
 /** Bound direct finalized reads made by dynamic pages. */
 export function createPageClaimsReader(
@@ -16,7 +19,7 @@ export function createPageClaimsReader(
   minRpcIntervalMs = PAGE_CLAIMS_MIN_RPC_INTERVAL_MS,
 ) {
   const cache = new Map<string, CacheEntry>();
-  const inFlight = new Map<string, Promise<MarginClaim[]>>();
+  const inFlight = new Map<string, Promise<PageClaimsRead>>();
   let nextRpcAt = 0;
   let suppressUntil = 0;
 
@@ -26,17 +29,17 @@ export function createPageClaimsReader(
     nextRpcAt = Math.max(nextRpcAt, now()) + minRpcIntervalMs;
   }
 
-  return async function read(canonicalUrl: string): Promise<MarginClaim[]> {
+  return async function read(canonicalUrl: string): Promise<PageClaimsRead> {
     const cached = cache.get(canonicalUrl);
-    if (cached && now() - cached.fetchedAt < ttlMs) return cached.claims;
-    if (now() < suppressUntil) return cached?.claims || [];
+    if (cached && now() - cached.fetchedAt < ttlMs) return { ok: true, claims: cached.claims };
+    if (now() < suppressUntil) return { ok: false, claims: cached?.claims || [], error: 'temporary RPC failure cooldown' };
     const existing = inFlight.get(canonicalUrl);
     if (existing) return existing;
 
     const request = waitForRpcSlot().then(() => fetchClaims(canonicalUrl))
       .then((claims) => {
         cache.set(canonicalUrl, { claims, fetchedAt: now() });
-        return claims;
+        return { ok: true as const, claims };
       })
       .catch((error) => {
         // Preserve a last known finalized result during a temporary gateway or
@@ -44,9 +47,11 @@ export function createPageClaimsReader(
         // Also suppress a burst of retries when there is no cached result. The
         // next scheduled read will try again after the gateway cooldown.
         suppressUntil = now() + 15_000;
-        if (cached) return cached.claims;
-        void error;
-        return [];
+        return {
+          ok: false as const,
+          claims: cached?.claims || [],
+          error: String((error as Error)?.message || error),
+        };
       })
       .finally(() => inFlight.delete(canonicalUrl));
     inFlight.set(canonicalUrl, request);

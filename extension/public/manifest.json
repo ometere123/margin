@@ -3,7 +3,7 @@
   "name": "MARGIN",
   "version": "0.1.0",
   "description": "Consensus-backed annotations for narrowly scoped public web claims.",
-  "permissions": ["storage", "contextMenus", "sidePanel", "tabs", "activeTab"],
+  "permissions": ["storage", "contextMenus", "sidePanel", "tabs", "activeTab", "scripting"],
   "host_permissions": [
     "https://studio.genlayer.com/*",
     "https://*/*",
