@@ -136,7 +136,7 @@ The exact command flags should still be checked against `npm exec -- genlayer <c
 8. Fund the wallet from the Studionet faucet.
 9. Run the scenarios in `docs/LIVE_VALIDATION.md`. Normal users never configure the contract, RPC, chain or signer URL.
 
-Current canonical contract: `0xb4161203706B2428D5FbC5B7e114b09d1De32960` on Studionet 61999, deployed from source commit `552a6810742bd28ed0fc9eac80f07e69e95f8791`. The prior `0x03fE...D57C` deployment is historical. The production signer is [`https://margin-signer.vercel.app/`](https://margin-signer.vercel.app/). See [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md) for the live record.
+The canonical contract is recorded in [`deployment.json`](deployment.json) on Studionet 61999. The prior deployments are historical. The production signer is [`https://margin-signer.vercel.app/`](https://margin-signer.vercel.app/). See [`SUBMISSION.md`](SUBMISSION.md) for the live record.
 
 ## Evidence model
 

@@ -31,6 +31,10 @@ The contract intentionally does **not** claim to preserve historical webpages. `
 - `get_assured_claim(claim_key)`
 - `is_assured_claim_final(claim_key)`
 
+The reference consumer is constructed with the canonical MARGIN address once and exposes
+`execute_if_supported(claim_key)`. Callers cannot select a replacement MARGIN-like
+contract per execution.
+
 ## Security boundaries
 
 - Web pages and evidence are untrusted prompt material.

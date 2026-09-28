@@ -861,6 +861,7 @@ SOURCE MANIFEST COMMITMENT:
                 and candidate.get("contradicting_source_indexes") == independent.get("contradicting_source_indexes")
                 and candidate.get("historical_evidence_used") == independent.get("historical_evidence_used")
                 and candidate.get("source_manifest") == independent.get("source_manifest")
+                and candidate.get("adjudication_context_digest") == independent.get("adjudication_context_digest")
             )
 
         decision = gl.vm.run_nondet_unsafe(judge, validate)
