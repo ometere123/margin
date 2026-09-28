@@ -194,13 +194,30 @@
       "finalStatus": "SUPPORTED",
       "state": "RESOLVED",
       "appealDeadline": "2026-09-28T20:47:40.898505+00:00",
-      "settlement": "pending appeal deadline"
+      "settleTx": "0x9478d501612b280a756d529862d5f1bf57b005946d1b10bf3add328e9a80f308",
+      "settleFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "withdrawalTx": "0xd1c9cfe491dc186911fd582ddd6d3f05cf17acc17efdf9768680c24bf65422a5",
+      "withdrawalFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "stateAfterSettlement": "SETTLED",
+      "finalStatusAfterSettlement": "SUPPORTED",
+      "publisherCreditAfterWithdrawal": 0,
+      "challengerCreditAfterWithdrawal": 0,
+      "settled": true,
+      "settlementNote": "After the recorded appeal deadline, settlement finalized the 3 GEN SUPPORTED payout to publisher credit. Publisher withdrawal then finalized successfully; canonical readback shows SETTLED / SUPPORTED with both credits at zero."
     },
     "consumerDeployment": {
       "contractAddress": "0x26a0ee4a03c39887B1d6284609286eFC7be314F8",
       "deploymentTx": "0x7c11d48b9e9bf6e5511c6097d8b7872577e11ee14b95c4cf2edcd0eb121afa68",
       "boundMarginAddress": "0xC3E6E1C2102187F3558aDb593dC29D7acf3d2310",
       "deploymentFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS"
+    },
+    "freshPositiveConsumerExercise": {
+      "consumerAddress": "0x26a0ee4a03c39887B1d6284609286eFC7be314F8",
+      "claimKey": "274e16c4d7acfaf0f3a3bb4699485b59baad9284c273ae1153f828e42cbb924f",
+      "exerciseTx": "0x999a662f130504f5c2a795c26f9166d4d3f25510931822b659e46ec5df4ff077",
+      "exerciseFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "canonicalClaimState": "SETTLED / SUPPORTED",
+      "postExerciseHasExecuted": true
     }
   },
   "toolVersions": {

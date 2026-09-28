@@ -56,7 +56,7 @@ Do not run bare `genlayer ...` commands from this repo.
 
 ## Checks completed for the corrected candidate
 
-- WSL Direct Mode: 14/14 PASS, including adversarial domain-proof rejection cases.
+- WSL Direct Mode: 15/15 PASS, including adversarial domain-proof rejection cases.
 - WSL contract lint/validation: PASS with `genvm-lint 0.11.1rc2`.
 - Python/source invariant suite: 12/12 PASS.
 - `npm exec -- genlayer --version`: `0.39.1`.
@@ -71,8 +71,8 @@ Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat th
 
 The corrected contract deployment is real and finalized. The following evidence boundaries remain explicit and must not be overstated:
 
-- The earlier live Assured settlement, consumer, wallet and browser evidence belongs to the immediately preceding deployment and is retained as historical evidence. The current deployment has fresh same-source appeal resolution evidence; settlement/withdrawal are pending the recorded appeal deadline.
-- The corrected consumer is newly deployed against the current MARGIN address and its construction calldata binds that address; a fresh positive exercise is pending the current Assured settlement.
+- The earlier live wallet and browser evidence belongs to the immediately preceding deployment and is retained as historical evidence. The current deployment has fresh same-source appeal, post-deadline settlement, withdrawal and canonical readback evidence: `SETTLED / SUPPORTED`, both credits zero.
+- The corrected consumer is newly deployed against the current MARGIN address, its construction calldata binds that address, and its fresh positive exercise finalized successfully with `has_executed: true`.
 - Live wallet-to-chain end-to-end verification remains recorded for the preceding deployment; this source-only round did not redo the browser matrix.
 - live fee profiling. Live `INCONCLUSIVE` evidence is now recorded for claim `6e886a73a2573cdffb6d74b328215dff6cbd0b8f32e7b5d8141d862ccb1d8cf3`: submit `0x4d1ee62a832e0d4fcb548d7b1c71cccdd4a69650a70f0ce823f61b3c6c1aa777`, resolve `0x04e6245f7a2f44d333e885a7ccbe3e8602fd87dca2990e3de2c0a52e1fe19df8`, and canonical `INCONCLUSIVE` readback. The controlled `STALE` lifecycle is also recorded with submit `0xa3300ccffe62e6f3641c0f1f7b314555f73a7a2e72333bf3f1c8a27bd6f8b166`, resolve `0x14a0d173311ef22c283c07cae4bf9fa2a79fc778f619adcfd41430cd19754e3a`, and canonical `STALE` readback;
 - automated browser E2E and hostile-page matrix.
