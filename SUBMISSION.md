@@ -13,6 +13,7 @@ MARGIN is a browser-native annotation layer: the extension anchors an explicit c
 - Source commit: `a18eba60cdb1b26c55692cb8dbc6f26d08ea1359`
 - Source: 16,762 bytes; SHA-256 `5d4330301fa51c8ae7f7253c1f4d6730d0a91746e5479e8b269c60a7f52b954b`
 - Runtime identity: `chain_id=61999`, `network=studionet`, `rpc=https://studio.genlayer.com/api`
+- Production signer: [`https://margin-signer.vercel.app/`](https://margin-signer.vercel.app/) — verified HTTP 200 and MARGIN signer page.
 
 ## Finalized live claim
 
@@ -33,6 +34,6 @@ The earlier deployment at `0xecE43547EcFbFB082B4Bfb62D3bdEb6dBf0B8059` and its t
 - Direct Mode: 8/8 passed under the repository's stable `v0.2.12` runner in WSL
 - Static lint: PASS with `genvm-lint 0.11.1rc2`
 - Full linter SDK validation remains environment-limited by the unavailable/corrupt runner archive; no validation pass is claimed here.
-- Browser extension and signer bundles build successfully. A Chromium wallet/annotation session was not claimed as completed in this run.
+- Browser extension and signer bundles build successfully. The signer is deployed at `https://margin-signer.vercel.app/`; a Chromium wallet/annotation session was not claimed as completed in this run.
 
 MARGIN's verdict is a bounded result for the challenged claim and independently inspectable public source. It is not a universal truth score or historical proof of what a page previously displayed.

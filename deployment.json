@@ -9,6 +9,7 @@
   "sourceCommit": "a18eba60cdb1b26c55692cb8dbc6f26d08ea1359",
   "sourceBytes": 16762,
   "sourceSha256": "5d4330301fa51c8ae7f7253c1f4d6730d0a91746e5479e8b269c60a7f52b954b",
+  "signerUrl": "https://margin-signer.vercel.app/",
   "runtimeIdentity": {
     "chain_id": 61999,
     "network": "studionet",
