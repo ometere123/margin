@@ -61,7 +61,7 @@ Do not run bare `genlayer ...` commands from this repo.
 - Python/source invariant suite: 12/12 PASS.
 - `npm exec -- genlayer --version`: `0.39.1`.
 - Studionet network info and deployed `network()` readback: `61999`, `studionet`, `https://studio.genlayer.com/api`.
-- Extension/signer typecheck, tests and builds: PASS on the current committed source; extension tests `11/11`, signer tests `15/15`, source invariants `12/12`.
+- Extension/signer typecheck, tests and builds: PASS on the current committed source; extension tests `12/12`, signer tests `15/15`, source invariants `12/12`.
 - Reproducible extension archive: `MARGIN-extension-v0.1.0.zip`, SHA-256 `66f245a1a14969b061c11b6bfa43c72140356a2232f447787273b73e86f664d9`, produced by `npm run zip` from `extension/dist`; repeated generation with unchanged sources matched this hash.
 
 Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat the checks that do not require package downloads.

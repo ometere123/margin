@@ -32,7 +32,7 @@ The earlier deployment at `0xecE43547EcFbFB082B4Bfb62D3bdEb6dBf0B8059` and its t
 ## Verification status for this revision
 
 - Local CLI: `0.39.1`
-- `npm run verify`: PASS for the corrected source (extension tests: 11; signer tests: 15; source invariant tests: 12; Direct Mode: 14 under WSL stable runner). The extension read scheduler regression suite covers concurrent deduplication, TTL caching, stale-result fallback and cold-cache gateway-failure suppression.
+- `npm run verify`: PASS for the corrected source (extension tests: 12; signer tests: 15; source invariant tests: 12; Direct Mode: 14 under WSL stable runner). The extension read scheduler regression suite covers concurrent deduplication, TTL caching, stale-result fallback and cold-cache gateway-failure suppression.
 - Direct Mode: 14/14 passed under the repository's stable `v0.2.12` runner in WSL, including cross-origin, expired-proof and wrong-publisher domain-proof rejection cases.
 - Static lint: PASS with `genvm-lint 0.11.1rc2`
 - Full linter SDK validation remains environment-limited by the unavailable/corrupt runner archive; no validation pass is claimed here.

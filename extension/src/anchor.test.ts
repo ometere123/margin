@@ -23,6 +23,13 @@ describe('rendered DOM text anchoring', () => {
     expect(match.normalizedRangeText).toBe('application-level');
   });
 
+  it('matches the RFC word when an inline element splits the middle of it', () => {
+    const document = dom('<p>applicatio<span></span>n-level</p>');
+    const match = findRangeDetailed(document, 'application-level', '', '');
+    expect(match.range).not.toBeNull();
+    expect(match.normalizedRangeText).toBe('application-level');
+  });
+
   it('preserves real whitespace and explicit br separation', () => {
     const spaced = findRangeDetailed(dom('<p>application- <span>level</span></p>'), 'application- level', '', '');
     expect(spaced.range).not.toBeNull();
