@@ -130,11 +130,14 @@ A second controlled Assured Claim was created specifically to prove the positive
 - Challenge: `0x978d517eb7d774af22d7f19c2eea33877b65bc01a3a05364e88c197c0e4955ed` — finalized `MAJORITY_AGREE / SUCCESS`, 1 GEN challenge bond
 - Resolution: `0x4ad4827bb4827f1c3365f64a2e62a64b273c2b12286a9ac5af246e2c17273de0` — finalized `MAJORITY_AGREE / SUCCESS`
 - Canonical readback after resolution: `RESOLVED / SUPPORTED`; appeal deadline `2026-09-28T12:37:10.149202+00:00`
-- Settlement, withdrawal, and positive consumer execution are intentionally not recorded here until their transactions finalize and canonical readback is verified.
+- After the appeal deadline, settlement finalized in `0xbc9c39d5b0273868fdcc8dc8f3f898995f0461db03c7c31559d1073c1f4e83e4` (`FINALIZED / MAJORITY_AGREE / SUCCESS`). Publisher withdrawal finalized in `0xb913996d7b635a0aa61f3db84e6550577c67dc89f352fc46f083d1614816b675` with the same finality. Canonical readback is `SETTLED / SUPPORTED`, with publisher and challenger credits both `0` after withdrawal.
+- The positive consumer call finalized in `0x167af481d43b97c30f5a35b234c633112e8b4fcf7af9500e85241a4fbe0e9052` (`FINALIZED / MAJORITY_AGREE / SUCCESS`). Its canonical `has_executed` readback changed from `false` to `true`.
 
 ## Downstream consumer evidence
 
 The separate reference consumer was deployed at `0x2885169713d79cb2FC463Dc624Ea5fc08b59d044` by finalized transaction `0x84ba75b54e4f58b5550388b9a474c31099b8626f55b8c8041081ed886a27c6a4`. Its `execute_if_supported` call against the canonical MARGIN contract and the settled `CONTRADICTED` claim finalized in `0xb7c25973b255b6148b0e156db42ef6128bb22c0dc89ba15be828cc440b78ebd0` with the expected contract error `protected action requires a SUPPORTED assured claim`. `has_executed` was `false` both before and after the call. This is a negative-gate proof that the consumer reads canonical MARGIN state and does not trust a caller-supplied/frontend status.
+
+The same consumer was then exercised against the positive settled claim `09c8cdd7a1ad5716bcafadc38458685340400da3682436e4a1f86319b82b5a9c`. The call finalized successfully in `0x167af481d43b97c30f5a35b234c633112e8b4fcf7af9500e85241a4fbe0e9052`, and canonical `has_executed` readback is `true`.
 
 ## Fee profile
 

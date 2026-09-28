@@ -88,9 +88,15 @@
       "resolveTx": "0x4ad4827bb4827f1c3365f64a2e62a64b273c2b12286a9ac5af246e2c17273de0",
       "resolveFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
       "finalStatus": "SUPPORTED",
-      "state": "RESOLVED",
+      "state": "SETTLED",
       "appealDeadline": "2026-09-28T12:37:10.149202+00:00",
-      "settlementPendingAtLastRead": true,
+      "settleTx": "0xbc9c39d5b0273868fdcc8dc8f3f898995f0461db03c7c31559d1073c1f4e83e4",
+      "settleFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "withdrawalTx": "0xb913996d7b635a0aa61f3db84e6550577c67dc89f352fc46f083d1614816b675",
+      "withdrawalFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "settled": true,
+      "publisherCreditAfterWithdrawal": 0,
+      "challengerCreditAfterWithdrawal": 0,
       "evidenceUrls": ["https://margin-signer.vercel.app/fixtures/support.html"],
       "sourceManifestDigest": "7e1defff880eeccdb06d6d8630c68e2c1690669b5ebc24a58f02975dd97f2143"
     },
@@ -105,6 +111,15 @@
       "exerciseResult": "protected action requires a SUPPORTED assured claim",
       "postExerciseHasExecuted": false,
       "canonicalClaimState": "SETTLED / CONTRADICTED"
+    },
+    "positiveConsumerExercise": {
+      "consumerContractAddress": "0x2885169713d79cb2FC463Dc624Ea5fc08b59d044",
+      "claimKey": "09c8cdd7a1ad5716bcafadc38458685340400da3682436e4a1f86319b82b5a9c",
+      "preExerciseHasExecuted": false,
+      "exerciseTx": "0x167af481d43b97c30f5a35b234c633112e8b4fcf7af9500e85241a4fbe0e9052",
+      "exerciseFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "postExerciseHasExecuted": true,
+      "canonicalClaimState": "SETTLED / SUPPORTED"
     }
   },
   "toolVersions": {
