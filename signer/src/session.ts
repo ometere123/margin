@@ -14,3 +14,10 @@ export function shouldAutoRestore(marker: string | null): boolean {
 export function isStudionetChainHex(chainHex: string): boolean {
   return Number.parseInt(chainHex, 16) === 61999;
 }
+
+export function walletHeaderState(account: string | null, chainCorrect: boolean) {
+  return {
+    connected: Boolean(account),
+    networkActive: Boolean(account && chainCorrect),
+  };
+}

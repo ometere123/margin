@@ -1,4 +1,5 @@
 import { CLAIM_CLASSES, MARGIN_CONTRACT_ADDRESS, MARGIN_EXPLORER_URL, MARGIN_SIGNER_URL, canonicalizeUrl, claimKeyFor, encodeDraft, pageKeyFor, type ClaimClass, type ClaimDraft, type MarginClaim } from '../../shared/protocol';
+import { signerChallengeUrl } from './signerUrl';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
@@ -48,9 +49,7 @@ async function draftView(seed: any) {
       };
       const draft: ClaimDraft = { ...withoutKey, claimKey: await claimKeyFor(withoutKey) };
       await chrome.storage.session.set({ pendingDraft: draft });
-      const target = new URL(MARGIN_SIGNER_URL);
-      target.searchParams.set('draft', encodeDraft(draft));
-      await chrome.tabs.create({ url: target.toString() });
+      await chrome.tabs.create({ url: signerChallengeUrl(MARGIN_SIGNER_URL, encodeDraft(draft)) });
     } catch (error) {
       err.innerHTML = `<div class="error">${esc(String((error as Error).message || error))}</div>`;
     }

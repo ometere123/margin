@@ -4,9 +4,10 @@ import { TransactionHashVariant } from 'genlayer-js/types';
 import { canonicalizeUrl, claimKeyFor, decodeDraft, MARGIN_CHAIN_ID, MARGIN_CONSUMER_ADDRESS, MARGIN_CONTRACT_ADDRESS, MARGIN_EXPLORER_URL, MARGIN_NETWORK_NAME, MARGIN_RPC_URL, pageKeyFor, type ClaimDraft, type MarginClaim } from '../../shared/protocol';
 import { disconnectStorageKey, executionSummary, isSuccessfulFinalizedReceipt, pendingAccountMatches, trackingFailureMessage, transactionsStorageKey, type PendingTransaction } from './transaction';
 import { createProviderBackedClient } from './wallet';
-import { accountFromProvider, accountRequestMethod, isStudionetChainHex, shouldAutoRestore } from './session';
+import { accountFromProvider, accountRequestMethod, isStudionetChainHex, shouldAutoRestore, walletHeaderState } from './session';
 import { assuredActions, assuredDisplay, type AssuredClaimView, type AssuredAction } from './assured';
 import { parseRoute, type Route } from './router';
+import { decisionHistoryHtml, type DecisionHistoryEntry } from './history';
 import './style.css';
 
 declare global {
@@ -35,6 +36,7 @@ let assuredClaim: AssuredClaimView | null = null;
 let assuredError = '';
 let consumerExecuted: boolean | null = null;
 let directClaim: MarginClaim | null = null;
+let decisionHistory: DecisionHistoryEntry[] = [];
 
 
 function esc(v: string) { return v.replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]!)); }
@@ -56,8 +58,10 @@ function transactionCards() {
 function contractLink(address: string) { return `<a href="${MARGIN_EXPLORER_URL}/address/${encodeURIComponent(address)}" target="_blank" rel="noreferrer">View contract in Explorer ↗</a>`; }
 
 function headerHtml() {
-  const wallet = account ? `<span class="wallet-chip" title="${esc(account)}">${esc(account.slice(0, 8))}…${esc(account.slice(-6))}</span>` : '';
-  return `<header><a class="brand" href="/"><img src="/assets/margin-logo.svg" alt="MARGIN"><span><span class="wordmark">MARGIN</span><span class="sub">Consensus-backed web claims</span></span></a><nav><a class="nav-item" href="/activity">Activity</a>${wallet}<span class="pill ${chainCorrect ? 'ok' : 'warn'}">${chainCorrect ? `Studionet · ${MARGIN_CHAIN_ID}` : 'Wallet not on Studionet'}</span></nav></header>`;
+  const walletState = walletHeaderState(account, chainCorrect);
+  const wallet = walletState.connected ? `<span class="wallet-chip" title="${esc(account!)}">${esc(account!.slice(0, 8))}…${esc(account!.slice(-6))}</span><button id="header-disconnect" class="header-action">Disconnect</button>` : '<button id="header-connect" class="header-action">Connect wallet</button>';
+  const networkLabel = walletState.networkActive ? `Studionet · ${MARGIN_CHAIN_ID}` : account ? 'Wallet not on Studionet' : `Studionet · ${MARGIN_CHAIN_ID}`;
+  return `<header><a class="brand" href="/"><img src="/assets/margin-logo.svg" alt="MARGIN"><span><span class="wordmark">MARGIN</span><span class="sub">Consensus-backed web claims</span></span></a><nav><a class="nav-item" href="/activity">Activity</a>${wallet}<span class="pill ${walletState.networkActive ? 'ok' : 'warn'}">${networkLabel}</span></nav></header>`;
 }
 
 function evidenceRows(claim: MarginClaim) {
@@ -72,7 +76,7 @@ function directClaimView() {
   if (!directClaim) return `<section class="empty-state"><h1>Claim unavailable</h1><p>That claim key is malformed, unavailable, or not finalized on Studionet.</p><a class="button dark" href="/">Back to MARGIN</a></section>`;
   const c = directClaim;
   const manifest = c.latest_manifest ? JSON.stringify(c.latest_manifest, null, 2) : '';
-  return `<section class="result-card"><div class="eyebrow">Final result</div><div class="result-line"><span class="status-badge ${esc(c.status)}">${esc(c.status)}</span><span class="final-chip">FINALIZED ✓</span><span class="meta">Revision ${esc(String(c.revision))}</span></div><blockquote>${esc(c.quote)}</blockquote><p class="meta">${esc(c.canonical_url)}</p></section><section><div class="eyebrow">Challenge</div><p>${esc(c.challenge_statement)}</p><div class="detail-grid"><span>Claim class</span><strong>${esc(c.claim_class)}</strong><span>Challenger</span><code>${esc(c.challenger)}</code><span>Created</span><span>${esc(c.created_at)}</span><span>Resolved</span><span>${esc(c.resolved_at || 'Not resolved')}</span></div></section><section><div class="eyebrow">Resolution</div><p>${esc(c.rationale || 'No rationale recorded.')}</p></section><section><div class="eyebrow">Evidence</div><div class="evidence-list">${evidenceRows(c)}</div></section><section><div class="eyebrow">Provenance</div><div class="detail-grid"><span>Claim key</span><code>${esc(c.claim_key)}</code><span>Source manifest digest</span><code>${esc(c.source_manifest_digest || 'Not returned')}</code></div>${manifest ? `<details><summary>Advanced provenance</summary><pre>${esc(manifest)}</pre></details>` : ''}<p class="route-links"><a class="button secondary" href="${esc(c.canonical_url)}" target="_blank" rel="noreferrer">Back to source ↗</a><a class="button secondary" href="/claim/${esc(c.claim_key)}/assurance">View assurance</a><a class="button secondary" href="${MARGIN_EXPLORER_URL}/address/${MARGIN_CONTRACT_ADDRESS}" target="_blank" rel="noreferrer">MARGIN Explorer ↗</a></p></section>`;
+  return `<section class="result-card"><div class="eyebrow">Final result</div><div class="result-line"><span class="status-badge ${esc(c.status)}">${esc(c.status)}</span><span class="final-chip">FINALIZED ✓</span><span class="meta">Revision ${esc(String(c.revision))}</span></div><blockquote>${esc(c.quote)}</blockquote><p class="meta">${esc(c.canonical_url)}</p></section><section><div class="eyebrow">Challenge</div><p>${esc(c.challenge_statement)}</p><div class="detail-grid"><span>Claim class</span><strong>${esc(c.claim_class)}</strong><span>Challenger</span><code>${esc(c.challenger)}</code><span>Created</span><span>${esc(c.created_at)}</span><span>Resolved</span><span>${esc(c.resolved_at || 'Not resolved')}</span></div></section><section><div class="eyebrow">Resolution</div><p>${esc(c.rationale || 'No rationale recorded.')}</p></section>${decisionHistoryHtml(decisionHistory)}<section><div class="eyebrow">Evidence</div><div class="evidence-list">${evidenceRows(c)}</div></section><section><div class="eyebrow">Provenance</div><div class="detail-grid"><span>Claim key</span><code>${esc(c.claim_key)}</code><span>Source manifest digest</span><code>${esc(c.source_manifest_digest || 'Not returned')}</code></div>${manifest ? `<details><summary>Advanced provenance</summary><pre>${esc(manifest)}</pre></details>` : ''}<p class="route-links"><a class="button secondary" href="${esc(c.canonical_url)}" target="_blank" rel="noreferrer">Back to source ↗</a><a class="button secondary" href="/claim/${esc(c.claim_key)}/assurance">View assurance</a><a class="button secondary" href="${MARGIN_EXPLORER_URL}/address/${MARGIN_CONTRACT_ADDRESS}" target="_blank" rel="noreferrer">MARGIN Explorer ↗</a></p></section>`;
 }
 
 function activityView() {
@@ -92,7 +96,7 @@ function activityView() {
 
 function renderNonChallenge(message = '') {
   const body = route.kind === 'home' ? `<section class="hero"><div class="eyebrow">Browser-native protocol workspace</div><h1>Consensus-backed footnotes for the public web.</h1><p>Install or open the MARGIN extension, highlight a public claim, then choose <strong>Challenge with MARGIN</strong>.</p><div class="flow-strip" aria-label="MARGIN flow"><span>Highlight</span><i aria-hidden="true">→</i><span>Challenge</span><i aria-hidden="true">→</i><span>Consensus</span></div></section><details class="deployment-card"><summary><span>Deployment</span><span class="meta">Studionet · ${MARGIN_CHAIN_ID}</span></summary><div class="detail-grid"><span>Network</span><strong>Studionet · ${MARGIN_CHAIN_ID}</strong><span>Contract</span><code>${esc(contractAddress)}</code></div><p>${contractLink(contractAddress)}</p></details>` : route.kind === 'activity' ? activityView() : route.kind === 'claim' ? directClaimView() : route.kind === 'assurance' ? `<section><div class="eyebrow">Assurance</div><h1>Assured Claim</h1><p class="meta">Canonical claim: <code>${esc(route.claimKey)}</code></p>${directClaimView()}</section>${assuredPanel()}` : `<section class="empty-state"><h1>Page not found</h1><a class="button dark" href="/">Back to MARGIN</a></section>`;
-  const visibleMessage = /^(Wallet connected to Studionet 61999\.|Wallet is on Studionet 61999\.)$/.test(message) ? '' : message;
+  const visibleMessage = /^(Wallet connected to Studionet 61999\.|Wallet is on Studionet 61999\.|Wallet disconnected from MARGIN\.)$/.test(message) ? '' : message;
   app.innerHTML = `<main>${headerHtml()}${visibleMessage ? `<div class="notice">${esc(visibleMessage)}</div>` : ''}${contractError ? `<div class="notice">${esc(contractError)}</div>` : ''}${body}</main>`;
   bind();
 }
@@ -113,9 +117,8 @@ function assuredPanel() {
 function render(message = '') {
   if (route.kind !== 'challenge') { renderNonChallenge(message); return; }
   const ready = draftVerified && contractVerified && isConnected();
-  const walletButton = account ? `<span class="hash">${esc(account.slice(0,8)+'…'+account.slice(-6))}</span><button id="disconnect" class="quiet">Disconnect</button>` : '<button id="connect" class="dark">Connect wallet</button>';
-  const visibleMessage = /^(Wallet connected to Studionet 61999\.|Wallet is on Studionet 61999\.)$/.test(message) ? '' : message;
-  app.innerHTML = `<main>${headerHtml()}${visibleMessage ? `<div class="notice">${esc(visibleMessage)}</div>` : ''}${contractError ? `<div class="notice">${esc(contractError)}</div>` : ''}${draftError ? `<div class="notice">${esc(draftError)}</div>` : ''}<section><div class="eyebrow">Deployment</div><div class="row"><strong>Contract</strong><span class="hash">${validAddress(contractAddress) ? `${esc(contractAddress.slice(0,8))}…${esc(contractAddress.slice(-6))}` : 'missing configuration'}</span><span class="meta">${contractVerified ? 'Verified ✓' : 'Verifying…'}</span></div><small>Studionet · ${MARGIN_CHAIN_ID} · ${MARGIN_RPC_URL}</small></section>${draft ? `<section><div class="eyebrow">Highlighted claim</div><blockquote>${esc(draft.anchor.exact)}</blockquote><div class="meta">${esc(draft.claimClass)} · ${esc(draft.canonicalUrl)}</div><h3>Challenge</h3><p>${esc(draft.challengeStatement)}</p><div class="eyebrow">Public evidence</div><p>${draft.evidenceUrls.length ? draft.evidenceUrls.map((url) => esc(url)).join('<br>') : 'No additional evidence URLs supplied.'}</p>${draft.archiveUrl ? `<div class="eyebrow">Archive</div><p>${esc(draft.archiveUrl)}</p>` : ''}<div class="eyebrow">Claim key</div><div class="hash">${esc(draft.claimKey)}</div></section>` : `<section><h3>No challenge draft</h3><p>Start from the MARGIN extension by highlighting a public claim.</p></section>`}${assuredPanel()}<section><div class="row">${walletButton}${draft ? `<button id="submit" class="accent" ${ready ? '' : 'disabled'}>Submit challenge</button><button id="resolve" ${ready ? '' : 'disabled'}>Resolve</button>` : ''}</div><div id="status">${statusMessage}</div></section>${transactions.length ? `<section><div class="eyebrow">Transaction provenance</div>${transactionCards()}</section>` : ''}</main>`;
+  const visibleMessage = /^(Wallet connected to Studionet 61999\.|Wallet is on Studionet 61999\.|Wallet disconnected from MARGIN\.)$/.test(message) ? '' : message;
+  app.innerHTML = `<main>${headerHtml()}${visibleMessage ? `<div class="notice">${esc(visibleMessage)}</div>` : ''}${contractError ? `<div class="notice">${esc(contractError)}</div>` : ''}${draftError ? `<div class="notice">${esc(draftError)}</div>` : ''}<details class="deployment-card"><summary><span>Deployment</span><span class="meta">${contractVerified ? 'Verified ✓' : 'Verifying…'} · Studionet · ${MARGIN_CHAIN_ID}</span></summary><div class="row"><strong>Contract</strong><span class="hash">${validAddress(contractAddress) ? `${esc(contractAddress.slice(0,8))}…${esc(contractAddress.slice(-6))}` : 'missing configuration'}</span></div><small>Studionet · ${MARGIN_CHAIN_ID} · ${MARGIN_RPC_URL}</small></details>${draft ? `<section><div class="eyebrow">Highlighted claim</div><blockquote>${esc(draft.anchor.exact)}</blockquote><div class="meta">${esc(draft.claimClass)} · ${esc(draft.canonicalUrl)}</div><h3>Challenge</h3><p>${esc(draft.challengeStatement)}</p><div class="eyebrow">Public evidence</div><p>${draft.evidenceUrls.length ? draft.evidenceUrls.map((url) => esc(url)).join('<br>') : 'No additional evidence URLs supplied.'}</p>${draft.archiveUrl ? `<div class="eyebrow">Archive</div><p>${esc(draft.archiveUrl)}</p>` : ''}<div class="eyebrow">Claim key</div><div class="hash">${esc(draft.claimKey)}</div></section>` : `<section><h3>No challenge draft</h3><p>Start from the MARGIN extension by highlighting a public claim.</p></section>`}${assuredPanel()}<section><div class="row">${draft ? `<button id="submit" class="accent" ${ready ? '' : 'disabled'}>Submit challenge</button><button id="resolve" ${ready ? '' : 'disabled'}>Resolve</button>` : ''}</div><div id="status">${statusMessage}</div></section>${transactions.length ? `<section><div class="eyebrow">Transaction provenance</div>${transactionCards()}</section>` : ''}</main>`;
   bind();
 }
 
@@ -363,8 +366,10 @@ async function loadRouteData() {
     const readClient = createClient({ chain: studionet });
     directClaim = await readClient.readContract({ address: contractAddress as `0x${string}`, functionName: 'get_claim', args: [claimKey], transactionHashVariant: TransactionHashVariant.LATEST_FINAL }) as unknown as MarginClaim;
     if (!directClaim || directClaim.claim_key?.toLowerCase() !== claimKey) directClaim = null;
+    decisionHistory = directClaim ? await readClient.readContract({ address: contractAddress as `0x${string}`, functionName: 'get_decision_history', args: [claimKey], transactionHashVariant: TransactionHashVariant.LATEST_FINAL }) as DecisionHistoryEntry[] : [];
   } catch {
     directClaim = null;
+    decisionHistory = [];
   }
   if (route.kind === 'assurance') await readAssuredState(false);
 }
@@ -409,6 +414,8 @@ async function runAssuredAction(action: AssuredAction) {
 }
 
 function bind() {
+  document.querySelector('#header-connect')?.addEventListener('click', () => connect(true).catch(e => render(String(e.message || e))));
+  document.querySelector('#header-disconnect')?.addEventListener('click', disconnect);
   document.querySelector('#connect')?.addEventListener('click', () => connect(true).catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`)));
   document.querySelector('#disconnect')?.addEventListener('click', disconnect);
   document.querySelector('#submit')?.addEventListener('click', () => submitClaim().catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`)));
