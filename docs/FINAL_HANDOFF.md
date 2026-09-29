@@ -8,6 +8,7 @@ The frontend workspace routes are `/`, `/challenge?draft=...`, `/claim/<claimKey
 
 - Network: Studionet, chain `61999`, RPC `https://studio.genlayer.com/api`.
 - Contract: `0x0f8D86d56F1b8997475dD048579807fBFe60e227`.
+- Bound consumer: `0x388c762f777A10071A13063d71ed0B37CdE2d85a`, deployed in a separate consumer-only correction and bound to the contract above.
 - Deployment: `0x1f54fb2b8520008a8bf856906a695dd35f6835e28afdedf51bded400744abebd`, `FINALIZED / MAJORITY_AGREE / SUCCESS`.
 - Deployment source commit: `826206bb1825cbcd716e0eb24288e91b8bc6d00a`.
 - Deployment source: 58,790 bytes; SHA-256 `6F5866BCEE5569C3BA0560E172F3FF524CF43F2A7A174189DB05CC03BD9FDEAF`.
@@ -83,7 +84,7 @@ The corrected contract deployment is real and finalized. The following evidence 
 
 ## Production configuration hardening
 
-The canonical static signer is `https://margin-signer.vercel.app/`. Its Vite production build receives the public `VITE_MARGIN_CONTRACT_ADDRESS` value for the canonical Studionet deployment. The signer no longer asks normal users to save a contract address and ignores incoming contract query parameters. The extension release similarly embeds the canonical contract and signer origin; Options is informational rather than an infrastructure editor. The final production deployment is `dpl_6mGoLz1QmrTMuz9bvjxBkY5Ynnv2`; HTTP smoke verification returned 200, the intended CSP and `Referrer-Policy: no-referrer`, and the deployed bundle contains the final MARGIN and consumer addresses. Real wallet/browser proof remains manual for this final deployment.
+The canonical static signer is `https://margin-signer.vercel.app/`. Its Vite production build receives the public `VITE_MARGIN_CONTRACT_ADDRESS` value for the canonical Studionet deployment. The signer no longer asks normal users to save a contract address and ignores incoming contract query parameters. The extension release similarly embeds the canonical contract and signer origin; Options is informational rather than an infrastructure editor. The current production deployment is `dpl_5jGexXPWMc1VL6qJe5PoUsDborCF`; HTTP smoke verification and the deployed bundle-address check are recorded with this handoff. Real wallet/browser proof remains manual for this final deployment.
 
 The signer must use the injected EIP-1193 provider directly. In `genlayer-js@1.1.8`, `client.connect('studionet')` enters the legacy GenLayer Snap path (`wallet_getSnaps` / `wallet_requestSnaps`); production MARGIN therefore constructs the provider-backed client without calling that helper. `signer/src/wallet.test.ts` guards this boundary.
 
