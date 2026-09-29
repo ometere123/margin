@@ -2,8 +2,8 @@
 import { readFile, writeFile } from 'node:fs/promises';
 const path = process.argv[2] ?? 'scripts/live/evidence/C-pending.json';
 const state = JSON.parse(await readFile(path, 'utf8'));
-if (!state.earliestCancelAt) throw new Error('No pending C sequence found. Start it with run-current-sequences.mjs --sequence C.');
-const remaining = Date.parse(state.earliestCancelAt) - Date.now();
+if (!state.earliestPossibleAttemptAt) throw new Error('No pending C sequence found. Start it with run-current-sequences.mjs --sequence C.');
+const remaining = Date.parse(state.earliestPossibleAttemptAt) - Date.now();
 if (remaining > 0) {
   console.log(JSON.stringify({ ...state, status: 'PENDING', remainingMs: remaining }, null, 2));
   process.exit(0);

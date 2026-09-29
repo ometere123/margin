@@ -20,5 +20,5 @@
       "note": "Run with a fresh claim, valid HTTPS proof, and publisher wallet; do not cancel before earliestCancelAt."
     }
   ],
-  "earliestCancelAt": "2026-09-30T19:40:36.559Z"
+  "earliestPossibleAttemptAt": "2026-09-30T19:40:36.559Z"
 }

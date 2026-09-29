@@ -48,7 +48,7 @@ await save();
 
 if (sequence === 'C') {
   const earliest = new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString();
-  state.earliestCancelAt = state.earliestCancelAt ?? earliest;
+  state.earliestPossibleAttemptAt = state.earliestPossibleAttemptAt ?? earliest;
   state.status = 'PENDING';
   state.steps.push({ at: now.toISOString(), action: 'register_assured_claim', status: 'PENDING', note: 'Run with a fresh claim, valid HTTPS proof, and publisher wallet; do not cancel before earliestCancelAt.' });
   await save();
