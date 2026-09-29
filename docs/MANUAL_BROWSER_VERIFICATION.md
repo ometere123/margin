@@ -5,10 +5,11 @@ This checklist is for the current release. It does not authorize contract redepl
 ## Release checks
 
 1. Run `npm ci`, `npm run cli`, `npm exec -- genlayer --version` and `npm run verify`.
-2. Run `npm run zip` and record the resulting ZIP SHA-256.
-3. Load `extension/dist` as an unpacked extension in a fresh Chromium profile.
-4. Confirm the toolbar and side-panel icons use the MARGIN assets.
-5. Open `https://margin-signer.vercel.app/` and confirm the deployment card shows Studionet `61999` and the canonical contract from `deployment.json`.
+2. Run `npm run live:read` and record the finalized `network()` identity. Optionally run `npm run live:read -- --claim=<64-hex-claim-key>` for a canonical claim read.
+3. Run `npm run zip` and record the resulting ZIP SHA-256.
+4. Load `extension/dist` as an unpacked extension in a fresh Chromium profile.
+5. Confirm the toolbar and side-panel icons use the MARGIN assets.
+6. Open `https://margin-signer.vercel.app/` and confirm the deployment card shows Studionet `61999` and the canonical contract from `deployment.json`.
 
 ## Normal claim flow
 
