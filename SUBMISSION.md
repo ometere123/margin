@@ -7,7 +7,7 @@ MARGIN is a browser-native annotation layer: the extension anchors an explicit c
 - Network: Studionet
 - Chain ID: `61999`
 - RPC: `https://studio.genlayer.com/api`
-- Contract: [`0x6525B4a5d9CEd32f440D47b0Bf966C2D25d1Fcb0`](https://explorer-studio.genlayer.com/address/0x6525B4a5d9CEd32f440D47b0Bf966C2D25d1Fcb0)
+- Contract: [`0x2a22f117bB61f6a123AfA794710cD2D13844Ff6A`](https://explorer-studio.genlayer.com/address/0x2a22f117bB61f6a123AfA794710cD2D13844Ff6A)
 - Deployment transaction: [`0xe839f83f73e6c461f4740d561c108154ee40fc5a3f9aa5b96b0cd00f9a1a7675`](https://explorer-studio.genlayer.com/tx/0xe839f83f73e6c461f4740d561c108154ee40fc5a3f9aa5b96b0cd00f9a1a7675)
 - Result: `FINALIZED / MAJORITY_AGREE / SUCCESS`
 - Deployment source commit: `d781a9ef417d2e3e2fd2915086a3b43129ffa5a6`
@@ -23,7 +23,7 @@ The immediately preceding corrected deployment `0xC3E6E1C2102187F3558aDb593dC29D
 
 The final contract changes consensus validation so validators still independently fetch and adjudicate the bounded evidence, but do not require byte-identical source manifests, content digests, or supporting/contradicting index arrays. They must agree exactly on the bounded status and satisfy deterministic semantic conditions for that status. Storage records are copied before entering nondeterministic execution to avoid storage-read warnings.
 
-The corrected reference consumer is now deployed at `0xfAE0De6115e46F56034772CeD5c0C6684E009bd8`, bound at construction to the final MARGIN address. Its deployment transaction is `0x828cdb7b87486d70b530bfa3a4458458f32185091cac666ac7ec9cd504f7189a`.
+The corrected reference consumer is now deployed at `0x92b0c63c09c2b97aC2b2c2C5b09143cFfd94Fa6D`, bound at construction to the final MARGIN address. Its deployment transaction is `0x6b9238514216e2058aadc845641acbbcfc1b68029299a7485837d4c64eeb3cec`.
 
 The fresh external-domain browser challenge requested for this deployment was not claimed: Chromium control was unavailable in this session. Prior browser annotation evidence remains historical evidence for the previous canonical deployment and is not substituted for the new browser proof.
 

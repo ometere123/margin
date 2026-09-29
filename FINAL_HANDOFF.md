@@ -7,7 +7,7 @@ The corrected Studionet deployment and corrected-contract normal claim lifecycle
 The frontend workspace routes are `/`, `/challenge?draft=...`, `/claim/<claimKey>`, `/claim/<claimKey>/assurance`, and `/activity`. The signer remains static and wallet-backed; the extension remains the primary discovery and annotation surface. The supplied logo/favicon/icon assets are included in the signer and MV3 extension. No contract source or deployed contract was changed in this frontend round.
 
 - Network: Studionet, chain `61999`, RPC `https://studio.genlayer.com/api`.
-- Contract: `0x6525B4a5d9CEd32f440D47b0Bf966C2D25d1Fcb0`.
+- Contract: `0x2a22f117bB61f6a123AfA794710cD2D13844Ff6A`.
 - Deployment: `0xe839f83f73e6c461f4740d561c108154ee40fc5a3f9aa5b96b0cd00f9a1a7675`, `FINALIZED / MAJORITY_AGREE / SUCCESS`.
 - Deployment source commit: `d781a9ef417d2e3e2fd2915086a3b43129ffa5a6`.
 - Runtime identity: `chain_id=61999`, `network=studionet`, `rpc=https://studio.genlayer.com/api`.

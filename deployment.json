@@ -3,12 +3,12 @@
   "chainId": 61999,
   "rpc": "https://studio.genlayer.com/api",
   "explorer": "https://explorer-studio.genlayer.com",
-  "contractAddress": "0x6525B4a5d9CEd32f440D47b0Bf966C2D25d1Fcb0",
-  "deploymentTx": "0xe839f83f73e6c461f4740d561c108154ee40fc5a3f9aa5b96b0cd00f9a1a7675",
+  "contractAddress": "0x2a22f117bB61f6a123AfA794710cD2D13844Ff6A",
+  "deploymentTx": "0x9b61671af5c70e0cb5a0bc74c0cf0804eda7a878e26cd892537923bc83a967de",
   "deploymentStatus": "FINALIZED / MAJORITY_AGREE / SUCCESS",
-  "sourceCommit": "d781a9ef417d2e3e2fd2915086a3b43129ffa5a6",
-  "sourceBytes": 45774,
-  "sourceSha256": "bdfadc8351078bd331f901648976671dca59308a297a54572212289e18cf8a33",
+  "sourceCommit": "ce99b62",
+  "sourceBytes": 52435,
+  "sourceSha256": "cb3269b1ccaabe75429949a3979d277c970ed0ffaef7e3c1978e9bd39117053b",
   "signerUrl": "https://margin-signer.vercel.app/",
   "runtimeIdentity": {
     "chain_id": 61999,
@@ -171,8 +171,8 @@
   },
   "liveEvidence": {
     "canonicalDeploymentChecks": {
-      "contractAddress": "0x6525B4a5d9CEd32f440D47b0Bf966C2D25d1Fcb0",
-      "deploymentTx": "0xe839f83f73e6c461f4740d561c108154ee40fc5a3f9aa5b96b0cd00f9a1a7675",
+      "contractAddress": "0x2a22f117bB61f6a123AfA794710cD2D13844Ff6A",
+      "deploymentTx": "0x9b61671af5c70e0cb5a0bc74c0cf0804eda7a878e26cd892537923bc83a967de",
       "networkReadback": {
         "chain_id": 61999,
         "network": "studionet",
@@ -206,9 +206,9 @@
       "settlementNote": "After the recorded appeal deadline, settlement finalized the 3 GEN SUPPORTED payout to publisher credit. Publisher withdrawal then finalized successfully; canonical readback shows SETTLED / SUPPORTED with both credits at zero."
     },
     "consumerDeployment": {
-      "contractAddress": "0xfAE0De6115e46F56034772CeD5c0C6684E009bd8",
-      "deploymentTx": "0x828cdb7b87486d70b530bfa3a4458458f32185091cac666ac7ec9cd504f7189a",
-      "boundMarginAddress": "0x6525B4a5d9CEd32f440D47b0Bf966C2D25d1Fcb0",
+      "contractAddress": "0x92b0c63c09c2b97aC2b2c2C5b09143cFfd94Fa6D",
+      "deploymentTx": "0x6b9238514216e2058aadc845641acbbcfc1b68029299a7485837d4c64eeb3cec",
+      "boundMarginAddress": "0x2a22f117bB61f6a123AfA794710cD2D13844Ff6A",
       "deploymentFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS"
     },
     "freshExternalBrowserChallenge": {

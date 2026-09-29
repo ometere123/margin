@@ -2,8 +2,8 @@ export const MARGIN_CHAIN_ID = 61999 as const;
 export const MARGIN_NETWORK_NAME = 'studionet' as const;
 export const MARGIN_RPC_URL = 'https://studio.genlayer.com/api' as const;
 export const MARGIN_EXPLORER_URL = 'https://explorer-studio.genlayer.com' as const;
-export const MARGIN_CONTRACT_ADDRESS = '0x6525B4a5d9CEd32f440D47b0Bf966C2D25d1Fcb0' as const;
-export const MARGIN_CONSUMER_ADDRESS = '0xfAE0De6115e46F56034772CeD5c0C6684E009bd8' as const;
+export const MARGIN_CONTRACT_ADDRESS = '0x2a22f117bB61f6a123AfA794710cD2D13844Ff6A' as const;
+export const MARGIN_CONSUMER_ADDRESS = '0x92b0c63c09c2b97aC2b2c2C5b09143cFfd94Fa6D' as const;
 export const MARGIN_SIGNER_URL = 'https://margin-signer.vercel.app/' as const;
 
 export const CLAIM_CLASSES = [

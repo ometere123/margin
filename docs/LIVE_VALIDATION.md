@@ -172,7 +172,7 @@ On 2026-09-28, the production signer was exercised through the real browser flow
 
 ### Final validator-equivalence deployment
 
-The final validator-equivalence correction was deployed to `0x6525B4a5d9CEd32f440D47b0Bf966C2D25d1Fcb0` in transaction `0xe839f83f73e6c461f4740d561c108154ee40fc5a3f9aa5b96b0cd00f9a1a7675`, finalized `MAJORITY_AGREE / SUCCESS`. `network()` read back chain `61999`, network `studionet`, and RPC `https://studio.genlayer.com/api`. The corrected consumer was redeployed at `0xfAE0De6115e46F56034772CeD5c0C6684E009bd8` in transaction `0x828cdb7b87486d70b530bfa3a4458458f32185091cac666ac7ec9cd504f7189a`, with construction calldata bound to the new MARGIN address.
+The final hardening deployment was deployed to `0x2a22f117bB61f6a123AfA794710cD2D13844Ff6A` in transaction `0x9b61671af5c70e0cb5a0bc74c0cf0804eda7a878e26cd892537923bc83a967de`, finalized `MAJORITY_AGREE / SUCCESS`. `network()` read back chain `61999`, network `studionet`, and RPC `https://studio.genlayer.com/api`. The corrected consumer was redeployed at `0x92b0c63c09c2b97aC2b2c2C5b09143cFfd94Fa6D` in transaction `0x6b9238514216e2058aadc845641acbbcfc1b68029299a7485837d4c64eeb3cec`, with construction calldata bound to the new MARGIN address.
 
 The contract now requires exact agreement only on the bounded semantic status. Each validator independently fetches and substantively adjudicates the evidence, while candidate manifests, content digests and cited source indexes are validated structurally without byte-identical comparison. Storage is copied before entering the nondeterministic block to remove the storage-read warning.
 
