@@ -10,7 +10,7 @@
   "sourceBytes": 58790,
   "sourceSha256": "6F5866BCEE5569C3BA0560E172F3FF524CF43F2A7A174189DB05CC03BD9FDEAF",
   "signerUrl": "https://margin-signer.vercel.app/",
-  "signerDeployment": "dpl_HB5ctN9t8KYg71fBedAST6yGvGAC",
+  "signerDeployment": "dpl_6c1vSm55spwo4mMuLxhbHWzJzZpz",
   "runtimeIdentity": {
     "chain_id": 61999,
     "network": "studionet",
@@ -49,6 +49,21 @@
     "sourceCommit": "a4b72797e3bb8af617e0fb671bd5191937720cfa",
     "sourceSha256": "C6D96DE8C78232EDA94B6A516341BE893A388F19088D9EDE4863645ACBC20DEF",
     "status": "historical; superseded by the capped-release consumer"
+  },
+  "supersededConsumerPerCreatorCap": {
+    "contractAddress": "0x7c447BAEaf5ae60Cec2d432BA33860375fEB9994",
+    "deploymentTx": "0x97b94e7f7e730a3bf14f4488bc37172f29a33480c5483fdc0ddbb32289092294",
+    "boundMarginAddress": "0x0f8D86d56F1b8997475dD048579807fBFe60e227",
+    "sourceCommit": "b18351d026e339e06b202df58a01742b46341d78",
+    "sourceSha256": "1205EAA5BFC7E4377D03C853B70B334F0575D8664E6B9EDD4FF9940499F13BD4",
+    "sourceBytes": 9804,
+    "status": "historical; superseded by the per-creator capped consumer"
+  },
+  "failedConsumerDeploymentAttempt": {
+    "contractAddress": "0x5541950BF6D10d0F17EF63A376aFc66BF48B0D9D",
+    "deploymentTx": "0xad7f1e7fd54b945c5f109471266557eaa5c0a8c5b2804b56b788aeaee50f6745",
+    "boundMarginAddress": "0x0f8D86d56F1b8997475dD048579807fBFe60e227",
+    "status": "historical; constructor argument encoding error, execution failed; not current evidence"
   },
   "historicalEvidence": {
     "normalClaim": {
@@ -255,13 +270,13 @@
       "sourceBytes": 58790
     },
     "consumerDeployment": {
-      "contractAddress": "0x7c447BAEaf5ae60Cec2d432BA33860375fEB9994",
-      "deploymentTx": "0x97b94e7f7e730a3bf14f4488bc37172f29a33480c5483fdc0ddbb32289092294",
+      "contractAddress": "0x603FF16d4ba5d9Ac8bb66af8fF6869EbFA272254",
+      "deploymentTx": "0x54fdeda4f6f0f4e3c5af9adf4eb3a1955757d818c83bdd51e8271e418c82bac6",
       "boundMarginAddress": "0x0f8D86d56F1b8997475dD048579807fBFe60e227",
       "deploymentFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
-      "sourceCommit": "b18351d026e339e06b202df58a01742b46341d78",
-      "sourceSha256": "1205EAA5BFC7E4377D03C853B70B334F0575D8664E6B9EDD4FF9940499F13BD4",
-      "sourceBytes": 9804,
+      "sourceCommit": "944994949655e994a7909777b079409750607a75",
+      "sourceSha256": "8CF090D85013415BB0FFADAB74E900C40029F38F0B5ED54E84AA79D6FB70DDD7",
+      "sourceBytes": 11496,
       "boundAddressReadback": "0x0f8D86d56F1b8997475dD048579807fBFe60e227"
     },
     "freshNormalClaimFinalDeployment": {

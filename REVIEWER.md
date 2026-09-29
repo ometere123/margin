@@ -23,6 +23,9 @@ This is a short, evidence-first review path for the current Studionet release.
 | Assured lifecycle is bonded and bounded | Direct Mode lifecycle and appeal tests; `deployment.json` live records |
 | Consumer uses canonical MARGIN state | bound-address test and `MarginGate` implementation in `contracts/margin_consumer.py` |
 | Multiple funded releases cannot hide one another | `get_releases_for_claim` implementation and real-MARGIN SimEngine integration in `tests/direct/test_consumer_integration.py` |
+| Per-creator release spam is bounded without blocking other creators | `test_protected_release_cap_is_per_creator_and_pagination_is_bounded` |
+| Negative release outcomes refund exactly once | real-MARGIN integration tests for CONTRADICTED, INCONCLUSIVE, STALE, CANCELLED, ABORTED and expiry |
+| Bond conservation is explicit | MARGIN lifecycle assertions in `tests/direct/test_margin.py` |
 | Protected release is pre-settlement and pull-paid | consumer lifecycle tests, `create_protected_release`, `execute_release`, `refund_release` and `withdraw_release_credit` |
 | Current consumer deployment is bound correctly | current consumer deployment calldata, address and source SHA-256 in `deployment.json` |
 | Resolver cannot escape by waiting briefly | `abort_stalled` timeout tests and timing notes in `docs/LIVE_VALIDATION.md` |

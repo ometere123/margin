@@ -10,7 +10,7 @@ chain: 61999
 rpc: https://studio.genlayer.com/api
 cli: npm exec -- genlayer (0.39.1)
 margin: 0x0f8D86d56F1b8997475dD048579807fBFe60e227
-consumer: 0x7c447BAEaf5ae60Cec2d432BA33860375fEB9994
+consumer: 0x603FF16d4ba5d9Ac8bb66af8fF6869EbFA272254
 
 The executable `run-current-sequences.ps1` records CLI output for sequences A, B and C. It never substitutes Direct Mode output for live receipts. Sequence A remains pending until the 24-hour registration window elapses; sequences B and C require fresh claim/domain-proof inputs and separate wallet accounts.
 ```

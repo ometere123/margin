@@ -17,7 +17,7 @@ This file describes only the current canonical deployment. Historical deployment
 - MARGIN source commit: `826206bb1825cbcd716e0eb24288e91b8bc6d00a`
 - MARGIN source SHA-256: `6F5866BCEE5569C3BA0560E172F3FF524CF43F2A7A174189DB05CC03BD9FDEAF`
 - MARGIN deployment result: `FINALIZED / MAJORITY_AGREE / SUCCESS`
-- Consumer: [`0x7c447BAEaf5ae60Cec2d432BA33860375fEB9994`](https://explorer-studio.genlayer.com/address/0x7c447BAEaf5ae60Cec2d432BA33860375fEB9994)
+- Consumer: [`0x603FF16d4ba5d9Ac8bb66af8fF6869EbFA272254`](https://explorer-studio.genlayer.com/address/0x603FF16d4ba5d9Ac8bb66af8fF6869EbFA272254)
 - Consumer deployment: [`0x97b94e7f7e730a3bf14f4488bc37172f29a33480c5483fdc0ddbb32289092294`](https://explorer-studio.genlayer.com/tx/0x97b94e7f7e730a3bf14f4488bc37172f29a33480c5483fdc0ddbb32289092294)
 - Consumer source commit: `b18351d`
 - Consumer source SHA-256: `1205EAA5BFC7E4377D03C853B70B334F0575D8664E6B9EDD4FF9940499F13BD4`
@@ -28,7 +28,7 @@ This file describes only the current canonical deployment. Historical deployment
 ## Production signer and release
 
 - Signer: https://margin-signer.vercel.app/
-- Production deployment: `dpl_HB5ctN9t8KYg71fBedAST6yGvGAC`
+- Production deployment: `dpl_6c1vSm55spwo4mMuLxhbHWzJzZpz`
 - Extension archive: `MARGIN-extension-v0.1.0.zip`
 - Extension SHA-256: `109C2CA42B85DEE0AC1AAAD7DE6F3996DE4B00D56DD334C00C7440BACC4EF3AB`
 
@@ -38,7 +38,7 @@ The signer uses the injected EIP-1193 wallet and the final configured MARGIN add
 
 - Contract lint: `3/3` for each contract
 - Python invariants: `12/12`
-- Direct Mode: `30/30` in the current CI run after this consumer change
+- Direct Mode: `36/36` in the current local verification after this consumer change
 - Extension tests: `16/16`
 - Signer tests: `27/27`
 - Extension and signer builds: passed

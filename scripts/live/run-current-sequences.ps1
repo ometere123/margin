@@ -11,7 +11,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $Margin = '0x0f8D86d56F1b8997475dD048579807fBFe60e227'
-$Consumer = '0x7c447BAEaf5ae60Cec2d432BA33860375fEB9994'
+$Consumer = '0x603FF16d4ba5d9Ac8bb66af8fF6869EbFA272254'
 $Cli = 'npm exec -- genlayer'
 
 function Invoke-Gl([string]$Command) {
