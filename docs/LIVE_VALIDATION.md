@@ -176,7 +176,7 @@ The final hardening deployment was deployed to `0x2a22f117bB61f6a123AfA794710cD2
 
 The contract now requires exact agreement only on the bounded semantic status. Each validator independently fetches and substantively adjudicates the evidence, while candidate manifests, content digests and cited source indexes are validated structurally without byte-identical comparison. Storage is copied before entering the nondeterministic block to remove the storage-read warning.
 
-The production signer was redeployed at `https://margin-signer.vercel.app/` with `VITE_MARGIN_CONTRACT_ADDRESS` set to the new address; frontend workspace deployment `dpl_4N17SZpCHS8pN8EGfJktVwsBYiPo` returned HTTP 200, the new address and reference-consumer address were present in the bundle, and the deployed CSP/referrer headers remained enforced. The built extension also embeds the new address. Direct route and asset smoke checks passed. No new browser transaction or badge result is claimed for this frontend-only deployment; the previously recorded external-domain browser proof remains the live protocol evidence.
+The production signer was redeployed at `https://margin-signer.vercel.app/` with `VITE_MARGIN_CONTRACT_ADDRESS` set to the new address; frontend workspace deployment `dpl_5YYkBGHGVbyuRpYBbBZBQFnbBvdW` returned HTTP 200, the new address and reference-consumer address were present in the bundle, and the deployed CSP/referrer headers remained enforced. The built extension also embeds the new address. No new browser transaction or badge result is claimed for this frontend-only deployment; the previously recorded external-domain browser proof remains the live protocol evidence.
 
 ## Frontend workspace verification
 

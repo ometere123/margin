@@ -63,8 +63,8 @@ Do not run bare `genlayer ...` commands from this repo.
 - Python/source invariant suite: 12/12 PASS.
 - `npm exec -- genlayer --version`: `0.39.1`.
 - Studionet network info and deployed `network()` readback: `61999`, `studionet`, `https://studio.genlayer.com/api`.
-- Extension/signer typecheck, tests and builds: PASS on the current committed source; extension tests `12/12`, signer tests `15/15`, source invariants `12/12`.
-- Reproducible extension archive: `MARGIN-extension-v0.1.0.zip`, SHA-256 `66f245a1a14969b061c11b6bfa43c72140356a2232f447787273b73e86f664d9`, produced by `npm run zip` from `extension/dist`; repeated generation with unchanged sources matched this hash.
+- Extension/signer typecheck, tests and builds: PASS on the current source; extension tests `16/16`, signer tests `27/27`, source invariants `12/12`, Direct Mode `22/22`.
+- Reproducible extension archive: `MARGIN-extension-v0.1.0.zip`, SHA-256 `c6ec12468fb129922a33e68f50e7826646e6fe4f1dddaeb3ddc0de841af4a62f`, produced by `npm run zip` from `extension/dist`; the ZIP is not committed as generated noise.
 - GitHub Actions `verify` was green in the prior recorded run `36467929894`; the final repository SHA is reported outside the repository.
 
 Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat the checks that do not require package downloads.
@@ -81,7 +81,7 @@ The corrected contract deployment is real and finalized. The following evidence 
 
 ## Production configuration hardening
 
-The canonical static signer is `https://margin-signer.vercel.app/`. Its Vite production build receives the public `VITE_MARGIN_CONTRACT_ADDRESS` value for the canonical Studionet deployment. The signer no longer asks normal users to save a contract address and ignores incoming contract query parameters. The extension release similarly embeds the canonical contract and signer origin; Options is informational rather than an infrastructure editor. The latest frontend workspace deployment is `dpl_oygXve4mKeMeLdrrCpR7vEqR5i7h`. Its response returned the intended CSP and `Referrer-Policy: no-referrer`; the deployed bundle contains the canonical contract and reference-consumer addresses. Direct route smoke checks returned HTTP 200 for `/`, `/challenge`, `/activity`, `/claim/<64-hex-key>`, `/claim/<64-hex-key>/assurance`, favicon and logo assets. The static deployment uses the repository-root `vercel.json` because the signer imports the shared protocol module. Real wallet/browser proof remains the previously recorded manual evidence; this frontend round does not claim a new browser transaction.
+The canonical static signer is `https://margin-signer.vercel.app/`. Its Vite production build receives the public `VITE_MARGIN_CONTRACT_ADDRESS` value for the canonical Studionet deployment. The signer no longer asks normal users to save a contract address and ignores incoming contract query parameters. The extension release similarly embeds the canonical contract and signer origin; Options is informational rather than an infrastructure editor. The latest frontend workspace deployment is `dpl_5YYkBGHGVbyuRpYBbBZBQFnbBvdW`. Its response returned the intended CSP and `Referrer-Policy: no-referrer`; the deployed bundle contains the canonical contract and reference-consumer addresses. Real wallet/browser proof remains the previously recorded manual evidence; this frontend round does not claim a new browser transaction.
 
 The signer must use the injected EIP-1193 provider directly. In `genlayer-js@1.1.8`, `client.connect('studionet')` enters the legacy GenLayer Snap path (`wallet_getSnaps` / `wallet_requestSnaps`); production MARGIN therefore constructs the provider-backed client without calling that helper. `signer/src/wallet.test.ts` guards this boundary.
 
