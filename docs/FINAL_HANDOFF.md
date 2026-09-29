@@ -68,7 +68,7 @@ Do not run bare `genlayer ...` commands from this repo.
 - Studionet network info and deployed `network()` readback: `61999`, `studionet`, `https://studio.genlayer.com/api`.
 - Extension/signer typecheck, tests and builds: PASS on the current source; contract lint is AST-only (`3/3` per contract; full SDK semantic validation was not run), extension tests `16/16`, signer tests `27/27`, source invariants `12/12`, Direct Mode `36/36`.
 - Reproducible extension archive: `MARGIN-extension-v0.1.0.zip`, SHA-256 `109C2CA42B85DEE0AC1AAAD7DE6F3996DE4B00D56DD334C00C7440BACC4EF3AB`, produced by `npm run zip` from `extension/dist`; the ZIP is not committed as generated noise.
-- GitHub Actions `verify` was green for the current repository in [run `36579002424`](https://github.com/ometere123/margin/actions/runs/36579002424); the final repository SHA is reported outside the repository.
+- GitHub Actions `verify` was green for the exact final repository SHA in [run `36617195685`](https://github.com/ometere123/margin/actions/runs/36617195685).
 
 Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat the checks that do not require package downloads.
 
@@ -77,7 +77,7 @@ Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat th
 The current live evidence boundary is:
 
 - MARGIN deployment: `0x0f8D86d56F1b8997475dD048579807fBFe60e227`, finalized at `0x1f54fb2b8520008a8bf856906a695dd35f6835e28afdedf51bded400744abebd`.
-- Consumer deployment: `0x603FF16d4ba5d9Ac8bb66af8fF6869EbFA272254`, finalized at `0x54fdeda4f6f0f4e3c5af9adf4eb3a1955757d818c83bdd51e8271e418c82bac6`, with its constructor bound to the current MARGIN address. The unusable constructor-argument attempt `0xad7f1e7fd54b945c5f109471266557eaa5c0a8c5b2804b56b788aeaee50f6745` is not current evidence.
+- Consumer deployment: `0x603FF16d4ba5d9Ac8bb66af8fF6869EbFA272254`, finalized at `0x54fdeda4f6f0f4e3c5af9adf4eb3a1955757d818c83bdd51e8271e418c82bac6`, with its constructor bound to the current MARGIN address. Source commit `944994949655e994a7909777b079409750607a75`, SHA-256 `8CF090D85013415BB0FFADAB74E900C40029F38F0B5ED54E84AA79D6FB70DDD7`, 11,496 bytes. The unusable constructor-argument attempt `0xad7f1e7fd54b945c5f109471266557eaa5c0a8c5b2804b56b788aeaee50f6745` is not current evidence.
 - Fresh final-deployment normal claim evidence: submit → resolve → `FINALIZED / MAJORITY_AGREE / SUCCESS`, with canonical verdict `SUPPORTED`, as recorded above.
 - No fresh Assured, cancellation, or funded protected-release live lifecycle is claimed for the current deployment. Historical transactions and verdicts are referenced only through [`docs/HISTORY.md`](HISTORY.md).
 - Browser verification remains manual; automated browser evidence is not claimed.
