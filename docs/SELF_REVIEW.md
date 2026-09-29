@@ -23,7 +23,7 @@ This is an evidence inventory, not a project score. Historical deployments and b
 
 - `npm run verify` runs contract AST lint, TypeScript typechecks, extension tests, signer tests, Python invariants, Direct Mode and both production builds.
 - Current totals are: AST lint `3/3` for each contract, extension `16/16`, signer `27/27`, invariants `12/12`, Direct Mode `29/29`.
-- CLI verification reports exactly `0.39.1`; CI is green in [run 36579002424](https://github.com/ometere123/margin/actions/runs/36579002424).
+- CLI verification reports exactly `0.39.1`; the final CI run for this source commit is recorded in the external handoff after GitHub completes it.
 - The read-only `npm run live:read` script verifies finalized `network()` identity without a wallet or write.
 - Limitation: automated browser E2E and the full hostile-page matrix were not run in this environment.
 

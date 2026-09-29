@@ -17,18 +17,18 @@ This file describes only the current canonical deployment. Historical deployment
 - MARGIN source commit: `826206bb1825cbcd716e0eb24288e91b8bc6d00a`
 - MARGIN source SHA-256: `6F5866BCEE5569C3BA0560E172F3FF524CF43F2A7A174189DB05CC03BD9FDEAF`
 - MARGIN deployment result: `FINALIZED / MAJORITY_AGREE / SUCCESS`
-- Consumer: [`0x603FF16d4ba5d9Ac8bb66af8fF6869EbFA272254`](https://explorer-studio.genlayer.com/address/0x603FF16d4ba5d9Ac8bb66af8fF6869EbFA272254)
-- Consumer deployment: [`0x97b94e7f7e730a3bf14f4488bc37172f29a33480c5483fdc0ddbb32289092294`](https://explorer-studio.genlayer.com/tx/0x97b94e7f7e730a3bf14f4488bc37172f29a33480c5483fdc0ddbb32289092294)
-- Consumer source commit: `b18351d`
-- Consumer source SHA-256: `1205EAA5BFC7E4377D03C853B70B334F0575D8664E6B9EDD4FF9940499F13BD4`
-- Consumer source size: `9804` bytes
+- Consumer: [`0x6Bdb12646e054C24b68012560F7472636b395881`](https://explorer-studio.genlayer.com/address/0x6Bdb12646e054C24b68012560F7472636b395881)
+- Consumer deployment: [`0x10f861aa287fe9ce0b4dbbacd95fc51cacb14539516d62f9bd6331495609ff0d`](https://explorer-studio.genlayer.com/tx/0x10f861aa287fe9ce0b4dbbacd95fc51cacb14539516d62f9bd6331495609ff0d)
+- Consumer source commit: `66b2e2a492bc343df6369c8f6b4779fcb79a128c`
+- Consumer source SHA-256: `FBCF9882250D640008B778F0486BDA3FCC892886270704ACB26DFADD2B7FF465`
+- Consumer source size: `12869` bytes
 - Consumer constructor binding: final MARGIN address above
 - Consumer deployment result: `FINALIZED / MAJORITY_AGREE / SUCCESS`
 
 ## Production signer and release
 
 - Signer: https://margin-signer.vercel.app/
-- Production deployment: `dpl_6c1vSm55spwo4mMuLxhbHWzJzZpz`
+- Production deployment: `dpl_AskgUH19RUAjoQB8dehD4onbwzoM`
 - Extension archive: `MARGIN-extension-v0.1.0.zip`
 - Extension SHA-256: `109C2CA42B85DEE0AC1AAAD7DE6F3996DE4B00D56DD334C00C7440BACC4EF3AB`
 
@@ -38,9 +38,9 @@ The signer uses the injected EIP-1193 wallet and the final configured MARGIN add
 
 - Contract lint: `3/3` for each contract
 - Python invariants: `12/12`
-- Direct Mode: `36/36` in the current local verification after this consumer change
+- Direct Mode: `37/37` in the current local verification after this consumer change
 - Extension tests: `16/16`
-- Signer tests: `27/27`
+- Signer tests: `30/30`
 - Extension and signer builds: passed
 - MARGIN source was not modified in this consumer-only round; its deployed SHA-256 remains unchanged.
 

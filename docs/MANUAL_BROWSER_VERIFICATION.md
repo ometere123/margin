@@ -9,7 +9,7 @@ This checklist is for the current release. It does not authorize contract redepl
 3. Run `npm run zip` and record the resulting ZIP SHA-256.
 4. Load `extension/dist` as an unpacked extension in a fresh Chromium profile.
 5. Confirm the toolbar and side-panel icons use the MARGIN assets.
-6. Open `https://margin-signer.vercel.app/` and confirm the deployment card shows Studionet `61999`, MARGIN `0x0f8D86d56F1b8997475dD048579807fBFe60e227`, and the bound consumer `0x603FF16d4ba5d9Ac8bb66af8fF6869EbFA272254` where shown.
+6. Open `https://margin-signer.vercel.app/` and confirm the deployment card shows Studionet `61999`, MARGIN `0x0f8D86d56F1b8997475dD048579807fBFe60e227`, and the bound consumer `0x6Bdb12646e054C24b68012560F7472636b395881` where shown.
 
 ## Normal claim flow
 

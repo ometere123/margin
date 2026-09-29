@@ -10,9 +10,9 @@ chain: 61999
 rpc: https://studio.genlayer.com/api
 cli: npm exec -- genlayer (0.39.1)
 margin: 0x0f8D86d56F1b8997475dD048579807fBFe60e227
-consumer: 0x603FF16d4ba5d9Ac8bb66af8fF6869EbFA272254
+consumer: 0x6Bdb12646e054C24b68012560F7472636b395881
 
-The executable `run-current-sequences.ps1` records CLI output for sequences A, B and C. It never substitutes Direct Mode output for live receipts. Sequence A remains pending until the 24-hour registration window elapses; sequences B and C require fresh claim/domain-proof inputs and separate wallet accounts.
+The executable `run-current-sequences.mjs` creates durable, timestamped checkpoints for sequences A, B and C. `resume-C.mjs` reports the earliest legal cancellation time. These scripts never substitute Direct Mode output for live receipts, retry a write, or invent a transaction hash; the operator must supply fresh claim, proof and wallet inputs before executing live writes.
 ```
 
 Each write must be followed by `npm exec -- genlayer receipt <hash>` and the record must include `FINALIZED`, execution result, canonical readback and the public account used. Do not reuse historical hashes.
