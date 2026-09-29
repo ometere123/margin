@@ -2,6 +2,9 @@
   "buildCommand": "npm run build -w signer",
   "installCommand": "npm ci",
   "outputDirectory": "signer/dist",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
   "headers": [
     {
       "source": "/(.*)",

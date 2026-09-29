@@ -167,6 +167,12 @@ This follows the important GenLayer rule that validators must independently veri
 
 The corrected contract is deployed, corrected-contract normal claim lifecycles are recorded in `deployment.json`, live `SUPPORTED`, `CONTRADICTED`, `INCONCLUSIVE` and `STALE` outcomes are recorded, both a settled `CONTRADICTED` and a settled `SUPPORTED` Assured Claim path are recorded, the bounded Assured appeal and reference consumer have been exercised, and the RFC browser-aligned claim has been read and visibly rendered by the built extension. The following evidence remains account/browser dependent and must not be inferred from unit tests:
 
+### Frontend workspace routes
+
+The static signer is a focused transaction and provenance workspace, not a replacement for the extension. The extension opens `/challenge?draft=...`; finalized annotations link to `/claim/<claimKey>` and `/claim/<claimKey>/assurance`; `/activity` shows browser-local transaction provenance and `/` explains the extension-first entry point. Direct claim and assurance routes read finalized state from the canonical Studionet contract, so visitors do not need the original draft.
+
+The signer and extension use the supplied MARGIN logo/icon assets. The assurance view exposes the existing registration, challenge, resolution, appeal, settlement and withdrawal actions only when the connected account and finalized state permit them. Its downstream-use card reads the bound reference consumer at `0xfAE0De6115e46F56034772CeD5c0C6684E009bd8` with `has_executed(claim_key)`.
+
 - repeat the complete wallet-to-chain submit/resolve session from a fresh browser profile if an independent reviewer requires it;
 - measure broader fee profiles and exercise a separate GenLayer transaction-level appeal where supported by the stable tooling;
 - complete the full automated browser E2E and hostile-page matrix described in `docs/LIVE_VALIDATION.md`.

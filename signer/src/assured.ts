@@ -6,6 +6,9 @@ export type AssuredClaimView = {
   publisher_bond?: string | number | bigint;
   challenger?: string;
   challenge_bond?: string | number | bigint;
+  domain_proof_url?: string;
+  proof_expires_at?: string;
+  proof_digest?: string;
   state?: AssuredState;
   final_status?: string;
   appeal_deadline?: string | number | bigint;
@@ -14,6 +17,7 @@ export type AssuredClaimView = {
   publisher_credit?: string | number | bigint;
   challenger_credit?: string | number | bigint;
   appeal_reason?: string;
+  appeal_bond?: string | number | bigint;
   source_manifest_digest?: string;
   latest_manifest?: unknown;
 };
@@ -29,9 +33,11 @@ export function assuredActions(claim: AssuredClaimView | null, account: string |
   if (state === 'REGISTERED') return account && !same(account, claim.publisher) ? ['challenge'] : [];
   if (state === 'CHALLENGED') return account ? ['resolve'] : [];
   if (state === 'RESOLVED') {
-    const deadline = Number(claim.appeal_deadline || 0);
-    const appealOpen = deadline === 0 || now <= deadline;
-    return appealOpen && Number(claim.appeal_count || 0) < 1 && (same(account, claim.publisher) || same(account, claim.challenger)) ? ['appeal'] : (deadline > 0 && now > deadline ? ['settle'] : []);
+    const rawDeadline = claim.appeal_deadline;
+    const deadlineMs = typeof rawDeadline === 'string' ? Date.parse(rawDeadline) : Number(rawDeadline || 0) * 1000;
+    const nowMs = now < 10_000_000_000 ? now * 1000 : now;
+    const appealOpen = Number.isFinite(deadlineMs) && nowMs <= deadlineMs;
+    return appealOpen && Number(claim.appeal_count || 0) < 1 && (same(account, claim.publisher) || same(account, claim.challenger)) ? ['appeal'] : (!appealOpen && Number.isFinite(deadlineMs) && nowMs > deadlineMs ? ['settle'] : []);
   }
   if (state === 'APPEALED') return account ? ['resolveAppeal'] : [];
   if (state === 'SETTLED') {
