@@ -46,6 +46,7 @@ def test_consumer_binds_margin_address_and_rejects_substitution(
     consumer = direct_deploy("contracts/margin_consumer.py", canonical_address)
     direct_vm.sender = direct_alice
     assert consumer.canonical_margin_address.as_hex.lower() == canonical_address.lower()
+    assert consumer.get_canonical_margin_address().lower() == canonical_address.lower()
 
     with pytest.raises(TypeError):
         consumer.execute_if_supported("0x" + "11" * 20, "claim-key")
@@ -167,5 +168,36 @@ def test_protected_release_cap_is_per_creator_and_pagination_is_bounded(
     assert len(consumer.get_releases_for_claim_page(key, 0, 25)) == 6
     assert len(consumer.get_releases_for_claim_page(key, 5, 1)) == 1
     assert consumer.get_releases_for_claim_page(key, 6, 1) == []
+    creator_releases = consumer.get_releases_for_creator_claim(
+        key, "0x" + direct_bob.hex(), 0, 25
+    )
+    assert [item["release_id"] for item in creator_releases] == [other_creator_release]
     with direct_vm.expect_revert("release page limit must be between 1 and 25"):
         consumer.get_releases_for_claim_page(key, 0, 26)
+
+
+def test_claim_index_is_bounded_and_late_creator_can_retrieve_own_release(
+    direct_vm, direct_deploy, direct_alice, direct_bob
+):
+    consumer, key, _address = _deploy_registered_fixture(
+        direct_vm, direct_deploy, direct_alice, direct_bob
+    )
+    wallets = ["0x" + f"{index:040x}" for index in range(1, 7)]
+    for wallet in wallets:
+        direct_vm.sender = bytes.fromhex(wallet[2:])
+        for _ in range(5):
+            direct_vm.value = 1
+            consumer.create_protected_release(
+                key, "0x" + direct_bob.hex(), "2999-01-01T00:00:00+00:00"
+            )
+
+    late_creator = "0x" + "77" * 20
+    direct_vm.sender = bytes.fromhex(late_creator[2:])
+    direct_vm.value = 2
+    late_release = consumer.create_protected_release(
+        key, "0x" + direct_bob.hex(), "2999-01-01T00:00:00+00:00"
+    )
+    assert len(consumer.get_releases_for_claim_page(key, 0, 25)) == 25
+    assert len(consumer.get_releases_for_claim_page(key, 25, 25)) == 6
+    own = consumer.get_releases_for_creator_claim(key, late_creator, 0, 25)
+    assert [item["release_id"] for item in own] == [late_release]

@@ -48,9 +48,11 @@ class MarginConsumer(gl.Contract):
     canonical_margin_address: Address
     executed_claims: TreeMap[str, str]
     releases: TreeMap[str, ProtectedRelease]
-    # JSON-encoded release-id lists keep the index bounded by the number of
-    # funded releases without allowing a later release to hide an earlier one.
-    release_ids_by_claim: TreeMap[str, str]
+    # The claim-wide index is an append-only counter plus one key per release.
+    # Creation therefore reads only the creator's bounded index; it never loads
+    # a structure that other wallets can grow without bound.
+    release_count_by_claim: TreeMap[str, u256]
+    release_id_by_claim_index: TreeMap[str, str]
     release_ids_by_creator_claim: TreeMap[str, str]
     release_count: u256
 
@@ -60,6 +62,10 @@ class MarginConsumer(gl.Contract):
 
     def _margin(self):
         return MarginGate(self.canonical_margin_address)
+
+    @gl.public.view
+    def get_canonical_margin_address(self) -> str:
+        return self.canonical_margin_address.as_hex
 
     def _release_dict(self, record: ProtectedRelease) -> dict:
         return {
@@ -121,7 +127,6 @@ class MarginConsumer(gl.Contract):
             raise gl.vm.UserError("protected release requires an existing Assured Claim")
         if assured.get("state") not in ("REGISTERED", "CHALLENGED", "RESOLVED", "APPEALED"):
             raise gl.vm.UserError("protected release must be committed before final settlement")
-        release_ids = self._release_ids_for_claim(claim_key)
         creator_key = self._creator_claim_index_key(claim_key, gl.message.sender_address)
         creator_release_ids = self._release_ids_for_creator_claim(creator_key)
         if len(creator_release_ids) >= self.MAX_RELEASES_PER_CREATOR_PER_CLAIM:
@@ -141,8 +146,9 @@ class MarginConsumer(gl.Contract):
             beneficiary_credit=zero,
             creator_credit=zero,
         )
-        release_ids.append(release_id)
-        self.release_ids_by_claim[claim_key] = json.dumps(release_ids, separators=(",", ":"))
+        claim_index = int(self.release_count_by_claim.get(claim_key, u256(0)))
+        self.release_id_by_claim_index[self._claim_index_key(claim_key, claim_index)] = release_id
+        self.release_count_by_claim[claim_key] = u256(claim_index + 1)
         creator_release_ids.append(release_id)
         self.release_ids_by_creator_claim[creator_key] = json.dumps(creator_release_ids, separators=(",", ":"))
         return release_id
@@ -208,15 +214,18 @@ class MarginConsumer(gl.Contract):
             return {}
         return self._release_dict(self.releases[release_id])
 
-    def _release_ids_for_claim(self, claim_key: str) -> list:
-        encoded = self.release_ids_by_claim.get(str(claim_key).strip().lower(), "[]")
-        try:
-            value = json.loads(encoded)
-        except Exception:
-            raise gl.vm.UserError("protected release index is malformed")
-        if not isinstance(value, list):
-            raise gl.vm.UserError("protected release index is malformed")
-        return [str(item) for item in value]
+    def _claim_index_key(self, claim_key: str, index: int) -> str:
+        return f"{str(claim_key).strip().lower()}:{int(index)}"
+
+    def _release_ids_for_claim_page(self, claim_key: str, offset: int, limit: int) -> list:
+        normalized = str(claim_key).strip().lower()
+        count = int(self.release_count_by_claim.get(normalized, u256(0)))
+        start = min(int(offset), count)
+        end = min(start + int(limit), count)
+        return [
+            self.release_id_by_claim_index.get(self._claim_index_key(normalized, index), "")
+            for index in range(start, end)
+        ]
 
     def _release_ids_for_creator_claim(self, creator_key: str) -> list:
         encoded = self.release_ids_by_creator_claim.get(str(creator_key), "[]")
@@ -230,7 +239,9 @@ class MarginConsumer(gl.Contract):
 
     @gl.public.view
     def get_releases_for_claim(self, claim_key: str) -> list:
-        return [self.get_release(release_id) for release_id in self._release_ids_for_claim(claim_key)]
+        # Compatibility view: bounded to the first 25 records. Use the page
+        # view for complete claim-wide enumeration.
+        return [self.get_release(release_id) for release_id in self._release_ids_for_claim_page(claim_key, 0, 25)]
 
     @gl.public.view
     def get_releases_for_claim_page(self, claim_key: str, offset: int, limit: int) -> list:
@@ -240,7 +251,26 @@ class MarginConsumer(gl.Contract):
             raise gl.vm.UserError("release page offset must not be negative")
         if limit_value <= 0 or limit_value > 25:
             raise gl.vm.UserError("release page limit must be between 1 and 25")
-        release_ids = self._release_ids_for_claim(claim_key)
+        release_ids = self._release_ids_for_claim_page(claim_key, offset_value, limit_value)
+        return [
+            self.get_release(release_id)
+            for release_id in release_ids
+        ]
+
+    @gl.public.view
+    def get_releases_for_creator_claim(
+        self, claim_key: str, creator: str, offset: int, limit: int
+    ) -> list:
+        offset_value = int(offset)
+        limit_value = int(limit)
+        if offset_value < 0:
+            raise gl.vm.UserError("release page offset must not be negative")
+        if limit_value <= 0 or limit_value > 25:
+            raise gl.vm.UserError("release page limit must be between 1 and 25")
+        creator_key = self._creator_claim_index_key(
+            str(claim_key).strip().lower(), Address(str(creator).strip())
+        )
+        release_ids = self._release_ids_for_creator_claim(creator_key)
         return [
             self.get_release(release_id)
             for release_id in release_ids[offset_value:offset_value + limit_value]

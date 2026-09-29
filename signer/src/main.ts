@@ -8,6 +8,7 @@ import { accountFromProvider, accountRequestMethod, isStudionetChainHex, shouldA
 import { assuredActions, assuredDisplay, type AssuredClaimView, type AssuredAction } from './assured';
 import { parseRoute, type Route } from './router';
 import { decisionHistoryHtml, type DecisionHistoryEntry } from './history';
+import { consumerErrorMessage, mergeProtectedReleases, prioritizeProtectedReleases, type ProtectedReleaseView } from './consumer';
 import './style.css';
 
 declare global {
@@ -35,38 +36,13 @@ let listenersBound = false;
 let assuredClaim: AssuredClaimView | null = null;
 let assuredError = '';
 let consumerExecuted: boolean | null = null;
-type ProtectedReleaseView = {
-  release_id?: string;
-  claim_key?: string;
-  creator?: string;
-  beneficiary?: string;
-  amount?: string | number | bigint;
-  expiry?: string;
-  executed?: boolean;
-  refunded?: boolean;
-  beneficiary_credit?: string | number | bigint;
-  creator_credit?: string | number | bigint;
-};
 let protectedReleases: ProtectedReleaseView[] = [];
 let selectedReleaseId = '';
 let consumerError = '';
+let protectedReleaseOffset = 0;
+let protectedReleaseHasMore = false;
 let directClaim: MarginClaim | null = null;
 let decisionHistory: DecisionHistoryEntry[] = [];
-
-function prioritizeProtectedReleases(releases: ProtectedReleaseView[]): ProtectedReleaseView[] {
-  const connected = account?.toLowerCase() || '';
-  return [...releases].sort((a, b) => {
-    const own = (release: ProtectedReleaseView) => {
-      const creator = String(release.creator || '').toLowerCase();
-      const beneficiary = String(release.beneficiary || '').toLowerCase();
-      return (creator === connected ? 2 : 0) + (beneficiary === connected ? 1 : 0);
-    };
-    const priorityDifference = own(b) - own(a);
-    if (priorityDifference !== 0) return priorityDifference;
-    return String(a.release_id || '').localeCompare(String(b.release_id || ''));
-  });
-}
-
 
 function esc(v: string) { return v.replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]!)); }
 function validAddress(v: string): v is `0x${string}` { return /^0x[0-9a-fA-F]{40}$/.test(v); }
@@ -143,7 +119,7 @@ function assuredPanel() {
   const appealWindow = Number.isFinite(deadlineMs) ? (Date.now() <= deadlineMs ? `Open until ${new Date(deadlineMs).toLocaleString()}` : `Closed ${new Date(deadlineMs).toLocaleString()}`) : 'No valid appeal deadline returned';
   const releaseEligible = state === 'SETTLED' && String(assuredClaim?.final_status || '').toUpperCase() === 'SUPPORTED';
   const releaseActions = protectedRelease ? `${releaseEligible && !protectedRelease.executed && !protectedRelease.refunded ? '<button class="dark" data-consumer-action="execute">Execute protected release</button>' : ''}${!protectedRelease.executed && !protectedRelease.refunded && (state === 'CANCELLED' || state === 'ABORTED' || (protectedRelease.expiry && Date.parse(protectedRelease.expiry) <= Date.now())) ? '<button class="quiet" data-consumer-action="refund">Refund release</button>' : ''}${(Number(protectedRelease.beneficiary_credit || 0) > 0 || Number(protectedRelease.creator_credit || 0) > 0) ? '<button class="quiet" data-consumer-action="withdraw">Withdraw release credit</button>' : ''}` : '';
-  const releaseList = protectedReleases.length ? `<div class="release-list"><div class="eyebrow">Protected releases (${protectedReleases.length})</div>${protectedReleases.map((release) => `<button class="quiet release-picker ${release.release_id === protectedRelease?.release_id ? 'selected' : ''}" data-select-release="${esc(String(release.release_id))}">${esc(String(release.release_id))} · ${release.executed ? 'Executed' : release.refunded ? 'Refunded' : 'Open'} · ${esc(assuredDisplay(release.amount))}</button>`).join('')}</div>` : '<p class="meta">No protected release exists for this claim.</p>';
+  const releaseList = protectedReleases.length ? `<div class="release-list"><div class="eyebrow">Protected releases (${protectedReleases.length}${protectedReleaseHasMore ? '+' : ''})</div>${protectedReleases.map((release) => `<button class="quiet release-picker ${release.release_id === protectedRelease?.release_id ? 'selected' : ''}" data-select-release="${esc(String(release.release_id))}">${esc(String(release.release_id))} · ${release.executed ? 'Executed' : release.refunded ? 'Refunded' : 'Open'} · ${esc(assuredDisplay(release.amount))}</button>`).join('')}${protectedReleaseHasMore ? '<button class="quiet" id="load-more-releases">Load more releases</button>' : ''}</div>` : '<p class="meta">No protected release exists for this claim.</p>';
   const releaseRows = protectedRelease ? `<div class="detail-grid"><span>Selected release</span><code>${esc(assuredDisplay(protectedRelease.release_id))}</code><span>Creator</span><code>${esc(assuredDisplay(protectedRelease.creator))}</code><span>Beneficiary</span><code>${esc(assuredDisplay(protectedRelease.beneficiary))}</code><span>Amount</span><code>${esc(assuredDisplay(protectedRelease.amount))}</code><span>Expiry</span><span>${esc(assuredDisplay(protectedRelease.expiry))}</span><span>Executed</span><strong>${protectedRelease.executed ? 'Yes' : 'No'}</strong><span>Refunded</span><strong>${protectedRelease.refunded ? 'Yes' : 'No'}</strong><span>Beneficiary credit</span><code>${esc(assuredDisplay(protectedRelease.beneficiary_credit))}</code><span>Creator credit</span><code>${esc(assuredDisplay(protectedRelease.creator_credit))}</code></div>` : '';
   const canCreateRelease = ['REGISTERED', 'CHALLENGED', 'RESOLVED', 'APPEALED'].includes(state);
   const releaseCreate = canCreateRelease ? '<label for="release-beneficiary">Protected release beneficiary</label><input id="release-beneficiary" placeholder="0x…"><label for="release-amount">GEN amount (smallest units)</label><input id="release-amount" inputmode="numeric" placeholder="1000000000000000000"><label for="release-expiry">Release expiry (ISO datetime)</label><input id="release-expiry" placeholder="2026-10-01T00:00:00+00:00"><button class="dark" data-consumer-action="create">Create protected release</button>' : '';
@@ -388,19 +364,39 @@ async function readAssuredState(redraw = true) {
     consumerExecuted = null;
     protectedReleases = [];
     selectedReleaseId = '';
+    protectedReleaseOffset = 0;
+    protectedReleaseHasMore = false;
     if (assuredClaim && String(assuredClaim.state).toUpperCase() === 'SETTLED' && String(assuredClaim.final_status).toUpperCase() === 'SUPPORTED') {
       consumerExecuted = Boolean(await readClient.readContract({ address: MARGIN_CONSUMER_ADDRESS, functionName: 'has_executed', args: [assuredKey], transactionHashVariant: TransactionHashVariant.LATEST_FINAL }));
     }
     try {
-      const releases = await readClient.readContract({ address: MARGIN_CONSUMER_ADDRESS, functionName: 'get_releases_for_claim_page', args: [assuredKey, 0, 25], transactionHashVariant: TransactionHashVariant.LATEST_FINAL }) as ProtectedReleaseView[];
-      protectedReleases = Array.isArray(releases) ? prioritizeProtectedReleases(releases.filter((release) => release && Object.keys(release).length)) : [];
+      const [claimPage, creatorPage] = await Promise.all([
+        readClient.readContract({ address: MARGIN_CONSUMER_ADDRESS, functionName: 'get_releases_for_claim_page', args: [assuredKey, 0, 25], transactionHashVariant: TransactionHashVariant.LATEST_FINAL }) as Promise<ProtectedReleaseView[]>,
+        account ? readClient.readContract({ address: MARGIN_CONSUMER_ADDRESS, functionName: 'get_releases_for_creator_claim', args: [assuredKey, account, 0, 25], transactionHashVariant: TransactionHashVariant.LATEST_FINAL }) as Promise<ProtectedReleaseView[]> : Promise.resolve([]),
+      ]);
+      const releases = Array.isArray(claimPage) ? claimPage : [];
+      protectedReleaseOffset = releases.length;
+      protectedReleaseHasMore = releases.length === 25;
+      protectedReleases = mergeProtectedReleases([], [...releases, ...(Array.isArray(creatorPage) ? creatorPage : [])], account);
       if (protectedReleases.length) selectedReleaseId = protectedReleases.some((release) => release.release_id === selectedReleaseId) ? selectedReleaseId : String(protectedReleases[0].release_id || '');
-    } catch { protectedReleases = []; selectedReleaseId = ''; }
+    } catch { protectedReleases = []; selectedReleaseId = ''; protectedReleaseOffset = 0; protectedReleaseHasMore = false; }
     assuredError = '';
   } catch (error) {
     assuredError = `Assured state read unavailable: ${String((error as Error).message || error)}`;
   }
   if (redraw) render();
+}
+
+async function loadMoreReleases() {
+  const assuredKey = draft?.claimKey || (route.kind === 'assurance' ? route.claimKey : '');
+  if (!assuredKey || !protectedReleaseHasMore) return;
+  const readClient = createClient({ chain: studionet });
+  const page = await readClient.readContract({ address: MARGIN_CONSUMER_ADDRESS, functionName: 'get_releases_for_claim_page', args: [assuredKey, protectedReleaseOffset, 25], transactionHashVariant: TransactionHashVariant.LATEST_FINAL }) as ProtectedReleaseView[];
+  const incoming = Array.isArray(page) ? page.filter((release) => release && Object.keys(release).length) : [];
+  protectedReleases = mergeProtectedReleases(protectedReleases, incoming, account);
+  protectedReleaseOffset += incoming.length;
+  protectedReleaseHasMore = incoming.length === 25;
+  render();
 }
 
 async function loadRouteData() {
@@ -557,7 +553,8 @@ function bind() {
   document.querySelector('#refresh-assured')?.addEventListener('click', () => readAssuredState().catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`)));
   document.querySelectorAll<HTMLElement>('[data-assured-action]').forEach((button) => button.addEventListener('click', () => runAssuredAction(button.dataset.assuredAction as AssuredAction).catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`))));
   document.querySelectorAll<HTMLElement>('[data-select-release]').forEach((button) => button.addEventListener('click', () => { selectedReleaseId = button.dataset.selectRelease || ''; render(); }));
-  document.querySelectorAll<HTMLElement>('[data-consumer-action]').forEach((button) => button.addEventListener('click', () => runConsumerAction(button.dataset.consumerAction as 'create' | 'execute' | 'refund' | 'withdraw', button.dataset.releaseId || '').catch(e => { consumerError = String(e.message || e); setStatus(`<div class="bad">${esc(consumerError)}</div>`); })));
+  document.querySelector('#load-more-releases')?.addEventListener('click', () => loadMoreReleases().catch(e => { consumerError = consumerErrorMessage(e); render(); }));
+  document.querySelectorAll<HTMLElement>('[data-consumer-action]').forEach((button) => button.addEventListener('click', () => runConsumerAction(button.dataset.consumerAction as 'create' | 'execute' | 'refund' | 'withdraw', button.dataset.releaseId || '').catch(e => { consumerError = consumerErrorMessage(e); setStatus(`<div class="bad">${esc(consumerError)}</div>`); })));
   document.querySelectorAll<HTMLElement>('[data-resume]').forEach((button) => button.addEventListener('click', () => resumeTransaction(button.dataset.resume!).catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`))));
 }
 
