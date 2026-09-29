@@ -8,10 +8,10 @@ MARGIN is a browser-native annotation layer: the extension anchors an explicit c
 - Chain ID: `61999`
 - RPC: `https://studio.genlayer.com/api`
 - Contract: [`0x2a22f117bB61f6a123AfA794710cD2D13844Ff6A`](https://explorer-studio.genlayer.com/address/0x2a22f117bB61f6a123AfA794710cD2D13844Ff6A)
-- Deployment transaction: [`0xe839f83f73e6c461f4740d561c108154ee40fc5a3f9aa5b96b0cd00f9a1a7675`](https://explorer-studio.genlayer.com/tx/0xe839f83f73e6c461f4740d561c108154ee40fc5a3f9aa5b96b0cd00f9a1a7675)
+- Deployment transaction: [`0x9b61671af5c70e0cb5a0bc74c0cf0804eda7a878e26cd892537923bc83a967de`](https://explorer-studio.genlayer.com/tx/0x9b61671af5c70e0cb5a0bc74c0cf0804eda7a878e26cd892537923bc83a967de)
 - Result: `FINALIZED / MAJORITY_AGREE / SUCCESS`
-- Deployment source commit: `d781a9ef417d2e3e2fd2915086a3b43129ffa5a6`
-- Source: 45,774 bytes; SHA-256 `bdfadc8351078bd331f901648976671dca59308a297a54572212289e18cf8a33`
+- Deployment source commit: `ce99b627293b07f85077f1886da376c72de86fb6`
+- Source: 52,435 bytes; SHA-256 `cb3269b1ccaabe75429949a3979d277c970ed0ffaef7e3c1978e9bd39117053b`
 - Runtime identity: `chain_id=61999`, `network=studionet`, `rpc=https://studio.genlayer.com/api`
 - Production signer: [`https://margin-signer.vercel.app/`](https://margin-signer.vercel.app/) — redeployed with the corrected public contract configuration.
 
@@ -47,10 +47,10 @@ The earlier deployment at `0xecE43547EcFbFB082B4Bfb62D3bdEb6dBf0B8059` and its t
 - Static lint: PASS with `genvm-lint 0.11.1rc2`
 - Full linter SDK validation remains environment-limited by the unavailable/corrupt runner archive; no validation pass is claimed here.
 - The extension and signer build successfully locally. The signer has no editable contract-address UI and does not accept a contract query override. The production wallet path uses ordinary EIP-1193 directly; the installed `genlayer-js@1.1.8` Snap-oriented `client.connect()` helper is intentionally not used. The signer provider regression test rejects all Snap RPC methods. Its finalization helper uses the actual Studionet receipt shape (`consensus_data.*.execution_result`), because this SDK version does not export `isSuccessful()` and does not populate the older `txExecutionResultName` field for Studio receipts. Transaction IDs are persisted before polling, with explorer links and resumable tracking after polling failures. A live Chromium read/anchor check now finds the finalized browser-aligned claim on the RFC page and renders a visible `data-margin-claim` badge. A separate real production signer session also completed Submit and Resolve through the injected wallet; exact hashes and canonical readbacks are recorded below.
-- The production signer response was checked at `https://margin-signer.vercel.app/` after production deployment `dpl_CusQjTanPdaNEcJmaDtj8WC3iBhR` (inspect URL: `https://vercel.com/delealufejoel-4184s-projects/margin-signer/CusQjTanPdaNEcJmaDtj8WC3iBhR`): it returned `200 OK`, the canonical contract address was present in the deployed bundle, and the observed headers included `Content-Security-Policy` with `frame-ancestors 'none'` and only the Studionet RPC in `connect-src`, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, and the restricted `Permissions-Policy`. The static deployment is configured from the repository-root `vercel.json` so the signer can resolve the shared protocol module.
+- The production signer response was checked at `https://margin-signer.vercel.app/` after production deployment `dpl_5YYkBGHGVbyuRpYBbBZBQFnbBvdW`: it returned `200 OK`, the fresh canonical contract and consumer addresses were present in the deployed bundle, and the observed headers included `Content-Security-Policy` with `frame-ancestors 'none'` and only the Studionet RPC in `connect-src`, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, and the restricted `Permissions-Policy`.
 - A reproducible extension archive was generated with `npm run zip`: `MARGIN-extension-v0.1.0.zip`, SHA-256 `c6ec12468fb129922a33e68f50e7826646e6fe4f1dddaeb3ddc0de841af4a62f`. The archive contains only `extension/dist`; the ZIP is intentionally ignored and is not committed as a generated artifact.
 
-## Live browser annotation evidence
+## Historical live browser annotation evidence
 
 On 2026-09-28, the built unpacked extension was loaded in Chromium and `https://www.rfc-editor.org/info/rfc9110/` was inspected after the finalized contract read. The extension rendered:
 

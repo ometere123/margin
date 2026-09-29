@@ -2,16 +2,17 @@
 
 ## Current live status (2026-09-28)
 
-The corrected Studionet deployment and corrected-contract normal claim lifecycles are complete. Use [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md) as the authoritative live record. The browser-aligned finalized claim has now been read and visibly rendered by the built extension on the RFC page; the optional Assured Claim path is recorded separately.
+The corrected Studionet deployment and corrected-contract normal claim lifecycles are complete. Use [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md) as the authoritative live record. The optional Assured Claim path is recorded separately. Browser evidence from an earlier deployment is retained as historical evidence; a fresh browser-wallet run against the current deployment remains manual work.
 
 The frontend workspace routes are `/`, `/challenge?draft=...`, `/claim/<claimKey>`, `/claim/<claimKey>/assurance`, and `/activity`. The signer remains static and wallet-backed; the extension remains the primary discovery and annotation surface. The supplied logo/favicon/icon assets are included in the signer and MV3 extension. No contract source or deployed contract was changed in this frontend round.
 
 - Network: Studionet, chain `61999`, RPC `https://studio.genlayer.com/api`.
 - Contract: `0x2a22f117bB61f6a123AfA794710cD2D13844Ff6A`.
-- Deployment: `0xe839f83f73e6c461f4740d561c108154ee40fc5a3f9aa5b96b0cd00f9a1a7675`, `FINALIZED / MAJORITY_AGREE / SUCCESS`.
-- Deployment source commit: `d781a9ef417d2e3e2fd2915086a3b43129ffa5a6`.
+- Deployment: `0x9b61671af5c70e0cb5a0bc74c0cf0804eda7a878e26cd892537923bc83a967de`, `FINALIZED / MAJORITY_AGREE / SUCCESS`.
+- Deployment source commit: `ce99b627293b07f85077f1886da376c72de86fb6`.
+- Deployment source: 52,435 bytes; SHA-256 `cb3269b1ccaabe75429949a3979d277c970ed0ffaef7e3c1978e9bd39117053b`.
 - Runtime identity: `chain_id=61999`, `network=studionet`, `rpc=https://studio.genlayer.com/api`.
-- A corrected-contract browser-aligned normal claim is finalized as `SUPPORTED` and has been rendered as a visible claim-keyed badge by the built extension on `https://www.rfc-editor.org/info/rfc9110/`. See [`SUBMISSION.md`](SUBMISSION.md) for the exact observed claim key and geometry.
+- A corrected-contract browser-aligned claim is recorded in `deployment.json`; fresh browser rendering against the current deployment is not claimed here. See [`docs/MANUAL_BROWSER_VERIFICATION.md`](MANUAL_BROWSER_VERIFICATION.md) for the exact manual proof steps.
 
 The earlier environment-bound checklist below is historical context. It is not permission to overwrite the final deployment record or claim that browser-wallet verification occurred when it has not.
 
@@ -58,14 +59,14 @@ Do not run bare `genlayer ...` commands from this repo.
 
 ## Checks completed for the corrected candidate
 
-- WSL Direct Mode: 15/15 PASS, including adversarial domain-proof rejection cases.
-- WSL contract lint/validation: PASS with `genvm-lint 0.11.1rc2`.
+- WSL Direct Mode: 22/22 PASS, including adversarial domain-proof rejection cases and consumer tests.
+- Contract AST lint: 3/3 PASS with `genvm-lint 0.11.1rc2`; SDK semantic validation is not claimed because the compatible v0.2.12 runner bundle is unavailable to the installed linter.
 - Python/source invariant suite: 12/12 PASS.
 - `npm exec -- genlayer --version`: `0.39.1`.
 - Studionet network info and deployed `network()` readback: `61999`, `studionet`, `https://studio.genlayer.com/api`.
 - Extension/signer typecheck, tests and builds: PASS on the current source; contract AST lint `3/3`, extension tests `16/16`, signer tests `27/27`, source invariants `12/12`, Direct Mode `22/22`.
 - Reproducible extension archive: `MARGIN-extension-v0.1.0.zip`, SHA-256 `c6ec12468fb129922a33e68f50e7826646e6fe4f1dddaeb3ddc0de841af4a62f`, produced by `npm run zip` from `extension/dist`; the ZIP is not committed as generated noise.
-- GitHub Actions `verify` was green in the prior recorded run `36467929894`; the final repository SHA is reported outside the repository.
+- GitHub Actions `verify` was green for the current repository in [run `36548304731`](https://github.com/ometere123/margin/actions/runs/36548304731); the final repository SHA is reported outside the repository.
 
 Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat the checks that do not require package downloads.
 

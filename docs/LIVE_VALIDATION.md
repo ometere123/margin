@@ -98,7 +98,7 @@ The optional application-level Assured Claim path has now been exercised on the 
 - Confirm normal page visits create no GenLayer writes.
 - Confirm page with no claims causes only a read.
 - Live browser-aligned read/anchor check completed for `https://www.rfc-editor.org/info/rfc9110/`: the finalized claim key `cd77ff5d309f9a6cf60f51b7afbc2ca90b91cdcf80c613da1aee3d9fb191446b` was returned and rendered as a visible `M · SUPPORTED` badge with `data-margin-claim` set to that key. The quote was matched across the RFC Editor's zero-width `<wbr>` split. CSS Custom Highlight was unavailable in the inspected session, but the independent badge proof succeeded.
-- Final audit recheck: a controllable Chrome tab in the extension-enabled browser profile loaded the same RFC URL with the current built extension. A DOM query for `data-margin-claim="cd77ff5d309f9a6cf60f51b7afbc2ca90b91cdcf80c613da1aee3d9fb191446b"` returned exactly one element with text `M · SUPPORTED`. The canonical read immediately before this check returned the same claim key with status `SUPPORTED`, revision `1`, and source-manifest digest `452a5215fca972d2646684809863ba96e059a4ef159f122b71272b25ee84a153`.
+- A prior browser audit recheck recorded one `data-margin-claim` element with text `M · SUPPORTED` for the browser-aligned claim. That observation belongs to the earlier browser evidence record and is not presented as a fresh browser check against the current deployment.
 
 ### Hostile-page spot check
 
@@ -158,9 +158,9 @@ On 2026-09-28, a fresh controlled claim was submitted and resolved on the canoni
 
 The public domain proof for this controlled sequence is `https://margin-signer.vercel.app/.well-known/margin.json`, bound to nonce `assured-appeal-fresh-20260928` and the fresh claim key above. The signer/fixture deployment was updated through the existing Vercel project; no contract redeployment occurred.
 
-### Fresh real browser wallet lifecycle evidence
+### Historical real browser wallet lifecycle evidence
 
-On 2026-09-28, the production signer was exercised through the real browser flow with the injected EIP-1193 wallet on Studionet. No contract or Snap configuration was changed. For claim `83d48bcd1f55ef81a63d27f5dc5c0d9b8b8b0cc1183a0c5791674889bad776a5` on `https://www.rfc-editor.org/info/rfc9110/`:
+On 2026-09-28, the production signer was exercised through the real browser flow with the injected EIP-1193 wallet on Studionet. This is historical evidence for the preceding deployment, not a fresh run against the current deployment. No contract or Snap configuration was changed. For claim `83d48bcd1f55ef81a63d27f5dc5c0d9b8b8b0cc1183a0c5791674889bad776a5` on `https://www.rfc-editor.org/info/rfc9110/`:
 
 - Submit was approved in the wallet and finalized successfully as `0xaa2e1205bbb1680d03d4ccba35fb615115a64f899f486b4e3eca71a17605e2af`.
 - The signer persisted and displayed the submit transaction with a Studionet Explorer link before finality; canonical `get_claim` readback confirmed the claim existed with status `OPEN`, revision `0`.
