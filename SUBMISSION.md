@@ -70,7 +70,7 @@ The controlled Assured Claim was then exercised live. Registration (`0xbb9b0c865
 
 The production signer now supports direct static routes: `/`, `/challenge?draft=...`, `/claim/<claimKey>`, `/claim/<claimKey>/assurance`, and `/activity`. `/claim/<claimKey>` reads finalized claim provenance without requiring an encoded draft. The assurance route reads the existing Assured Claim lifecycle and the bound reference consumer without changing protocol semantics. The extension side panel remains lightweight and links finalized annotations to the full claim and assurance routes.
 
-Frontend workspace deployment: `dpl_4N17SZpCHS8pN8EGfJktVwsBYiPo`. Direct HTTP smoke checks for all routes and supplied favicon/logo assets returned 200. The production bundle contains the canonical MARGIN contract and bound reference-consumer address. This round changed no contract source and did not redeploy either contract.
+Frontend workspace deployment: `dpl_oygXve4mKeMeLdrrCpR7vEqR5i7h`. Direct HTTP smoke checks for all routes and supplied favicon/logo assets returned 200. The production bundle contains the canonical MARGIN contract and bound reference-consumer address. This round changed no contract source and did not redeploy either contract.
 
 The signer uses the supplied MARGIN logo and favicon assets; the unpacked MV3 extension declares the supplied 16/32/48/128px icons and action icon. Appeal deadlines are parsed as ISO datetimes and domain-proof expiry is entered as the ISO string required by the existing contract.
 
