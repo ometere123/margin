@@ -50,4 +50,4 @@ Do not silently migrate to any other network or preview environment.
 
 ## Stop condition
 
-Stop only when the source, tests, extension build, stable Studionet deployment/runtime, fee measurement and live browser workflow are as complete as available credentials/environment permit. Leave a precise `FINAL_HANDOFF.md` listing only genuinely manual/account-specific leftovers.
+Stop only when the source, tests, extension build, stable Studionet deployment/runtime, fee measurement and live browser workflow are as complete as available credentials/environment permit. Leave a precise `docs/FINAL_HANDOFF.md` listing only genuinely manual/account-specific leftovers.

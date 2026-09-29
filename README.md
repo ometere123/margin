@@ -79,8 +79,9 @@ shared/protocol.ts           chain constants, keys, draft encoding
 scripts/                     verification + ZIP handoff scripts
 tests/                       source invariants + GenLayer Direct Mode tests
 docs/                        architecture, threat model, live validation
-CLAUDE.md                    Claude handoff
-CODEX.md                     Codex handoff
+docs/CLAUDE.md               Claude handoff
+docs/CODEX.md                Codex handoff
+docs/FINAL_HANDOFF.md        Final handoff
 ```
 
 ## Build
@@ -157,7 +158,7 @@ The local page digest prevents the extension from silently changing what *it* sa
 
 `resolve_claim` runs a leader adjudication over the same bounded source set that validators can independently fetch. A validator reruns the source-grounded adjudication. The decision-bearing `status` must match exactly. Rationale may differ and only the accepted leader rationale is stored.
 
-Each accepted revision also stores a digest of the ordered sources, fetch statuses and bounded content digests observed by validators, plus structured source-index fields. An unchanged source manifest cannot consume another revision; immediate refreshes after the first decision are restricted to the challenger or a cooldown. Recognised archive hosts are distinguished from ordinary supplemental URLs.
+Each accepted revision stores a source-set digest for the ordered claim-input identities plus accepted-proposal observation provenance: fetch statuses, bounded content digests and structured source-index fields. Validators may harmlessly observe different bytes or cite different adequate indexes; only the bounded status and semantic conditions are consensus-bound. Normal refreshes are cooldown-gated and limited to three slots, while two slots are reserved for Assured initial/appeal contexts. Recognised archive hosts are distinguished from ordinary supplemental URLs.
 
 An optional Assured Claim binds a publisher to an HTTPS `/.well-known/margin.json` proof, requires publisher and challenger GEN bonds, permits one bounded appeal, and exposes deterministic settlement/withdrawal state. It is separate from normal permissionless annotations. `contracts/margin_consumer.py` demonstrates reading settled MARGIN state directly before allowing a protected action.
 

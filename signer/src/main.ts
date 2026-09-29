@@ -201,6 +201,7 @@ async function connect(explicit = true) {
     await updateChainState();
   }
   render(chainCorrect ? 'Wallet connected to Studionet 61999.' : 'Wallet connected, but switch to Studionet 61999 before writing.');
+  void resumeAssuredTransactions();
   return chainCorrect;
 }
 
@@ -430,8 +431,15 @@ async function runAssuredAction(action: AssuredAction) {
   activity.push({ id: txId, label: definition.functionName, claimKey: assuredKey, state: 'submitted', account, submittedAt: new Date().toISOString(), contractAddress, network: 'studionet' });
   localStorage.setItem(activityKey, JSON.stringify(activity));
   setStatus(`<div class="pending">${esc(definition.functionName)} submitted. Waiting for finalization…<br>${txLink(txId)}</div>`);
-  await waitForFinalizedSuccess(client, txId, definition.functionName);
-  activity[activity.length - 1].state = 'finalized';
+  try {
+    await waitForFinalizedSuccess(client, txId, definition.functionName);
+    activity[activity.length - 1].state = 'finalized';
+  } catch (error) {
+    const text = String((error as Error).message || error);
+    activity[activity.length - 1].state = text.includes(' failed:') ? 'failed' : 'tracking-interrupted';
+    localStorage.setItem(activityKey, JSON.stringify(activity));
+    throw error;
+  }
   localStorage.setItem(activityKey, JSON.stringify(activity));
   setStatus(`<div class="ok"><strong>${esc(definition.functionName)} finalized ✓</strong><br>${txLink(txId)}</div>`);
   await readAssuredState(false);
@@ -461,11 +469,61 @@ async function runConsumerAction(action: 'create' | 'execute' | 'refund' | 'with
         : { functionName: 'withdraw_release_credit', args: [protectedRelease!.release_id], value: 0n };
   setStatus('<div class="pending">Confirm the downstream consumer transaction in your wallet…</div>');
   const txId = await client.writeContract({ address: MARGIN_CONSUMER_ADDRESS, functionName: definition.functionName, args: definition.args, value: definition.value } as any);
+  const activityKey = `margin.assured.transactions.${assuredKey}`;
+  const activity = JSON.parse(localStorage.getItem(activityKey) || '[]') as Array<Record<string, unknown>>;
+  activity.push({ id: txId, label: definition.functionName, claimKey: assuredKey, state: 'submitted', account, submittedAt: new Date().toISOString(), contractAddress: MARGIN_CONTRACT_ADDRESS, network: 'studionet' });
+  localStorage.setItem(activityKey, JSON.stringify(activity));
   setStatus(`<div class="pending">${esc(definition.functionName)} submitted. Waiting for finalization…<br>${txLink(txId)}</div>`);
-  await waitForFinalizedSuccess(client, txId, definition.functionName);
+  try {
+    await waitForFinalizedSuccess(client, txId, definition.functionName);
+    activity[activity.length - 1].state = 'finalized';
+  } catch (error) {
+    const text = String((error as Error).message || error);
+    activity[activity.length - 1].state = text.includes(' failed:') ? 'failed' : 'tracking-interrupted';
+    localStorage.setItem(activityKey, JSON.stringify(activity));
+    throw error;
+  }
+  localStorage.setItem(activityKey, JSON.stringify(activity));
   await readAssuredState(false);
   setStatus(`<div class="ok"><strong>${esc(definition.functionName)} finalized ✓</strong><br>${txLink(txId)}</div>`);
   render();
+}
+
+type AssuredTransactionRecord = PendingTransaction & { functionName?: string };
+
+function assuredTransactionRecords(): Array<{ key: string; records: AssuredTransactionRecord[] }> {
+  const result: Array<{ key: string; records: AssuredTransactionRecord[] }> = [];
+  for (let i = 0; i < localStorage.length; i += 1) {
+    const key = localStorage.key(i) || '';
+    if (!key.startsWith('margin.assured.transactions.')) continue;
+    try {
+      const records = JSON.parse(localStorage.getItem(key) || '[]') as AssuredTransactionRecord[];
+      if (Array.isArray(records)) result.push({ key, records });
+    } catch { /* malformed local journal is not protocol state */ }
+  }
+  return result;
+}
+
+async function resumeAssuredTransactions() {
+  if (!account || !chainCorrect) return;
+  for (const group of assuredTransactionRecords()) {
+    let changed = false;
+    for (const record of group.records) {
+      if (!record.id || !['submitted', 'tracking-interrupted'].includes(String(record.state))) continue;
+      if (!pendingAccountMatches(record.account, account)) continue;
+      try {
+        const client = await walletClient();
+        setStatus(`<div class="pending">Resuming ${esc(record.label)} finalization…<br>${txLink(record.id)}</div>`);
+        await waitForFinalizedSuccess(client, record.id, record.label);
+        record.state = 'finalized';
+      } catch (error) {
+        const text = String((error as Error).message || error);
+        record.state = text.includes(' failed:') ? 'failed' : 'tracking-interrupted';
+      }
+      changed = true;
+    }
+    if (changed) localStorage.setItem(group.key, JSON.stringify(group.records));
+  }
 }
 
 function bind() {
@@ -507,5 +565,6 @@ async function initialize() {
   for (const tx of transactions.filter((item) => item.state === 'submitted' || item.state === 'tracking-interrupted')) {
     void resumeTransaction(tx.id);
   }
+  void resumeAssuredTransactions();
 }
 void initialize();

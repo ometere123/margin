@@ -23,7 +23,7 @@ MARGIN has been pushed to the environment boundary available in this build sessi
 - Text-selection capture with canonical URL, exact/prefix/suffix anchor and local page digest.
 - Challenge composer for five bounded claim classes and up to three public evidence URLs plus an optional public archive URL.
 - Canonical page key and claim key generation, with both keys recomputed and enforced by the Intelligent Contract.
-- GenLayer Intelligent Contract with bounded page index, bounded revision history, validator-bound source manifests, domain-controlled Assured Claims, native GEN bonds, one appeal and deterministic settlement views.
+- GenLayer Intelligent Contract with bounded page index, bounded revision history, consensus-bound source identities and status plus accepted-proposal observation provenance, domain-controlled Assured Claims, native GEN bonds, one appeal and deterministic settlement views.
 - Independent validator re-execution of the evidence task; decision-bearing status, structured source indexes and source-manifest digest must match exactly.
 - Bounded results: `SUPPORTED`, `CONTRADICTED`, `INCONCLUSIVE`, `STALE`.
 - Read-only extension state uses finalized GenLayer reads rather than a MARGIN backend.
@@ -91,7 +91,7 @@ No success evidence for those steps has been fabricated.
 
 ## Exact continuation sequence
 
-1. Read `README.md`, `docs/ARCHITECTURE.md`, `docs/THREAT_MODEL.md`, `docs/LIVE_VALIDATION.md`, then `CODEX.md` or `CLAUDE.md`.
+1. Read `README.md`, `docs/ARCHITECTURE.md`, `docs/THREAT_MODEL.md`, `docs/LIVE_VALIDATION.md`, then `docs/CODEX.md` or `docs/CLAUDE.md`.
 2. Run `bash scripts/offline-preflight.sh`.
 3. Install Node 20+ dependencies with `npm install`. This installs the repo-local `genlayer@0.39.1`. Immediately run `npm run cli:check` and `npm exec -- genlayer --version`; both must resolve to `0.39.1`. Then run `npm run verify`. Repair only real SDK/API drift; preserve the architecture. Do not use the machine's global GenLayer CLI.
 4. Create a Python environment, install `requirements.txt`, run the current `genvm-lint check contracts/margin.py`, then run `pytest tests/direct -v`.

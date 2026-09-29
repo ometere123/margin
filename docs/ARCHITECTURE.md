@@ -63,19 +63,39 @@ The contract fetches:
 - optional archive URL;
 - up to three evidence URLs.
 
-Source text is explicitly treated as untrusted prompt material. Validators independently fetch the bounded source set and commit an ordered source manifest containing fetch status, provenance and content digests. The leader must return bounded structured findings; validators re-derive and verify the decision-bearing fields and manifest. A validator disagreement cannot be hidden by a leader-provided digest.
+Source text is explicitly treated as untrusted prompt material. Validators independently fetch the bounded source set and commit an ordered source manifest containing fetch status, provenance and content digests. The leader must return bounded structured findings; validators re-derive and verify the decision-bearing fields and their own manifest. Consensus binds the source identity set and final status; it intentionally does not require byte-identical web observations or identical cited indexes across validators. The stored observation manifest is accepted-proposal provenance, not a committee-wide byte attestation.
 
 MARGIN does not use fuzzy status tolerance.
 
 ## 5. Revision model
 
-A claim may be re-resolved up to five times, but unchanged source manifests are rejected, immediate refreshes after the first decision are restricted to the original challenger, and other refreshes require a cooldown. Assured Claims use an internal resolver and cannot be consumed by ordinary `resolve_claim` while challenged or appealed. Their single bonded appeal adds a bounded, untrusted appeal contention to the adjudication context, so the same source manifest can be reconsidered exactly once without becoming an instruction to validators. Each accepted resolution stores its ordered evidence manifest and is appended to immutable keyed history before the latest status is updated. This prevents a stranger from trivially burning all revision capacity.
+A claim may be re-resolved up to five times. Normal refreshes are limited to three slots and require a deterministic cooldown; two reserved slots are available only to the Assured initial and one-shot appeal contexts. Assured Claims use an internal resolver and cannot be consumed by ordinary `resolve_claim` while challenged or appealed. Their single bonded appeal adds a bounded, untrusted appeal contention to the adjudication context, so the same source manifest can be reconsidered exactly once without becoming an instruction to validators. Each accepted resolution stores its ordered evidence manifest and is appended to immutable keyed history before the latest status is updated. This prevents a stranger from trivially burning all revision capacity.
 
 The current extension renders the latest finalized status.
 
 ### Assured Claims and consumers
 
-An Assured Claim requires an exact HTTPS `/.well-known/margin.json` proof bound to the publisher, nonce, claim and expiry. The publisher and challenger lock bounded GEN bonds. One appeal may be opened before the deadline; after the deadline, deterministic settlement allocates the funded balances according to the finalized status. `MarginConsumer` demonstrates a downstream contract reading settled MARGIN state directly rather than trusting extension data.
+An Assured Claim requires an exact HTTPS `/.well-known/margin.json` proof bound to the publisher, nonce, claim and expiry. The publisher and challenger lock bounded GEN bonds. One appeal may be opened before the deadline; after the deadline, deterministic settlement allocates the funded balances according to the finalized status. `MarginConsumer` binds the canonical MARGIN address at construction and demonstrates a downstream contract reading settled MARGIN state directly rather than trusting extension data. Its protected release is a small warranty-backed payment reference: an integrator funds a release for a beneficiary, and the consumer either credits the beneficiary once for `SETTLED + SUPPORTED` or refunds the creator for a negative terminal state/expiry.
+
+Example integration (the consumer must be constructed with the trusted MARGIN address):
+
+```python
+class MarginGate:
+    class View:
+        def is_claim_supported(self, claim_key: str) -> bool: ...
+
+class ProtectedAction(gl.Contract):
+    margin_address: Address
+
+    def __init__(self, canonical_margin_address: str):
+        self.margin_address = Address(canonical_margin_address)
+
+    @gl.public.write
+    def execute(self, claim_key: str) -> None:
+        if not MarginGate(self.margin_address).view().is_claim_supported(claim_key):
+            raise gl.vm.UserError("MARGIN claim is not SETTLED + SUPPORTED")
+        # Perform the downstream action exactly once after the canonical read.
+```
 
 ## 6. No MARGIN backend
 

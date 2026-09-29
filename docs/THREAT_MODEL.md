@@ -51,15 +51,15 @@ Mitigations:
 - fetched adjudication material is capped per primary/archive/evidence source;
 - strict string bounds;
 - 5 resolutions maximum per claim;
-- unchanged source manifests are rejected;
-- immediate refresh after the first decision is challenger-controlled and other refreshes are cooldown-gated;
+- only 3 normal revision slots are available; two slots are reserved for Assured initial/appeal contexts;
+- normal refreshes are cooldown-gated for every caller;
 - every write costs a GenLayer transaction.
 
 The optional Assured Claim path adds explicit publisher/challenger bonds and one bounded appeal. Settlement is one-shot and liabilities remain reserved until the appeal deadline.
 
 ## Evidence-manifest integrity
 
-Each accepted resolution commits the validator-observed ordered source manifest, including URL, fetch status, provenance and bounded content digest. The leader cannot substitute a digest, source index or archive interpretation without failing the validator consistency checks. A browser-local page digest remains only a capture anchor, not historical proof.
+Each accepted resolution commits the accepted proposal's ordered observation manifest, including URL, fetch status, provenance and bounded content digest. The source-set digest binds the expected identities and order; validators may harmlessly observe different bytes or cite different adequate indexes. The leader cannot substitute a source identity, malformed index or invalid archive interpretation without failing the validator consistency checks, but the protocol does not claim committee-wide byte equality. A browser-local page digest remains only a capture anchor, not historical proof. Named limitation: the accepted leader chooses which validator-validated `OK` sources to cite in the stored provenance, so consumers must treat the final status as consensus-bound and the cited manifest as proposal provenance.
 
 ## Scope abuse
 

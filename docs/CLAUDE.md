@@ -12,10 +12,10 @@ Read in order:
 2. `docs/ARCHITECTURE.md`
 3. `docs/THREAT_MODEL.md`
 4. `docs/LIVE_VALIDATION.md`
-5. `CODEX.md` (the execution checklist applies equally here)
+5. `docs/CODEX.md` (the execution checklist applies equally here)
 
 Use the official GenLayer developer skill/docs if available. Validate the contract against the live stable 61999-compatible GenVM/toolchain, run all JS/Python tests, repair SDK drift, deploy to 61999, validate consensus + finality + an appeal, load the unpacked extension, validate real webpage anchoring and deploy the static signer if credentials permit.
 
 Do not add a MARGIN backend. Do not turn it into a website-first DApp. Do not weaken independent validator verification. Do not claim historical page truth from the local page digest.
 
-When finished, write `FINAL_HANDOFF.md` containing deployed address, transaction IDs, exact tool versions, tests run, fee measurements, browser test evidence, known limitations and only the remaining account-specific/manual steps.
+When finished, write `docs/FINAL_HANDOFF.md` containing deployed address, transaction IDs, exact tool versions, tests run, fee measurements, browser test evidence, known limitations and only the remaining account-specific/manual steps.
