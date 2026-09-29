@@ -3,12 +3,12 @@
   "chainId": 61999,
   "rpc": "https://studio.genlayer.com/api",
   "explorer": "https://explorer-studio.genlayer.com",
-  "contractAddress": "0x2a22f117bB61f6a123AfA794710cD2D13844Ff6A",
-  "deploymentTx": "0x9b61671af5c70e0cb5a0bc74c0cf0804eda7a878e26cd892537923bc83a967de",
+  "contractAddress": "0xA188e8314AeEd0C31060725b00bEd20D1feBca19",
+  "deploymentTx": "0x42bd77dbeccbbbfb46b4a06a8491c5eb654fdd9743cc7cd938152e009eff179a",
   "deploymentStatus": "FINALIZED / MAJORITY_AGREE / SUCCESS",
-  "sourceCommit": "ce99b627293b07f85077f1886da376c72de86fb6",
-  "sourceBytes": 52435,
-  "sourceSha256": "cb3269b1ccaabe75429949a3979d277c970ed0ffaef7e3c1978e9bd39117053b",
+  "sourceCommit": "b6f5b7efa02d09b0f4e02ed4c7b047a8f41beebb",
+  "sourceBytes": 53039,
+  "sourceSha256": "f31fcd032282d6733eaf3968b477ac76da8fadceeff73d6cc3c974a56ebc9190",
   "signerUrl": "https://margin-signer.vercel.app/",
   "runtimeIdentity": {
     "chain_id": 61999,
@@ -19,6 +19,13 @@
     "contractAddress": "0x03fE368186822d745b4DB8e4A49f8F43e867D57C",
     "deploymentTx": "0xde6118bd3f5208c0b01f99ba085c7630e8fefc20811b3cd807d2b69e285082e9",
     "status": "historical"
+  },
+  "supersededDeployment": {
+    "contractAddress": "0x2a22f117bB61f6a123AfA794710cD2D13844Ff6A",
+    "deploymentTx": "0x9b61671af5c70e0cb5a0bc74c0cf0804eda7a878e26cd892537923bc83a967de",
+    "consumerAddress": "0x92b0c63c09c2b97aC2b2c2C5b09143cFfd94Fa6D",
+    "consumerDeploymentTx": "0x6b9238514216e2058aadc845641acbbcfc1b68029299a7485837d4c64eeb3cec",
+    "status": "historical; superseded by the current deployment"
   },
   "historicalEvidence": {
     "normalClaim": {
@@ -201,24 +208,6 @@
       "canonicalClaimState": "SETTLED / SUPPORTED",
       "postExerciseHasExecuted": true,
       "note": "Historical consumer was not bound to the current canonical MARGIN deployment."
-    }
-  },
-  "liveEvidence": {
-    "canonicalDeploymentChecks": {
-      "contractAddress": "0x2a22f117bB61f6a123AfA794710cD2D13844Ff6A",
-      "deploymentTx": "0x9b61671af5c70e0cb5a0bc74c0cf0804eda7a878e26cd892537923bc83a967de",
-      "networkReadback": {
-        "chain_id": 61999,
-        "network": "studionet",
-        "rpc": "https://studio.genlayer.com/api"
-      },
-      "sourceCommit": "ce99b627293b07f85077f1886da376c72de86fb6"
-    },
-    "consumerDeployment": {
-      "contractAddress": "0x92b0c63c09c2b97aC2b2c2C5b09143cFfd94Fa6D",
-      "deploymentTx": "0x6b9238514216e2058aadc845641acbbcfc1b68029299a7485837d4c64eeb3cec",
-      "boundMarginAddress": "0x2a22f117bB61f6a123AfA794710cD2D13844Ff6A",
-      "deploymentFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS"
     },
     "historicalExternalBrowserAttempt": {
       "contractAddress": "0x6525B4a5d9CEd32f440D47b0Bf966C2D25d1Fcb0",
@@ -226,6 +215,24 @@
       "signerDeployment": "dpl_2kYaztcwUAcAWNHgaoEkXicsTPkx",
       "status": "NOT_RUN / HISTORICAL ATTEMPT",
       "blocker": "Chromium-control service could not load its browser request-header policy; no browser transaction or badge result is claimed for this deployment."
+    }
+  },
+  "liveEvidence": {
+    "canonicalDeploymentChecks": {
+      "contractAddress": "0xA188e8314AeEd0C31060725b00bEd20D1feBca19",
+      "deploymentTx": "0x42bd77dbeccbbbfb46b4a06a8491c5eb654fdd9743cc7cd938152e009eff179a",
+      "networkReadback": {
+        "chain_id": 61999,
+        "network": "studionet",
+        "rpc": "https://studio.genlayer.com/api"
+      },
+      "sourceCommit": "b6f5b7efa02d09b0f4e02ed4c7b047a8f41beebb"
+    },
+    "consumerDeployment": {
+      "contractAddress": "0xb14dBe36C33D716018c343a5E589471A2c0F644C",
+      "deploymentTx": "0x51d53f2a96457f32a48ddfd0ada55f1f0e9e564ea07c2a3633149b3fa569bed0",
+      "boundMarginAddress": "0xA188e8314AeEd0C31060725b00bEd20D1feBca19",
+      "deploymentFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS"
     }
   },
   "toolVersions": {

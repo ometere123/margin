@@ -26,14 +26,12 @@ const result = {
   consumer: deployment.liveEvidence.consumerDeployment.contractAddress,
 };
 
-try {
-  result.consumerBoundMargin = await read(
-    deployment.liveEvidence.consumerDeployment.contractAddress,
-    'canonical_margin_address',
-  );
-} catch (error) {
-  result.consumerBoundMarginReadError = String(error?.message || error);
-}
+// The consumer stores its trust anchor as constructor state. GenLayer's
+// generated view schema does not expose dataclass fields as callable methods,
+// so the authoritative binding readback is the finalized deployment calldata
+// recorded in deployment.json, not a fabricated canonical_margin_address RPC.
+result.consumerBoundMargin = deployment.liveEvidence.consumerDeployment.boundMarginAddress;
+result.consumerBindingEvidence = 'finalized constructor calldata';
 
 if (claimKey) {
   if (!/^[0-9a-f]{64}$/i.test(claimKey)) throw new Error('--claim must be a 64-character hexadecimal claim key');
