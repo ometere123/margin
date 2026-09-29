@@ -141,20 +141,31 @@ def test_protected_release_expiry_refund_is_single_use_and_pull_payment(
         consumer.withdraw_release_credit(release_id)
 
 
-def test_protected_release_cap_is_enforced_per_claim(
+def test_protected_release_cap_is_per_creator_and_pagination_is_bounded(
     direct_vm, direct_deploy, direct_alice, direct_bob
 ):
     consumer, key, _address = _deploy_registered_fixture(
         direct_vm, direct_deploy, direct_alice, direct_bob
     )
-    for _ in range(20):
+    for _ in range(5):
         direct_vm.value = 1
         consumer.create_protected_release(
             key, "0x" + direct_bob.hex(), "2999-01-01T00:00:00+00:00"
         )
-    assert len(consumer.get_releases_for_claim(key)) == 20
+    assert len(consumer.get_releases_for_claim(key)) == 5
     direct_vm.value = 1
-    with direct_vm.expect_revert("maximum protected releases reached for claim"):
+    with direct_vm.expect_revert("maximum protected releases reached for creator and claim"):
         consumer.create_protected_release(
             key, "0x" + direct_bob.hex(), "2999-01-01T00:00:00+00:00"
         )
+    direct_vm.sender = direct_bob
+    direct_vm.value = 1
+    other_creator_release = consumer.create_protected_release(
+        key, "0x" + direct_alice.hex(), "2999-01-01T00:00:00+00:00"
+    )
+    assert other_creator_release
+    assert len(consumer.get_releases_for_claim_page(key, 0, 25)) == 6
+    assert len(consumer.get_releases_for_claim_page(key, 5, 1)) == 1
+    assert consumer.get_releases_for_claim_page(key, 6, 1) == []
+    with direct_vm.expect_revert("release page limit must be between 1 and 25"):
+        consumer.get_releases_for_claim_page(key, 0, 26)

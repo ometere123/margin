@@ -392,7 +392,7 @@ async function readAssuredState(redraw = true) {
       consumerExecuted = Boolean(await readClient.readContract({ address: MARGIN_CONSUMER_ADDRESS, functionName: 'has_executed', args: [assuredKey], transactionHashVariant: TransactionHashVariant.LATEST_FINAL }));
     }
     try {
-      const releases = await readClient.readContract({ address: MARGIN_CONSUMER_ADDRESS, functionName: 'get_releases_for_claim', args: [assuredKey], transactionHashVariant: TransactionHashVariant.LATEST_FINAL }) as ProtectedReleaseView[];
+      const releases = await readClient.readContract({ address: MARGIN_CONSUMER_ADDRESS, functionName: 'get_releases_for_claim_page', args: [assuredKey, 0, 25], transactionHashVariant: TransactionHashVariant.LATEST_FINAL }) as ProtectedReleaseView[];
       protectedReleases = Array.isArray(releases) ? prioritizeProtectedReleases(releases.filter((release) => release && Object.keys(release).length)) : [];
       if (protectedReleases.length) selectedReleaseId = protectedReleases.some((release) => release.release_id === selectedReleaseId) ? selectedReleaseId : String(protectedReleases[0].release_id || '');
     } catch { protectedReleases = []; selectedReleaseId = ''; }
