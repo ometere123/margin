@@ -36,6 +36,12 @@
     "sourceCommit": "b6f5b7efa02d09b0f4e02ed4c7b047a8f41beebb",
     "status": "historical; superseded by the final warning-free deployment"
   },
+  "supersededConsumerAfterSourceFix": {
+    "contractAddress": "0x3Bc6566Adf5d57d427d73CdDa89b6d105e6A3b5F",
+    "deploymentTx": "0xa2984fc2eccfd90430e9811d5a4e9a6cb106b000510b017b54e90184cdf0673a",
+    "boundMarginAddress": "0x0f8D86d56F1b8997475dD048579807fBFe60e227",
+    "status": "historical; superseded by the multi-release consumer"
+  },
   "historicalEvidence": {
     "normalClaim": {
       "claimKey": "27a215c4cfe5d008e90ea65093c822f6af2133b2872e65cee69f06bf31861a69",
@@ -241,10 +247,14 @@
       "sourceBytes": 58790
     },
     "consumerDeployment": {
-      "contractAddress": "0x3Bc6566Adf5d57d427d73CdDa89b6d105e6A3b5F",
-      "deploymentTx": "0xa2984fc2eccfd90430e9811d5a4e9a6cb106b000510b017b54e90184cdf0673a",
+      "contractAddress": "0x388c762f777A10071A13063d71ed0B37CdE2d85a",
+      "deploymentTx": "0xddb1e2b791ccb550e3fcd7b5d1a4203956b8def764b7054310da12306e90ce0f",
       "boundMarginAddress": "0x0f8D86d56F1b8997475dD048579807fBFe60e227",
-      "deploymentFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS"
+      "deploymentFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "sourceCommit": "a4b72797e3bb8af617e0fb671bd5191937720cfa",
+      "sourceSha256": "C6D96DE8C78232EDA94B6A516341BE893A388F19088D9EDE4863645ACBC20DEF",
+      "sourceBytes": 9650,
+      "boundAddressReadback": "0x0f8D86d56F1b8997475dD048579807fBFe60e227"
     },
     "freshNormalClaimFinalDeployment": {
       "claimKey": "99bbd4ea502c2b56341ec9ba9c08cacbede75d8f1e32e8964b65ec4bec63ebc6",

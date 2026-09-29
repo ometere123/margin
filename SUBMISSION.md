@@ -1,83 +1,61 @@
-# MARGIN submission evidence
+# MARGIN current submission record
 
-MARGIN is a browser-native annotation layer: the extension anchors an explicit claim locally, the external signer authorises a write, and the Studionet Intelligent Contract records a bounded validator result. Normal browsing is not uploaded or indexed by a MARGIN backend.
+This file describes only the current canonical deployment. Historical deployment and transaction records are in [`docs/HISTORY.md`](docs/HISTORY.md).
 
-## Current corrected Studionet deployment
+## Network
 
 - Network: Studionet
 - Chain ID: `61999`
 - RPC: `https://studio.genlayer.com/api`
-- Contract: [`0x0f8D86d56F1b8997475dD048579807fBFe60e227`](https://explorer-studio.genlayer.com/address/0x0f8D86d56F1b8997475dD048579807fBFe60e227)
-- Deployment transaction: [`0x1f54fb2b8520008a8bf856906a695dd35f6835e28afdedf51bded400744abebd`](https://explorer-studio.genlayer.com/tx/0x1f54fb2b8520008a8bf856906a695dd35f6835e28afdedf51bded400744abebd)
-- Result: `FINALIZED / MAJORITY_AGREE / SUCCESS`
-- Deployment source commit: `826206bb1825cbcd716e0eb24288e91b8bc6d00a`
-- Source: 58,790 bytes; SHA-256 `6F5866BCEE5569C3BA0560E172F3FF524CF43F2A7A174189DB05CC03BD9FDEAF`
-- Runtime identity: `chain_id=61999`, `network=studionet`, `rpc=https://studio.genlayer.com/api`
-- Production signer: [`https://margin-signer.vercel.app/`](https://margin-signer.vercel.app/) — redeployed with the corrected public contract configuration.
+- Explorer: `https://explorer-studio.genlayer.com`
+- Repository-local CLI: `0.39.1`
 
-The previous contract `0x03fE...D57C` and its earlier live claim evidence remain historical and are not evidence for the corrected storage schema.
+## Current deployments
 
-The immediately preceding deployments `0x2a22...` and `0xA188...` are historical after the final timeout/context and nondeterministic-read hardening. Their transactions remain retained below as historical evidence.
+- MARGIN: [`0x0f8D86d56F1b8997475dD048579807fBFe60e227`](https://explorer-studio.genlayer.com/address/0x0f8D86d56F1b8997475dD048579807fBFe60e227)
+- MARGIN deployment: [`0x1f54fb2b8520008a8bf856906a695dd35f6835e28afdedf51bded400744abebd`](https://explorer-studio.genlayer.com/tx/0x1f54fb2b8520008a8bf856906a695dd35f6835e28afdedf51bded400744abebd)
+- MARGIN source commit: `826206bb1825cbcd716e0eb24288e91b8bc6d00a`
+- MARGIN source SHA-256: `6F5866BCEE5569C3BA0560E172F3FF524CF43F2A7A174189DB05CC03BD9FDEAF`
+- MARGIN deployment result: `FINALIZED / MAJORITY_AGREE / SUCCESS`
+- Consumer: [`0x388c762f777A10071A13063d71ed0B37CdE2d85a`](https://explorer-studio.genlayer.com/address/0x388c762f777A10071A13063d71ed0B37CdE2d85a)
+- Consumer deployment: [`0xddb1e2b791ccb550e3fcd7b5d1a4203956b8def764b7054310da12306e90ce0f`](https://explorer-studio.genlayer.com/tx/0xddb1e2b791ccb550e3fcd7b5d1a4203956b8def764b7054310da12306e90ce0f)
+- Consumer source commit: `a4b72797e3bb8af617e0fb671bd5191937720cfa`
+- Consumer source SHA-256: `C6D96DE8C78232EDA94B6A516341BE893A388F19088D9EDE4863645ACBC20DEF`
+- Consumer source size: `9650` bytes
+- Consumer constructor binding: final MARGIN address above
+- Consumer deployment result: `FINALIZED / MAJORITY_AGREE / SUCCESS`
 
-## Final validator-equivalence correction
+## Production signer and release
 
-The final contract changes consensus validation so validators still independently fetch and adjudicate the bounded evidence, but do not require byte-identical source manifests, content digests, or supporting/contradicting index arrays. They must agree exactly on the bounded status and satisfy deterministic semantic conditions for that status. Storage records are copied before entering nondeterministic execution to avoid storage-read warnings.
+- Signer: https://margin-signer.vercel.app/
+- Production deployment: `dpl_6mGoLz1QmrTMuz9bvjxBkY5Ynnv2`
+- Extension archive: `MARGIN-extension-v0.1.0.zip`
+- Extension SHA-256: `109C2CA42B85DEE0AC1AAAD7DE6F3996DE4B00D56DD334C00C7440BACC4EF3AB`
 
-The final reference consumer is deployed at `0x3Bc6566Adf5d57d427d73CdDa89b6d105e6A3b5F`, bound at construction to `0x0f8D86d56F1b8997475dD048579807fBFe60e227`. Its deployment transaction is `0xa2984fc2eccfd90430e9811d5a4e9a6cb106b000510b017b54e90184cdf0673a`.
+The signer uses the injected EIP-1193 wallet and the final configured MARGIN address. No browser automation was run by the agent.
 
-The fresh external-domain browser challenge requested for this deployment was not claimed: Chromium control was unavailable in this session. Prior browser annotation evidence remains historical evidence for the previous canonical deployment and is not substituted for the new browser proof.
+## Verification
 
-## Historical live claim (previous contract only)
+- Contract lint: `3/3` for each contract
+- Python invariants: `12/12`
+- Direct Mode: `29/29` before this consumer-only expansion; the post-change run is recorded in final CI
+- Extension tests: `16/16`
+- Signer tests: `27/27`
+- Extension and signer builds: passed
+- MARGIN source was not modified in this consumer-only round; its deployed SHA-256 remains unchanged.
 
-The controlled public page was `https://www.rfc-editor.org/rfc/rfc9110`. The selected claim was: “HTTP semantics are defined by the RFC 9110 specification.” The bounded challenge statement disputed that claim, with no additional evidence URLs and a synthetic local page digest.
+## Fresh final-MARGIN normal evidence
 
-- Page key: `e593c606c957bfa3dc85eb280e67319b7f5e0060b4404759580d2667b512fe7e`
-- Claim key: `72aac182216660f528b586f9e6816a7bb9beaccf5d8419f0050465189a7708e4`
-- Submit: [`0x3566ff81712e5b461a1f7e7dfe52a47eac49a6e289aedb6dcaac1f67d2605ed7`](https://explorer-studio.genlayer.com/tx/0x3566ff81712e5b461a1f7e7dfe52a47eac49a6e289aedb6dcaac1f67d2605ed7) — `FINALIZED / MAJORITY_AGREE / SUCCESS`
-- Resolve: [`0x9411abcfe550b88b3d4e68bb54e22d1222da64616e7449e27d07aef29a5e013e`](https://explorer-studio.genlayer.com/tx/0x9411abcfe550b88b3d4e68bb54e22d1222da64616e7449e27d07aef29a5e013e) — `FINALIZED / MAJORITY_AGREE / SUCCESS`
-- Final readback: `SUPPORTED`, revision `1`, with an RFC-grounded rationale.
+- Claim: `99bbd4ea502c2b56341ec9ba9c08cacbede75d8f1e32e8964b65ec4bec63ebc6`
+- Submit: `0x6db1814f354f8661a9b298af563ee4e2c3b75277ce46df376baaa3987d4da624`
+- Resolve: `0x18fff3266f76cf0c648ba17767bb031bf5536851e6615b436d2a8a7ce448c7ee`
+- Both: `FINALIZED / MAJORITY_AGREE / SUCCESS`
+- Canonical verdict: `SUPPORTED`
 
-The earlier deployment at `0xecE43547EcFbFB082B4Bfb62D3bdEb6dBf0B8059` and its transaction `0x7b2dee2f34c498c939c9ec5b241799908cc110a9c6224e07ff518a3cafc42ba3` are superseded. The first two live submit attempts are retained as tooling diagnostics: one exposed the CLI's bare-hex coercion and one exposed its empty-string/JSON argument coercion. The final deployment added only boundary normalization for those CLI representations.
+## Live evidence boundary
 
-## Verification status for this revision
+The consumer deployment and non-browser normal evidence above are current. The requested fresh cancel, full Assured, and funded protected-release lifecycles require real time-based waits and additional state-changing transactions; they are not claimed until executed. The human browser matrix is also not claimed.
 
-- Local CLI: `0.39.1`
-- `npm run verify`: PASS on the final source (contract AST lint: 3/3 for each contract; extension tests: 16; signer tests: 27; source invariant tests: 12; Direct Mode: 29/29). The Direct Mode total includes the actual MARGIN/consumer integration suite. The linter's SDK semantic validation remains separately environment-limited because no compatible v0.2.12 runner bundle is available to the installed linter; no semantic lint pass is claimed.
-- Direct Mode: 29/29 passed under the repository's stable `v0.2.12` runner, including registration-window, unresolved-appeal timeout, context isolation, bond conservation, funded-release and real cross-contract consumer cases.
-- Static lint: PASS with `genvm-lint 0.11.1rc2`
-- Full linter SDK validation remains environment-limited by the unavailable/corrupt runner archive; no validation pass is claimed here.
-- The extension and signer build successfully locally. The signer has no editable contract-address UI and does not accept a contract query override. The production wallet path uses ordinary EIP-1193 directly; the installed `genlayer-js@1.1.8` Snap-oriented `client.connect()` helper is intentionally not used. The signer provider regression test rejects all Snap RPC methods. Its finalization helper uses the actual Studionet receipt shape (`consensus_data.*.execution_result`), because this SDK version does not export `isSuccessful()` and does not populate the older `txExecutionResultName` field for Studio receipts. Transaction IDs are persisted before polling, with explorer links and resumable tracking after polling failures. A live Chromium read/anchor check now finds the finalized browser-aligned claim on the RFC page and renders a visible `data-margin-claim` badge. A separate real production signer session also completed Submit and Resolve through the injected wallet; exact hashes and canonical readbacks are recorded below.
-- The production signer response was checked at `https://margin-signer.vercel.app/` after production deployment `dpl_5YYkBGHGVbyuRpYBbBZBQFnbBvdW`: it returned `200 OK`, the fresh canonical contract and consumer addresses were present in the deployed bundle, and the observed headers included `Content-Security-Policy` with `frame-ancestors 'none'` and only the Studionet RPC in `connect-src`, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, and the restricted `Permissions-Policy`.
-- A reproducible extension archive was generated with `npm run zip`: `MARGIN-extension-v0.1.0.zip`, SHA-256 `c6ec12468fb129922a33e68f50e7826646e6fe4f1dddaeb3ddc0de841af4a62f`. The archive contains only `extension/dist`; the ZIP is intentionally ignored and is not committed as a generated artifact.
+### MANUAL BROWSER STATUS
 
-## Historical live browser annotation evidence
-
-On 2026-09-28, the built unpacked extension was loaded in Chromium and `https://www.rfc-editor.org/info/rfc9110/` was inspected after the finalized contract read. The extension rendered:
-
-- Claim key: `cd77ff5d309f9a6cf60f51b7afbc2ca90b91cdcf80c613da1aee3d9fb191446b`
-- Badge attribute: `data-margin-claim="cd77ff5d309f9a6cf60f51b7afbc2ca90b91cdcf80c613da1aee3d9fb191446b"`
-- Badge text: `M · SUPPORTED`
-- Badge geometry: non-zero (`92.78 × 17.99` CSS pixels in the inspected viewport)
-- The exact quote was matched across the RFC Editor's zero-width `<wbr>` split; no synthetic whitespace was introduced.
-
-The browser exposed no CSS Custom Highlight registry in this session, so the independent badge proof is the authoritative visible check here; CSS Highlight remains an optional enhancement. The richer side-panel provenance and real wallet-to-chain lifecycle remain separately account/browser dependent.
-
-The corrected contract has two fresh normal-claim lifecycles recorded. The `/rfc/rfc9110/` claim submitted with `0xe5e82dafcc335f8906efb5854267b524648f9490b81df718129acd63c908ba2e` and resolved with `0x6de269fe99104bed617c1b891b6d191ffe26f9f0ec2c0395539a6598940f3ffd` finalized `SUPPORTED`. The browser-aligned `/info/rfc9110/` claim submitted with `0x3c8172c9919ee95a19f8b55e8f55c5a98304892061efe6581b37942385f263cd` and resolved with `0x42f5004557bc12a3d4f6a7dd2b30532989a4732524196523b92c4ce1e2904247` also finalized `SUPPORTED`, revision `1`, with source-manifest digest `452a5215fca972d2646684809863ba96e059a4ef159f122b71272b25ee84a153`.
-
-The controlled Assured Claim was then exercised live. Registration (`0xbb9b0c865640afff0b6312ffcd49fbdf229584c3b86136ec0ded1534b305d979`) finalized with a 1 GEN publisher bond; a separate funded challenger submitted (`0xac2cc1ce571b4647361b0e84ac47fd5b158b4dc10916a5bf7e65d28971dab240`) with a 1 GEN challenge bond; resolution (`0x0af5540e19cb92de18b8c2c174ea2b7b164abde21a67ddc1a46928daeb5c1f9b`) finalized `MAJORITY_AGREE / SUCCESS`. Settlement (`0xa4bff00ddba0254be669092d1a965ab748d02c091a98c36ec15c64343bd2755b`) and challenger withdrawal (`0x8314aa27ad1a2c95d1be6910cccff22e430495c28691888f0cb828bb2ddf4990`) also finalized `MAJORITY_AGREE / SUCCESS`; canonical readback is now `SETTLED / CONTRADICTED` with both credits zero after withdrawal.
-
-## Frontend completion
-
-The production signer now supports direct static routes: `/`, `/challenge?draft=...`, `/claim/<claimKey>`, `/claim/<claimKey>/assurance`, and `/activity`. `/claim/<claimKey>` reads finalized claim provenance without requiring an encoded draft. The assurance route reads the existing Assured Claim lifecycle and the bound reference consumer without changing protocol semantics. The extension side panel remains lightweight and links finalized annotations to the full claim and assurance routes.
-
-Frontend workspace deployment: `dpl_5YYkBGHGVbyuRpYBbBZBQFnbBvdW`. Direct HTTP smoke checks returned 200; the production bundle contains the fresh canonical MARGIN contract and bound reference-consumer address, and the deployed CSP/referrer headers remain enforced.
-
-The signer uses the supplied MARGIN logo and favicon assets; the unpacked MV3 extension declares the supplied 16/32/48/128px icons and action icon. Appeal deadlines are parsed as ISO datetimes and domain-proof expiry is entered as the ISO string required by the existing contract.
-
-The separate downstream consumer was deployed at `0x2885169713d79cb2FC463Dc624Ea5fc08b59d044` (`0x84ba75b54e4f58b5550388b9a474c31099b8626f55b8c8041081ed886a27c6a4`). Exercising it against the settled contradicted claim (`0xb7c25973b255b6148b0e156db42ef6128bb22c0dc89ba15be828cc440b78ebd0`) finalized with the expected `protected action requires a SUPPORTED assured claim` contract error, and `has_executed` remained false. This is historical consumer evidence. The current consumer is `0x3Bc6566Adf5d57d427d73CdDa89b6d105e6A3b5F`; current live consumer exercise remains a non-browser follow-up if a final Assured state is created.
-
-The earlier paragraph above records an intermediate live run. The final authoritative hardening run is the same-source sequence recorded in `deployment.json`: after appeal resolution `0xa35cd6cfdf68b0b65a901298bdfd4bad2afde0491d71fe7802d94c2cde7`, settlement `0x9478d501612b280a756d529862d5f1bf57b005946d1b10bf3add328e9a80f308` and publisher withdrawal `0xd1c9cfe491dc186911fd582ddd6d3f05cf17acc17efdf9768680c24bf65422a5` both finalized `MAJORITY_AGREE / SUCCESS`. The canonical claim readback is `SETTLED / SUPPORTED`, `settled: true`, with publisher and challenger credits both `0`. The bound consumer at `0x26a0ee4a03c39887B1d6284609286eFC7be314F8` was exercised in `0x999a662f130504f5c2a795c26f9166d4d3f25510931822b659e46ec5df4ff077`, finalized `MAJORITY_AGREE / SUCCESS`, and `has_executed` read back `true`.
-
-The preceding same-source appeal/consumer paragraph is historical evidence for an older deployment; it is not evidence for the final `0x0f8D...` deployment.
-
-MARGIN's verdict is a bounded result for the challenged claim and independently inspectable public source. It is not a universal truth score or historical proof of what a page previously displayed.
+`NOT RUN BY AGENT`

@@ -22,6 +22,10 @@ This is a short, evidence-first review path for the current Studionet release.
 | Revision griefing is bounded | normal three-slot/cooldown and reserved Assured-slot tests |
 | Assured lifecycle is bonded and bounded | Direct Mode lifecycle and appeal tests; `deployment.json` live records |
 | Consumer uses canonical MARGIN state | bound-address test and `MarginGate` implementation in `contracts/margin_consumer.py` |
+| Multiple funded releases cannot hide one another | `get_releases_for_claim` implementation and real-MARGIN SimEngine integration in `tests/direct/test_consumer_integration.py` |
+| Protected release is pre-settlement and pull-paid | consumer lifecycle tests, `create_protected_release`, `execute_release`, `refund_release` and `withdraw_release_credit` |
+| Current consumer deployment is bound correctly | current consumer deployment calldata, address and source SHA-256 in `deployment.json` |
+| Resolver cannot escape by waiting briefly | `abort_stalled` timeout tests and timing notes in `docs/LIVE_VALIDATION.md` |
 | Wallet signing is ordinary EIP-1193 | signer wallet tests and source review; no Snap methods |
 | Browser annotation is extension-first | extension anchor/badge tests and the recorded manual browser evidence |
 
