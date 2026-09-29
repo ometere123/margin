@@ -28,7 +28,7 @@ This file describes only the current canonical deployment. Historical deployment
 ## Production signer and release
 
 - Signer: https://margin-signer.vercel.app/
-- Production deployment: `dpl_6mGoLz1QmrTMuz9bvjxBkY5Ynnv2`
+- Production deployment: `dpl_5jGexXPWMc1VL6qJe5PoUsDborCF`
 - Extension archive: `MARGIN-extension-v0.1.0.zip`
 - Extension SHA-256: `109C2CA42B85DEE0AC1AAAD7DE6F3996DE4B00D56DD334C00C7440BACC4EF3AB`
 
@@ -38,7 +38,7 @@ The signer uses the injected EIP-1193 wallet and the final configured MARGIN add
 
 - Contract lint: `3/3` for each contract
 - Python invariants: `12/12`
-- Direct Mode: `29/29` before this consumer-only expansion; the post-change run is recorded in final CI
+- Direct Mode: `29/29` in the current CI run `36579002424`
 - Extension tests: `16/16`
 - Signer tests: `27/27`
 - Extension and signer builds: passed

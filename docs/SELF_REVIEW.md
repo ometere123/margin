@@ -23,7 +23,7 @@ This is an evidence inventory, not a project score. Historical deployments and b
 
 - `npm run verify` runs contract AST lint, TypeScript typechecks, extension tests, signer tests, Python invariants, Direct Mode and both production builds.
 - Current totals are: AST lint `3/3` for each contract, extension `16/16`, signer `27/27`, invariants `12/12`, Direct Mode `29/29`.
-- CLI verification reports exactly `0.39.1`; CI is green in [run 36550961019](https://github.com/ometere123/margin/actions/runs/36550961019).
+- CLI verification reports exactly `0.39.1`; CI is green in [run 36579002424](https://github.com/ometere123/margin/actions/runs/36579002424).
 - The read-only `npm run live:read` script verifies finalized `network()` identity without a wallet or write.
 - Limitation: automated browser E2E and the full hostile-page matrix were not run in this environment.
 
@@ -31,7 +31,7 @@ This is an evidence inventory, not a project score. Historical deployments and b
 
 - The extension remains the primary discovery and annotation surface; the signer provides routed challenge, claim, assurance and activity workspaces.
 - The signer preserves injected EIP-1193 wallet handling, finalized reads, transaction persistence/recovery, Explorer links, global wallet controls, claim history and protected-release actions.
-- The production signer is `https://margin-signer.vercel.app/`, deployment `dpl_6mGoLz1QmrTMuz9bvjxBkY5Ynnv2`.
-- The extension ZIP hash is `c6ec12468fb129922a33e68f50e7826646e6fe4f1dddaeb3ddc0de841af4a62f`.
+- The production signer is `https://margin-signer.vercel.app/`, deployment `dpl_5jGexXPWMc1VL6qJe5PoUsDborCF`.
+- The extension ZIP hash is `109C2CA42B85DEE0AC1AAAD7DE6F3996DE4B00D56DD334C00C7440BACC4EF3AB`.
 - Historical browser evidence demonstrates the RFC `<wbr>` anchoring and visible claim badge; it is not presented as fresh proof against the current deployment.
 - Limitation: fresh Chromium matrix execution, real-wallet current-deployment proof and the demo video remain manual deliverables.

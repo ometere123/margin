@@ -27,13 +27,13 @@ MARGIN has been pushed to the environment boundary available in this build sessi
 - Challenge composer for five bounded claim classes and up to three public evidence URLs plus an optional public archive URL.
 - Canonical page key and claim key generation, with both keys recomputed and enforced by the Intelligent Contract.
 - GenLayer Intelligent Contract with bounded page index, bounded revision history, consensus-bound source identities and status plus accepted-proposal observation provenance, domain-controlled Assured Claims, native GEN bonds, one appeal and deterministic settlement views.
-- Independent validator re-execution of the evidence task; decision-bearing status, structured source indexes and source-manifest digest must match exactly.
+- Independent validator re-execution of the evidence task; deterministic source identities and bounded semantic status are consensus-bound. Validators independently fetch and adjudicate. Exact accepted observation content digests, cited indexes and leader rationale are accepted-proposal provenance and may differ across validators.
 - Bounded results: `SUPPORTED`, `CONTRADICTED`, `INCONCLUSIVE`, `STALE`.
 - Read-only extension state uses finalized GenLayer reads rather than a MARGIN backend.
 - Static wallet signer for injected EIP-1193 wallets, transaction fee estimation, writes and finalization.
 - Webpage annotation rendering anchored back beside the challenged text.
 - Prompt-injection treatment: fetched pages are explicitly untrusted evidence and cannot redefine adjudication instructions.
-- Minimal downstream consumer in `contracts/margin_consumer.py` reads settled Assured Claim state directly.
+- Funded protected-release consumer in `contracts/margin_consumer.py` reads settled Assured Claim state directly and supports multiple independent releases per claim.
 - Source-level and Direct Mode test suites, controlled public-fixture pages, architecture/threat/live-validation documentation.
 
 ## Fixed network invariant
@@ -67,8 +67,8 @@ Do not run bare `genlayer ...` commands from this repo.
 - `npm exec -- genlayer --version`: `0.39.1`.
 - Studionet network info and deployed `network()` readback: `61999`, `studionet`, `https://studio.genlayer.com/api`.
 - Extension/signer typecheck, tests and builds: PASS on the current source; contract AST lint `3/3` per contract, extension tests `16/16`, signer tests `27/27`, source invariants `12/12`, Direct Mode `29/29`.
-- Reproducible extension archive: `MARGIN-extension-v0.1.0.zip`, SHA-256 `c6ec12468fb129922a33e68f50e7826646e6fe4f1dddaeb3ddc0de841af4a62f`, produced by `npm run zip` from `extension/dist`; the ZIP is not committed as generated noise.
-- GitHub Actions `verify` was green for the current repository in [run `36548304731`](https://github.com/ometere123/margin/actions/runs/36548304731); the final repository SHA is reported outside the repository.
+- Reproducible extension archive: `MARGIN-extension-v0.1.0.zip`, SHA-256 `109C2CA42B85DEE0AC1AAAD7DE6F3996DE4B00D56DD334C00C7440BACC4EF3AB`, produced by `npm run zip` from `extension/dist`; the ZIP is not committed as generated noise.
+- GitHub Actions `verify` was green for the current repository in [run `36579002424`](https://github.com/ometere123/margin/actions/runs/36579002424); the final repository SHA is reported outside the repository.
 
 Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat the checks that do not require package downloads.
 
@@ -76,8 +76,8 @@ Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat th
 
 The corrected contract deployment is real and finalized. The following evidence boundaries remain explicit and must not be overstated:
 
-- The earlier live wallet and browser evidence belongs to the immediately preceding deployment and is retained as historical evidence. The current deployment has fresh same-source appeal, post-deadline settlement, withdrawal and canonical readback evidence: `SETTLED / SUPPORTED`, both credits zero.
-- The corrected consumer is newly deployed against the current MARGIN address, its construction calldata binds that address, and its fresh positive exercise finalized successfully with `has_executed: true`.
+- The earlier live wallet and browser evidence belongs to the immediately preceding deployment and is retained as historical evidence. Fresh same-source appeal, post-deadline settlement, withdrawal and positive protected-release exercise are not claimed for the current deployment; historical transactions remain in [`docs/HISTORY.md`](HISTORY.md).
+- The corrected consumer is newly deployed against the current MARGIN address and its construction calldata binds that address. A fresh consumer exercise is not claimed here.
 - Live wallet-to-chain end-to-end verification remains recorded for the preceding deployment; this source-only round did not redo the browser matrix.
 - live fee profiling. Live `INCONCLUSIVE` evidence is now recorded for claim `6e886a73a2573cdffb6d74b328215dff6cbd0b8f32e7b5d8141d862ccb1d8cf3`: submit `0x4d1ee62a832e0d4fcb548d7b1c71cccdd4a69650a70f0ce823f61b3c6c1aa777`, resolve `0x04e6245f7a2f44d333e885a7ccbe3e8602fd87dca2990e3de2c0a52e1fe19df8`, and canonical `INCONCLUSIVE` readback. The controlled `STALE` lifecycle is also recorded with submit `0xa3300ccffe62e6f3641c0f1f7b314555f73a7a2e72333bf3f1c8a27bd6f8b166`, resolve `0x14a0d173311ef22c283c07cae4bf9fa2a79fc778f619adcfd41430cd19754e3a`, and canonical `STALE` readback;
 - automated browser E2E and hostile-page matrix.
