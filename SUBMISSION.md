@@ -17,18 +17,18 @@ This file describes only the current canonical deployment. Historical deployment
 - MARGIN source commit: `826206bb1825cbcd716e0eb24288e91b8bc6d00a`
 - MARGIN source SHA-256: `6F5866BCEE5569C3BA0560E172F3FF524CF43F2A7A174189DB05CC03BD9FDEAF`
 - MARGIN deployment result: `FINALIZED / MAJORITY_AGREE / SUCCESS`
-- Consumer: [`0x388c762f777A10071A13063d71ed0B37CdE2d85a`](https://explorer-studio.genlayer.com/address/0x388c762f777A10071A13063d71ed0B37CdE2d85a)
-- Consumer deployment: [`0xddb1e2b791ccb550e3fcd7b5d1a4203956b8def764b7054310da12306e90ce0f`](https://explorer-studio.genlayer.com/tx/0xddb1e2b791ccb550e3fcd7b5d1a4203956b8def764b7054310da12306e90ce0f)
-- Consumer source commit: `a4b72797e3bb8af617e0fb671bd5191937720cfa`
-- Consumer source SHA-256: `C6D96DE8C78232EDA94B6A516341BE893A388F19088D9EDE4863645ACBC20DEF`
-- Consumer source size: `9650` bytes
+- Consumer: [`0x7c447BAEaf5ae60Cec2d432BA33860375fEB9994`](https://explorer-studio.genlayer.com/address/0x7c447BAEaf5ae60Cec2d432BA33860375fEB9994)
+- Consumer deployment: [`0x97b94e7f7e730a3bf14f4488bc37172f29a33480c5483fdc0ddbb32289092294`](https://explorer-studio.genlayer.com/tx/0x97b94e7f7e730a3bf14f4488bc37172f29a33480c5483fdc0ddbb32289092294)
+- Consumer source commit: `b18351d`
+- Consumer source SHA-256: `1205EAA5BFC7E4377D03C853B70B334F0575D8664E6B9EDD4FF9940499F13BD4`
+- Consumer source size: `9804` bytes
 - Consumer constructor binding: final MARGIN address above
 - Consumer deployment result: `FINALIZED / MAJORITY_AGREE / SUCCESS`
 
 ## Production signer and release
 
 - Signer: https://margin-signer.vercel.app/
-- Production deployment: `dpl_5jGexXPWMc1VL6qJe5PoUsDborCF`
+- Production deployment: `dpl_HB5ctN9t8KYg71fBedAST6yGvGAC`
 - Extension archive: `MARGIN-extension-v0.1.0.zip`
 - Extension SHA-256: `109C2CA42B85DEE0AC1AAAD7DE6F3996DE4B00D56DD334C00C7440BACC4EF3AB`
 
@@ -38,7 +38,7 @@ The signer uses the injected EIP-1193 wallet and the final configured MARGIN add
 
 - Contract lint: `3/3` for each contract
 - Python invariants: `12/12`
-- Direct Mode: `29/29` in the current CI run `36579002424`
+- Direct Mode: `30/30` in the current CI run after this consumer change
 - Extension tests: `16/16`
 - Signer tests: `27/27`
 - Extension and signer builds: passed

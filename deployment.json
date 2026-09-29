@@ -10,7 +10,7 @@
   "sourceBytes": 58790,
   "sourceSha256": "6F5866BCEE5569C3BA0560E172F3FF524CF43F2A7A174189DB05CC03BD9FDEAF",
   "signerUrl": "https://margin-signer.vercel.app/",
-  "signerDeployment": "dpl_5jGexXPWMc1VL6qJe5PoUsDborCF",
+  "signerDeployment": "dpl_HB5ctN9t8KYg71fBedAST6yGvGAC",
   "runtimeIdentity": {
     "chain_id": 61999,
     "network": "studionet",
@@ -41,6 +41,14 @@
     "deploymentTx": "0xa2984fc2eccfd90430e9811d5a4e9a6cb106b000510b017b54e90184cdf0673a",
     "boundMarginAddress": "0x0f8D86d56F1b8997475dD048579807fBFe60e227",
     "status": "historical; superseded by the multi-release consumer"
+  },
+  "supersededConsumerBeforeReleaseCap": {
+    "contractAddress": "0x388c762f777A10071A13063d71ed0B37CdE2d85a",
+    "deploymentTx": "0xddb1e2b791ccb550e3fcd7b5d1a4203956b8def764b7054310da12306e90ce0f",
+    "boundMarginAddress": "0x0f8D86d56F1b8997475dD048579807fBFe60e227",
+    "sourceCommit": "a4b72797e3bb8af617e0fb671bd5191937720cfa",
+    "sourceSha256": "C6D96DE8C78232EDA94B6A516341BE893A388F19088D9EDE4863645ACBC20DEF",
+    "status": "historical; superseded by the capped-release consumer"
   },
   "historicalEvidence": {
     "normalClaim": {
@@ -247,13 +255,13 @@
       "sourceBytes": 58790
     },
     "consumerDeployment": {
-      "contractAddress": "0x388c762f777A10071A13063d71ed0B37CdE2d85a",
-      "deploymentTx": "0xddb1e2b791ccb550e3fcd7b5d1a4203956b8def764b7054310da12306e90ce0f",
+      "contractAddress": "0x7c447BAEaf5ae60Cec2d432BA33860375fEB9994",
+      "deploymentTx": "0x97b94e7f7e730a3bf14f4488bc37172f29a33480c5483fdc0ddbb32289092294",
       "boundMarginAddress": "0x0f8D86d56F1b8997475dD048579807fBFe60e227",
       "deploymentFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
-      "sourceCommit": "a4b72797e3bb8af617e0fb671bd5191937720cfa",
-      "sourceSha256": "C6D96DE8C78232EDA94B6A516341BE893A388F19088D9EDE4863645ACBC20DEF",
-      "sourceBytes": 9650,
+      "sourceCommit": "b18351d026e339e06b202df58a01742b46341d78",
+      "sourceSha256": "1205EAA5BFC7E4377D03C853B70B334F0575D8664E6B9EDD4FF9940499F13BD4",
+      "sourceBytes": 9804,
       "boundAddressReadback": "0x0f8D86d56F1b8997475dD048579807fBFe60e227"
     },
     "freshNormalClaimFinalDeployment": {

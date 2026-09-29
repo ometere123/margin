@@ -10,7 +10,9 @@ chain: 61999
 rpc: https://studio.genlayer.com/api
 cli: npm exec -- genlayer (0.39.1)
 margin: 0x0f8D86d56F1b8997475dD048579807fBFe60e227
-consumer: 0x388c762f777A10071A13063d71ed0B37CdE2d85a
+consumer: 0x7c447BAEaf5ae60Cec2d432BA33860375fEB9994
+
+The executable `run-current-sequences.ps1` records CLI output for sequences A, B and C. It never substitutes Direct Mode output for live receipts. Sequence A remains pending until the 24-hour registration window elapses; sequences B and C require fresh claim/domain-proof inputs and separate wallet accounts.
 ```
 
 Each write must be followed by `npm exec -- genlayer receipt <hash>` and the record must include `FINALIZED`, execution result, canonical readback and the public account used. Do not reuse historical hashes.

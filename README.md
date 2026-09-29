@@ -172,7 +172,7 @@ The corrected contract is deployed, corrected-contract normal claim lifecycles a
 
 The static signer is a focused transaction and provenance workspace, not a replacement for the extension. The extension opens `/challenge?draft=...`; finalized annotations link to `/claim/<claimKey>` and `/claim/<claimKey>/assurance`; `/activity` shows browser-local transaction provenance and `/` explains the extension-first entry point. Direct claim and assurance routes read finalized state from the canonical Studionet contract, so visitors do not need the original draft.
 
-The signer and extension use the supplied MARGIN logo/icon assets. The assurance view exposes the existing registration, challenge, resolution, appeal, settlement and withdrawal actions only when the connected account and finalized state permit them. The current bound reference consumer is `0x388c762f777A10071A13063d71ed0B37CdE2d85a`; older consumer addresses in `deployment.json` are historical only.
+The signer and extension use the supplied MARGIN logo/icon assets. The assurance view exposes the existing registration, challenge, resolution, appeal, settlement and withdrawal actions only when the connected account and finalized state permit them. The current bound reference consumer is `0x7c447BAEaf5ae60Cec2d432BA33860375fEB9994`; older consumer addresses in `deployment.json` are historical only. It supports up to 20 independently indexed protected releases per claim.
 
 - repeat the complete wallet-to-chain submit/resolve session from a fresh browser profile if an independent reviewer requires it;
 - measure broader fee profiles and exercise a separate GenLayer transaction-level appeal where supported by the stable tooling;
