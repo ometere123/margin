@@ -50,6 +50,20 @@ Use two separately authorised wallets: publisher and challenger. Use a domain pr
 
 Record the date, browser version, extension ZIP SHA-256, current git SHA, signer deployment, wallet addresses (public only), transaction hashes, Explorer links, final canonical readbacks and screenshots. Mark any step not performed as `NOT RUN`; do not infer it from tests or an earlier deployment.
 
+## Ready state for manual testing
+
+The following public fixtures are hosted on `https://a-murex-one.vercel.app` and are not the signer origin:
+
+| Fixture | URL | Claim key | Non-browser state |
+| --- | --- | --- | --- |
+| A | `https://a-murex-one.vercel.app/` | `a379566c75876bd2d6253aabf8daa6d27aed5051e690d323c457e58dc3d0a0b7` | Assured lifecycle is `RESOLVED` with final status `INCONCLUSIVE`; settlement is recorded after the real appeal deadline. |
+| B | `https://a-murex-one.vercel.app/b.html` | `65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a` | Assured lifecycle is intended to finish `SETTLED + SUPPORTED`, with a pre-settlement protected release and beneficiary withdrawal recorded if the live verdict is supported. |
+| C | `https://a-murex-one.vercel.app/c.html` | `55a4242e0958156bba84c565255ba528b49edd5b5f4974a62783c3cdc5336fcb` | `REGISTERED`, unchallenged, cancellation pending until `2026-09-30T21:01:11.318Z`. |
+
+Public wallet roles used by the non-browser evidence are: publisher `0xb29Ead15B1E8A2420faE84de974088f67a15ccC2`, challenger `0xac3AC69dC0Bde389256dD6748C75817ead9286D9`, and integrator `0x951e6B75530774fF82321a5ae54e14F778F0C855`. The current contract is `0x0f8D86d56F1b8997475dD048579807fBFe60e227`; the bound consumer is `0x6Bdb12646e054C24b68012560F7472636b395881`.
+
+For manual browser testing, use A or B to inspect a finalized provenance route and the extension readback; use C only to verify a registered assurance state and that cancellation is not offered before its deadline. Record screenshots and observed transaction hashes alongside the corresponding sequence file in `scripts/live/evidence/`. These fixtures are non-browser evidence inputs; browser rendering remains a separate human check.
+
 ### MANUAL BROWSER STATUS
 
 `NOT RUN BY AGENT`

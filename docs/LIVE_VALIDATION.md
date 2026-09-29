@@ -28,4 +28,4 @@ Claim `99bbd4ea502c2b56341ec9ba9c08cacbede75d8f1e32e8964b65ec4bec63ebc6` on the 
 
 ## Live evidence status
 
-Fresh cancel, full Assured settlement, and funded protected-release transactions for the current deployment are not claimed until their time-based waits and canonical readbacks have actually completed. No browser automation was run by the agent; the human operator owns the browser matrix.
+Fresh Assured sequence A and funded protected-release sequence B are complete against the current deployment with finalized receipts and canonical readbacks in `scripts/live/evidence/`. Sequence C is truthfully pending until `2026-09-30T21:01:11.318Z`; no cancellation is claimed before then. No browser automation was run by the agent; the human operator owns the browser matrix.

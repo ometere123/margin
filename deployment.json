@@ -291,6 +291,59 @@
       "revision": 1,
       "sourceManifestDigest": "d889d24b9d070a86de23350a7d348c2011f780410dfffac9d85c579dca3b9e0c",
       "note": "Fresh non-browser normal claim against the final deployment; no browser automation was run in this round."
+    },
+    "liveSequenceA": {
+      "claimKey": "a379566c75876bd2d6253aabf8daa6d27aed5051e690d323c457e58dc3d0a0b7",
+      "canonicalUrl": "https://a-murex-one.vercel.app/",
+      "state": "SETTLED",
+      "finalStatus": "INCONCLUSIVE",
+      "transactions": {
+        "submit": "0x9ab73a9cba3c31e4c03351da10c334e7a7a075523896918304b5240aef2de2c3",
+        "normalResolve": "0xeaceb2e91777022bd6ae12b3abb984f550ee790af11ed3256ce071d939ce357a",
+        "register": "0x2de50c83bf0b48c187f4356a45465a34169727eaba444949a5915e9c1fc98a7e",
+        "challenge": "0x59da704e0479fb9de6e61dbf6cb27a6df799818bf73d4f8884c79f9154aba853",
+        "resolveAssured": "0xef937f6dcdbbb7ec2e54d7293b8d1b9f10580d65d4d739fc1f388c09165ebd59",
+        "settle": "0x2613a8b765b8733a7c473b88247be6a62563d6c3c3355bad713929ce07368fcc",
+        "publisherWithdraw": "0x3af1e7eebf3b0560641e242f71f01e7aa5647a1967efbc06218dc9bf6a9d1b6b",
+        "challengerWithdraw": "0x03d8d6ede836514f7f03427a6eeba85fa50369edc1a8f80e4841fce0efb0000a"
+      },
+      "finality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "readback": "settled=true; publisher_credit=0; challenger_credit=0; publisher_bond=0; challenger_bond=0"
+    },
+    "liveSequenceB": {
+      "claimKey": "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a",
+      "canonicalUrl": "https://a-murex-one.vercel.app/b.html",
+      "state": "SETTLED",
+      "finalStatus": "SUPPORTED",
+      "releaseId": "0:65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a",
+      "transactions": {
+        "submit": "0x39866f2f834bca751eee499d41b53b5e91f908f86c009e36458d8044ce604951",
+        "normalResolve": "0xf9dc30dc6e7a6b883d5aa4355d687994593077adbf6aa54aa8f712fe0e32195f",
+        "register": "0x96247e1da24c6ceff1b2d7eb59996e7d8f8ca9759fde2b959f8978e6e8db729d",
+        "createRelease": "0xed8bfc3e6c8c50b3d894f123f2eb344a80f410b317da3225b2ec4bfba3f7c41f",
+        "challenge": "0xce26d00bd3cee5f2f9dce39c656ef1caab11c29ed2c6e303ee8b945d6532f273",
+        "resolveAssured": "0x4ca9768b9d9a1577852bb6de8b29762e3fb79fd86b6564037de220a4271b7744",
+        "settle": "0xd07613f25b6b9fbe2d6789115880ca85a4b3141affc14b062cff56a48702bff1",
+        "executeRelease": "0x983dd40b1bea503af4b275e1b50f6e5ad8aedaaea60b700ea957224d9179a391",
+        "beneficiaryWithdraw": "0x27daeba9b35d257131288a531b83c6a681ad720c78ced01e51a6560937678b43",
+        "assuredWithdraw": "0x40863e3bd34caac5c5c2016a962eb334656c5e0af5b59ea736cae8911131b473"
+      },
+      "finality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "readback": "settled=true; final_status=SUPPORTED; release.executed=true; release.refunded=false; beneficiary_credit=0; is_claim_supported=true"
+    },
+    "liveSequenceC": {
+      "claimKey": "55a4242e0958156bba84c565255ba528b49edd5b5f4974a62783c3cdc5336fcb",
+      "canonicalUrl": "https://a-murex-one.vercel.app/c.html",
+      "state": "PENDING",
+      "registrationState": "REGISTERED",
+      "transactions": {
+        "submit": "0x735bba6827f108de7144a3be5a8b3d25108f1377f8c8af891b86fc2ec4b170d9",
+        "normalResolve": "0x018f7a80324e4a0cd20a753d7027fad28eda1ab4d06a55a0a8992426bce3d788",
+        "register": "0x1109486bbb5c2761935a54f48a3f4858c7c3a2a7f961b2339a7c7b93aee25d45"
+      },
+      "finality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "earliestCancelAt": "2026-09-30T21:01:11.318Z",
+      "readback": "registered=true; unchallenged=true; cancellation not yet attempted"
     }
   },
   "toolVersions": {

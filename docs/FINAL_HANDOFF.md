@@ -2,7 +2,7 @@
 
 ## Current live status (2026-09-29)
 
-The corrected Studionet deployment and corrected-contract normal claim lifecycles are complete. Use [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md) as the authoritative live record. The optional Assured Claim path is recorded separately. Browser evidence from an earlier deployment is retained as historical evidence; a fresh browser-wallet run against the current deployment remains manual work.
+The corrected Studionet deployment and fresh non-browser live sequences are complete where their real deadlines elapsed. Use [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md) as the authoritative live record. Browser evidence from an earlier deployment is retained as historical evidence; a fresh browser-wallet run against the current deployment remains manual work.
 
 The frontend workspace routes are `/`, `/challenge?draft=...`, `/claim/<claimKey>`, `/claim/<claimKey>/assurance`, and `/activity`. The signer remains static and wallet-backed; the extension remains the primary discovery and annotation surface. The supplied logo/favicon/icon assets are included in the signer and MV3 extension. The MARGIN contract was not changed; the bound consumer was redeployed for the capped protected-release index.
 
@@ -79,7 +79,7 @@ The current live evidence boundary is:
 - MARGIN deployment: `0x0f8D86d56F1b8997475dD048579807fBFe60e227`, finalized at `0x1f54fb2b8520008a8bf856906a695dd35f6835e28afdedf51bded400744abebd`.
 - Consumer deployment: `0x6Bdb12646e054C24b68012560F7472636b395881`, finalized at `0x10f861aa287fe9ce0b4dbbacd95fc51cacb14539516d62f9bd6331495609ff0d`, with its constructor bound to the current MARGIN address. Source commit `66b2e2a492bc343df6369c8f6b4779fcb79a128c`, SHA-256 `FBCF9882250D640008B778F0486BDA3FCC892886270704ACB26DFADD2B7FF465`, 12,869 bytes. The previous consumer deployment is historical only.
 - Fresh final-deployment normal claim evidence: submit → resolve → `FINALIZED / MAJORITY_AGREE / SUCCESS`, with canonical verdict `SUPPORTED`, as recorded above.
-- No fresh Assured, cancellation, or funded protected-release live lifecycle is claimed for the current deployment. Historical transactions and verdicts are referenced only through [`docs/HISTORY.md`](HISTORY.md).
+- Fresh final-deployment Assured evidence is recorded in `scripts/live/evidence/A.json` and `B.json`: A is `SETTLED + INCONCLUSIVE` with both credits withdrawn; B is `SETTLED + SUPPORTED` with a protected release created before settlement, executed and withdrawn. C is a truthful `REGISTERED` pending cancellation sequence with earliest cancellation at `2026-09-30T21:01:11.318Z`; no cancellation is claimed before that time. Historical transactions and verdicts are referenced only through [`docs/HISTORY.md`](HISTORY.md).
 - Browser verification remains manual; automated browser evidence is not claimed.
 
 ## Production configuration hardening
@@ -94,7 +94,7 @@ No success evidence for those steps has been fabricated.
 
 ## Final state note
 
-The contracts are already deployed on Studionet 61999, the production signer is already deployed, and the extension is already built. The remaining human task is to run [`docs/MANUAL_BROWSER_VERIFICATION.md`](MANUAL_BROWSER_VERIFICATION.md). Fresh Assured/cancellation/protected-release evidence is not claimed for this consumer redeployment; executable checkpoints are under `scripts/live/`.
+The contracts are already deployed on Studionet 61999, the production signer is already deployed, and the extension is already built. Fresh Assured evidence A and B is recorded under `scripts/live/evidence/`; C remains pending until its derived 24-hour cancellation time. The remaining human task is to run [`docs/MANUAL_BROWSER_VERIFICATION.md`](MANUAL_BROWSER_VERIFICATION.md).
 
 ## Architecture that must not be weakened
 

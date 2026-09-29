@@ -1,0 +1,273 @@
+{
+  "sequence": "C",
+  "network": "studionet",
+  "chainId": 61999,
+  "rpc": "https://studio.genlayer.com/api",
+  "margin": "0x0f8D86d56F1b8997475dD048579807fBFe60e227",
+  "consumer": "0x6Bdb12646e054C24b68012560F7472636b395881",
+  "steps": [
+    {
+      "account": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+      "function": "submit_claim",
+      "args": [
+        "55a4242e0958156bba84c565255ba528b49edd5b5f4974a62783c3cdc5336fcb",
+        "685c02c14e5a0cf27aba2445f80a5e3774bd4ef9edb3f201ce38c9f70d9c80be",
+        "https://a-murex-one.vercel.app/c.html",
+        "A finalized GenLayer transaction has passed the protocol consensus lifecycle.",
+        "GenLayer cancellation evidence ",
+        " This page is a live MARGIN evidence fixture.",
+        "32dc81882d15a49e208c51f09ecd8698ae5c056c260bf2a23d6d724ec344ca9c",
+        "TECHNICAL",
+        "Verify that this statement about the GenLayer consensus lifecycle is accurate.",
+        "[\"https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture\"]",
+        ""
+      ],
+      "value": "0",
+      "submittedAt": "2026-09-29T20:56:39.576Z",
+      "txHash": "0x735bba6827f108de7144a3be5a8b3d25108f1377f8c8af891b86fc2ec4b170d9",
+      "status": "SUBMITTED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "hash": "0x735bba6827f108de7144a3be5a8b3d25108f1377f8c8af891b86fc2ec4b170d9"
+      },
+      "readback": {
+        "claim": {
+          "archive_url": "",
+          "canonical_url": "https://a-murex-one.vercel.app/c.html",
+          "challenge_statement": "Verify that this statement about the GenLayer consensus lifecycle is accurate.",
+          "challenger": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+          "claim_class": "TECHNICAL",
+          "claim_key": "55a4242e0958156bba84c565255ba528b49edd5b5f4974a62783c3cdc5336fcb",
+          "created_at": "2026-09-29T20:56:59.487075+00:00",
+          "evidence_urls_json": "[\"https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture\"]",
+          "latest_manifest": {},
+          "page_digest": "32dc81882d15a49e208c51f09ecd8698ae5c056c260bf2a23d6d724ec344ca9c",
+          "page_key": "685c02c14e5a0cf27aba2445f80a5e3774bd4ef9edb3f201ce38c9f70d9c80be",
+          "prefix": "GenLayer cancellation evidence ",
+          "quote": "A finalized GenLayer transaction has passed the protocol consensus lifecycle.",
+          "rationale": "",
+          "resolved_at": "",
+          "revision": 0,
+          "source_manifest_digest": "",
+          "source_set_digest": "",
+          "status": "OPEN",
+          "suffix": " This page is a live MARGIN evidence fixture."
+        }
+      }
+    },
+    {
+      "account": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+      "function": "resolve_claim",
+      "args": [
+        "55a4242e0958156bba84c565255ba528b49edd5b5f4974a62783c3cdc5336fcb"
+      ],
+      "value": "0",
+      "submittedAt": "2026-09-29T20:57:21.492Z",
+      "txHash": "0x018f7a80324e4a0cd20a753d7027fad28eda1ab4d06a55a0a8992426bce3d788",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "hash": "0x018f7a80324e4a0cd20a753d7027fad28eda1ab4d06a55a0a8992426bce3d788"
+      },
+      "readback": {
+        "claim": {
+          "archive_url": "",
+          "canonical_url": "https://a-murex-one.vercel.app/c.html",
+          "challenge_statement": "Verify that this statement about the GenLayer consensus lifecycle is accurate.",
+          "challenger": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+          "claim_class": "TECHNICAL",
+          "claim_key": "55a4242e0958156bba84c565255ba528b49edd5b5f4974a62783c3cdc5336fcb",
+          "created_at": "2026-09-29T20:56:59.487075+00:00",
+          "evidence_urls_json": "[\"https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture\"]",
+          "latest_manifest": {
+            "accepted_observation_manifest": [
+              {
+                "content_digest": "d93b10cf2132ab98f82d8206c6a46a23267dbead35f378f03d65c6af693736c3",
+                "fetch_status": "OK",
+                "kind": "PRIMARY",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/c.html"
+              },
+              {
+                "content_digest": "0c48eeed27750cb8f3aaa19432ce4c0d20756c9c5edabf5c933855c21dd96ced",
+                "fetch_status": "OK",
+                "kind": "EVIDENCE",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture"
+              }
+            ],
+            "adjudication_context_digest": "47940374df1c0deb6a7c29f5226d958ad7101ca1a12266790b08363e7d0c19e7",
+            "appeal_count": 0,
+            "claim_present": true,
+            "context_kind": "NORMAL",
+            "contradicting_source_indexes": [],
+            "historical_evidence_used": false,
+            "leader_cited_indexes": {
+              "contradicting": [],
+              "supporting": []
+            },
+            "protocol_version": 2,
+            "source_manifest_digest": "8b6c9c5c497fd3f2bb92821fbb343be81a30b3640f692a59252fd18969f9d551",
+            "source_set_digest": "3b020fa400c9e6866b0a21950d3a406bcdfd65467937cd0bbc0c7aeb804710e7",
+            "sources": [
+              {
+                "content_digest": "d93b10cf2132ab98f82d8206c6a46a23267dbead35f378f03d65c6af693736c3",
+                "fetch_status": "OK",
+                "kind": "PRIMARY",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/c.html"
+              },
+              {
+                "content_digest": "0c48eeed27750cb8f3aaa19432ce4c0d20756c9c5edabf5c933855c21dd96ced",
+                "fetch_status": "OK",
+                "kind": "EVIDENCE",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture"
+              }
+            ],
+            "supporting_source_indexes": []
+          },
+          "page_digest": "32dc81882d15a49e208c51f09ecd8698ae5c056c260bf2a23d6d724ec344ca9c",
+          "page_key": "685c02c14e5a0cf27aba2445f80a5e3774bd4ef9edb3f201ce38c9f70d9c80be",
+          "prefix": "GenLayer cancellation evidence ",
+          "quote": "A finalized GenLayer transaction has passed the protocol consensus lifecycle.",
+          "rationale": "The highlighted claim states that 'A finalized GenLayer transaction has passed the protocol consensus lifecycle.' The primary source (index 0) merely repeats this claim without providing verifiable evidence or technical details about the consensus lifecycle. The evidence source (index 1) describes GenLayer's architecture and security model but does not explicitly confirm whether a specific transaction has passed the consensus lifecycle or provide a mechanism to verify this. No independently inspectable evidence (e.g., transaction logs, consensus finality proofs, or protocol documentation) is a",
+          "resolved_at": "2026-09-29T20:57:45.373316+00:00",
+          "revision": 1,
+          "source_manifest_digest": "8b6c9c5c497fd3f2bb92821fbb343be81a30b3640f692a59252fd18969f9d551",
+          "source_set_digest": "3b020fa400c9e6866b0a21950d3a406bcdfd65467937cd0bbc0c7aeb804710e7",
+          "status": "INCONCLUSIVE",
+          "suffix": " This page is a live MARGIN evidence fixture."
+        },
+        "assured": {}
+      }
+    },
+    {
+      "account": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+      "function": "register_assured_claim",
+      "args": [
+        "55a4242e0958156bba84c565255ba528b49edd5b5f4974a62783c3cdc5336fcb",
+        "https://a-murex-one.vercel.app/.well-known/margin.json",
+        "margin-live-c-20260929",
+        "2027-01-01T00:00:00+00:00"
+      ],
+      "value": "1",
+      "submittedAt": "2026-09-29T20:59:32.681Z",
+      "txHash": "0x1109486bbb5c2761935a54f48a3f4858c7c3a2a7f961b2339a7c7b93aee25d45",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "hash": "0x1109486bbb5c2761935a54f48a3f4858c7c3a2a7f961b2339a7c7b93aee25d45"
+      },
+      "readback": {
+        "claim": {
+          "archive_url": "",
+          "canonical_url": "https://a-murex-one.vercel.app/c.html",
+          "challenge_statement": "Verify that this statement about the GenLayer consensus lifecycle is accurate.",
+          "challenger": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+          "claim_class": "TECHNICAL",
+          "claim_key": "55a4242e0958156bba84c565255ba528b49edd5b5f4974a62783c3cdc5336fcb",
+          "created_at": "2026-09-29T20:56:59.487075+00:00",
+          "evidence_urls_json": "[\"https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture\"]",
+          "latest_manifest": {
+            "accepted_observation_manifest": [
+              {
+                "content_digest": "d93b10cf2132ab98f82d8206c6a46a23267dbead35f378f03d65c6af693736c3",
+                "fetch_status": "OK",
+                "kind": "PRIMARY",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/c.html"
+              },
+              {
+                "content_digest": "0c48eeed27750cb8f3aaa19432ce4c0d20756c9c5edabf5c933855c21dd96ced",
+                "fetch_status": "OK",
+                "kind": "EVIDENCE",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture"
+              }
+            ],
+            "adjudication_context_digest": "47940374df1c0deb6a7c29f5226d958ad7101ca1a12266790b08363e7d0c19e7",
+            "appeal_count": 0,
+            "claim_present": true,
+            "context_kind": "NORMAL",
+            "contradicting_source_indexes": [],
+            "historical_evidence_used": false,
+            "leader_cited_indexes": {
+              "contradicting": [],
+              "supporting": []
+            },
+            "protocol_version": 2,
+            "source_manifest_digest": "8b6c9c5c497fd3f2bb92821fbb343be81a30b3640f692a59252fd18969f9d551",
+            "source_set_digest": "3b020fa400c9e6866b0a21950d3a406bcdfd65467937cd0bbc0c7aeb804710e7",
+            "sources": [
+              {
+                "content_digest": "d93b10cf2132ab98f82d8206c6a46a23267dbead35f378f03d65c6af693736c3",
+                "fetch_status": "OK",
+                "kind": "PRIMARY",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/c.html"
+              },
+              {
+                "content_digest": "0c48eeed27750cb8f3aaa19432ce4c0d20756c9c5edabf5c933855c21dd96ced",
+                "fetch_status": "OK",
+                "kind": "EVIDENCE",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture"
+              }
+            ],
+            "supporting_source_indexes": []
+          },
+          "page_digest": "32dc81882d15a49e208c51f09ecd8698ae5c056c260bf2a23d6d724ec344ca9c",
+          "page_key": "685c02c14e5a0cf27aba2445f80a5e3774bd4ef9edb3f201ce38c9f70d9c80be",
+          "prefix": "GenLayer cancellation evidence ",
+          "quote": "A finalized GenLayer transaction has passed the protocol consensus lifecycle.",
+          "rationale": "The highlighted claim states that 'A finalized GenLayer transaction has passed the protocol consensus lifecycle.' The primary source (index 0) merely repeats this claim without providing verifiable evidence or technical details about the consensus lifecycle. The evidence source (index 1) describes GenLayer's architecture and security model but does not explicitly confirm whether a specific transaction has passed the consensus lifecycle or provide a mechanism to verify this. No independently inspectable evidence (e.g., transaction logs, consensus finality proofs, or protocol documentation) is a",
+          "resolved_at": "2026-09-29T20:57:45.373316+00:00",
+          "revision": 1,
+          "source_manifest_digest": "8b6c9c5c497fd3f2bb92821fbb343be81a30b3640f692a59252fd18969f9d551",
+          "source_set_digest": "3b020fa400c9e6866b0a21950d3a406bcdfd65467937cd0bbc0c7aeb804710e7",
+          "status": "INCONCLUSIVE",
+          "suffix": " This page is a live MARGIN evidence fixture."
+        },
+        "assured": {
+          "appeal_bond": 0,
+          "appeal_context_digest": "",
+          "appeal_count": 0,
+          "appeal_deadline": "",
+          "appeal_reason": "",
+          "challenge_bond": 0,
+          "challenger": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+          "challenger_credit": 0,
+          "claim_key": "55a4242e0958156bba84c565255ba528b49edd5b5f4974a62783c3cdc5336fcb",
+          "domain_nonce": "margin-live-c-20260929",
+          "domain_proof_url": "https://a-murex-one.vercel.app/.well-known/margin.json",
+          "final_status": "OPEN",
+          "proof_digest": "7f79133a2a305c632cc9d1a5aa8782018e7a1517e3627ad03a41f16d99af976d",
+          "proof_expires_at": "2027-01-01T00:00:00+00:00",
+          "publisher": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+          "publisher_bond": 1,
+          "publisher_credit": 0,
+          "settled": false,
+          "state": "REGISTERED",
+          "state_started_at": "2026-09-29T21:00:11.318794+00:00"
+        }
+      }
+    }
+  ],
+  "publicAccounts": {
+    "publisher": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+    "challenger": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9"
+  },
+  "claim": {
+    "claimKey": "55a4242e0958156bba84c565255ba528b49edd5b5f4974a62783c3cdc5336fcb",
+    "canonicalUrl": "https://a-murex-one.vercel.app/c.html",
+    "pageKey": "685c02c14e5a0cf27aba2445f80a5e3774bd4ef9edb3f201ce38c9f70d9c80be"
+  },
+  "earliestCancelAt": "2026-09-30T21:01:11.318Z"
+}

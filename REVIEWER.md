@@ -31,5 +31,8 @@ This is a short, evidence-first review path for the current Studionet release.
 | Resolver cannot escape by waiting briefly | `abort_stalled` timeout tests and timing notes in `docs/LIVE_VALIDATION.md` |
 | Wallet signing is ordinary EIP-1193 | signer wallet tests and source review; no Snap methods |
 | Browser annotation is extension-first | extension anchor/badge tests and the recorded manual browser evidence |
+| Live sequence A uses the final deployment | `scripts/live/evidence/A.json` and `A.md`; status/readback recorded after real finality |
+| Live sequence B uses a pre-settlement protected release | `scripts/live/evidence/B.json` and `B.md`; release execution/refund branch is recorded truthfully |
+| Live sequence C respects the full registration window | `scripts/live/evidence/C.json` and `C.md`; pending status includes the finalized registration-derived earliest cancellation time |
 
 The current release uses Studionet chain `61999`, RPC `https://studio.genlayer.com/api`, and the addresses recorded in `deployment.json`. Browser, wallet and live lifecycle claims remain limited to the transactions and manual checks explicitly recorded there and in `docs/LIVE_VALIDATION.md`.

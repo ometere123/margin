@@ -1,0 +1,8 @@
+{
+  "protocol_version": 2,
+  "domain": "a-murex-one.vercel.app",
+  "publisher_wallet": "0xb29ead15b1e8a2420fae84de974088f67a15ccc2",
+  "nonce": "margin-live-c-20260929",
+  "claim_key": "55a4242e0958156bba84c565255ba528b49edd5b5f4974a62783c3cdc5336fcb",
+  "expiry": "2027-01-01T00:00:00+00:00"
+}

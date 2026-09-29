@@ -54,7 +54,7 @@ The signer uses the injected EIP-1193 wallet and the final configured MARGIN add
 
 ## Live evidence boundary
 
-The consumer deployment and non-browser normal evidence above are current. The requested fresh cancel, full Assured, and funded protected-release lifecycles require real time-based waits and additional state-changing transactions; they are not claimed until executed. The human browser matrix is also not claimed.
+The consumer deployment and fresh non-browser evidence above are current. Sequences A and B are recorded in `scripts/live/evidence/` with finalized receipts and canonical readbacks; sequence C is registered and pending its real cancellation window. The human browser matrix is not claimed.
 
 ### MANUAL BROWSER STATUS
 

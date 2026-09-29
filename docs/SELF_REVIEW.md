@@ -15,14 +15,14 @@ This is an evidence inventory, not a project score. Historical deployments and b
 
 - `contracts/margin.py` covers bounded claims, source identity commitments, accepted observation provenance, explicit normal/Assured adjudication contexts, revision limits, cooldowns, cancellation, stalled abort, appeal, settlement and pull-credit withdrawal.
 - `contracts/margin_consumer.py` binds the canonical MARGIN address at construction and rejects caller-selected trust anchors.
-- Direct Mode passes `29/29`; the consumer integration subset passes; source invariants pass `12/12`.
+- Direct Mode passes `37/37`; the consumer integration subset passes; source invariants pass `12/12`.
 - The current deployed MARGIN source matches `deployment.json`: commit `826206bb1825cbcd716e0eb24288e91b8bc6d00a`, 58,790 bytes, SHA-256 `6F5866BCEE5569C3BA0560E172F3FF524CF43F2A7A174189DB05CC03BD9FDEAF`.
 - Limitation: semantic GenVM lint validation is unavailable locally because the compatible v0.2.12 runner bundle is unavailable to the installed linter; the AST lint pass is `3/3` and the Direct Mode runner is green.
 
 ## Engineering
 
 - `npm run verify` runs contract AST lint, TypeScript typechecks, extension tests, signer tests, Python invariants, Direct Mode and both production builds.
-- Current totals are: AST lint `3/3` for each contract, extension `16/16`, signer `27/27`, invariants `12/12`, Direct Mode `29/29`.
+- Current totals are: AST lint `3/3` for each contract, extension `16/16`, signer `30/30`, invariants `12/12`, Direct Mode `37/37`.
 - CLI verification reports exactly `0.39.1`; the final CI run for this source commit is recorded in the external handoff after GitHub completes it.
 - The read-only `npm run live:read` script verifies finalized `network()` identity without a wallet or write.
 - Limitation: automated browser E2E and the full hostile-page matrix were not run in this environment.
@@ -31,7 +31,7 @@ This is an evidence inventory, not a project score. Historical deployments and b
 
 - The extension remains the primary discovery and annotation surface; the signer provides routed challenge, claim, assurance and activity workspaces.
 - The signer preserves injected EIP-1193 wallet handling, finalized reads, transaction persistence/recovery, Explorer links, global wallet controls, claim history and protected-release actions.
-- The production signer is `https://margin-signer.vercel.app/`, deployment `dpl_5jGexXPWMc1VL6qJe5PoUsDborCF`.
+- The production signer is `https://margin-signer.vercel.app/`, deployment `dpl_AskgUH19RUAjoQB8dehD4onbwzoM`.
 - The extension ZIP hash is `109C2CA42B85DEE0AC1AAAD7DE6F3996DE4B00D56DD334C00C7440BACC4EF3AB`.
 - Historical browser evidence demonstrates the RFC `<wbr>` anchoring and visible claim badge; it is not presented as fresh proof against the current deployment.
 - Limitation: fresh Chromium matrix execution, real-wallet current-deployment proof and the demo video remain manual deliverables.

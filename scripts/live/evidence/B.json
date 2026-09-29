@@ -1,0 +1,718 @@
+{
+  "sequence": "B",
+  "network": "studionet",
+  "chainId": 61999,
+  "rpc": "https://studio.genlayer.com/api",
+  "margin": "0x0f8D86d56F1b8997475dD048579807fBFe60e227",
+  "consumer": "0x6Bdb12646e054C24b68012560F7472636b395881",
+  "steps": [
+    {
+      "account": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+      "function": "submit_claim",
+      "args": [
+        "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a",
+        "640b240f2ccd85fc30906be2dd60dcbe11796bbaaaf4cf5d6c9a135531f38552",
+        "https://a-murex-one.vercel.app/b.html",
+        "GenLayer validators independently adjudicate transactions before the protocol finalizes them.",
+        "GenLayer protected release evidence ",
+        " This page is a live MARGIN evidence fixture.",
+        "bb123f242dc809013f104b08d5e35fa489e1ef2e2e6c6a9955bba1dbe4a3a3c9",
+        "TECHNICAL",
+        "Verify that this claim about independent validator adjudication and finalization is supported.",
+        "[\"https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture\"]",
+        ""
+      ],
+      "value": "0",
+      "submittedAt": "2026-09-29T20:44:59.914Z",
+      "txHash": "0x39866f2f834bca751eee499d41b53b5e91f908f86c009e36458d8044ce604951",
+      "status": "SUBMITTED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "hash": "0x39866f2f834bca751eee499d41b53b5e91f908f86c009e36458d8044ce604951"
+      },
+      "readback": {
+        "claim": {
+          "archive_url": "",
+          "canonical_url": "https://a-murex-one.vercel.app/b.html",
+          "challenge_statement": "Verify that this claim about independent validator adjudication and finalization is supported.",
+          "challenger": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+          "claim_class": "TECHNICAL",
+          "claim_key": "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a",
+          "created_at": "2026-09-29T20:45:19.752495+00:00",
+          "evidence_urls_json": "[\"https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture\"]",
+          "latest_manifest": {},
+          "page_digest": "bb123f242dc809013f104b08d5e35fa489e1ef2e2e6c6a9955bba1dbe4a3a3c9",
+          "page_key": "640b240f2ccd85fc30906be2dd60dcbe11796bbaaaf4cf5d6c9a135531f38552",
+          "prefix": "GenLayer protected release evidence ",
+          "quote": "GenLayer validators independently adjudicate transactions before the protocol finalizes them.",
+          "rationale": "",
+          "resolved_at": "",
+          "revision": 0,
+          "source_manifest_digest": "",
+          "source_set_digest": "",
+          "status": "OPEN",
+          "suffix": " This page is a live MARGIN evidence fixture."
+        }
+      }
+    },
+    {
+      "account": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+      "function": "resolve_claim",
+      "args": [
+        "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a"
+      ],
+      "value": "0",
+      "submittedAt": "2026-09-29T20:45:43.991Z",
+      "txHash": "0xf9dc30dc6e7a6b883d5aa4355d687994593077adbf6aa54aa8f712fe0e32195f",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "hash": "0xf9dc30dc6e7a6b883d5aa4355d687994593077adbf6aa54aa8f712fe0e32195f"
+      },
+      "readback": {
+        "claim": {
+          "archive_url": "",
+          "canonical_url": "https://a-murex-one.vercel.app/b.html",
+          "challenge_statement": "Verify that this claim about independent validator adjudication and finalization is supported.",
+          "challenger": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+          "claim_class": "TECHNICAL",
+          "claim_key": "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a",
+          "created_at": "2026-09-29T20:45:19.752495+00:00",
+          "evidence_urls_json": "[\"https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture\"]",
+          "latest_manifest": {
+            "accepted_observation_manifest": [
+              {
+                "content_digest": "977029544f9969aec8a147e597aac1e104deaa48d72fbff98919211868f08a7d",
+                "fetch_status": "OK",
+                "kind": "PRIMARY",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/b.html"
+              },
+              {
+                "content_digest": "0c48eeed27750cb8f3aaa19432ce4c0d20756c9c5edabf5c933855c21dd96ced",
+                "fetch_status": "OK",
+                "kind": "EVIDENCE",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture"
+              }
+            ],
+            "adjudication_context_digest": "d0bc2faa221465272cf3778bb027325f84d51dde967217f28df2e7b1a481d0b8",
+            "appeal_count": 0,
+            "claim_present": true,
+            "context_kind": "NORMAL",
+            "contradicting_source_indexes": [],
+            "historical_evidence_used": false,
+            "leader_cited_indexes": {
+              "contradicting": [],
+              "supporting": [
+                1
+              ]
+            },
+            "protocol_version": 2,
+            "source_manifest_digest": "0e54fcb925bda90a541f7aa1ff484752fbdfd2878755cc0dd0295bb4c55295b2",
+            "source_set_digest": "8515ffa3a6adc257efb405a1ac41ef7ec549a7d416fa4a3fce00172c8d13af69",
+            "sources": [
+              {
+                "content_digest": "977029544f9969aec8a147e597aac1e104deaa48d72fbff98919211868f08a7d",
+                "fetch_status": "OK",
+                "kind": "PRIMARY",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/b.html"
+              },
+              {
+                "content_digest": "0c48eeed27750cb8f3aaa19432ce4c0d20756c9c5edabf5c933855c21dd96ced",
+                "fetch_status": "OK",
+                "kind": "EVIDENCE",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture"
+              }
+            ],
+            "supporting_source_indexes": [
+              1
+            ]
+          },
+          "page_digest": "bb123f242dc809013f104b08d5e35fa489e1ef2e2e6c6a9955bba1dbe4a3a3c9",
+          "page_key": "640b240f2ccd85fc30906be2dd60dcbe11796bbaaaf4cf5d6c9a135531f38552",
+          "prefix": "GenLayer protected release evidence ",
+          "quote": "GenLayer validators independently adjudicate transactions before the protocol finalizes them.",
+          "rationale": "The evidence from Source 1 (the GenLayer blog) describes GenLayer as the 'adjudication layer for the agentic economy' and a 'decentralized AI consensus protocol where validators powered by diverse models resolve contracts, disputes and real-world questions.' This directly supports the claim that validators independently adjudicate transactions (resolving contracts and disputes) as part of the protocol's consensus and finalization process.",
+          "resolved_at": "2026-09-29T20:46:02.607455+00:00",
+          "revision": 1,
+          "source_manifest_digest": "0e54fcb925bda90a541f7aa1ff484752fbdfd2878755cc0dd0295bb4c55295b2",
+          "source_set_digest": "8515ffa3a6adc257efb405a1ac41ef7ec549a7d416fa4a3fce00172c8d13af69",
+          "status": "SUPPORTED",
+          "suffix": " This page is a live MARGIN evidence fixture."
+        },
+        "assured": {}
+      }
+    },
+    {
+      "account": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+      "function": "register_assured_claim",
+      "args": [
+        "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a",
+        "https://a-murex-one.vercel.app/.well-known/margin.json",
+        "margin-live-b-20260929",
+        "2027-01-01T00:00:00+00:00"
+      ],
+      "value": "1",
+      "submittedAt": "2026-09-29T20:48:11.777Z",
+      "txHash": "0x96247e1da24c6ceff1b2d7eb59996e7d8f8ca9759fde2b959f8978e6e8db729d",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "hash": "0x96247e1da24c6ceff1b2d7eb59996e7d8f8ca9759fde2b959f8978e6e8db729d"
+      },
+      "readback": {
+        "claim": {
+          "archive_url": "",
+          "canonical_url": "https://a-murex-one.vercel.app/b.html",
+          "challenge_statement": "Verify that this claim about independent validator adjudication and finalization is supported.",
+          "challenger": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+          "claim_class": "TECHNICAL",
+          "claim_key": "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a",
+          "created_at": "2026-09-29T20:45:19.752495+00:00",
+          "evidence_urls_json": "[\"https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture\"]",
+          "latest_manifest": {
+            "accepted_observation_manifest": [
+              {
+                "content_digest": "977029544f9969aec8a147e597aac1e104deaa48d72fbff98919211868f08a7d",
+                "fetch_status": "OK",
+                "kind": "PRIMARY",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/b.html"
+              },
+              {
+                "content_digest": "0c48eeed27750cb8f3aaa19432ce4c0d20756c9c5edabf5c933855c21dd96ced",
+                "fetch_status": "OK",
+                "kind": "EVIDENCE",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture"
+              }
+            ],
+            "adjudication_context_digest": "d0bc2faa221465272cf3778bb027325f84d51dde967217f28df2e7b1a481d0b8",
+            "appeal_count": 0,
+            "claim_present": true,
+            "context_kind": "NORMAL",
+            "contradicting_source_indexes": [],
+            "historical_evidence_used": false,
+            "leader_cited_indexes": {
+              "contradicting": [],
+              "supporting": [
+                1
+              ]
+            },
+            "protocol_version": 2,
+            "source_manifest_digest": "0e54fcb925bda90a541f7aa1ff484752fbdfd2878755cc0dd0295bb4c55295b2",
+            "source_set_digest": "8515ffa3a6adc257efb405a1ac41ef7ec549a7d416fa4a3fce00172c8d13af69",
+            "sources": [
+              {
+                "content_digest": "977029544f9969aec8a147e597aac1e104deaa48d72fbff98919211868f08a7d",
+                "fetch_status": "OK",
+                "kind": "PRIMARY",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/b.html"
+              },
+              {
+                "content_digest": "0c48eeed27750cb8f3aaa19432ce4c0d20756c9c5edabf5c933855c21dd96ced",
+                "fetch_status": "OK",
+                "kind": "EVIDENCE",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture"
+              }
+            ],
+            "supporting_source_indexes": [
+              1
+            ]
+          },
+          "page_digest": "bb123f242dc809013f104b08d5e35fa489e1ef2e2e6c6a9955bba1dbe4a3a3c9",
+          "page_key": "640b240f2ccd85fc30906be2dd60dcbe11796bbaaaf4cf5d6c9a135531f38552",
+          "prefix": "GenLayer protected release evidence ",
+          "quote": "GenLayer validators independently adjudicate transactions before the protocol finalizes them.",
+          "rationale": "The evidence from Source 1 (the GenLayer blog) describes GenLayer as the 'adjudication layer for the agentic economy' and a 'decentralized AI consensus protocol where validators powered by diverse models resolve contracts, disputes and real-world questions.' This directly supports the claim that validators independently adjudicate transactions (resolving contracts and disputes) as part of the protocol's consensus and finalization process.",
+          "resolved_at": "2026-09-29T20:46:02.607455+00:00",
+          "revision": 1,
+          "source_manifest_digest": "0e54fcb925bda90a541f7aa1ff484752fbdfd2878755cc0dd0295bb4c55295b2",
+          "source_set_digest": "8515ffa3a6adc257efb405a1ac41ef7ec549a7d416fa4a3fce00172c8d13af69",
+          "status": "SUPPORTED",
+          "suffix": " This page is a live MARGIN evidence fixture."
+        },
+        "assured": {
+          "appeal_bond": 0,
+          "appeal_context_digest": "",
+          "appeal_count": 0,
+          "appeal_deadline": "",
+          "appeal_reason": "",
+          "challenge_bond": 0,
+          "challenger": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+          "challenger_credit": 0,
+          "claim_key": "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a",
+          "domain_nonce": "margin-live-b-20260929",
+          "domain_proof_url": "https://a-murex-one.vercel.app/.well-known/margin.json",
+          "final_status": "OPEN",
+          "proof_digest": "5d51db2c4fff0f601d6bef972b5d46096221f4de181b30dbaeaa025ae265bf77",
+          "proof_expires_at": "2027-01-01T00:00:00+00:00",
+          "publisher": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+          "publisher_bond": 1,
+          "publisher_credit": 0,
+          "settled": false,
+          "state": "REGISTERED",
+          "state_started_at": "2026-09-29T20:48:30.333511+00:00"
+        }
+      }
+    },
+    {
+      "account": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+      "function": "create_protected_release",
+      "args": [
+        "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a",
+        "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+        "2027-02-01T00:00:00+00:00"
+      ],
+      "value": "1",
+      "submittedAt": "2026-09-29T20:51:20.215Z",
+      "txHash": "0xed8bfc3e6c8c50b3d894f123f2eb344a80f410b317da3225b2ec4bfba3f7c41f",
+      "status": "SUBMITTED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "hash": "0xed8bfc3e6c8c50b3d894f123f2eb344a80f410b317da3225b2ec4bfba3f7c41f"
+      },
+      "readback": {
+        "releases": [
+          {
+            "amount": 1,
+            "beneficiary": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+            "beneficiary_credit": 0,
+            "claim_key": "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a",
+            "creator": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+            "creator_credit": 0,
+            "executed": false,
+            "expiry": "2027-02-01T00:00:00+00:00",
+            "refunded": false,
+            "release_id": "0:65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a"
+          }
+        ]
+      }
+    },
+    {
+      "account": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+      "function": "challenge_assured_claim",
+      "args": [
+        "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a"
+      ],
+      "value": "1",
+      "submittedAt": "2026-09-29T20:52:02.616Z",
+      "txHash": "0xce26d00bd3cee5f2f9dce39c656ef1caab11c29ed2c6e303ee8b945d6532f273",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "hash": "0xce26d00bd3cee5f2f9dce39c656ef1caab11c29ed2c6e303ee8b945d6532f273"
+      },
+      "readback": {
+        "claim": {
+          "archive_url": "",
+          "canonical_url": "https://a-murex-one.vercel.app/b.html",
+          "challenge_statement": "Verify that this claim about independent validator adjudication and finalization is supported.",
+          "challenger": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+          "claim_class": "TECHNICAL",
+          "claim_key": "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a",
+          "created_at": "2026-09-29T20:45:19.752495+00:00",
+          "evidence_urls_json": "[\"https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture\"]",
+          "latest_manifest": {
+            "accepted_observation_manifest": [
+              {
+                "content_digest": "977029544f9969aec8a147e597aac1e104deaa48d72fbff98919211868f08a7d",
+                "fetch_status": "OK",
+                "kind": "PRIMARY",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/b.html"
+              },
+              {
+                "content_digest": "0c48eeed27750cb8f3aaa19432ce4c0d20756c9c5edabf5c933855c21dd96ced",
+                "fetch_status": "OK",
+                "kind": "EVIDENCE",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture"
+              }
+            ],
+            "adjudication_context_digest": "0ccfb3d2a5fd7d1cc0d52cddc8d82b791123d475cf69540f4b1eba2048458971",
+            "appeal_count": 0,
+            "claim_present": true,
+            "context_kind": "ASSURED_INITIAL",
+            "contradicting_source_indexes": [],
+            "historical_evidence_used": false,
+            "leader_cited_indexes": {
+              "contradicting": [],
+              "supporting": [
+                0
+              ]
+            },
+            "protocol_version": 2,
+            "source_manifest_digest": "0e54fcb925bda90a541f7aa1ff484752fbdfd2878755cc0dd0295bb4c55295b2",
+            "source_set_digest": "8515ffa3a6adc257efb405a1ac41ef7ec549a7d416fa4a3fce00172c8d13af69",
+            "sources": [
+              {
+                "content_digest": "977029544f9969aec8a147e597aac1e104deaa48d72fbff98919211868f08a7d",
+                "fetch_status": "OK",
+                "kind": "PRIMARY",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/b.html"
+              },
+              {
+                "content_digest": "0c48eeed27750cb8f3aaa19432ce4c0d20756c9c5edabf5c933855c21dd96ced",
+                "fetch_status": "OK",
+                "kind": "EVIDENCE",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture"
+              }
+            ],
+            "supporting_source_indexes": [
+              0
+            ]
+          },
+          "page_digest": "bb123f242dc809013f104b08d5e35fa489e1ef2e2e6c6a9955bba1dbe4a3a3c9",
+          "page_key": "640b240f2ccd85fc30906be2dd60dcbe11796bbaaaf4cf5d6c9a135531f38552",
+          "prefix": "GenLayer protected release evidence ",
+          "quote": "GenLayer validators independently adjudicate transactions before the protocol finalizes them.",
+          "rationale": "The primary source page contains the exact claim verbatim: 'GenLayer validators independently adjudicate transactions before the protocol finalizes them.' This directly supports the highlighted claim. The evidence source corroborates this by describing the validator role in adjudication and finalization, though the primary source alone is sufficient for support.",
+          "resolved_at": "2026-09-29T20:53:12.410740+00:00",
+          "revision": 2,
+          "source_manifest_digest": "0e54fcb925bda90a541f7aa1ff484752fbdfd2878755cc0dd0295bb4c55295b2",
+          "source_set_digest": "8515ffa3a6adc257efb405a1ac41ef7ec549a7d416fa4a3fce00172c8d13af69",
+          "status": "SUPPORTED",
+          "suffix": " This page is a live MARGIN evidence fixture."
+        },
+        "assured": {
+          "appeal_bond": 0,
+          "appeal_context_digest": "0ccfb3d2a5fd7d1cc0d52cddc8d82b791123d475cf69540f4b1eba2048458971",
+          "appeal_count": 0,
+          "appeal_deadline": "2026-09-29T21:53:12.410740+00:00",
+          "appeal_reason": "",
+          "challenge_bond": 1,
+          "challenger": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "challenger_credit": 0,
+          "claim_key": "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a",
+          "domain_nonce": "margin-live-b-20260929",
+          "domain_proof_url": "https://a-murex-one.vercel.app/.well-known/margin.json",
+          "final_status": "SUPPORTED",
+          "proof_digest": "5d51db2c4fff0f601d6bef972b5d46096221f4de181b30dbaeaa025ae265bf77",
+          "proof_expires_at": "2027-01-01T00:00:00+00:00",
+          "publisher": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+          "publisher_bond": 1,
+          "publisher_credit": 0,
+          "settled": false,
+          "state": "RESOLVED",
+          "state_started_at": "2026-09-29T20:53:12.410740+00:00"
+        }
+      }
+    },
+    {
+      "account": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+      "function": "resolve_assured_claim",
+      "args": [
+        "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a"
+      ],
+      "value": "0",
+      "submittedAt": "2026-09-29T20:52:53.308Z",
+      "txHash": "0x4ca9768b9d9a1577852bb6de8b29762e3fb79fd86b6564037de220a4271b7744",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "hash": "0x4ca9768b9d9a1577852bb6de8b29762e3fb79fd86b6564037de220a4271b7744"
+      },
+      "readback": {
+        "claim": {
+          "archive_url": "",
+          "canonical_url": "https://a-murex-one.vercel.app/b.html",
+          "challenge_statement": "Verify that this claim about independent validator adjudication and finalization is supported.",
+          "challenger": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+          "claim_class": "TECHNICAL",
+          "claim_key": "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a",
+          "created_at": "2026-09-29T20:45:19.752495+00:00",
+          "evidence_urls_json": "[\"https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture\"]",
+          "latest_manifest": {
+            "accepted_observation_manifest": [
+              {
+                "content_digest": "977029544f9969aec8a147e597aac1e104deaa48d72fbff98919211868f08a7d",
+                "fetch_status": "OK",
+                "kind": "PRIMARY",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/b.html"
+              },
+              {
+                "content_digest": "0c48eeed27750cb8f3aaa19432ce4c0d20756c9c5edabf5c933855c21dd96ced",
+                "fetch_status": "OK",
+                "kind": "EVIDENCE",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture"
+              }
+            ],
+            "adjudication_context_digest": "0ccfb3d2a5fd7d1cc0d52cddc8d82b791123d475cf69540f4b1eba2048458971",
+            "appeal_count": 0,
+            "claim_present": true,
+            "context_kind": "ASSURED_INITIAL",
+            "contradicting_source_indexes": [],
+            "historical_evidence_used": false,
+            "leader_cited_indexes": {
+              "contradicting": [],
+              "supporting": [
+                0
+              ]
+            },
+            "protocol_version": 2,
+            "source_manifest_digest": "0e54fcb925bda90a541f7aa1ff484752fbdfd2878755cc0dd0295bb4c55295b2",
+            "source_set_digest": "8515ffa3a6adc257efb405a1ac41ef7ec549a7d416fa4a3fce00172c8d13af69",
+            "sources": [
+              {
+                "content_digest": "977029544f9969aec8a147e597aac1e104deaa48d72fbff98919211868f08a7d",
+                "fetch_status": "OK",
+                "kind": "PRIMARY",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/b.html"
+              },
+              {
+                "content_digest": "0c48eeed27750cb8f3aaa19432ce4c0d20756c9c5edabf5c933855c21dd96ced",
+                "fetch_status": "OK",
+                "kind": "EVIDENCE",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture"
+              }
+            ],
+            "supporting_source_indexes": [
+              0
+            ]
+          },
+          "page_digest": "bb123f242dc809013f104b08d5e35fa489e1ef2e2e6c6a9955bba1dbe4a3a3c9",
+          "page_key": "640b240f2ccd85fc30906be2dd60dcbe11796bbaaaf4cf5d6c9a135531f38552",
+          "prefix": "GenLayer protected release evidence ",
+          "quote": "GenLayer validators independently adjudicate transactions before the protocol finalizes them.",
+          "rationale": "The primary source page contains the exact claim verbatim: 'GenLayer validators independently adjudicate transactions before the protocol finalizes them.' This directly supports the highlighted claim. The evidence source corroborates this by describing the validator role in adjudication and finalization, though the primary source alone is sufficient for support.",
+          "resolved_at": "2026-09-29T20:53:12.410740+00:00",
+          "revision": 2,
+          "source_manifest_digest": "0e54fcb925bda90a541f7aa1ff484752fbdfd2878755cc0dd0295bb4c55295b2",
+          "source_set_digest": "8515ffa3a6adc257efb405a1ac41ef7ec549a7d416fa4a3fce00172c8d13af69",
+          "status": "SUPPORTED",
+          "suffix": " This page is a live MARGIN evidence fixture."
+        },
+        "assured": {
+          "appeal_bond": 0,
+          "appeal_context_digest": "0ccfb3d2a5fd7d1cc0d52cddc8d82b791123d475cf69540f4b1eba2048458971",
+          "appeal_count": 0,
+          "appeal_deadline": "2026-09-29T21:53:12.410740+00:00",
+          "appeal_reason": "",
+          "challenge_bond": 1,
+          "challenger": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "challenger_credit": 0,
+          "claim_key": "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a",
+          "domain_nonce": "margin-live-b-20260929",
+          "domain_proof_url": "https://a-murex-one.vercel.app/.well-known/margin.json",
+          "final_status": "SUPPORTED",
+          "proof_digest": "5d51db2c4fff0f601d6bef972b5d46096221f4de181b30dbaeaa025ae265bf77",
+          "proof_expires_at": "2027-01-01T00:00:00+00:00",
+          "publisher": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+          "publisher_bond": 1,
+          "publisher_credit": 0,
+          "settled": false,
+          "state": "RESOLVED",
+          "state_started_at": "2026-09-29T20:53:12.410740+00:00"
+        }
+      }
+    },
+    {
+      "account": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+      "function": "settle_assured_claim",
+      "args": [
+        "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a"
+      ],
+      "value": "0",
+      "submittedAt": "2026-09-29T21:54:52.771Z",
+      "txHash": "0xd07613f25b6b9fbe2d6789115880ca85a4b3141affc14b062cff56a48702bff1",
+      "status": "SUBMITTED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "hash": "0xd07613f25b6b9fbe2d6789115880ca85a4b3141affc14b062cff56a48702bff1"
+      },
+      "readback": {
+        "assured": {
+          "appeal_bond": 0,
+          "appeal_context_digest": "0ccfb3d2a5fd7d1cc0d52cddc8d82b791123d475cf69540f4b1eba2048458971",
+          "appeal_count": 0,
+          "appeal_deadline": "2026-09-29T21:53:12.410740+00:00",
+          "appeal_reason": "",
+          "challenge_bond": 0,
+          "challenger": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "challenger_credit": 0,
+          "claim_key": "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a",
+          "domain_nonce": "margin-live-b-20260929",
+          "domain_proof_url": "https://a-murex-one.vercel.app/.well-known/margin.json",
+          "final_status": "SUPPORTED",
+          "proof_digest": "5d51db2c4fff0f601d6bef972b5d46096221f4de181b30dbaeaa025ae265bf77",
+          "proof_expires_at": "2027-01-01T00:00:00+00:00",
+          "publisher": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+          "publisher_bond": 0,
+          "publisher_credit": 2,
+          "settled": true,
+          "state": "SETTLED",
+          "state_started_at": "2026-09-29T20:53:12.410740+00:00"
+        }
+      }
+    },
+    {
+      "account": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+      "function": "execute_release",
+      "args": [
+        "0:65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a"
+      ],
+      "value": "0",
+      "submittedAt": "2026-09-29T21:55:53.777Z",
+      "txHash": "0x983dd40b1bea503af4b275e1b50f6e5ad8aedaaea60b700ea957224d9179a391",
+      "status": "SUBMITTED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "hash": "0x983dd40b1bea503af4b275e1b50f6e5ad8aedaaea60b700ea957224d9179a391"
+      },
+      "readback": {
+        "release": {
+          "amount": 1,
+          "beneficiary": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+          "beneficiary_credit": 1,
+          "claim_key": "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a",
+          "creator": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+          "creator_credit": 0,
+          "executed": true,
+          "expiry": "2027-02-01T00:00:00+00:00",
+          "refunded": false,
+          "release_id": "0:65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a"
+        },
+        "supported": true
+      }
+    },
+    {
+      "account": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+      "function": "withdraw_release_credit",
+      "args": [
+        "0:65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a"
+      ],
+      "value": "0",
+      "submittedAt": "2026-09-29T21:57:26.415Z",
+      "txHash": "0x27daeba9b35d257131288a531b83c6a681ad720c78ced01e51a6560937678b43",
+      "status": "SUBMITTED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "hash": "0x27daeba9b35d257131288a531b83c6a681ad720c78ced01e51a6560937678b43"
+      },
+      "readback": {
+        "release": {
+          "amount": 1,
+          "beneficiary": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+          "beneficiary_credit": 0,
+          "claim_key": "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a",
+          "creator": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+          "creator_credit": 0,
+          "executed": true,
+          "expiry": "2027-02-01T00:00:00+00:00",
+          "refunded": false,
+          "release_id": "0:65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a"
+        }
+      }
+    },
+    {
+      "account": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+      "function": "withdraw_assured_credit",
+      "args": [
+        "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a"
+      ],
+      "value": "0",
+      "submittedAt": "2026-09-29T21:59:05.519Z",
+      "txHash": "0x40863e3bd34caac5c5c2016a962eb334656c5e0af5b59ea736cae8911131b473",
+      "status": "SUBMITTED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "hash": "0x40863e3bd34caac5c5c2016a962eb334656c5e0af5b59ea736cae8911131b473"
+      },
+      "readback": {
+        "assured": {
+          "appeal_bond": 0,
+          "appeal_context_digest": "0ccfb3d2a5fd7d1cc0d52cddc8d82b791123d475cf69540f4b1eba2048458971",
+          "appeal_count": 0,
+          "appeal_deadline": "2026-09-29T21:53:12.410740+00:00",
+          "appeal_reason": "",
+          "challenge_bond": 0,
+          "challenger": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "challenger_credit": 0,
+          "claim_key": "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a",
+          "domain_nonce": "margin-live-b-20260929",
+          "domain_proof_url": "https://a-murex-one.vercel.app/.well-known/margin.json",
+          "final_status": "SUPPORTED",
+          "proof_digest": "5d51db2c4fff0f601d6bef972b5d46096221f4de181b30dbaeaa025ae265bf77",
+          "proof_expires_at": "2027-01-01T00:00:00+00:00",
+          "publisher": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+          "publisher_bond": 0,
+          "publisher_credit": 0,
+          "settled": true,
+          "state": "SETTLED",
+          "state_started_at": "2026-09-29T20:53:12.410740+00:00"
+        }
+      }
+    }
+  ],
+  "publicAccounts": {
+    "publisher": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+    "challenger": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+    "integrator": "0x951e6B75530774fF82321a5ae54e14F778F0C855"
+  },
+  "claim": {
+    "claimKey": "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a",
+    "canonicalUrl": "https://a-murex-one.vercel.app/b.html",
+    "pageKey": "640b240f2ccd85fc30906be2dd60dcbe11796bbaaaf4cf5d6c9a135531f38552"
+  },
+  "appealDeadline": "2026-09-29T21:53:12.410740+00:00",
+  "release": {
+    "releaseId": "0:65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a",
+    "amount": 1,
+    "creator": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+    "beneficiary": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2"
+  },
+  "finalReadback": {
+    "appeal_bond": 0,
+    "appeal_context_digest": "0ccfb3d2a5fd7d1cc0d52cddc8d82b791123d475cf69540f4b1eba2048458971",
+    "appeal_count": 0,
+    "appeal_deadline": "2026-09-29T21:53:12.410740+00:00",
+    "appeal_reason": "",
+    "challenge_bond": 0,
+    "challenger": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+    "challenger_credit": 0,
+    "claim_key": "65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a",
+    "domain_nonce": "margin-live-b-20260929",
+    "domain_proof_url": "https://a-murex-one.vercel.app/.well-known/margin.json",
+    "final_status": "SUPPORTED",
+    "proof_digest": "5d51db2c4fff0f601d6bef972b5d46096221f4de181b30dbaeaa025ae265bf77",
+    "proof_expires_at": "2027-01-01T00:00:00+00:00",
+    "publisher": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+    "publisher_bond": 0,
+    "publisher_credit": 0,
+    "settled": true,
+    "state": "SETTLED",
+    "state_started_at": "2026-09-29T20:53:12.410740+00:00"
+  }
+}

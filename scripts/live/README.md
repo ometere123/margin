@@ -1,6 +1,6 @@
 # Current-deployment live evidence scripts
 
-This directory is reserved for reproducible non-browser Studionet evidence. The agent did not execute the time-based sequences in this round, so this file records the exact required order without inventing transaction hashes.
+This directory contains reproducible non-browser Studionet evidence for the final MARGIN and consumer deployments. The scripts use only public addresses in their checkpoints; private keys remain in the local CLI keychain and are never written to evidence.
 
 Environment invariant for every command:
 
@@ -12,7 +12,7 @@ cli: npm exec -- genlayer (0.39.1)
 margin: 0x0f8D86d56F1b8997475dD048579807fBFe60e227
 consumer: 0x6Bdb12646e054C24b68012560F7472636b395881
 
-The executable `run-current-sequences.mjs` creates durable, timestamped checkpoints for sequences A, B and C. `resume-C.mjs` reports the earliest legal cancellation time. These scripts never substitute Direct Mode output for live receipts, retry a write, or invent a transaction hash; the operator must supply fresh claim, proof and wallet inputs before executing live writes.
+The executable `run-current-sequences.mjs` creates durable checkpoints for sequences A, B and C. It accepts `--dry-run` and uses the existing JSON file as a resume journal; `--resume` never resubmits a recorded hash. `resume-C.mjs` invokes the same runner and can cancel only after the deadline derived from finalized registration state. These scripts never substitute Direct Mode output for live receipts, retry a write, or invent a transaction hash.
 ```
 
 Each write must be followed by `npm exec -- genlayer receipt <hash>` and the record must include `FINALIZED`, execution result, canonical readback and the public account used. Do not reuse historical hashes.
