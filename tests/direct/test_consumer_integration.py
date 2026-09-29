@@ -15,12 +15,12 @@ ALICE = "0x" + "11" * 20
 BOB = "0x" + "22" * 20
 
 
-def _claim_key() -> str:
+def _claim_key(suffix: str = "") -> str:
     statement = "The current support matrix appears to require Node 20 or newer."
     payload = {
         "archiveUrl": "",
         "canonicalUrl": URL,
-        "challengeStatement": statement,
+        "challengeStatement": statement + suffix,
         "claimClass": "COMPATIBILITY",
         "exact": "Runtime 4.2 supports Node 18 in production.",
         "evidenceUrls": ["https://example.com/docs/support"],
@@ -32,6 +32,109 @@ def _claim_key() -> str:
     }
     encoded = json.dumps(payload, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
     return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
+
+
+CHARLIE = "0x" + "33" * 20
+
+
+def _submit_real_claim(engine, margin_address, key, suffix=""):
+    engine.call_method(
+        margin_address,
+        "submit_claim",
+        [
+            key,
+            PAGE_KEY,
+            URL,
+            "Runtime 4.2 supports Node 18 in production.",
+            "Compatibility notes say",
+            "See the support matrix below.",
+            PAGE_DIGEST,
+            "COMPATIBILITY",
+            "The current support matrix appears to require Node 20 or newer." + suffix,
+            json.dumps(["https://example.com/docs/support"]),
+            "",
+        ],
+        sender=ALICE,
+    )
+
+
+def _prepare_assured(
+    engine, margin_address, key, *, status=None, challenge=True,
+    proof_expiry="2999-01-01T00:00:00+00:00"
+):
+    engine.vm.clear_mocks()
+    nonce = "publisher-" + key[:8]
+    proof = json.dumps(
+        {
+            "protocol_version": 2,
+            "domain": "example.com",
+            "publisher_wallet": ALICE,
+            "nonce": nonce,
+            "claim_key": key,
+            "expiry": proof_expiry,
+        }
+    )
+    engine.vm.mock_web(
+        r".*example\.com/\.well-known/margin\.json",
+        {"status": 200, "body": proof},
+    )
+    engine.vm.value = 1
+    engine.call_method(
+        margin_address,
+        "register_assured_claim",
+        [key, "https://example.com/.well-known/margin.json", nonce, proof_expiry],
+        sender=ALICE,
+    )
+    if challenge:
+        engine.vm.value = 1
+        engine.call_method(margin_address, "challenge_assured_claim", [key], sender=BOB)
+    if status is None:
+        return
+
+    body = "Support matrix: Runtime 4.2 supports Node 18 in production."
+    engine.vm.mock_web(r"https://example\.com/docs/runtime", {"status": 200, "body": body})
+    engine.vm.mock_web(r"https://example\.com/docs/support", {"status": 200, "body": body})
+    records = [
+        {
+            "kind": "PRIMARY",
+            "url": URL,
+            "fetch_status": "OK",
+            "content_digest": hashlib.sha256(body.encode()).hexdigest(),
+            "provenance": "PUBLIC_SOURCE",
+        },
+        {
+            "kind": "EVIDENCE",
+            "url": "https://example.com/docs/support",
+            "fetch_status": "OK",
+            "content_digest": hashlib.sha256(body.encode()).hexdigest(),
+            "provenance": "PUBLIC_SOURCE",
+        },
+    ]
+    source_digest = hashlib.sha256(
+        json.dumps({"v": 2, "sources": records}, separators=(",", ":"), sort_keys=True).encode()
+    ).hexdigest()
+    candidate = {
+        "status": status,
+        "rationale": "The independently fetched evidence was adjudicated.",
+        "claim_present": status != "STALE",
+        "supporting_source_indexes": [0] if status == "SUPPORTED" else [],
+        "contradicting_source_indexes": [0] if status == "CONTRADICTED" else [],
+        "historical_evidence_used": False,
+        "source_manifest_digest": source_digest,
+    }
+    engine.vm.mock_llm(r".*MARGIN web-claim challenge.*", json.dumps(candidate))
+    engine.call_method(margin_address, "resolve_assured_claim", [key], sender=BOB)
+
+
+def _new_real_system(seed):
+    state = StateStore(chain_id=61999, seed=seed)
+    engine = SimEngine(state)
+    engine.activate()
+    margin_address, margin = engine.deploy("contracts/margin.py", sender=ALICE)
+    consumer_address, consumer = engine.deploy(
+        "contracts/margin_consumer.py", args=[margin_address], sender=ALICE
+    )
+    return engine, margin_address, margin, consumer_address, consumer
 
 
 def test_real_margin_and_bound_consumer_support_precommit_and_execution():
@@ -179,5 +282,137 @@ def test_real_margin_and_bound_consumer_support_precommit_and_execution():
         )
         assert consumer.get_release(release_one_id)["beneficiary_credit"] == 0
         assert consumer.get_release(release_two_id)["beneficiary_credit"] == 0
+    finally:
+        engine.deactivate()
+
+
+@pytest.mark.parametrize("status", ["CONTRADICTED", "INCONCLUSIVE", "STALE"])
+def test_real_margin_negative_terminal_release_refund_and_conservation(status):
+    engine, margin_address, margin, consumer_address, consumer = _new_real_system(
+        "negative-" + status
+    )
+    try:
+        key = _claim_key()
+        _submit_real_claim(engine, margin_address, key)
+        _prepare_assured(engine, margin_address, key, status=status)
+        engine.vm.value = 7
+        release_id = engine.call_method(
+            consumer_address,
+            "create_protected_release",
+            [key, BOB, "2999-01-03T00:00:00+00:00"],
+            sender=ALICE,
+        )
+        engine.vm.warp("2999-01-01T02:00:00+00:00")
+        engine.call_method(margin_address, "settle_assured_claim", [key], sender=BOB)
+        assert margin.get_assured_claim(key)["state"] == "SETTLED"
+        assert margin.get_assured_claim(key)["final_status"] == status
+        with pytest.raises(Exception, match="protected release requires SETTLED SUPPORTED state"):
+            engine.call_method(consumer_address, "execute_release", [release_id], sender=BOB)
+        engine.call_method(consumer_address, "refund_release", [release_id], sender=ALICE)
+        release = consumer.get_release(release_id)
+        assert release["creator_credit"] == 7
+        assert release["beneficiary_credit"] == 0
+        with pytest.raises(Exception, match="protected release already completed"):
+            engine.call_method(consumer_address, "refund_release", [release_id], sender=ALICE)
+        with pytest.raises(Exception, match="protected release already completed"):
+            engine.call_method(consumer_address, "execute_release", [release_id], sender=BOB)
+        with pytest.raises(Exception, match="caller has no release credit"):
+            engine.call_method(consumer_address, "withdraw_release_credit", [release_id], sender=CHARLIE)
+        engine.call_method(consumer_address, "withdraw_release_credit", [release_id], sender=ALICE)
+        assert consumer.get_release(release_id)["creator_credit"] == 0
+    finally:
+        engine.deactivate()
+
+
+def test_real_margin_cancelled_and_aborted_release_refunds():
+    engine, margin_address, margin, consumer_address, consumer = _new_real_system("cancel-abort")
+    try:
+        cancelled_key = _claim_key()
+        _submit_real_claim(engine, margin_address, cancelled_key)
+        _prepare_assured(engine, margin_address, cancelled_key, challenge=False)
+        engine.vm.value = 4
+        cancelled_release = engine.call_method(
+            consumer_address,
+            "create_protected_release",
+            [cancelled_key, BOB, "2999-01-05T00:00:00+00:00"],
+            sender=ALICE,
+        )
+        engine.vm.warp("2999-01-02T00:00:00+00:00")
+        engine.call_method(margin_address, "cancel_assured_claim", [cancelled_key], sender=ALICE)
+        engine.call_method(consumer_address, "refund_release", [cancelled_release], sender=ALICE)
+        assert consumer.get_release(cancelled_release)["creator_credit"] == 4
+
+        aborted_key = _claim_key("-aborted")
+        # This claim is submitted with the same real MARGIN contract but a distinct
+        # key; its publisher proof and challenge are independently verified.
+        _submit_real_claim(engine, margin_address, aborted_key, suffix="-aborted")
+        _prepare_assured(engine, margin_address, aborted_key, proof_expiry="3000-01-01T00:00:00+00:00")
+        engine.vm.value = 2
+        aborted_release = engine.call_method(
+            consumer_address,
+            "create_protected_release",
+            [aborted_key, BOB, "2999-01-05T00:00:00+00:00"],
+            sender=ALICE,
+        )
+        engine.vm.warp("2999-01-04T00:00:00+00:00")
+        engine.call_method(margin_address, "abort_stalled", [aborted_key], sender=BOB)
+        assert margin.get_assured_claim(aborted_key)["state"] == "ABORTED"
+        engine.call_method(consumer_address, "refund_release", [aborted_release], sender=ALICE)
+        assert consumer.get_release(aborted_release)["creator_credit"] == 2
+    finally:
+        engine.deactivate()
+
+
+def test_real_margin_unresolved_release_expires_and_refunds():
+    engine, margin_address, margin, consumer_address, consumer = _new_real_system("expiry")
+    try:
+        key = _claim_key()
+        _submit_real_claim(engine, margin_address, key)
+        _prepare_assured(engine, margin_address, key)
+        engine.vm.value = 6
+        release_id = engine.call_method(
+            consumer_address,
+            "create_protected_release",
+            [key, BOB, "2999-01-01T01:00:00+00:00"],
+            sender=ALICE,
+        )
+        engine.vm.warp("2999-01-01T02:00:00+00:00")
+        with pytest.raises(Exception, match="protected release has expired"):
+            engine.call_method(consumer_address, "execute_release", [release_id], sender=BOB)
+        engine.call_method(consumer_address, "refund_release", [release_id], sender=ALICE)
+        assert consumer.get_release(release_id)["creator_credit"] == 6
+        with pytest.raises(Exception, match="protected release already completed"):
+            engine.call_method(consumer_address, "execute_release", [release_id], sender=BOB)
+    finally:
+        engine.deactivate()
+
+
+def test_real_margin_two_creators_have_independent_releases():
+    engine, margin_address, margin, consumer_address, consumer = _new_real_system("two-creators")
+    try:
+        key = _claim_key()
+        _submit_real_claim(engine, margin_address, key)
+        _prepare_assured(engine, margin_address, key, status="SUPPORTED")
+        engine.vm.value = 3
+        first = engine.call_method(
+            consumer_address, "create_protected_release", [key, BOB, "2999-01-03T00:00:00+00:00"], sender=ALICE
+        )
+        engine.vm.value = 5
+        second = engine.call_method(
+            consumer_address, "create_protected_release", [key, CHARLIE, "2999-01-03T00:00:00+00:00"], sender=BOB
+        )
+        assert {item["release_id"] for item in consumer.get_releases_for_claim(key)} == {first, second}
+        engine.vm.warp("2999-01-01T02:00:00+00:00")
+        engine.call_method(margin_address, "settle_assured_claim", [key], sender=BOB)
+        engine.call_method(consumer_address, "execute_release", [first], sender=CHARLIE)
+        engine.call_method(consumer_address, "execute_release", [second], sender=CHARLIE)
+        assert consumer.get_release(first)["beneficiary_credit"] == 3
+        assert consumer.get_release(second)["beneficiary_credit"] == 5
+        with pytest.raises(Exception, match="caller has no release credit|no release credit"):
+            engine.call_method(consumer_address, "withdraw_release_credit", [first], sender=CHARLIE)
+        engine.call_method(consumer_address, "withdraw_release_credit", [first], sender=BOB)
+        engine.call_method(consumer_address, "withdraw_release_credit", [second], sender=CHARLIE)
+        assert consumer.get_release(first)["beneficiary_credit"] == 0
+        assert consumer.get_release(second)["beneficiary_credit"] == 0
     finally:
         engine.deactivate()

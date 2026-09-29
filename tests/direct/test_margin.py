@@ -301,6 +301,14 @@ def test_assured_claim_domain_proof_and_bond_lifecycle(direct_vm, direct_deploy,
     assert assured["state"] == "SETTLED"
     assert assured["settled"] is True
     assert assured["challenger_credit"] == 2
+    assert (
+        assured["publisher_bond"]
+        + assured["challenge_bond"]
+        + assured["appeal_bond"]
+        + assured["publisher_credit"]
+        + assured["challenger_credit"]
+        == 2
+    )
 
     # Settlement credits are withdrawable exactly once; a replay cannot pay out
     # again after the canonical credit has been cleared.
@@ -487,6 +495,7 @@ def test_publisher_can_cancel_unchallenged_assured_claim_once(direct_vm, direct_
     assured = contract.get_assured_claim(key)
     assert assured["state"] == "CANCELLED"
     assert assured["publisher_credit"] == 1
+    assert assured["publisher_bond"] + assured["challenge_bond"] + assured["appeal_bond"] + assured["publisher_credit"] + assured["challenger_credit"] == 1
     with direct_vm.expect_revert("assured claim cannot be cancelled"):
         contract.cancel_assured_claim(key)
 
@@ -531,6 +540,7 @@ def test_stalled_challenge_can_abort_and_refund_both_bonds(direct_vm, direct_dep
     assert assured["state"] == "ABORTED"
     assert assured["publisher_credit"] == 1
     assert assured["challenger_credit"] == 1
+    assert assured["publisher_bond"] + assured["challenge_bond"] + assured["appeal_bond"] + assured["publisher_credit"] + assured["challenger_credit"] == 2
 
 
 def test_appealed_timeout_has_only_abort_refund_exit(
@@ -564,6 +574,7 @@ def test_appealed_timeout_has_only_abort_refund_exit(
     assert assured["publisher_bond"] == 0
     assert assured["challenge_bond"] == 0
     assert assured["appeal_bond"] == 0
+    assert assured["publisher_bond"] + assured["challenge_bond"] + assured["appeal_bond"] + assured["publisher_credit"] + assured["challenger_credit"] == 3
     with direct_vm.expect_revert("assured claim is not stalled"):
         contract.abort_stalled(key)
     with direct_vm.expect_revert("assured claim is not ready for settlement"):
