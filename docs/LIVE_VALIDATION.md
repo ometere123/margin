@@ -13,7 +13,7 @@ This file records only current deployment evidence. Older deployments, consumer 
 
 MARGIN is `0x0f8D86d56F1b8997475dD048579807fBFe60e227`, deployed by `0x1f54fb2b8520008a8bf856906a695dd35f6835e28afdedf51bded400744abebd`. Its source is commit `826206bb1825cbcd716e0eb24288e91b8bc6d00a`, SHA-256 `6F5866BCEE5569C3BA0560E172F3FF524CF43F2A7A174189DB05CC03BD9FDEAF`, size 58,790 bytes. `network()` reads Studionet, chain `61999`, and the required RPC. Deployment finalized `MAJORITY_AGREE / SUCCESS`.
 
-The current consumer is `0x388c762f777A10071A13063d71ed0B37CdE2d85a`, deployed by `0xddb1e2b791ccb550e3fcd7b5d1a4203956b8def764b7054310da12306e90ce0f`. Its source is commit `a4b72797e3bb8af617e0fb671bd5191937720cfa`, SHA-256 `C6D96DE8C78232EDA94B6A516341BE893A388F19088D9EDE4863645ACBC20DEF`, size 9,650 bytes. Finalized constructor calldata binds it to the current MARGIN address. Consumer deployment finalized `MAJORITY_AGREE / SUCCESS`.
+The current consumer is `0x7c447BAEaf5ae60Cec2d432BA33860375fEB9994`, deployed by `0x97b94e7f7e730a3bf14f4488bc37172f29a33480c5483fdc0ddbb32289092294`. Its source is commit `b18351d026e339e06b202df58a01742b46341d78`, SHA-256 `1205EAA5BFC7E4377D03C853B70B334F0575D8664E6B9EDD4FF9940499F13BD4`, size 9,804 bytes. Finalized constructor calldata binds it to the current MARGIN address. Consumer deployment finalized `MAJORITY_AGREE / SUCCESS`.
 
 ## Current normal claim
 
