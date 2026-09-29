@@ -11,6 +11,7 @@ This is a short, evidence-first review path for the current Studionet release.
 7. Load `extension/dist` as an unpacked MV3 extension, open a public page, highlight a narrow technical claim and choose **Challenge with MARGIN**. The extension opens `/challenge?draft=...`; it does not hold wallet controls.
 8. For the complete manual browser and Assured Claim matrix, follow [`docs/MANUAL_BROWSER_VERIFICATION.md`](docs/MANUAL_BROWSER_VERIFICATION.md). It is an observation checklist, not recorded live evidence.
 9. For a read-only current deployment check, run `npm run live:read` or `npm run live:read -- --claim=<64-hex-claim-key>`. This verifies `network()` at `LATEST_FINAL` and optionally reads a claim; it performs no writes. The consumer binding is verified from deployment construction calldata because the bound storage field is not exposed as a callable public view in this SDK path.
+10. Read [`docs/SELF_REVIEW.md`](docs/SELF_REVIEW.md) for the evidence-only limitations across GenLayer fit, contract quality, engineering and frontend/UX.
 
 ## Claims-to-evidence map
 
