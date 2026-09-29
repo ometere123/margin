@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import pytest
 
 from glsim.engine import SimEngine
 from glsim.state import StateStore
@@ -129,32 +130,54 @@ def test_real_margin_and_bound_consumer_support_precommit_and_execution():
         )
         engine.call_method(margin_address, "resolve_assured_claim", [key], sender=BOB)
 
-        # Pre-commit the funded consequence while the Assured claim is only RESOLVED.
+        # Pre-commit two independent funded consequences while the Assured claim is only RESOLVED.
         engine.vm.value = 3
-        engine.call_method(
+        release_one_id = engine.call_method(
             consumer_address,
             "create_protected_release",
             [key, BOB, "2999-01-02T00:00:00+00:00"],
             sender=ALICE,
         )
-        release = consumer.get_release_for_claim(key)
-        assert release["amount"] == 3
-        assert release["executed"] is False
+        engine.vm.value = 4
+        release_two_id = engine.call_method(
+            consumer_address,
+            "create_protected_release",
+            [key, BOB, "2999-01-03T00:00:00+00:00"],
+            sender=ALICE,
+        )
+        releases = consumer.get_releases_for_claim(key)
+        assert [release["release_id"] for release in releases] == [release_one_id, release_two_id]
+        assert releases[0]["amount"] == 3
+        assert releases[1]["amount"] == 4
+        assert all(release["executed"] is False for release in releases)
 
         engine.vm.warp("2999-01-01T02:00:00+00:00")
         engine.call_method(margin_address, "settle_assured_claim", [key], sender=BOB)
         assert margin.get_assured_claim(key)["state"] == "SETTLED"
         assert margin.get_assured_claim(key)["final_status"] == "SUPPORTED"
 
-        engine.call_method(consumer_address, "execute_release", [release["release_id"]], sender=BOB)
-        executed = consumer.get_release(release["release_id"])
+        engine.call_method(consumer_address, "execute_release", [release_one_id], sender=BOB)
+        engine.call_method(consumer_address, "execute_release", [release_two_id], sender=BOB)
+        executed = consumer.get_release(release_one_id)
         assert executed["executed"] is True
         assert executed["beneficiary_credit"] == 3
+        assert consumer.get_release(release_two_id)["beneficiary_credit"] == 4
         assert consumer.is_claim_supported(key) is True
 
+        with pytest.raises(Exception, match="protected release already completed"):
+            engine.call_method(consumer_address, "execute_release", [release_one_id], sender=BOB)
+        with pytest.raises(Exception, match="protected release already completed"):
+            engine.call_method(consumer_address, "refund_release", [release_one_id], sender=ALICE)
+        with pytest.raises(Exception, match="no release credit"):
+            engine.call_method(consumer_address, "withdraw_release_credit", [release_one_id], sender=ALICE)
+
         engine.call_method(
-            consumer_address, "withdraw_release_credit", [release["release_id"]], sender=BOB
+            consumer_address, "withdraw_release_credit", [release_one_id], sender=BOB
         )
-        assert consumer.get_release(release["release_id"])["beneficiary_credit"] == 0
+        engine.call_method(
+            consumer_address, "withdraw_release_credit", [release_two_id], sender=BOB
+        )
+        assert consumer.get_release(release_one_id)["beneficiary_credit"] == 0
+        assert consumer.get_release(release_two_id)["beneficiary_credit"] == 0
     finally:
         engine.deactivate()

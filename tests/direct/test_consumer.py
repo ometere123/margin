@@ -75,8 +75,12 @@ def test_protected_release_requires_existing_canonical_claim_and_keeps_creator_b
     assert release["executed"] is False
     assert release["refunded"] is False
 
-    with direct_vm.expect_revert("a protected release already exists"):
-        consumer.create_protected_release(key, "0x" + direct_bob.hex(), "2999-01-01T00:00:00+00:00")
+    second_id = consumer.create_protected_release(
+        key, "0x" + direct_bob.hex(), "2999-01-01T00:00:00+00:00"
+    )
+    assert second_id != release_id
+    releases = consumer.get_releases_for_claim(key)
+    assert [item["release_id"] for item in releases] == [release_id, second_id]
     assert consumer.get_release_for_claim(key)["release_id"] == release_id
 
 

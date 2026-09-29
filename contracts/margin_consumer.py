@@ -3,6 +3,7 @@
 from genlayer import *
 from dataclasses import dataclass
 from datetime import datetime, timezone
+import json
 
 
 @allow_storage
@@ -46,7 +47,9 @@ class MarginConsumer(gl.Contract):
     canonical_margin_address: Address
     executed_claims: TreeMap[str, str]
     releases: TreeMap[str, ProtectedRelease]
-    release_by_claim: TreeMap[str, str]
+    # JSON-encoded release-id lists keep the index bounded by the number of
+    # funded releases without allowing a later release to hide an earlier one.
+    release_ids_by_claim: TreeMap[str, str]
     release_count: u256
 
     def __init__(self, canonical_margin_address: str):
@@ -104,9 +107,6 @@ class MarginConsumer(gl.Contract):
         expiry_dt = self._expiry(expiry)
         if expiry_dt <= datetime.now(timezone.utc):
             raise gl.vm.UserError("release expiry must be in the future")
-        existing_release_id = self.release_by_claim.get(claim_key, "")
-        if existing_release_id != "":
-            raise gl.vm.UserError("a protected release already exists for this claim")
         margin = self._margin().view()
         claim = margin.get_claim(claim_key)
         if not isinstance(claim, dict) or str(claim.get("claim_key", "")).strip().lower() != claim_key:
@@ -131,7 +131,9 @@ class MarginConsumer(gl.Contract):
             beneficiary_credit=zero,
             creator_credit=zero,
         )
-        self.release_by_claim[claim_key] = release_id
+        release_ids = self._release_ids_for_claim(claim_key)
+        release_ids.append(release_id)
+        self.release_ids_by_claim[claim_key] = json.dumps(release_ids, separators=(",", ":"))
         return release_id
 
     @gl.public.write
@@ -196,9 +198,25 @@ class MarginConsumer(gl.Contract):
         return self._release_dict(self.releases[release_id])
 
     @gl.public.view
+    def _release_ids_for_claim(self, claim_key: str) -> list:
+        encoded = self.release_ids_by_claim.get(str(claim_key).strip().lower(), "[]")
+        try:
+            value = json.loads(encoded)
+        except Exception:
+            raise gl.vm.UserError("protected release index is malformed")
+        if not isinstance(value, list):
+            raise gl.vm.UserError("protected release index is malformed")
+        return [str(item) for item in value]
+
+    @gl.public.view
+    def get_releases_for_claim(self, claim_key: str) -> list:
+        return [self.get_release(release_id) for release_id in self._release_ids_for_claim(claim_key)]
+
+    @gl.public.view
     def get_release_for_claim(self, claim_key: str) -> dict:
-        release_id = self.release_by_claim.get(str(claim_key).strip().lower(), "")
-        return self.get_release(release_id) if release_id != "" else {}
+        """Compatibility view returning the first release, if one exists."""
+        releases = self.get_releases_for_claim(claim_key)
+        return releases[0] if releases else {}
 
     @gl.public.view
     def has_executed(self, claim_key: str) -> bool:
