@@ -74,13 +74,13 @@ Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat th
 
 ## Remaining verification boundary
 
-The corrected contract deployment is real and finalized. The following evidence boundaries remain explicit and must not be overstated:
+The current live evidence boundary is:
 
-- The earlier live wallet and browser evidence belongs to the immediately preceding deployment and is retained as historical evidence. Fresh same-source appeal, post-deadline settlement, withdrawal and positive protected-release exercise are not claimed for the current deployment; historical transactions remain in [`docs/HISTORY.md`](HISTORY.md).
-- The corrected consumer is newly deployed against the current MARGIN address and its construction calldata binds that address. A fresh consumer exercise is not claimed here.
-- Live wallet-to-chain end-to-end verification remains recorded for the preceding deployment; this source-only round did not redo the browser matrix.
-- live fee profiling. Live `INCONCLUSIVE` evidence is now recorded for claim `6e886a73a2573cdffb6d74b328215dff6cbd0b8f32e7b5d8141d862ccb1d8cf3`: submit `0x4d1ee62a832e0d4fcb548d7b1c71cccdd4a69650a70f0ce823f61b3c6c1aa777`, resolve `0x04e6245f7a2f44d333e885a7ccbe3e8602fd87dca2990e3de2c0a52e1fe19df8`, and canonical `INCONCLUSIVE` readback. The controlled `STALE` lifecycle is also recorded with submit `0xa3300ccffe62e6f3641c0f1f7b314555f73a7a2e72333bf3f1c8a27bd6f8b166`, resolve `0x14a0d173311ef22c283c07cae4bf9fa2a79fc778f619adcfd41430cd19754e3a`, and canonical `STALE` readback;
-- automated browser E2E and hostile-page matrix.
+- MARGIN deployment: `0x0f8D86d56F1b8997475dD048579807fBFe60e227`, finalized at `0x1f54fb2b8520008a8bf856906a695dd35f6835e28afdedf51bded400744abebd`.
+- Consumer deployment: `0x388c762f777A10071A13063d71ed0B37CdE2d85a`, finalized at `0xddb1e2b791ccb550e3fcd7b5d1a4203956b8def764b7054310da12306e90ce0f`, with its constructor bound to the current MARGIN address.
+- Fresh final-deployment normal claim evidence: submit → resolve → `FINALIZED / MAJORITY_AGREE / SUCCESS`, with canonical verdict `SUPPORTED`, as recorded above.
+- No fresh Assured, cancellation, or funded protected-release live lifecycle is claimed for the current deployment. Historical transactions and verdicts are referenced only through [`docs/HISTORY.md`](HISTORY.md).
+- Browser verification remains manual; automated browser evidence is not claimed.
 
 ## Production configuration hardening
 
@@ -92,18 +92,9 @@ The same SDK's Studio finalization response is shaped differently from older rec
 
 No success evidence for those steps has been fabricated.
 
-## Exact continuation sequence
+## Final state note
 
-1. Read `README.md`, `docs/ARCHITECTURE.md`, `docs/THREAT_MODEL.md`, `docs/LIVE_VALIDATION.md`, then `docs/CODEX.md` or `docs/CLAUDE.md`.
-2. Run `bash scripts/offline-preflight.sh`.
-3. Install Node 20+ dependencies with `npm install`. This installs the repo-local `genlayer@0.39.1`. Immediately run `npm run cli:check` and `npm exec -- genlayer --version`; both must resolve to `0.39.1`. Then run `npm run verify`. Repair only real SDK/API drift; preserve the architecture. Do not use the machine's global GenLayer CLI.
-4. Create a Python environment, install `requirements.txt`, run the current `genvm-lint check contracts/margin.py`, then run `pytest tests/direct -v`.
-5. Deploy `contracts/margin.py` to Studionet and write the real address/transaction/tool versions to a new `deployment.json` (never overwrite the example with invented data).
-6. Serve or deploy the static signer and configure its real production origin/CSP.
-7. Build the extension and load `extension/dist` unpacked in Chromium.
-8. Exercise the controlled fixtures and the full matrix in `docs/LIVE_VALIDATION.md`, including prompt injection, changed-page/stale behavior, duplicate claims, forged keys, repeated text, canonical URLs, SPA/DOM mutation, wallet mismatch, finality and an actual protocol appeal where supported.
-9. Record representative fee measurements for submission, normal resolution, maximum-evidence resolution and appeal/finality paths.
-10. Replace this status file with a truthful final report containing only real live evidence and remaining account-specific steps.
+The contracts are already deployed on Studionet 61999, the production signer is already deployed, and the extension is already built. The remaining human task is to run [`docs/MANUAL_BROWSER_VERIFICATION.md`](MANUAL_BROWSER_VERIFICATION.md).
 
 ## Architecture that must not be weakened
 
