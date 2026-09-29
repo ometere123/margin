@@ -52,17 +52,49 @@ Record the date, browser version, extension ZIP SHA-256, current git SHA, signer
 
 ## Ready state for manual testing
 
-The following public fixtures are hosted on `https://a-murex-one.vercel.app` and are not the signer origin:
+The following public fixtures are hosted on `https://a-murex-one.vercel.app` and are not the signer origin. They are read-only inspection fixtures for the browser run:
 
 | Fixture | URL | Claim key | Non-browser state |
 | --- | --- | --- | --- |
-| A | `https://a-murex-one.vercel.app/` | `a379566c75876bd2d6253aabf8daa6d27aed5051e690d323c457e58dc3d0a0b7` | Assured lifecycle is `RESOLVED` with final status `INCONCLUSIVE`; settlement is recorded after the real appeal deadline. |
-| B | `https://a-murex-one.vercel.app/b.html` | `65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a` | Assured lifecycle is intended to finish `SETTLED + SUPPORTED`, with a pre-settlement protected release and beneficiary withdrawal recorded if the live verdict is supported. |
-| C | `https://a-murex-one.vercel.app/c.html` | `55a4242e0958156bba84c565255ba528b49edd5b5f4974a62783c3cdc5336fcb` | `REGISTERED`, unchallenged, cancellation pending until `2026-09-30T21:01:11.318Z`. |
+| A | `https://a-murex-one.vercel.app/` | `a379566c75876bd2d6253aabf8daa6d27aed5051e690d323c457e58dc3d0a0b7` | `SETTLED`, `final_status=INCONCLUSIVE`; publisher and challenger each received credit `1`, then withdrew it; credits and bonds are `0`. |
+| B | `https://a-murex-one.vercel.app/b.html` | `65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a` | `SETTLED`, `final_status=SUPPORTED`; release `0:65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a` was created before settlement, `executed=true`, `refunded=false`, beneficiary credit `0` after withdrawal, `is_claim_supported=true`, Assured credits `0`. |
+| C | `https://a-murex-one.vercel.app/c.html` | `55a4242e0958156bba84c565255ba528b49edd5b5f4974a62783c3cdc5336fcb` | `REGISTERED`, unchallenged; cancellation is not yet possible. Registration state began `2026-09-29T21:00:11.318794Z`; earliest cancel is `2026-09-30T21:01:11.318Z`. |
 
 Public wallet roles used by the non-browser evidence are: publisher `0xb29Ead15B1E8A2420faE84de974088f67a15ccC2`, challenger `0xac3AC69dC0Bde389256dD6748C75817ead9286D9`, and integrator `0x951e6B75530774fF82321a5ae54e14F778F0C855`. The current contract is `0x0f8D86d56F1b8997475dD048579807fBFe60e227`; the bound consumer is `0x6Bdb12646e054C24b68012560F7472636b395881`.
 
-For manual browser testing, use A or B to inspect a finalized provenance route and the extension readback; use C only to verify a registered assurance state and that cancellation is not offered before its deadline. Record screenshots and observed transaction hashes alongside the corresponding sequence file in `scripts/live/evidence/`. These fixtures are non-browser evidence inputs; browser rendering remains a separate human check.
+The A, B and C fixture routes are read-only against canonical finalized state. They do not require importing the publisher, challenger or integrator keys. A fresh claim submission, resolution, wallet rejection and network-switch test require your own funded injected wallet; you cannot sign as the recorded publisher/challenger/integrator accounts unless you deliberately import those accounts.
+
+## Manual matrix
+
+| Step | Exact page/route | What to do | EXPECTED result | Record proof |
+| --- | --- | --- | --- | --- |
+| Extension install/icon | Chrome extension management page | Load `extension/dist` unpacked and inspect the toolbar/side-panel icon | MARGIN icon loads without manifest errors | `01-extension-icon.png` |
+| Side-panel capture | Any public technical page | Highlight a narrow claim and choose **Challenge with MARGIN** | Side panel opens with the exact quote and no wallet controls | `02-side-panel-capture.png` |
+| Challenge form | Side panel | Enter challenge text, evidence URL and optional archive URL | Inputs remain bounded and **Continue to wallet signer** is available | `03-challenge-form.png` |
+| Continue to signer | `/challenge?draft=...` | Continue from the extension | Signer opens the routed challenge page with the draft intact | `04-challenge-route.png` |
+| Wallet connect | `/challenge?draft=...` or `/` | Click **Connect wallet** with your own account | Header shows the shortened account and Studionet `61999` after authorization | `05-wallet-connect.png` |
+| Disconnect/reconnect | `/` | Click **Disconnect**, refresh, then click **Connect wallet** | Explicit disconnect persists across refresh; reconnect requires an explicit click | `06-disconnect-reconnect.png` |
+| Wrong network | `/challenge?draft=...` | Switch the wallet away from Studionet and attempt a write | Write is disabled or prompts for `wallet_switchEthereumChain`/`wallet_addEthereumChain`; no transaction is submitted off chain `61999` | `07-wrong-network.png` |
+| Submit fresh claim | `/challenge?draft=...` | On your own fresh draft, approve the wallet transaction once | Transaction ID appears immediately with a clickable Studionet Explorer link, then reaches `FINALIZED` | Submit tx hash + `08-submit-finalized.png` |
+| Resolve fresh claim | `/challenge?draft=...` | Click **Resolve** after the submit is finalized | A separate resolution transaction is tracked to finality and a verdict is shown | Resolve tx hash + `09-resolve-finalized.png` |
+| Fresh annotation/provenance | Original source page, then extension badge | Return to the source page and click the badge | Exact highlight, visible MARGIN badge, side-panel details and provenance link appear | `10-badge-provenance.png` |
+| Direct claim A | `/claim/a379566c75876bd2d6253aabf8daa6d27aed5051e690d323c457e58dc3d0a0b7` | Open directly without a draft or wallet | Read-only `SETTLED / INCONCLUSIVE`, quote, rationale, evidence, history and provenance render | `11-claim-A.png` |
+| Assurance A | `/claim/a379566c75876bd2d6253aabf8daa6d27aed5051e690d323c457e58dc3d0a0b7/assurance` | Open directly | Read-only settled assurance state and zero credits; no impossible action buttons | `12-assurance-A.png` |
+| Direct claim B | `/claim/65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a` | Open directly | Read-only `SETTLED / SUPPORTED` claim provenance renders | `13-claim-B.png` |
+| Assurance B/downstream | `/claim/65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a/assurance` | Inspect **Downstream use** | Release shows correct creator/integrator, publisher beneficiary, `executed=true`, `refunded=false`, zero beneficiary credit and no impossible buttons | `14-assurance-B-release.png` |
+| Direct claim C assurance | `/claim/55a4242e0958156bba84c565255ba528b49edd5b5f4974a62783c3cdc5336fcb/assurance` | Open directly | `REGISTERED`, unchallenged; no **Cancel** before `2026-09-30T21:01:11.318Z`; after that time, refresh and verify the action appears only if still eligible | `15-assurance-C.png` or later tx hash |
+| Decision history | `/claim/<A key>` or `/claim/<B key>` | Expand **Decision history** | Previous revisions show status, rationale, resolved time, resolver and provenance digest | `16-decision-history.png` |
+| Activity | `/activity` | Open the Activity route | Local transaction provenance is shown; no centralized activity backend is implied | `17-activity.png` |
+| Mobile layout | Any signer route at narrow viewport | Resize to mobile width and scroll | Cards, header, wallet controls, evidence and action buttons remain readable and usable | `18-mobile-layout.png` |
+| Rejected wallet request | `/challenge?draft=...` | Reject a wallet request in the injected wallet | Clear rejection text appears; no duplicate submission is created | `19-wallet-rejection.png` |
+
+## Known behaviours to expect
+
+- Sequence A was `SUPPORTED` on its normal resolve and `INCONCLUSIVE` on its Assured resolve. These are separate adjudication contexts, and validators independently judge each one.
+- The A and B domain proofs are no longer hosted because only one proof file is deployed at a time; C's proof is the currently hosted proof file. A and B are already finalized read-only fixtures.
+- The A, B and C pages are operator-hosted evidence fixtures, not third-party disputes.
+
+Record screenshots and observed transaction hashes alongside the corresponding sequence file in `scripts/live/evidence/`. Do not infer browser rendering from the non-browser evidence.
 
 ### MANUAL BROWSER STATUS
 

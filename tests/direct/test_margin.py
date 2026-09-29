@@ -5,6 +5,7 @@ Run with the official GenLayer testing suite:
 """
 import hashlib
 import json
+import pytest
 
 URL = "https://example.com/docs/runtime"
 PAGE_KEY = hashlib.sha256(URL.encode("utf-8")).hexdigest()
@@ -697,3 +698,89 @@ def test_normal_revision_capacity_does_not_consume_assured_slots(direct_vm, dire
     assert contract.get_claim(key)["revision"] == 5
     with direct_vm.expect_revert("maximum normal decision revisions reached"):
         contract.resolve_claim(key)
+
+
+@pytest.mark.parametrize("status,expected_publisher,expected_challenger", [
+    ("SUPPORTED", 2, 0),
+    ("INCONCLUSIVE", 1, 1),
+    ("STALE", 1, 1),
+])
+def test_assured_settlement_conserves_bonds_for_supported_inconclusive_and_stale(
+    direct_vm, direct_deploy, direct_alice, direct_bob, status, expected_publisher, expected_challenger
+):
+    contract = direct_deploy("contracts/margin.py")
+    direct_vm.sender = direct_alice
+    key = submit(contract, suffix=f"conservation-{status}")
+    _register_for_lifecycle(contract, direct_vm, direct_alice, key)
+    direct_vm.sender = direct_bob
+    direct_vm.value = 1
+    contract.challenge_assured_claim(key)
+
+    body = "Support matrix: Runtime 4.2 requires Node 20 or newer."
+    direct_vm.clear_mocks()
+    direct_vm.mock_web(r"https://example\.com/docs/runtime", {"status": 200, "body": body})
+    direct_vm.mock_web(r"https://example\.com/docs/support", {"status": 200, "body": body})
+    result = {
+        "status": status,
+        "rationale": f"{status} conservation fixture.",
+        "claim_present": status != "STALE",
+        "supporting_source_indexes": [0] if status == "SUPPORTED" else [],
+        "contradicting_source_indexes": [],
+        "historical_evidence_used": False,
+    }
+    direct_vm.mock_llm(r".*MARGIN web-claim challenge.*", json.dumps(result))
+    contract.resolve_assured_claim(key)
+    direct_vm.warp("2999-01-01T02:00:00+00:00")
+    contract.settle_assured_claim(key)
+    assured = contract.get_assured_claim(key)
+
+    # The two incoming one-unit bonds are fully represented by credits or
+    # remaining bond state; settlement itself does not lose value.
+    assert assured["publisher_bond"] + assured["challenge_bond"] + assured["appeal_bond"] + assured["publisher_credit"] + assured["challenger_credit"] == 2
+    assert assured["publisher_credit"] == expected_publisher
+    assert assured["challenger_credit"] == expected_challenger
+
+    direct_vm.sender = direct_alice
+    if expected_publisher:
+        contract.withdraw_assured_credit(key)
+    direct_vm.sender = direct_bob
+    if expected_challenger:
+        contract.withdraw_assured_credit(key)
+    settled = contract.get_assured_claim(key)
+    assert settled["publisher_bond"] + settled["challenge_bond"] + settled["appeal_bond"] + settled["publisher_credit"] + settled["challenger_credit"] == 0
+
+
+def test_publisher_appeal_conserves_and_withdraws_all_bonds(
+    direct_vm, direct_deploy, direct_alice, direct_bob
+):
+    contract = direct_deploy("contracts/margin.py")
+    direct_vm.sender = direct_alice
+    key = submit(contract, suffix="publisher-appeal-conservation")
+    _register_for_lifecycle(contract, direct_vm, direct_alice, key)
+    direct_vm.sender = direct_bob
+    direct_vm.value = 1
+    contract.challenge_assured_claim(key)
+    _mock_contradicted_resolution(direct_vm)
+    contract.resolve_assured_claim(key)
+
+    direct_vm.sender = direct_alice
+    direct_vm.value = 1
+    contract.appeal_assured_claim(key, "Publisher submits bounded new evidence for reconsideration.")
+    direct_vm.clear_mocks()
+    direct_vm.mock_web(r"https://example\.com/docs/runtime", {"status": 200, "body": "Support matrix confirms Node 18."})
+    direct_vm.mock_web(r"https://example\.com/docs/support", {"status": 200, "body": "Support matrix confirms Node 18."})
+    direct_vm.mock_llm(r".*MARGIN web-claim challenge.*", json.dumps({
+        "status": "SUPPORTED", "rationale": "The bounded appeal evidence supports the claim.",
+        "claim_present": True, "supporting_source_indexes": [0], "contradicting_source_indexes": [],
+        "historical_evidence_used": False,
+    }))
+    contract.resolve_assured_appeal(key)
+    direct_vm.warp("2999-01-01T02:00:00+00:00")
+    contract.settle_assured_claim(key)
+    assured = contract.get_assured_claim(key)
+    assert assured["publisher_bond"] + assured["challenge_bond"] + assured["appeal_bond"] + assured["publisher_credit"] + assured["challenger_credit"] == 3
+    assert assured["publisher_credit"] == 3
+    direct_vm.sender = direct_alice
+    contract.withdraw_assured_credit(key)
+    settled = contract.get_assured_claim(key)
+    assert settled["publisher_bond"] + settled["challenge_bond"] + settled["appeal_bond"] + settled["publisher_credit"] + settled["challenger_credit"] == 0

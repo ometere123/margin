@@ -24,13 +24,22 @@ This is a short, evidence-first review path for the current Studionet release.
 | Consumer uses canonical MARGIN state | bound-address test and `MarginGate` implementation in `contracts/margin_consumer.py` |
 | Multiple funded releases cannot hide one another | `get_releases_for_claim` implementation and real-MARGIN SimEngine integration in `tests/direct/test_consumer_integration.py` |
 | Per-creator release spam is bounded without blocking other creators | `test_protected_release_cap_is_per_creator_and_pagination_is_bounded` |
+| Per-creator cap is five and creators remain independent | `test_protected_release_cap_is_per_creator_and_pagination_is_bounded`; `test_real_margin_two_creators_have_independent_releases` (Direct Mode only) |
+| Claim-wide indexes are bounded and creator queries paginate | `test_protected_release_cap_is_per_creator_and_pagination_is_bounded`; creator-query assertions in consumer integration (Direct Mode only) |
 | Negative release outcomes refund exactly once | real-MARGIN integration tests for CONTRADICTED, INCONCLUSIVE, STALE, CANCELLED, ABORTED and expiry |
+| CONTRADICTED / INCONCLUSIVE / STALE refund paths | `test_real_margin_negative_terminal_release_refund_and_conservation` (parameterized; Direct Mode only) |
+| CANCELLED and ABORTED refund paths | `test_real_margin_cancelled_and_aborted_release_refunds` (Direct Mode only) |
+| Expiry refund path | `test_real_margin_unresolved_release_expires_and_refunds` (Direct Mode only) |
 | Bond conservation is explicit | MARGIN lifecycle assertions in `tests/direct/test_margin.py` |
+| Bond conservation for SUPPORTED, INCONCLUSIVE and STALE | `test_assured_settlement_conserves_bonds_for_supported_inconclusive_and_stale` (new parameterized Direct Mode test) |
+| Bond conservation for CONTRADICTED | `test_assured_claim_domain_proof_and_bond_lifecycle` (Direct Mode only) |
+| Bond conservation for cancellation and abort | `test_publisher_can_cancel_unchallenged_assured_claim_once`; `test_stalled_challenge_can_abort_and_refund_both_bonds` (Direct Mode only) |
+| Bond conservation for publisher and challenger appeals | `test_publisher_appeal_conserves_and_withdraws_all_bonds`; `test_appealed_timeout_has_only_abort_refund_exit` (Direct Mode only) |
 | Protected release is pre-settlement and pull-paid | consumer lifecycle tests, `create_protected_release`, `execute_release`, `refund_release` and `withdraw_release_credit` |
 | Current consumer deployment is bound correctly | current consumer deployment calldata, address and source SHA-256 in `deployment.json` |
 | Resolver cannot escape by waiting briefly | `abort_stalled` timeout tests and timing notes in `docs/LIVE_VALIDATION.md` |
 | Wallet signing is ordinary EIP-1193 | signer wallet tests and source review; no Snap methods |
-| Browser annotation is extension-first | extension anchor/badge tests and the recorded manual browser evidence |
+| Browser annotation is extension-first | extension anchor/badge tests; current browser matrix remains manual and `NOT RUN BY AGENT` |
 | Live sequence A uses the final deployment | `scripts/live/evidence/A.json` and `A.md`; status/readback recorded after real finality |
 | Live sequence B uses a pre-settlement protected release | `scripts/live/evidence/B.json` and `B.md`; release execution/refund branch is recorded truthfully |
 | Live sequence C respects the full registration window | `scripts/live/evidence/C.json` and `C.md`; pending status includes the finalized registration-derived earliest cancellation time |

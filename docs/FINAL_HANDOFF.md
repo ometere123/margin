@@ -61,12 +61,12 @@ Do not run bare `genlayer ...` commands from this repo.
 
 ## Checks completed for the corrected candidate
 
-- Direct Mode: 37/37 PASS, including adversarial domain-proof rejection cases, timeout-race cases, per-creator release-cap enforcement, pagination and real MARGIN/consumer integration coverage.
+- Direct Mode: 41/41 PASS, including adversarial domain-proof rejection cases, timeout-race cases, per-creator release-cap enforcement, pagination, bond-conservation assertions and real MARGIN/consumer integration coverage.
 - Contract AST lint: 3/3 PASS for both contracts with `genvm-lint 0.11.1rc2`; SDK semantic validation is not claimed because the compatible v0.2.12 runner bundle is unavailable to the installed linter.
 - Python/source invariant suite: 12/12 PASS.
 - `npm exec -- genlayer --version`: `0.39.1`.
 - Studionet network info and deployed `network()` readback: `61999`, `studionet`, `https://studio.genlayer.com/api`.
-- Extension/signer typecheck, tests and builds: PASS on the current source; contract lint is AST-only (`3/3` per contract; full SDK semantic validation was not run), extension tests `16/16`, signer tests `30/30`, source invariants `12/12`, Direct Mode `37/37`.
+- Extension/signer typecheck, tests and builds: PASS on the current source; contract lint is AST-only (`3/3` per contract; full SDK semantic validation was not run), extension tests `16/16`, signer tests `30/30`, source invariants `12/12`, Direct Mode `41/41`.
 - Reproducible extension archive: `MARGIN-extension-v0.1.0.zip`, SHA-256 `109C2CA42B85DEE0AC1AAAD7DE6F3996DE4B00D56DD334C00C7440BACC4EF3AB`, produced by `npm run zip` from `extension/dist`; the ZIP is not committed as generated noise.
 - GitHub Actions was green for source commit `d7cc0727bdced6ba85400fb7c60703cb49c59e34` in [run `36637688185`](https://github.com/ometere123/margin/actions/runs/36637688185).
 
