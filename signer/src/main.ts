@@ -35,6 +35,20 @@ let listenersBound = false;
 let assuredClaim: AssuredClaimView | null = null;
 let assuredError = '';
 let consumerExecuted: boolean | null = null;
+type ProtectedReleaseView = {
+  release_id?: string;
+  claim_key?: string;
+  creator?: string;
+  beneficiary?: string;
+  amount?: string | number | bigint;
+  expiry?: string;
+  executed?: boolean;
+  refunded?: boolean;
+  beneficiary_credit?: string | number | bigint;
+  creator_credit?: string | number | bigint;
+};
+let protectedRelease: ProtectedReleaseView | null = null;
+let consumerError = '';
 let directClaim: MarginClaim | null = null;
 let decisionHistory: DecisionHistoryEntry[] = [];
 
@@ -76,7 +90,7 @@ function directClaimView() {
   if (!directClaim) return `<section class="empty-state"><h1>Claim unavailable</h1><p>That claim key is malformed, unavailable, or not finalized on Studionet.</p><a class="button dark" href="/">Back to MARGIN</a></section>`;
   const c = directClaim;
   const manifest = c.latest_manifest ? JSON.stringify(c.latest_manifest, null, 2) : '';
-  return `<section class="result-card"><div class="eyebrow">Final result</div><div class="result-line"><span class="status-badge ${esc(c.status)}">${esc(c.status)}</span><span class="final-chip">FINALIZED ✓</span><span class="meta">Revision ${esc(String(c.revision))}</span></div><blockquote>${esc(c.quote)}</blockquote><p class="meta">${esc(c.canonical_url)}</p></section><section><div class="eyebrow">Challenge</div><p>${esc(c.challenge_statement)}</p><div class="detail-grid"><span>Claim class</span><strong>${esc(c.claim_class)}</strong><span>Challenger</span><code>${esc(c.challenger)}</code><span>Created</span><span>${esc(c.created_at)}</span><span>Resolved</span><span>${esc(c.resolved_at || 'Not resolved')}</span></div></section><section><div class="eyebrow">Resolution</div><p>${esc(c.rationale || 'No rationale recorded.')}</p></section>${decisionHistoryHtml(decisionHistory)}<section><div class="eyebrow">Evidence</div><div class="evidence-list">${evidenceRows(c)}</div></section><section><div class="eyebrow">Provenance</div><div class="detail-grid"><span>Claim key</span><code>${esc(c.claim_key)}</code><span>Source manifest digest</span><code>${esc(c.source_manifest_digest || 'Not returned')}</code></div>${manifest ? `<details><summary>Advanced provenance</summary><pre>${esc(manifest)}</pre></details>` : ''}<p class="route-links"><a class="button secondary" href="${esc(c.canonical_url)}" target="_blank" rel="noreferrer">Back to source ↗</a><a class="button secondary" href="/claim/${esc(c.claim_key)}/assurance">View assurance</a><a class="button secondary" href="${MARGIN_EXPLORER_URL}/address/${MARGIN_CONTRACT_ADDRESS}" target="_blank" rel="noreferrer">MARGIN Explorer ↗</a></p></section>`;
+  return `<section class="result-card"><div class="eyebrow">Final result</div><div class="result-line"><span class="status-badge ${esc(c.status)}">${esc(c.status)}</span><span class="final-chip">FINALIZED ✓</span><span class="meta">Revision ${esc(String(c.revision))}</span></div><blockquote>${esc(c.quote)}</blockquote><p class="meta">${esc(c.canonical_url)}</p></section><section><div class="eyebrow">Challenge</div><p>${esc(c.challenge_statement)}</p><div class="detail-grid"><span>Claim class</span><strong>${esc(c.claim_class)}</strong><span>Challenger</span><code>${esc(c.challenger)}</code><span>Created</span><span>${esc(c.created_at)}</span><span>Resolved</span><span>${esc(c.resolved_at || 'Not resolved')}</span></div></section><section><div class="eyebrow">Resolution</div><p>${esc(c.rationale || 'No rationale recorded.')}</p></section>${decisionHistoryHtml(decisionHistory)}<section><div class="eyebrow">Evidence</div><div class="evidence-list">${evidenceRows(c)}</div></section><section><div class="eyebrow">Provenance</div><div class="detail-grid"><span>Claim key</span><code>${esc(c.claim_key)}</code><span>Source manifest digest</span><code>${esc(c.source_manifest_digest || 'Not returned')}</code><span>Source-set digest</span><code>${esc(c.source_set_digest || 'Not returned')}</code></div>${manifest ? `<details><summary>Advanced provenance</summary><pre>${esc(manifest)}</pre></details>` : ''}<p class="route-links"><a class="button secondary" href="${esc(c.canonical_url)}" target="_blank" rel="noreferrer">Back to source ↗</a><a class="button secondary" href="/claim/${esc(c.claim_key)}/assurance">View assurance</a><a class="button secondary" href="${MARGIN_EXPLORER_URL}/address/${MARGIN_CONTRACT_ADDRESS}" target="_blank" rel="noreferrer">MARGIN Explorer ↗</a></p></section>`;
 }
 
 function activityView() {
@@ -111,7 +125,11 @@ function assuredPanel() {
   const deadline = assuredClaim?.appeal_deadline ? String(assuredClaim.appeal_deadline) : '';
   const deadlineMs = deadline ? Date.parse(deadline) : NaN;
   const appealWindow = Number.isFinite(deadlineMs) ? (Date.now() <= deadlineMs ? `Open until ${new Date(deadlineMs).toLocaleString()}` : `Closed ${new Date(deadlineMs).toLocaleString()}`) : 'No valid appeal deadline returned';
-  return `<section><div class="eyebrow">Assured Claim</div><div class="row"><strong>${esc(state)}</strong><span class="meta">Optional bonded lifecycle</span></div>${rows}${state === 'NOT REGISTERED' ? '<label for="proof-url">HTTPS domain proof URL</label><input id="proof-url" value="" placeholder="https://example.com/.well-known/margin.json"><label for="proof-nonce">Proof nonce</label><input id="proof-nonce" value="" placeholder="Publisher nonce"><label for="proof-expiry">Proof expiry (ISO datetime)</label><input id="proof-expiry" value="" placeholder="2026-10-01T12:00:00+00:00">' : ''}${assuredClaim ? `<p class="meta">Appeal window: ${esc(appealWindow)}</p>` : ''}<label for="appeal-reason">Appeal reason</label><textarea id="appeal-reason" maxlength="800" placeholder="Bounded new evidence or adjudication issue"></textarea><div class="row assured-actions">${action('register','Register Assured Claim')}${action('challenge','Challenge Assured Claim')}${action('resolve','Resolve Assured Claim')}${action('appeal','Appeal Assured Claim')}${action('resolveAppeal','Resolve Assured Appeal')}${action('settle','Settle Assured Claim')}${action('withdraw','Withdraw Assured Credit')}</div><p class="meta">${assuredError ? esc(assuredError) : 'Bonds, deadlines and credits are read from the canonical MARGIN contract.'}</p><p class="meta">${contractLink(contractAddress)}</p><div class="consumer-proof"><div class="eyebrow">Downstream use</div><p class="meta">Bound reference consumer: ${esc(MARGIN_CONSUMER_ADDRESS)}</p><p>The consumer permits protected execution only for a SETTLED + SUPPORTED Assured Claim.</p><p>${consumerExecuted === true ? 'Executed: Yes ✓' : consumerExecuted === false ? 'Eligible: Yes · Executed: No' : 'Eligible: No or state not yet settled SUPPORTED'}</p><button id="refresh-assured" class="quiet">Refresh Assured state</button></div></section>`;
+  const releaseEligible = state === 'SETTLED' && String(assuredClaim?.final_status || '').toUpperCase() === 'SUPPORTED';
+  const releaseActions = protectedRelease ? `${releaseEligible && !protectedRelease.executed && !protectedRelease.refunded ? '<button class="dark" data-consumer-action="execute">Execute protected release</button>' : ''}${!protectedRelease.executed && !protectedRelease.refunded && (state === 'CANCELLED' || state === 'ABORTED' || (protectedRelease.expiry && Date.parse(protectedRelease.expiry) <= Date.now())) ? '<button class="quiet" data-consumer-action="refund">Refund release</button>' : ''}${(Number(protectedRelease.beneficiary_credit || 0) > 0 || Number(protectedRelease.creator_credit || 0) > 0) ? '<button class="quiet" data-consumer-action="withdraw">Withdraw release credit</button>' : ''}` : '';
+  const releaseRows = protectedRelease ? `<div class="detail-grid"><span>Release</span><code>${esc(assuredDisplay(protectedRelease.release_id))}</code><span>Creator</span><code>${esc(assuredDisplay(protectedRelease.creator))}</code><span>Beneficiary</span><code>${esc(assuredDisplay(protectedRelease.beneficiary))}</code><span>Amount</span><code>${esc(assuredDisplay(protectedRelease.amount))}</code><span>Expiry</span><span>${esc(assuredDisplay(protectedRelease.expiry))}</span><span>Executed</span><strong>${protectedRelease.executed ? 'Yes' : 'No'}</strong><span>Refunded</span><strong>${protectedRelease.refunded ? 'Yes' : 'No'}</strong><span>Beneficiary credit</span><code>${esc(assuredDisplay(protectedRelease.beneficiary_credit))}</code><span>Creator credit</span><code>${esc(assuredDisplay(protectedRelease.creator_credit))}</code></div>` : '<p class="meta">No protected release exists for this claim.</p>';
+  const releaseCreate = !protectedRelease && releaseEligible ? '<label for="release-beneficiary">Protected release beneficiary</label><input id="release-beneficiary" placeholder="0x…"><label for="release-amount">GEN amount (smallest units)</label><input id="release-amount" inputmode="numeric" placeholder="1000000000000000000"><label for="release-expiry">Release expiry (ISO datetime)</label><input id="release-expiry" placeholder="2026-10-01T12:00:00+00:00"><button class="dark" data-consumer-action="create">Create protected release</button>' : '';
+  return `<section><div class="eyebrow">Assured Claim</div><div class="row"><strong>${esc(state)}</strong><span class="meta">Optional bonded lifecycle</span></div>${rows}${state === 'NOT REGISTERED' ? '<label for="proof-url">HTTPS domain proof URL</label><input id="proof-url" value="" placeholder="https://example.com/.well-known/margin.json"><label for="proof-nonce">Proof nonce</label><input id="proof-nonce" value="" placeholder="Publisher nonce"><label for="proof-expiry">Proof expiry (ISO datetime)</label><input id="proof-expiry" value="" placeholder="2026-10-01T12:00:00+00:00">' : ''}${assuredClaim ? `<p class="meta">Appeal window: ${esc(appealWindow)}</p>` : ''}<label for="appeal-reason">Appeal reason</label><textarea id="appeal-reason" maxlength="800" placeholder="Bounded new evidence or adjudication issue"></textarea><div class="row assured-actions">${action('register','Register Assured Claim')}${action('challenge','Challenge Assured Claim')}${action('resolve','Resolve Assured Claim')}${action('cancel','Cancel Assured Claim')}${action('abort','Abort stalled lifecycle')}${action('appeal','Appeal Assured Claim')}${action('resolveAppeal','Resolve Assured Appeal')}${action('settle','Settle Assured Claim')}${action('withdraw','Withdraw Assured Credit')}</div><p class="meta">${assuredError ? esc(assuredError) : 'Bonds, deadlines and credits are read from the canonical MARGIN contract.'}</p><p class="meta">${contractLink(contractAddress)}</p><div class="consumer-proof"><div class="eyebrow">Downstream use</div><p class="meta">Bound reference consumer: ${esc(MARGIN_CONSUMER_ADDRESS)}</p><p>The consumer permits protected execution only for a SETTLED + SUPPORTED Assured Claim.</p><p>${releaseEligible ? 'Eligible ✓' : 'Not eligible until the claim is SETTLED + SUPPORTED'} · ${consumerExecuted === true ? 'Legacy execution: Yes ✓' : consumerExecuted === false ? 'Legacy execution: No' : 'Legacy execution: not read'}</p>${releaseRows}${releaseCreate}${releaseActions}${consumerError ? `<p class="bad">${esc(consumerError)}</p>` : ''}<button id="refresh-assured" class="quiet">Refresh Assured state</button></div></section>`;
 }
 
 function render(message = '') {
@@ -349,9 +367,14 @@ async function readAssuredState(redraw = true) {
     const value = await readClient.readContract({ address: contractAddress, functionName: 'get_assured_claim', args: [assuredKey], transactionHashVariant: TransactionHashVariant.LATEST_FINAL }) as AssuredClaimView;
     assuredClaim = value && Object.keys(value as object).length ? value : null;
     consumerExecuted = null;
+    protectedRelease = null;
     if (assuredClaim && String(assuredClaim.state).toUpperCase() === 'SETTLED' && String(assuredClaim.final_status).toUpperCase() === 'SUPPORTED') {
       consumerExecuted = Boolean(await readClient.readContract({ address: MARGIN_CONSUMER_ADDRESS, functionName: 'has_executed', args: [assuredKey], transactionHashVariant: TransactionHashVariant.LATEST_FINAL }));
     }
+    try {
+      const release = await readClient.readContract({ address: MARGIN_CONSUMER_ADDRESS, functionName: 'get_release_for_claim', args: [assuredKey], transactionHashVariant: TransactionHashVariant.LATEST_FINAL }) as ProtectedReleaseView;
+      protectedRelease = release && Object.keys(release as object).length ? release : null;
+    } catch { protectedRelease = null; }
     assuredError = '';
   } catch (error) {
     assuredError = `Assured state read unavailable: ${String((error as Error).message || error)}`;
@@ -396,6 +419,8 @@ async function runAssuredAction(action: AssuredAction) {
     resolveAppeal: { functionName: 'resolve_assured_appeal', args: [assuredKey], value: 0n },
     settle: { functionName: 'settle_assured_claim', args: [assuredKey], value: 0n },
     withdraw: { functionName: 'withdraw_assured_credit', args: [assuredKey], value: 0n },
+    cancel: { functionName: 'cancel_assured_claim', args: [assuredKey], value: 0n },
+    abort: { functionName: 'abort_stalled', args: [assuredKey], value: 0n },
   };
   const definition = definitions[action];
   setStatus('<div class="pending">Confirm the Assured Claim transaction in your wallet…</div>');
@@ -413,6 +438,36 @@ async function runAssuredAction(action: AssuredAction) {
   render();
 }
 
+async function runConsumerAction(action: 'create' | 'execute' | 'refund' | 'withdraw') {
+  const assuredKey = draft?.claimKey || (route.kind === 'assurance' ? route.claimKey : '');
+  if (!assuredKey) throw new Error('Missing claim key.');
+  if (!isConnected()) throw new Error('Connect the wallet on Studionet 61999 first.');
+  const client = await walletClient();
+  const beneficiary = (document.querySelector<HTMLInputElement>('#release-beneficiary')?.value || '').trim();
+  const amount = (document.querySelector<HTMLInputElement>('#release-amount')?.value || '').trim();
+  const expiry = (document.querySelector<HTMLInputElement>('#release-expiry')?.value || '').trim();
+  if (action === 'create') {
+    if (!validAddress(beneficiary)) throw new Error('Enter a valid beneficiary address.');
+    if (!amount || !/^\d+$/.test(amount) || BigInt(amount) <= 0n) throw new Error('Enter a positive GEN amount in smallest units.');
+    if (!Number.isFinite(Date.parse(expiry))) throw new Error('Release expiry must be a valid ISO datetime.');
+  }
+  if ((action === 'execute' || action === 'refund' || action === 'withdraw') && !protectedRelease?.release_id) throw new Error('No protected release is available.');
+  const definition = action === 'create'
+    ? { functionName: 'create_protected_release', args: [assuredKey, beneficiary, expiry], value: BigInt(amount) }
+    : action === 'execute'
+      ? { functionName: 'execute_release', args: [protectedRelease!.release_id], value: 0n }
+      : action === 'refund'
+        ? { functionName: 'refund_release', args: [protectedRelease!.release_id], value: 0n }
+        : { functionName: 'withdraw_release_credit', args: [protectedRelease!.release_id], value: 0n };
+  setStatus('<div class="pending">Confirm the downstream consumer transaction in your wallet…</div>');
+  const txId = await client.writeContract({ address: MARGIN_CONSUMER_ADDRESS, functionName: definition.functionName, args: definition.args, value: definition.value } as any);
+  setStatus(`<div class="pending">${esc(definition.functionName)} submitted. Waiting for finalization…<br>${txLink(txId)}</div>`);
+  await waitForFinalizedSuccess(client, txId, definition.functionName);
+  await readAssuredState(false);
+  setStatus(`<div class="ok"><strong>${esc(definition.functionName)} finalized ✓</strong><br>${txLink(txId)}</div>`);
+  render();
+}
+
 function bind() {
   document.querySelector('#header-connect')?.addEventListener('click', () => connect(true).catch(e => render(String(e.message || e))));
   document.querySelector('#header-disconnect')?.addEventListener('click', disconnect);
@@ -422,6 +477,7 @@ function bind() {
   document.querySelector('#resolve')?.addEventListener('click', () => resolveClaim().catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`)));
   document.querySelector('#refresh-assured')?.addEventListener('click', () => readAssuredState().catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`)));
   document.querySelectorAll<HTMLElement>('[data-assured-action]').forEach((button) => button.addEventListener('click', () => runAssuredAction(button.dataset.assuredAction as AssuredAction).catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`))));
+  document.querySelectorAll<HTMLElement>('[data-consumer-action]').forEach((button) => button.addEventListener('click', () => runConsumerAction(button.dataset.consumerAction as 'create' | 'execute' | 'refund' | 'withdraw').catch(e => { consumerError = String(e.message || e); setStatus(`<div class="bad">${esc(consumerError)}</div>`); })));
   document.querySelectorAll<HTMLElement>('[data-resume]').forEach((button) => button.addEventListener('click', () => resumeTransaction(button.dataset.resume!).catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`))));
 }
 

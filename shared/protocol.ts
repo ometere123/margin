@@ -56,6 +56,7 @@ export interface MarginClaim {
   resolved_at: string;
   revision: number | bigint;
   source_manifest_digest?: string;
+  source_set_digest?: string;
   latest_manifest?: Record<string, unknown>;
 }
 

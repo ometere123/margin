@@ -33,6 +33,7 @@ class ContractInvariantTests(unittest.TestCase):
         self.assertIn("MAX_EVIDENCE_URLS = 3", SOURCE)
         self.assertIn("MAX_PAGE_CLAIMS = 48", SOURCE)
         self.assertIn("MAX_REVISIONS = 5", SOURCE)
+        self.assertIn("MAX_NORMAL_REVISIONS = 3", SOURCE)
         self.assertIn("MAX_PRIMARY_CHARS = 30000", SOURCE)
         self.assertIn("MAX_ARCHIVE_CHARS = 25000", SOURCE)
         self.assertIn("MAX_EVIDENCE_CHARS = 15000", SOURCE)
@@ -73,15 +74,21 @@ class ContractInvariantTests(unittest.TestCase):
 
     def test_evidence_manifest_is_validator_bound(self):
         self.assertIn("source_manifest_digest", SOURCE)
+        self.assertIn("source_set_digest", SOURCE)
+        self.assertIn("accepted_observation_manifest", SOURCE)
+        self.assertIn("leader_cited_indexes", SOURCE)
         self.assertIn("_consensus_candidate_is_valid", SOURCE)
         self.assertIn("independent_status == status", SOURCE)
         self.assertNotIn('candidate.get("source_manifest") == independent.get("source_manifest")', SOURCE)
         self.assertNotIn('candidate.get("contradicting_source_indexes") == independent.get("contradicting_source_indexes")', SOURCE)
         self.assertIn("source observations and cited indexes are validated independently", SOURCE)
-        self.assertIn("source manifest unchanged; no new revision", SOURCE)
+        self.assertIn("normal refresh cooldown has not elapsed", SOURCE)
+        self.assertNotIn("source manifest unchanged; no new revision", SOURCE)
 
     def test_assured_claim_has_domain_proof_and_bond_lifecycle(self):
         self.assertIn("register_assured_claim", SOURCE)
+        self.assertIn("cancel_assured_claim", SOURCE)
+        self.assertIn("abort_stalled", SOURCE)
         self.assertIn("@gl.public.write.payable", SOURCE)
         self.assertIn("/.well-known/margin.json", SOURCE)
         self.assertIn("challenge_assured_claim", SOURCE)
@@ -95,11 +102,14 @@ class ContractInvariantTests(unittest.TestCase):
 
     def test_consumer_reads_finalized_state_from_contract(self):
         self.assertIn("get_assured_claim", CONSUMER_SOURCE)
+        self.assertIn("is_claim_supported", CONSUMER_SOURCE)
         self.assertIn("canonical_margin_address: Address", CONSUMER_SOURCE)
-        self.assertIn("margin = MarginInterface(self.canonical_margin_address)", CONSUMER_SOURCE)
+        self.assertIn("MarginGate(self.canonical_margin_address)", CONSUMER_SOURCE)
         self.assertNotIn("execute_if_supported(self, margin_address", CONSUMER_SOURCE)
         self.assertIn('receipt.get("state") != "SETTLED"', CONSUMER_SOURCE)
         self.assertIn('receipt.get("final_status") != "SUPPORTED"', CONSUMER_SOURCE)
+        self.assertIn("create_protected_release", CONSUMER_SOURCE)
+        self.assertIn("refund_release", CONSUMER_SOURCE)
 
 if __name__ == '__main__':
     unittest.main()

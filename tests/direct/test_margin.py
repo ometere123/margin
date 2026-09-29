@@ -31,7 +31,7 @@ def claim_key_for(statement, evidence, archive=""):
 
 def submit(contract, suffix="1", evidence=None):
     evidence = evidence if evidence is not None else ["https://example.com/docs/support"]
-    statement = "The current support matrix appears to require Node 20 or newer."
+    statement = "The current support matrix appears to require Node 20 or newer." if suffix == "1" else f"The current support matrix appears to require Node 20 or newer ({suffix})."
     claim_key = claim_key_for(statement, evidence)
     contract.submit_claim(
         claim_key,
@@ -185,6 +185,7 @@ def test_consensus_semantics_tolerate_validator_observation_variation(direct_vm,
 
     def candidate(manifest, supporting, contradicting, status="SUPPORTED", claim_present=True):
         digest = contract._source_manifest_digest(manifest)
+        source_set_digest = contract._source_set_digest(identities)
         return {
             "status": status,
             "rationale": "bounded explanation",
@@ -193,8 +194,9 @@ def test_consensus_semantics_tolerate_validator_observation_variation(direct_vm,
             "contradicting_source_indexes": contradicting,
             "historical_evidence_used": False,
             "source_manifest_digest": digest,
+            "source_set_digest": source_set_digest,
             "source_manifest": manifest,
-            "adjudication_context_digest": contract._adjudication_context_digest(digest, "", 0),
+            "adjudication_context_digest": contract._adjudication_context_digest(source_set_digest, "", 0, "NORMAL"),
         }
 
     leader = candidate(leader_manifest, [0], [])
@@ -221,7 +223,7 @@ def test_network_metadata_is_studionet(direct_vm, direct_deploy):
     assert network["network"] == "studionet"
 
 
-def test_manifest_is_committed_and_unchanged_refresh_is_rejected(direct_vm, direct_deploy, direct_alice):
+def test_normal_refresh_requires_cooldown_but_same_source_is_allowed_afterwards(direct_vm, direct_deploy, direct_alice):
     contract = direct_deploy("contracts/margin.py")
     direct_vm.sender = direct_alice
     key = submit(contract)
@@ -239,8 +241,11 @@ def test_manifest_is_committed_and_unchanged_refresh_is_rejected(direct_vm, dire
     }))
     contract.resolve_claim(key)
     assert contract.get_claim(key)["source_manifest_digest"] == digest
-    with direct_vm.expect_revert("source manifest unchanged"):
+    with direct_vm.expect_revert("normal refresh cooldown has not elapsed"):
         contract.resolve_claim(key)
+    direct_vm.warp("2999-01-02T00:00:00+00:00")
+    contract.resolve_claim(key)
+    assert contract.get_claim(key)["revision"] == 2
 
 
 def test_assured_claim_domain_proof_and_bond_lifecycle(direct_vm, direct_deploy, direct_alice, direct_bob, direct_charlie):
@@ -334,7 +339,7 @@ def test_assured_claim_rejects_expired_domain_proof(direct_vm, direct_deploy, di
     })
     direct_vm.mock_web(r".*example\.com/\.well-known/margin\.json", {"status": 200, "body": proof})
     direct_vm.value = 1
-    with direct_vm.expect_revert("domain proof could not be independently verified"):
+    with direct_vm.expect_revert("proof expiry must be in the future"):
         contract.register_assured_claim(
             key,
             "https://example.com/.well-known/margin.json",
@@ -432,3 +437,128 @@ def test_assured_appeal_requires_new_source_and_settles_once(direct_vm, direct_d
         contract.settle_assured_claim(key)
     with direct_vm.expect_revert("assured claim is not appealable"):
         contract.appeal_assured_claim(key, "A settled claim cannot be appealed.")
+
+
+def _register_for_lifecycle(contract, direct_vm, direct_alice, key, expiry="2999-01-01T00:00:00+00:00"):
+    publisher = "0x" + direct_alice.hex()
+    proof = json.dumps({
+        "protocol_version": 2,
+        "domain": "example.com",
+        "publisher_wallet": publisher,
+        "nonce": "lifecycle-nonce",
+        "claim_key": key,
+        "expiry": expiry,
+    })
+    direct_vm.clear_mocks()
+    direct_vm.mock_web(r".*example\.com/\.well-known/margin\.json", {"status": 200, "body": proof})
+    direct_vm.sender = direct_alice
+    direct_vm.value = 1
+    contract.register_assured_claim(key, "https://example.com/.well-known/margin.json", "lifecycle-nonce", expiry)
+
+
+def test_publisher_can_cancel_unchallenged_assured_claim_once(direct_vm, direct_deploy, direct_alice):
+    contract = direct_deploy("contracts/margin.py")
+    direct_vm.sender = direct_alice
+    key = submit(contract)
+    _register_for_lifecycle(contract, direct_vm, direct_alice, key)
+    contract.cancel_assured_claim(key)
+    assured = contract.get_assured_claim(key)
+    assert assured["state"] == "CANCELLED"
+    assert assured["publisher_credit"] == 1
+    with direct_vm.expect_revert("assured claim cannot be cancelled"):
+        contract.cancel_assured_claim(key)
+
+
+def test_stalled_challenge_can_abort_and_refund_both_bonds(direct_vm, direct_deploy, direct_alice, direct_bob):
+    contract = direct_deploy("contracts/margin.py")
+    direct_vm.sender = direct_alice
+    key = submit(contract)
+    _register_for_lifecycle(contract, direct_vm, direct_alice, key)
+    direct_vm.sender = direct_bob
+    direct_vm.value = 1
+    contract.challenge_assured_claim(key)
+    direct_vm.warp("2999-01-03T00:00:00+00:00")
+    direct_vm.sender = direct_bob
+    contract.abort_stalled(key)
+    assured = contract.get_assured_claim(key)
+    assert assured["state"] == "ABORTED"
+    assert assured["publisher_credit"] == 1
+    assert assured["challenger_credit"] == 1
+
+
+def test_proof_expiry_requires_timezone_and_normalizes_offsets(direct_vm, direct_deploy, direct_alice):
+    contract = direct_deploy("contracts/margin.py")
+    direct_vm.sender = direct_alice
+    key = submit(contract)
+    expiry = "2999-01-01T01:00:00+01:00"
+    publisher = "0x" + direct_alice.hex()
+    proof = json.dumps({"protocol_version": 2, "domain": "example.com", "publisher_wallet": publisher, "nonce": "offset-nonce", "claim_key": key, "expiry": expiry})
+    direct_vm.mock_web(r".*well-known/margin\.json", {"status": 200, "body": proof})
+    direct_vm.value = 1
+    contract.register_assured_claim(key, "https://example.com/.well-known/margin.json", "offset-nonce", expiry)
+    assert contract.get_assured_claim(key)["proof_expires_at"] == "2999-01-01T00:00:00+00:00"
+
+    key2 = submit(contract, suffix="naive")
+    direct_vm.mock_web(r".*well-known/margin\.json", {"status": 200, "body": proof.replace(key, key2).replace(expiry, "2999-01-01T00:00:00")})
+    with direct_vm.expect_revert("proof expiry must include a timezone"):
+        contract.register_assured_claim(key2, "https://example.com/.well-known/margin.json", "offset-nonce", "2999-01-01T00:00:00")
+
+
+def test_proof_expiry_rejects_malformed_and_mismatched_fetch_values(direct_vm, direct_deploy, direct_alice):
+    contract = direct_deploy("contracts/margin.py")
+    direct_vm.sender = direct_alice
+    key = submit(contract, suffix="malformed-expiry")
+    direct_vm.value = 1
+    with direct_vm.expect_revert("proof expiry must be a valid ISO datetime"):
+        contract.register_assured_claim(key, "https://example.com/.well-known/margin.json", "malformed-nonce", "9999-not-a-date")
+
+    key2 = submit(contract, suffix="mismatched-expiry")
+    submitted = "2999-01-01T00:00:00+00:00"
+    fetched = "2999-01-02T00:00:00+00:00"
+    publisher = "0x" + direct_alice.hex()
+    proof = json.dumps({"protocol_version": 2, "domain": "example.com", "publisher_wallet": publisher, "nonce": "mismatch-nonce", "claim_key": key2, "expiry": fetched})
+    direct_vm.clear_mocks()
+    direct_vm.mock_web(r".*well-known/margin\.json", {"status": 200, "body": proof})
+    with direct_vm.expect_revert("domain proof could not be independently verified"):
+        contract.register_assured_claim(key2, "https://example.com/.well-known/margin.json", "mismatch-nonce", submitted)
+
+
+def test_normal_revision_capacity_does_not_consume_assured_slots(direct_vm, direct_deploy, direct_alice, direct_bob):
+    contract = direct_deploy("contracts/margin.py")
+    direct_vm.sender = direct_alice
+    key = submit(contract)
+    body = "Support matrix: Runtime 4.2 supports Node 18 in production."
+
+    def resolve_normal():
+        direct_vm.clear_mocks()
+        direct_vm.mock_web(r".*example\.com.*", {"status": 200, "body": body})
+        direct_vm.mock_llm(r".*MARGIN web-claim challenge.*", json.dumps({"status": "SUPPORTED", "rationale": "Evidence supports the claim.", "claim_present": True, "supporting_source_indexes": [0], "contradicting_source_indexes": [], "historical_evidence_used": False}))
+        contract.resolve_claim(key)
+
+    resolve_normal()
+    direct_vm.warp("2999-01-02T00:00:00+00:00")
+    resolve_normal()
+    direct_vm.warp("2999-01-03T00:00:00+00:00")
+    resolve_normal()
+    assert contract.get_claim(key)["revision"] == 3
+
+    _register_for_lifecycle(contract, direct_vm, direct_alice, key, "3000-01-01T00:00:00+00:00")
+    direct_vm.sender = direct_bob
+    direct_vm.value = 1
+    contract.challenge_assured_claim(key)
+    direct_vm.clear_mocks()
+    direct_vm.mock_web(r".*example\.com.*", {"status": 200, "body": body})
+    direct_vm.mock_llm(r".*MARGIN web-claim challenge.*", json.dumps({"status": "SUPPORTED", "rationale": "Assured evidence supports the claim.", "claim_present": True, "supporting_source_indexes": [0], "contradicting_source_indexes": [], "historical_evidence_used": False}))
+    direct_vm.sender = direct_bob
+    contract.resolve_assured_claim(key)
+    assert contract.get_claim(key)["revision"] == 4
+
+    direct_vm.value = 1
+    contract.appeal_assured_claim(key, "A bounded appeal contention requires reconsideration.")
+    direct_vm.clear_mocks()
+    direct_vm.mock_web(r".*example\.com.*", {"status": 200, "body": body})
+    direct_vm.mock_llm(r".*MARGIN web-claim challenge.*", json.dumps({"status": "SUPPORTED", "rationale": "The appeal remains supported.", "claim_present": True, "supporting_source_indexes": [0], "contradicting_source_indexes": [], "historical_evidence_used": False}))
+    contract.resolve_assured_appeal(key)
+    assert contract.get_claim(key)["revision"] == 5
+    with direct_vm.expect_revert("maximum normal decision revisions reached"):
+        contract.resolve_claim(key)
