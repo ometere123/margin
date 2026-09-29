@@ -1,4 +1,4 @@
-import { CLAIM_CLASSES, MARGIN_SIGNER_URL, canonicalizeUrl, claimKeyFor, encodeDraft, pageKeyFor, type ClaimClass, type ClaimDraft, type MarginClaim } from '../../shared/protocol';
+import { CLAIM_CLASSES, MARGIN_CONTRACT_ADDRESS, MARGIN_EXPLORER_URL, MARGIN_SIGNER_URL, canonicalizeUrl, claimKeyFor, encodeDraft, pageKeyFor, type ClaimClass, type ClaimDraft, type MarginClaim } from '../../shared/protocol';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
@@ -11,7 +11,10 @@ function shell(inner: string) {
 }
 
 function claimView(claim: MarginClaim) {
-  shell(`<div class="card"><div class="status ${esc(claim.status)}">${esc(claim.status)}</div><div class="quote">${esc(claim.quote)}</div><div class="muted">${esc(claim.rationale || 'This claim has not been resolved yet.')}</div></div><div class="card"><div class="label">Challenge</div><div class="muted">${esc(claim.challenge_statement)}</div><div class="label">Class</div><div class="muted">${esc(claim.claim_class)}</div><div class="label">Claim key</div><div class="code">${esc(claim.claim_key)}</div></div><button id="refresh" class="secondary">Refresh page annotations</button>`);
+  let evidence: string[] = [];
+  try { const parsed = JSON.parse(claim.evidence_urls_json || '[]'); if (Array.isArray(parsed)) evidence = parsed.map(String); } catch {}
+  const manifest = claim.latest_manifest ? JSON.stringify(claim.latest_manifest, null, 2) : 'No finalized source manifest returned.';
+  shell(`<div class="card"><div class="status ${esc(claim.status)}">${esc(claim.status)} · FINALIZED</div><div class="quote">${esc(claim.quote)}</div><div class="muted">${esc(claim.rationale || 'No rationale recorded.')}</div></div><div class="card"><div class="label">Challenge</div><div class="muted">${esc(claim.challenge_statement)}</div><div class="label">Class</div><div class="muted">${esc(claim.claim_class)}</div><div class="label">Revision</div><div class="muted">${esc(String(claim.revision))}</div><div class="label">Resolved</div><div class="muted">${esc(claim.resolved_at || 'Not resolved')}</div><div class="label">Claim key</div><div class="code">${esc(claim.claim_key)}</div><div class="label">Evidence URLs</div><div class="muted">${evidence.length ? evidence.map((url) => `<a href="${esc(url)}" target="_blank" rel="noreferrer">${esc(url)} ↗</a>`).join('<br>') : 'None recorded.'}</div><div class="label">Source manifest</div><pre class="code">${esc(manifest)}</pre><div class="muted"><a href="${MARGIN_EXPLORER_URL}/address/${MARGIN_CONTRACT_ADDRESS}" target="_blank" rel="noreferrer">MARGIN contract in Studionet Explorer ↗</a></div></div><button id="refresh" class="secondary">Refresh page annotations</button>`);
   document.querySelector('#refresh')?.addEventListener('click', async () => {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (tab?.id) await chrome.tabs.sendMessage(tab.id, { type: 'REFRESH_ANNOTATIONS' });

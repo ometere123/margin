@@ -86,6 +86,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // rejects in Chrome. Store the selected claim and let the user open the
     // panel with the extension action; context-menu launches still open it in
     // their gesture-backed handler above.
+    if (sender.tab?.id !== undefined) void chrome.sidePanel.open({ tabId: sender.tab.id }).catch(() => undefined);
     chrome.storage.session.set({ selectedClaim: message.claim, pendingDraft: null, panelError: '' }).then(async () => {
       try {
         sendResponse({ ok: true });

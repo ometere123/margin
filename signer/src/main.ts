@@ -1,10 +1,11 @@
 import { createClient } from 'genlayer-js';
 import { studionet } from 'genlayer-js/chains';
 import { TransactionHashVariant } from 'genlayer-js/types';
-import { canonicalizeUrl, claimKeyFor, decodeDraft, MARGIN_CHAIN_ID, MARGIN_NETWORK_NAME, MARGIN_RPC_URL, pageKeyFor, type ClaimDraft, type MarginClaim } from '../../shared/protocol';
+import { canonicalizeUrl, claimKeyFor, decodeDraft, MARGIN_CHAIN_ID, MARGIN_CONSUMER_ADDRESS, MARGIN_EXPLORER_URL, MARGIN_NETWORK_NAME, MARGIN_RPC_URL, pageKeyFor, type ClaimDraft, type MarginClaim } from '../../shared/protocol';
 import { disconnectStorageKey, executionSummary, isSuccessfulFinalizedReceipt, pendingAccountMatches, trackingFailureMessage, transactionsStorageKey, type PendingTransaction } from './transaction';
 import { createProviderBackedClient } from './wallet';
 import { accountFromProvider, accountRequestMethod, isStudionetChainHex, shouldAutoRestore } from './session';
+import { assuredActions, assuredDisplay, type AssuredClaimView, type AssuredAction } from './assured';
 import './style.css';
 
 declare global {
@@ -28,6 +29,9 @@ let transactions: PendingTransaction[] = [];
 let chainCorrect = false;
 let statusMessage = '';
 let listenersBound = false;
+let assuredClaim: AssuredClaimView | null = null;
+let assuredError = '';
+let consumerExecuted: boolean | null = null;
 
 
 function esc(v: string) { return v.replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]!)); }
@@ -46,10 +50,21 @@ function transactionCards() {
   }).join('');
 }
 
+function contractLink(address: string) { return `<a href="${MARGIN_EXPLORER_URL}/address/${encodeURIComponent(address)}" target="_blank" rel="noreferrer">View contract in Explorer ↗</a>`; }
+
+function assuredPanel() {
+  if (!draft) return '';
+  const actions = assuredActions(assuredClaim, account);
+  const state = assuredClaim ? String(assuredClaim.state || 'UNKNOWN') : 'NOT REGISTERED';
+  const rows = assuredClaim ? `<div class="assured-grid"><span>Publisher</span><code>${esc(assuredDisplay(assuredClaim.publisher))}</code><span>Challenger</span><code>${esc(assuredDisplay(assuredClaim.challenger))}</code><span>Publisher bond</span><code>${esc(assuredDisplay(assuredClaim.publisher_bond))}</code><span>Challenge bond</span><code>${esc(assuredDisplay(assuredClaim.challenge_bond))}</code><span>Final status</span><strong>${esc(assuredDisplay(assuredClaim.final_status))}</strong><span>Appeal deadline</span><code>${esc(assuredDisplay(assuredClaim.appeal_deadline))}</code><span>Appeal count</span><code>${esc(assuredDisplay(assuredClaim.appeal_count))}</code><span>Publisher credit</span><code>${esc(assuredDisplay(assuredClaim.publisher_credit))}</code><span>Challenger credit</span><code>${esc(assuredDisplay(assuredClaim.challenger_credit))}</code><span>Settled</span><strong>${assuredClaim.settled ? 'Yes' : 'No'}</strong></div>` : '<p class="meta">No Assured Claim is registered for this claim key yet.</p>';
+  const action = (name: AssuredAction, label: string) => actions.includes(name) ? `<button class="dark" data-assured-action="${name}">${label}</button>` : '';
+  return `<section><div class="eyebrow">Assured Claim</div><div class="row"><strong>${esc(state)}</strong><span class="meta">Optional bonded lifecycle</span></div>${rows}${state === 'NOT REGISTERED' ? '<label for="proof-url">Domain proof URL</label><input id="proof-url" value="" placeholder="https://example.com/.well-known/margin.json"><label for="proof-nonce">Proof nonce</label><input id="proof-nonce" value="" placeholder="Publisher nonce"><label for="proof-expiry">Proof expiry (Unix seconds)</label><input id="proof-expiry" value="" placeholder="e.g. 1790000000">' : ''}<label for="appeal-reason">Appeal reason</label><textarea id="appeal-reason" maxlength="800" placeholder="Bounded new evidence or adjudication issue"></textarea><div class="row assured-actions">${action('register','Register Assured Claim')}${action('challenge','Challenge Assured Claim')}${action('resolve','Resolve Assured Claim')}${action('appeal','Appeal Assured Claim')}${action('resolveAppeal','Resolve Assured Appeal')}${action('settle','Settle Assured Claim')}${action('withdraw','Withdraw Assured Credit')}</div><p class="meta">${assuredError ? esc(assuredError) : 'Bonds, deadlines and credits are read from the canonical MARGIN contract.'}</p><p class="meta">${contractLink(contractAddress)}</p><div class="consumer-proof"><div class="eyebrow">Reference consumer proof</div><p class="meta">Bound consumer: ${esc(MARGIN_CONSUMER_ADDRESS)}</p><p>${consumerExecuted === true ? 'Settled SUPPORTED claim: downstream execution permitted and recorded ✓' : consumerExecuted === false ? 'Downstream execution has not been recorded for this claim.' : 'Consumer read unavailable until this claim is settled SUPPORTED.'}</p><button id="refresh-assured" class="quiet">Refresh Assured state</button></div></section>`;
+}
+
 function render(message = '') {
   const ready = draftVerified && contractVerified && isConnected();
   const walletButton = account ? `<span class="hash">${esc(account.slice(0,8)+'…'+account.slice(-6))}</span><button id="disconnect" class="quiet">Disconnect</button>` : '<button id="connect" class="dark">Connect wallet</button>';
-  app.innerHTML = `<main><header><div><div class="wordmark">MARGIN</div><div class="sub">wallet signer</div></div><span class="pill">${chainCorrect ? `Studionet · ${MARGIN_CHAIN_ID}` : 'Wallet not on Studionet'}</span></header>${message ? `<div class="notice">${esc(message)}</div>` : ''}${contractError ? `<div class="notice">${esc(contractError)}</div>` : ''}${draftError ? `<div class="notice">${esc(draftError)}</div>` : ''}<section><div class="eyebrow">Deployment</div><div class="row"><strong>Contract</strong><span class="hash">${validAddress(contractAddress) ? `${esc(contractAddress.slice(0,8))}…${esc(contractAddress.slice(-6))}` : 'missing configuration'}</span><span class="meta">${contractVerified ? 'Verified ✓' : 'Verifying…'}</span></div><small>Studionet · ${MARGIN_CHAIN_ID} · ${MARGIN_RPC_URL}</small></section>${draft ? `<section><div class="eyebrow">Highlighted claim</div><blockquote>${esc(draft.anchor.exact)}</blockquote><div class="meta">${esc(draft.claimClass)} · ${esc(draft.canonicalUrl)}</div><h3>Challenge</h3><p>${esc(draft.challengeStatement)}</p><div class="eyebrow">Public evidence</div><p>${draft.evidenceUrls.length ? draft.evidenceUrls.map((url) => esc(url)).join('<br>') : 'No additional evidence URLs supplied.'}</p>${draft.archiveUrl ? `<div class="eyebrow">Archive</div><p>${esc(draft.archiveUrl)}</p>` : ''}<div class="eyebrow">Claim key</div><div class="hash">${esc(draft.claimKey)}</div></section>` : `<section><h3>No challenge draft</h3><p>Start from the MARGIN extension by highlighting a public claim.</p></section>`}<section><div class="row">${walletButton}${draft ? `<button id="submit" class="accent" ${ready ? '' : 'disabled'}>Submit challenge</button><button id="resolve" ${ready ? '' : 'disabled'}>Resolve</button>` : ''}</div><div id="status">${statusMessage}</div></section>${transactions.length ? `<section><div class="eyebrow">Transaction provenance</div>${transactionCards()}</section>` : ''}</main>`;
+  app.innerHTML = `<main><header><div><div class="wordmark">MARGIN</div><div class="sub">wallet signer</div></div><span class="pill">${chainCorrect ? `Studionet · ${MARGIN_CHAIN_ID}` : 'Wallet not on Studionet'}</span></header>${message ? `<div class="notice">${esc(message)}</div>` : ''}${contractError ? `<div class="notice">${esc(contractError)}</div>` : ''}${draftError ? `<div class="notice">${esc(draftError)}</div>` : ''}<section><div class="eyebrow">Deployment</div><div class="row"><strong>Contract</strong><span class="hash">${validAddress(contractAddress) ? `${esc(contractAddress.slice(0,8))}…${esc(contractAddress.slice(-6))}` : 'missing configuration'}</span><span class="meta">${contractVerified ? 'Verified ✓' : 'Verifying…'}</span></div><small>Studionet · ${MARGIN_CHAIN_ID} · ${MARGIN_RPC_URL}</small></section>${draft ? `<section><div class="eyebrow">Highlighted claim</div><blockquote>${esc(draft.anchor.exact)}</blockquote><div class="meta">${esc(draft.claimClass)} · ${esc(draft.canonicalUrl)}</div><h3>Challenge</h3><p>${esc(draft.challengeStatement)}</p><div class="eyebrow">Public evidence</div><p>${draft.evidenceUrls.length ? draft.evidenceUrls.map((url) => esc(url)).join('<br>') : 'No additional evidence URLs supplied.'}</p>${draft.archiveUrl ? `<div class="eyebrow">Archive</div><p>${esc(draft.archiveUrl)}</p>` : ''}<div class="eyebrow">Claim key</div><div class="hash">${esc(draft.claimKey)}</div></section>` : `<section><h3>No challenge draft</h3><p>Start from the MARGIN extension by highlighting a public claim.</p></section>`}${assuredPanel()}<section><div class="row">${walletButton}${draft ? `<button id="submit" class="accent" ${ready ? '' : 'disabled'}>Submit challenge</button><button id="resolve" ${ready ? '' : 'disabled'}>Resolve</button>` : ''}</div><div id="status">${statusMessage}</div></section>${transactions.length ? `<section><div class="eyebrow">Transaction provenance</div>${transactionCards()}</section>` : ''}</main>`;
   bind();
 }
 
@@ -272,11 +287,61 @@ async function resolveClaim() {
   setStatus(`<div class="ok"><strong>Resolution finalized ✓</strong><br>${esc(String(resolved.status))}<br>${esc(String(resolved.rationale || ''))}<br>${txLink(txId)}</div>`);
 }
 
+async function readAssuredState(redraw = true) {
+  if (!draft || !validAddress(contractAddress) || !contractVerified) return;
+  try {
+    const readClient = createClient({ chain: studionet });
+    const value = await readClient.readContract({ address: contractAddress, functionName: 'get_assured_claim', args: [draft.claimKey], transactionHashVariant: TransactionHashVariant.LATEST_FINAL }) as AssuredClaimView;
+    assuredClaim = value && Object.keys(value as object).length ? value : null;
+    consumerExecuted = null;
+    if (assuredClaim && String(assuredClaim.state).toUpperCase() === 'SETTLED' && String(assuredClaim.final_status).toUpperCase() === 'SUPPORTED') {
+      consumerExecuted = Boolean(await readClient.readContract({ address: MARGIN_CONSUMER_ADDRESS, functionName: 'has_executed', args: [draft.claimKey], transactionHashVariant: TransactionHashVariant.LATEST_FINAL }));
+    }
+    assuredError = '';
+  } catch (error) {
+    assuredError = `Assured state read unavailable: ${String((error as Error).message || error)}`;
+  }
+  if (redraw) render();
+}
+
+async function runAssuredAction(action: AssuredAction) {
+  if (!draft) throw new Error('Missing challenge draft.');
+  if (!isConnected()) throw new Error('Connect the wallet on Studionet 61999 first.');
+  if (!assuredActions(assuredClaim, account).includes(action)) throw new Error('This Assured Claim action is not valid for the current state or wallet.');
+  const client = await walletClient();
+  const proofUrl = (document.querySelector<HTMLInputElement>('#proof-url')?.value || '').trim();
+  const proofNonce = (document.querySelector<HTMLInputElement>('#proof-nonce')?.value || '').trim();
+  const proofExpiry = (document.querySelector<HTMLInputElement>('#proof-expiry')?.value || '').trim();
+  const appealReason = (document.querySelector<HTMLTextAreaElement>('#appeal-reason')?.value || '').trim();
+  if (action === 'register' && (!proofUrl || !proofNonce || !proofExpiry)) throw new Error('Provide the HTTPS domain proof URL, nonce and expiry.');
+  if (action === 'register' && !/^https:\/\//i.test(proofUrl)) throw new Error('Domain proof must use HTTPS.');
+  if (action === 'appeal' && appealReason.length < 12) throw new Error('Provide a precise bounded appeal reason.');
+  const definitions: Record<AssuredAction, { functionName: string; args: unknown[]; value: bigint }> = {
+    register: { functionName: 'register_assured_claim', args: [draft.claimKey, proofUrl, proofNonce, proofExpiry], value: 1n },
+    challenge: { functionName: 'challenge_assured_claim', args: [draft.claimKey], value: 1n },
+    resolve: { functionName: 'resolve_assured_claim', args: [draft.claimKey], value: 0n },
+    appeal: { functionName: 'appeal_assured_claim', args: [draft.claimKey, appealReason], value: 1n },
+    resolveAppeal: { functionName: 'resolve_assured_appeal', args: [draft.claimKey], value: 0n },
+    settle: { functionName: 'settle_assured_claim', args: [draft.claimKey], value: 0n },
+    withdraw: { functionName: 'withdraw_assured_credit', args: [draft.claimKey], value: 0n },
+  };
+  const definition = definitions[action];
+  setStatus('<div class="pending">Confirm the Assured Claim transaction in your wallet…</div>');
+  const txId = await client.writeContract({ address: contractAddress, functionName: definition.functionName, args: definition.args, value: definition.value } as any);
+  setStatus(`<div class="pending">${esc(definition.functionName)} submitted. Waiting for finalization…<br>${txLink(txId)}</div>`);
+  await waitForFinalizedSuccess(client, txId, definition.functionName);
+  setStatus(`<div class="ok"><strong>${esc(definition.functionName)} finalized ✓</strong><br>${txLink(txId)}</div>`);
+  await readAssuredState(false);
+  render();
+}
+
 function bind() {
   document.querySelector('#connect')?.addEventListener('click', () => connect(true).catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`)));
   document.querySelector('#disconnect')?.addEventListener('click', disconnect);
   document.querySelector('#submit')?.addEventListener('click', () => submitClaim().catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`)));
   document.querySelector('#resolve')?.addEventListener('click', () => resolveClaim().catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`)));
+  document.querySelector('#refresh-assured')?.addEventListener('click', () => readAssuredState().catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`)));
+  document.querySelectorAll<HTMLElement>('[data-assured-action]').forEach((button) => button.addEventListener('click', () => runAssuredAction(button.dataset.assuredAction as AssuredAction).catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`))));
   document.querySelectorAll<HTMLElement>('[data-resume]').forEach((button) => button.addEventListener('click', () => resumeTransaction(button.dataset.resume!).catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`))));
 }
 
@@ -294,6 +359,7 @@ async function initialize() {
       if (stored) transactions = JSON.parse(stored) as PendingTransaction[];
     } catch { transactions = []; }
   }
+  await readAssuredState(false);
   bindProviderListeners();
   if (window.ethereum && shouldAutoRestore(localStorage.getItem(disconnectStorageKey()))) {
     try { await connect(false); } catch { chainCorrect = false; }

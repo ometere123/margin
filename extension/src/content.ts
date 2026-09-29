@@ -1,5 +1,6 @@
 import { canonicalizeUrl, normalizeText, pageKeyFor, sha256Hex, type MarginClaim, type TextAnchor } from '../../shared/protocol';
 import { findRangeDetailed } from './anchor';
+import { badgePosition } from './badge';
 
 const marginContentGlobal = globalThis as typeof globalThis & { __MARGIN_CONTENT_ACTIVE__?: boolean };
 if (!marginContentGlobal.__MARGIN_CONTENT_ACTIVE__) {
@@ -81,6 +82,7 @@ async function captureSelection() {
 }
 
 const badges = new Map<string, HTMLButtonElement>();
+const badgeRanges = new Map<string, Range>();
 let activeHighlight: any = null;
 let activeProvenance: HTMLElement | null = null;
 let lastDiagnostics: Record<string, unknown> = {};
@@ -94,11 +96,29 @@ function debug(event: string, details: Record<string, unknown> = {}) {
 function clearAnnotations() {
   for (const badge of badges.values()) badge.remove();
   badges.clear();
+  badgeRanges.clear();
   activeProvenance?.remove();
   activeProvenance = null;
   const cssHighlights = (globalThis as any).CSS?.highlights;
   cssHighlights?.delete('margin-claims');
   activeHighlight = null;
+}
+
+function positionBadge(claimKey: string) {
+  const badge = badges.get(claimKey);
+  const range = badgeRanges.get(claimKey);
+  if (!badge || !range) return;
+  const rects = [...range.getClientRects()].filter((rect) => rect.width > 0 && rect.height > 0);
+  if (!rects.length) { badge.hidden = true; return; }
+  const visible = rects.find((rect) => rect.bottom >= 0 && rect.top <= window.innerHeight) || rects[0];
+  badge.hidden = false;
+  const placement = badgePosition(visible, { width: window.innerWidth, height: window.innerHeight }, { width: badge.offsetWidth || 120, height: badge.offsetHeight || 24 });
+  badge.style.left = `${placement.left}px`;
+  badge.style.top = `${placement.top}px`;
+}
+
+function repositionBadges() {
+  for (const claimKey of badges.keys()) positionBadge(claimKey);
 }
 
 function showProvenance(claim: MarginClaim, badge: HTMLButtonElement) {
@@ -178,9 +198,9 @@ function annotate(claim: MarginClaim, ranges: Range[], aggregateCount = 1) {
   const range = match.range;
   if (!range) return;
   ranges.push(range);
-  const rect = range.getBoundingClientRect();
-  if (!rect.width && !rect.height) {
-    debug('anchor-zero-rect', { claimKey: claim.claim_key, width: rect.width, height: rect.height });
+  const rects = [...range.getClientRects()].filter((item) => item.width > 0 && item.height > 0);
+  if (!rects.length) {
+    debug('anchor-zero-rect', { claimKey: claim.claim_key, rectCount: 0 });
     return;
   }
   const badge = document.createElement('button');
@@ -191,8 +211,6 @@ function annotate(claim: MarginClaim, ranges: Range[], aggregateCount = 1) {
   badge.setAttribute('aria-label', aggregateCount > 1 ? `MARGIN ${claim.status}, ${aggregateCount} claims` : `MARGIN ${claim.status}`);
   badge.title = aggregateCount > 1 ? `${aggregateCount} MARGIN claims on this text. ${claim.rationale || ''}` : (claim.rationale || 'Open MARGIN claim');
   badge.setAttribute('aria-expanded', 'false');
-  badge.style.top = `${Math.max(0, rect.bottom + window.scrollY + 3)}px`;
-  badge.style.left = `${Math.max(4, Math.min(document.documentElement.scrollWidth - 120, rect.left + window.scrollX))}px`;
   badge.addEventListener('click', (event) => {
     event.preventDefault(); event.stopPropagation();
     showProvenance(claim, badge);
@@ -202,7 +220,9 @@ function annotate(claim: MarginClaim, ranges: Range[], aggregateCount = 1) {
   });
   document.documentElement.appendChild(badge);
   badges.set(claim.claim_key, badge);
-  debug('badge-added', { claimKey: claim.claim_key, badgeCount: badges.size, width: rect.width, height: rect.height });
+  badgeRanges.set(claim.claim_key, range);
+  positionBadge(claim.claim_key);
+  debug('badge-added', { claimKey: claim.claim_key, badgeCount: badges.size, rectCount: rects.length, width: rects[0].width, height: rects[0].height });
 }
 
 let cachedClaims: MarginClaim[] = [];
@@ -321,6 +341,8 @@ void pageKeyFor(preferredCanonicalUrl()); // warm WebCrypto and keep shared deri
 void refresh();
 window.addEventListener('pageshow', () => void refresh());
 window.addEventListener('resize', scheduleReanchor, { passive: true });
+window.addEventListener('scroll', repositionBadges, { passive: true, capture: true });
+window.addEventListener('resize', repositionBadges, { passive: true });
 
 const domObserver = new MutationObserver((mutations) => {
   const relevant = mutations.some((mutation) => {

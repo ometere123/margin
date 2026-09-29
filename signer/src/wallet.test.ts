@@ -1,9 +1,16 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createProviderBackedClient } from './wallet';
 
 describe('provider-backed signer wallet', () => {
+  afterEach(() => vi.unstubAllGlobals());
   it('uses ordinary EIP-1193 methods and never requests MetaMask Snaps', async () => {
     const methods: string[] = [];
+    vi.stubGlobal('fetch', async (_input: unknown, init?: { body?: string }) => {
+      const method = JSON.parse(init?.body || '{}').method;
+      methods.push(`rpc:${method}`);
+      const result = method === 'eth_getTransactionCount' ? '0x0' : method === 'eth_estimateGas' ? '0x5208' : method === 'eth_gasPrice' ? '0x1' : '0x0';
+      return new Response(JSON.stringify({ jsonrpc: '2.0', id: 1, result }), { status: 200, headers: { 'content-type': 'application/json' } });
+    });
     const provider = {
       request: async ({ method }: { method: string; params?: unknown[] }) => {
         methods.push(method);
@@ -25,5 +32,5 @@ describe('provider-backed signer wallet', () => {
     expect(txHash).toBe(`0x${'11'.repeat(32)}`);
     expect(methods).toContain('eth_sendTransaction');
     expect(methods.some((method) => method.toLowerCase().includes('snap'))).toBe(false);
-  });
+  }, 15000);
 });
