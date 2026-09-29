@@ -28,6 +28,7 @@ MAX_DOMAIN_PROOF_CHARS = 8000
 MIN_ASSURANCE_BOND = 1
 MIN_CHALLENGE_BOND = 1
 ASSURED_APPEAL_WINDOW_SECONDS = 3600
+ASSURED_CHALLENGE_WINDOW_SECONDS = 86400
 NORMAL_REFRESH_COOLDOWN_SECONDS = 86400
 RESOLVE_TIMEOUT_SECONDS = 86400
 
@@ -569,6 +570,9 @@ class Margin(gl.Contract):
         record = gl.storage.copy_to_memory(self.assured_claims[claim_key])
         if record.state != "REGISTERED":
             raise gl.vm.UserError("assured claim is not open for challenge")
+        registered_at = self._parse_iso_utc(record.state_started_at, "registration start")
+        if datetime.now(timezone.utc) >= registered_at + timedelta(seconds=ASSURED_CHALLENGE_WINDOW_SECONDS):
+            raise gl.vm.UserError("assured challenge window has closed")
         if gl.message.sender_address == record.publisher:
             raise gl.vm.UserError("publisher cannot challenge its own assured claim")
         if int(gl.message.value) < MIN_CHALLENGE_BOND:
@@ -589,6 +593,9 @@ class Margin(gl.Contract):
             raise gl.vm.UserError("assured claim cannot be cancelled")
         if gl.message.sender_address != record.publisher:
             raise gl.vm.UserError("only the publisher may cancel")
+        registered_at = self._parse_iso_utc(record.state_started_at, "registration start")
+        if datetime.now(timezone.utc) < registered_at + timedelta(seconds=ASSURED_CHALLENGE_WINDOW_SECONDS):
+            raise gl.vm.UserError("assured challenge window is still open")
         record.publisher_credit = record.publisher_credit + record.publisher_bond
         record.publisher_bond = u256(0)
         record.state = "CANCELLED"
@@ -630,7 +637,7 @@ class Margin(gl.Contract):
         record = self.assured_claims[claim_key]
         if record.state != "CHALLENGED":
             raise gl.vm.UserError("assured claim is not ready for resolution")
-        context_digest = self._resolve_claim_internal(claim_key, "", 1, "ASSURED_INITIAL")
+        context_digest = self._resolve_claim_internal(claim_key, "", 0, "ASSURED_INITIAL")
         claim = self.claims[claim_key]
         record = gl.storage.copy_to_memory(record)
         record.final_status = claim.status
@@ -691,16 +698,11 @@ class Margin(gl.Contract):
         if claim_key not in self.assured_claims:
             raise gl.vm.UserError("assured claim is not registered")
         record = gl.storage.copy_to_memory(self.assured_claims[claim_key])
-        if record.state not in ("RESOLVED", "APPEALED") or record.settled:
+        if record.state != "RESOLVED" or record.settled:
             raise gl.vm.UserError("assured claim is not ready for settlement")
         now = datetime.now(timezone.utc)
-        if record.state == "RESOLVED":
-            if now < self._parse_iso_utc(record.appeal_deadline, "appeal deadline"):
-                raise gl.vm.UserError("appeal window is still open")
-        else:
-            started = self._parse_iso_utc(record.state_started_at, "state start")
-            if now < started + timedelta(seconds=RESOLVE_TIMEOUT_SECONDS):
-                raise gl.vm.UserError("appeal resolution timeout has not elapsed")
+        if now < self._parse_iso_utc(record.appeal_deadline, "appeal deadline"):
+            raise gl.vm.UserError("appeal window is still open")
         total = record.publisher_bond + record.challenge_bond + record.appeal_bond
         if record.final_status == "SUPPORTED":
             record.publisher_credit = total
@@ -883,8 +885,12 @@ class Margin(gl.Contract):
             raise gl.vm.UserError("maximum normal decision revisions reached")
         if context_kind != "NORMAL" and int(stored.revision) >= MAX_REVISIONS:
             raise gl.vm.UserError("maximum decision revisions reached")
-        if appeal_reason != "" and (appeal_count != 1 or len(appeal_reason) < 12 or len(appeal_reason) > 1000):
+        if context_kind == "ASSURED_INITIAL" and (appeal_reason != "" or appeal_count != 0):
+            raise gl.vm.UserError("initial assured context must not contain an appeal")
+        if context_kind == "ASSURED_APPEAL" and (appeal_count != 1 or len(appeal_reason) < 12 or len(appeal_reason) > 1000):
             raise gl.vm.UserError("appeal context is invalid")
+        if context_kind == "NORMAL" and appeal_reason != "":
+            raise gl.vm.UserError("normal context cannot contain an appeal")
         if context_kind == "NORMAL" and int(stored.revision) > 0:
             try:
                 next_refresh = datetime.fromisoformat(stored.resolved_at) + timedelta(seconds=NORMAL_REFRESH_COOLDOWN_SECONDS)

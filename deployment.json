@@ -167,27 +167,15 @@
       "postExerciseHasExecuted": true,
       "malformedArgumentAttemptTx": "0x37a14b5422fea161601178f7a398cafb9d73bd055e9e098fbc51e1b0a172242e",
       "malformedArgumentAttemptState": "FINALIZED / MAJORITY_AGREE / contract error; no consumer state change"
-    }
-  },
-  "liveEvidence": {
-    "canonicalDeploymentChecks": {
-      "contractAddress": "0x2a22f117bB61f6a123AfA794710cD2D13844Ff6A",
-      "deploymentTx": "0x9b61671af5c70e0cb5a0bc74c0cf0804eda7a878e26cd892537923bc83a967de",
-      "networkReadback": {
-        "chain_id": 61999,
-        "network": "studionet",
-        "rpc": "https://studio.genlayer.com/api"
-      },
-      "sourceCommit": "ce99b627293b07f85077f1886da376c72de86fb6"
     },
-    "sameSourceAppeal": {
+    "historicalSameSourceAppealAgainstPriorDeployment": {
       "claimKey": "274e16c4d7acfaf0f3a3bb4699485b59baad9284c273ae1153f828e42cbb924f",
       "submitTx": "0x572c6178076e3df97f895e003b462953545f4fed5660b1f029de649348deee59",
       "registerTx": "0x82b3b8f11268288fb404bd22fe2813aa33adba11d69c1934ed54d667deed902b",
       "challengeTx": "0x1e6c180ab2499b00e25b811dd4cdbb680023beb93758cfccb9b0df713582f4eb",
       "initialResolveTx": "0xe50313936f4ea26b6d96ae85bf53a7a33aee37ee4a9c46dcdcfcb91f9d16fcc1",
       "appealTx": "0x571c66cd65a1ee4809abed9e2c10ffd223867c3ca0d9e64d4e680de47458e947",
-      "appealResolveTx": "0xa35cd6cfdf68b0b65a901298bdfd4bad2afde0491d71fe7802d94c2cde7c62e7",
+      "appealResolveTx": "0xa35cd6cfdf68b0b65a901298bdfd4bad2afde0491d71fe7802d94c2cde7",
       "appealResolveFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
       "sourceManifestUnchanged": true,
       "appealCount": 1,
@@ -203,7 +191,28 @@
       "publisherCreditAfterWithdrawal": 0,
       "challengerCreditAfterWithdrawal": 0,
       "settled": true,
-      "settlementNote": "After the recorded appeal deadline, settlement finalized the 3 GEN SUPPORTED payout to publisher credit. Publisher withdrawal then finalized successfully; canonical readback shows SETTLED / SUPPORTED with both credits at zero."
+      "settlementNote": "Historical evidence from the prior canonical deployment; not evidence for the current contract."
+    },
+    "historicalConsumerExerciseAgainstPriorDeployment": {
+      "consumerAddress": "0x26a0ee4a03c39887B1d6284609286eFC7be314F8",
+      "claimKey": "274e16c4d7acfaf0f3a3bb4699485b59baad9284c273ae1153f828e42cbb924f",
+      "exerciseTx": "0x999a662f130504f5c2a795c26f9166d4d3f25510931822b659e46ec5df4ff077",
+      "exerciseFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "canonicalClaimState": "SETTLED / SUPPORTED",
+      "postExerciseHasExecuted": true,
+      "note": "Historical consumer was not bound to the current canonical MARGIN deployment."
+    }
+  },
+  "liveEvidence": {
+    "canonicalDeploymentChecks": {
+      "contractAddress": "0x2a22f117bB61f6a123AfA794710cD2D13844Ff6A",
+      "deploymentTx": "0x9b61671af5c70e0cb5a0bc74c0cf0804eda7a878e26cd892537923bc83a967de",
+      "networkReadback": {
+        "chain_id": 61999,
+        "network": "studionet",
+        "rpc": "https://studio.genlayer.com/api"
+      },
+      "sourceCommit": "ce99b627293b07f85077f1886da376c72de86fb6"
     },
     "consumerDeployment": {
       "contractAddress": "0x92b0c63c09c2b97aC2b2c2C5b09143cFfd94Fa6D",
@@ -217,14 +226,6 @@
       "signerDeployment": "dpl_2kYaztcwUAcAWNHgaoEkXicsTPkx",
       "status": "NOT_RUN / HISTORICAL ATTEMPT",
       "blocker": "Chromium-control service could not load its browser request-header policy; no browser transaction or badge result is claimed for this deployment."
-    },
-    "freshPositiveConsumerExercise": {
-      "consumerAddress": "0x26a0ee4a03c39887B1d6284609286eFC7be314F8",
-      "claimKey": "274e16c4d7acfaf0f3a3bb4699485b59baad9284c273ae1153f828e42cbb924f",
-      "exerciseTx": "0x999a662f130504f5c2a795c26f9166d4d3f25510931822b659e46ec5df4ff077",
-      "exerciseFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
-      "canonicalClaimState": "SETTLED / SUPPORTED",
-      "postExerciseHasExecuted": true
     }
   },
   "toolVersions": {

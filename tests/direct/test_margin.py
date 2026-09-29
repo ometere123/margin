@@ -293,6 +293,8 @@ def test_assured_claim_domain_proof_and_bond_lifecycle(direct_vm, direct_deploy,
     }))
     contract.resolve_assured_claim(key)
     assert contract.get_assured_claim(key)["state"] == "RESOLVED"
+    assert contract.get_claim(key)["latest_manifest"]["context_kind"] == "ASSURED_INITIAL"
+    assert contract.get_claim(key)["latest_manifest"]["appeal_count"] == 0
     direct_vm.warp("2999-01-01T02:00:00+00:00")
     contract.settle_assured_claim(key)
     assured = contract.get_assured_claim(key)
@@ -372,7 +374,7 @@ def test_assured_claim_rejects_wrong_publisher_in_domain_proof(direct_vm, direct
         )
 
 
-def test_assured_appeal_requires_new_source_and_settles_once(direct_vm, direct_deploy, direct_alice, direct_bob, direct_charlie):
+def test_assured_appeal_same_source_context_and_settles_once(direct_vm, direct_deploy, direct_alice, direct_bob, direct_charlie):
     contract = direct_deploy("contracts/margin.py")
     direct_vm.sender = direct_alice
     key = submit(contract)
@@ -456,17 +458,62 @@ def _register_for_lifecycle(contract, direct_vm, direct_alice, key, expiry="2999
     contract.register_assured_claim(key, "https://example.com/.well-known/margin.json", "lifecycle-nonce", expiry)
 
 
+def _mock_contradicted_resolution(direct_vm):
+    body = "Support matrix: Runtime 4.2 requires Node 20 or newer. Node 18 is unsupported."
+    direct_vm.clear_mocks()
+    direct_vm.mock_web(r"https://example\.com/docs/runtime", {"status": 200, "body": body})
+    direct_vm.mock_web(r"https://example\.com/docs/support", {"status": 200, "body": body})
+    records = [
+        {"kind": "PRIMARY", "url": URL, "fetch_status": "OK", "content_digest": hashlib.sha256(body.encode()).hexdigest(), "provenance": "PUBLIC_SOURCE"},
+        {"kind": "EVIDENCE", "url": "https://example.com/docs/support", "fetch_status": "OK", "content_digest": hashlib.sha256(body.encode()).hexdigest(), "provenance": "PUBLIC_SOURCE"},
+    ]
+    digest = hashlib.sha256(json.dumps({"v": 2, "sources": records}, separators=(",", ":"), sort_keys=True).encode()).hexdigest()
+    direct_vm.mock_llm(r".*MARGIN web-claim challenge.*", json.dumps({
+        "status": "CONTRADICTED", "rationale": "The support matrix contradicts the claim.",
+        "claim_present": True, "supporting_source_indexes": [], "contradicting_source_indexes": [0],
+        "historical_evidence_used": False, "source_manifest_digest": digest,
+    }))
+
+
 def test_publisher_can_cancel_unchallenged_assured_claim_once(direct_vm, direct_deploy, direct_alice):
     contract = direct_deploy("contracts/margin.py")
     direct_vm.sender = direct_alice
     key = submit(contract)
     _register_for_lifecycle(contract, direct_vm, direct_alice, key)
+    with direct_vm.expect_revert("assured challenge window is still open"):
+        contract.cancel_assured_claim(key)
+    direct_vm.warp("2999-01-02T00:00:00+00:00")
     contract.cancel_assured_claim(key)
     assured = contract.get_assured_claim(key)
     assert assured["state"] == "CANCELLED"
     assert assured["publisher_credit"] == 1
     with direct_vm.expect_revert("assured claim cannot be cancelled"):
         contract.cancel_assured_claim(key)
+
+
+def test_registration_window_allows_challenge_but_closes_after_deadline(
+    direct_vm, direct_deploy, direct_alice, direct_bob
+):
+    contract = direct_deploy("contracts/margin.py")
+    direct_vm.sender = direct_alice
+    key = submit(contract, suffix="registration-window")
+    _register_for_lifecycle(contract, direct_vm, direct_alice, key)
+    direct_vm.sender = direct_bob
+    direct_vm.value = 1
+    contract.challenge_assured_claim(key)
+    assert contract.get_assured_claim(key)["state"] == "CHALLENGED"
+
+    direct_vm.sender = direct_alice
+    key2 = submit(contract, suffix="registration-window-closed")
+    _register_for_lifecycle(contract, direct_vm, direct_alice, key2)
+    direct_vm.warp("2999-01-02T00:00:00+00:00")
+    direct_vm.sender = direct_bob
+    direct_vm.value = 1
+    with direct_vm.expect_revert("assured challenge window has closed"):
+        contract.challenge_assured_claim(key2)
+    direct_vm.sender = direct_alice
+    contract.cancel_assured_claim(key2)
+    assert contract.get_assured_claim(key2)["publisher_credit"] == 1
 
 
 def test_stalled_challenge_can_abort_and_refund_both_bonds(direct_vm, direct_deploy, direct_alice, direct_bob):
@@ -484,6 +531,83 @@ def test_stalled_challenge_can_abort_and_refund_both_bonds(direct_vm, direct_dep
     assert assured["state"] == "ABORTED"
     assert assured["publisher_credit"] == 1
     assert assured["challenger_credit"] == 1
+
+
+def test_appealed_timeout_has_only_abort_refund_exit(
+    direct_vm, direct_deploy, direct_alice, direct_bob
+):
+    contract = direct_deploy("contracts/margin.py")
+    direct_vm.sender = direct_alice
+    key = submit(contract, suffix="appealed-timeout")
+    _register_for_lifecycle(contract, direct_vm, direct_alice, key)
+    direct_vm.sender = direct_bob
+    direct_vm.value = 1
+    contract.challenge_assured_claim(key)
+    _mock_contradicted_resolution(direct_vm)
+    contract.resolve_assured_claim(key)
+    direct_vm.value = 1
+    contract.appeal_assured_claim(key, "A bounded appeal contention for timeout testing.")
+    assert contract.get_assured_claim(key)["state"] == "APPEALED"
+
+    with direct_vm.expect_revert("assured resolution timeout has not elapsed"):
+        contract.abort_stalled(key)
+    with direct_vm.expect_revert("assured claim is not ready for settlement"):
+        contract.settle_assured_claim(key)
+
+    direct_vm.warp("2999-01-03T00:00:00+00:00")
+    direct_vm.sender = direct_bob
+    contract.abort_stalled(key)
+    assured = contract.get_assured_claim(key)
+    assert assured["state"] == "ABORTED"
+    assert assured["publisher_credit"] == 1
+    assert assured["challenger_credit"] == 2
+    assert assured["publisher_bond"] == 0
+    assert assured["challenge_bond"] == 0
+    assert assured["appeal_bond"] == 0
+    with direct_vm.expect_revert("assured claim is not stalled"):
+        contract.abort_stalled(key)
+    with direct_vm.expect_revert("assured claim is not ready for settlement"):
+        contract.settle_assured_claim(key)
+
+
+def test_normal_then_assured_resolution_sequence_preserves_bonds(
+    direct_vm, direct_deploy, direct_alice, direct_bob
+):
+    contract = direct_deploy("contracts/margin.py")
+    direct_vm.sender = direct_alice
+    key = submit(contract, suffix="normal-before-assured")
+    _mock_contradicted_resolution(direct_vm)
+    contract.resolve_claim(key)
+    _register_for_lifecycle(contract, direct_vm, direct_alice, key)
+    direct_vm.sender = direct_bob
+    direct_vm.value = 1
+    contract.challenge_assured_claim(key)
+    _mock_contradicted_resolution(direct_vm)
+    contract.resolve_assured_claim(key)
+    assured = contract.get_assured_claim(key)
+    assert assured["state"] == "RESOLVED"
+    assert assured["publisher_bond"] == 1
+    assert assured["challenge_bond"] == 1
+
+
+def test_registered_then_normal_then_assured_resolution_sequence_preserves_bonds(
+    direct_vm, direct_deploy, direct_alice, direct_bob
+):
+    contract = direct_deploy("contracts/margin.py")
+    direct_vm.sender = direct_alice
+    key = submit(contract, suffix="registered-before-normal")
+    _register_for_lifecycle(contract, direct_vm, direct_alice, key)
+    _mock_contradicted_resolution(direct_vm)
+    contract.resolve_claim(key)
+    direct_vm.sender = direct_bob
+    direct_vm.value = 1
+    contract.challenge_assured_claim(key)
+    _mock_contradicted_resolution(direct_vm)
+    contract.resolve_assured_claim(key)
+    assured = contract.get_assured_claim(key)
+    assert assured["state"] == "RESOLVED"
+    assert assured["publisher_bond"] == 1
+    assert assured["challenge_bond"] == 1
 
 
 def test_proof_expiry_requires_timezone_and_normalizes_offsets(direct_vm, direct_deploy, direct_alice):

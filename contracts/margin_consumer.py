@@ -23,6 +23,8 @@ class ProtectedRelease:
 @gl.contract_interface
 class MarginGate:
     class View:
+        def get_claim(self, claim_key: str) -> dict: ...
+
         def get_assured_claim(self, claim_key: str) -> dict: ...
 
         def is_claim_supported(self, claim_key: str) -> bool: ...
@@ -80,6 +82,7 @@ class MarginConsumer(gl.Contract):
 
     @gl.public.write
     def execute_if_supported(self, claim_key: str) -> None:
+        """Legacy compatibility gate; funded releases are the primary consumer path."""
         claim_key = str(claim_key).strip().lower()
         receipt = self._margin().view().get_assured_claim(claim_key)
         if not isinstance(receipt, dict) or receipt.get("state") != "SETTLED":
@@ -101,6 +104,18 @@ class MarginConsumer(gl.Contract):
         expiry_dt = self._expiry(expiry)
         if expiry_dt <= datetime.now(timezone.utc):
             raise gl.vm.UserError("release expiry must be in the future")
+        existing_release_id = self.release_by_claim.get(claim_key, "")
+        if existing_release_id != "":
+            raise gl.vm.UserError("a protected release already exists for this claim")
+        margin = self._margin().view()
+        claim = margin.get_claim(claim_key)
+        if not isinstance(claim, dict) or str(claim.get("claim_key", "")).strip().lower() != claim_key:
+            raise gl.vm.UserError("protected release requires an existing MARGIN claim")
+        assured = margin.get_assured_claim(claim_key)
+        if not isinstance(assured, dict) or str(assured.get("claim_key", "")).strip().lower() != claim_key:
+            raise gl.vm.UserError("protected release requires an existing Assured Claim")
+        if assured.get("state") not in ("REGISTERED", "CHALLENGED", "RESOLVED", "APPEALED"):
+            raise gl.vm.UserError("protected release must be committed before final settlement")
         release_id = f"{int(self.release_count)}:{claim_key}"
         self.release_count = u256(int(self.release_count) + 1)
         zero = u256(0)
@@ -127,6 +142,8 @@ class MarginConsumer(gl.Contract):
         record = gl.storage.copy_to_memory(self.releases[release_id])
         if record.executed or record.refunded:
             raise gl.vm.UserError("protected release already completed")
+        if datetime.now(timezone.utc) >= self._expiry(record.expiry):
+            raise gl.vm.UserError("protected release has expired")
         if not self.is_claim_supported(record.claim_key):
             raise gl.vm.UserError("protected release requires SETTLED SUPPORTED state")
         record.executed = True

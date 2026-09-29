@@ -2,7 +2,7 @@ import { spawn } from 'node:child_process';
 
 const args = process.argv.slice(2);
 if (args.length === 0) {
-  console.error('Usage: node scripts/run-genvm-lint.mjs lint <contract.py>');
+  console.error('Usage: node scripts/run-genvm-lint.mjs lint <contract.py> [<contract.py> ...]');
   process.exit(2);
 }
 

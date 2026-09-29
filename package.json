@@ -15,7 +15,7 @@
     "preflight:offline": "bash scripts/offline-preflight.sh",
     "test:direct": "node scripts/run-direct-tests.mjs",
     "live:read": "node scripts/live-read.mjs",
-    "lint:contract": "node scripts/run-genvm-lint.mjs lint contracts/margin.py",
+    "lint:contract": "node scripts/run-genvm-lint.mjs lint contracts/margin.py && node scripts/run-genvm-lint.mjs lint contracts/margin_consumer.py",
     "cli": "npm run cli:check",
     "cli:check": "node scripts/check-genlayer-cli.mjs",
     "genlayer": "genlayer"
