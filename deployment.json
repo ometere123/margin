@@ -178,7 +178,7 @@
         "network": "studionet",
         "rpc": "https://studio.genlayer.com/api"
       },
-      "sourceCommit": "d781a9ef417d2e3e2fd2915086a3b43129ffa5a6"
+      "sourceCommit": "ce99b627293b07f85077f1886da376c72de86fb6"
     },
     "sameSourceAppeal": {
       "claimKey": "274e16c4d7acfaf0f3a3bb4699485b59baad9284c273ae1153f828e42cbb924f",
@@ -211,11 +211,11 @@
       "boundMarginAddress": "0x2a22f117bB61f6a123AfA794710cD2D13844Ff6A",
       "deploymentFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS"
     },
-    "freshExternalBrowserChallenge": {
+    "historicalExternalBrowserAttempt": {
       "contractAddress": "0x6525B4a5d9CEd32f440D47b0Bf966C2D25d1Fcb0",
       "signerUrl": "https://margin-signer.vercel.app/",
       "signerDeployment": "dpl_2kYaztcwUAcAWNHgaoEkXicsTPkx",
-      "status": "NOT_RUN",
+      "status": "NOT_RUN / HISTORICAL ATTEMPT",
       "blocker": "Chromium-control service could not load its browser request-header policy; no browser transaction or badge result is claimed for this deployment."
     },
     "freshPositiveConsumerExercise": {
