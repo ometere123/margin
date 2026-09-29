@@ -53,6 +53,20 @@ let consumerError = '';
 let directClaim: MarginClaim | null = null;
 let decisionHistory: DecisionHistoryEntry[] = [];
 
+function prioritizeProtectedReleases(releases: ProtectedReleaseView[]): ProtectedReleaseView[] {
+  const connected = account?.toLowerCase() || '';
+  return [...releases].sort((a, b) => {
+    const own = (release: ProtectedReleaseView) => {
+      const creator = String(release.creator || '').toLowerCase();
+      const beneficiary = String(release.beneficiary || '').toLowerCase();
+      return (creator === connected ? 2 : 0) + (beneficiary === connected ? 1 : 0);
+    };
+    const priorityDifference = own(b) - own(a);
+    if (priorityDifference !== 0) return priorityDifference;
+    return String(a.release_id || '').localeCompare(String(b.release_id || ''));
+  });
+}
+
 
 function esc(v: string) { return v.replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]!)); }
 function validAddress(v: string): v is `0x${string}` { return /^0x[0-9a-fA-F]{40}$/.test(v); }
@@ -379,7 +393,7 @@ async function readAssuredState(redraw = true) {
     }
     try {
       const releases = await readClient.readContract({ address: MARGIN_CONSUMER_ADDRESS, functionName: 'get_releases_for_claim', args: [assuredKey], transactionHashVariant: TransactionHashVariant.LATEST_FINAL }) as ProtectedReleaseView[];
-      protectedReleases = Array.isArray(releases) ? releases.filter((release) => release && Object.keys(release).length) : [];
+      protectedReleases = Array.isArray(releases) ? prioritizeProtectedReleases(releases.filter((release) => release && Object.keys(release).length)) : [];
       if (protectedReleases.length) selectedReleaseId = protectedReleases.some((release) => release.release_id === selectedReleaseId) ? selectedReleaseId : String(protectedReleases[0].release_id || '');
     } catch { protectedReleases = []; selectedReleaseId = ''; }
     assuredError = '';

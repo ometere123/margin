@@ -139,3 +139,22 @@ def test_protected_release_expiry_refund_is_single_use_and_pull_payment(
     assert consumer.get_release(release_id)["creator_credit"] == 0
     with direct_vm.expect_revert("no release credit"):
         consumer.withdraw_release_credit(release_id)
+
+
+def test_protected_release_cap_is_enforced_per_claim(
+    direct_vm, direct_deploy, direct_alice, direct_bob
+):
+    consumer, key, _address = _deploy_registered_fixture(
+        direct_vm, direct_deploy, direct_alice, direct_bob
+    )
+    for _ in range(20):
+        direct_vm.value = 1
+        consumer.create_protected_release(
+            key, "0x" + direct_bob.hex(), "2999-01-01T00:00:00+00:00"
+        )
+    assert len(consumer.get_releases_for_claim(key)) == 20
+    direct_vm.value = 1
+    with direct_vm.expect_revert("maximum protected releases reached for claim"):
+        consumer.create_protected_release(
+            key, "0x" + direct_bob.hex(), "2999-01-01T00:00:00+00:00"
+        )

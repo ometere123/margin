@@ -44,6 +44,7 @@ class ReleaseRecipient:
 
 
 class MarginConsumer(gl.Contract):
+    MAX_RELEASES_PER_CLAIM = 20
     canonical_margin_address: Address
     executed_claims: TreeMap[str, str]
     releases: TreeMap[str, ProtectedRelease]
@@ -116,6 +117,9 @@ class MarginConsumer(gl.Contract):
             raise gl.vm.UserError("protected release requires an existing Assured Claim")
         if assured.get("state") not in ("REGISTERED", "CHALLENGED", "RESOLVED", "APPEALED"):
             raise gl.vm.UserError("protected release must be committed before final settlement")
+        release_ids = self._release_ids_for_claim(claim_key)
+        if len(release_ids) >= self.MAX_RELEASES_PER_CLAIM:
+            raise gl.vm.UserError("maximum protected releases reached for claim")
         release_id = f"{int(self.release_count)}:{claim_key}"
         self.release_count = u256(int(self.release_count) + 1)
         zero = u256(0)
@@ -131,7 +135,6 @@ class MarginConsumer(gl.Contract):
             beneficiary_credit=zero,
             creator_credit=zero,
         )
-        release_ids = self._release_ids_for_claim(claim_key)
         release_ids.append(release_id)
         self.release_ids_by_claim[claim_key] = json.dumps(release_ids, separators=(",", ":"))
         return release_id
@@ -197,7 +200,6 @@ class MarginConsumer(gl.Contract):
             return {}
         return self._release_dict(self.releases[release_id])
 
-    @gl.public.view
     def _release_ids_for_claim(self, claim_key: str) -> list:
         encoded = self.release_ids_by_claim.get(str(claim_key).strip().lower(), "[]")
         try:
