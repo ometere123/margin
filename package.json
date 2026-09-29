@@ -10,11 +10,11 @@
     "build": "npm run build -w extension && npm run build -w signer",
     "test": "npm run test -w extension && npm run test -w signer && python3 -m pytest tests/test_contract_invariants.py -q",
     "typecheck": "npm run typecheck -w extension && npm run typecheck -w signer",
-    "verify": "npm run typecheck && npm run test && npm run test:direct && npm run build",
+    "verify": "npm run lint:contract && npm run typecheck && npm run test && npm run test:direct && npm run build",
     "zip": "npm run build -w extension && python scripts/make-extension-zip.py",
     "preflight:offline": "bash scripts/offline-preflight.sh",
     "test:direct": "node scripts/run-direct-tests.mjs",
-    "lint:contract": "genvm-lint check contracts/margin.py",
+    "lint:contract": "node scripts/run-genvm-lint.mjs lint contracts/margin.py",
     "cli": "npm run cli:check",
     "cli:check": "node scripts/check-genlayer-cli.mjs",
     "genlayer": "genlayer"
