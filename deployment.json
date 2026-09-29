@@ -3,13 +3,14 @@
   "chainId": 61999,
   "rpc": "https://studio.genlayer.com/api",
   "explorer": "https://explorer-studio.genlayer.com",
-  "contractAddress": "0xA188e8314AeEd0C31060725b00bEd20D1feBca19",
-  "deploymentTx": "0x42bd77dbeccbbbfb46b4a06a8491c5eb654fdd9743cc7cd938152e009eff179a",
+  "contractAddress": "0x0f8D86d56F1b8997475dD048579807fBFe60e227",
+  "deploymentTx": "0x1f54fb2b8520008a8bf856906a695dd35f6835e28afdedf51bded400744abebd",
   "deploymentStatus": "FINALIZED / MAJORITY_AGREE / SUCCESS",
-  "sourceCommit": "b6f5b7efa02d09b0f4e02ed4c7b047a8f41beebb",
-  "sourceBytes": 53039,
-  "sourceSha256": "f31fcd032282d6733eaf3968b477ac76da8fadceeff73d6cc3c974a56ebc9190",
+  "sourceCommit": "826206bb1825cbcd716e0eb24288e91b8bc6d00a",
+  "sourceBytes": 58790,
+  "sourceSha256": "6F5866BCEE5569C3BA0560E172F3FF524CF43F2A7A174189DB05CC03BD9FDEAF",
   "signerUrl": "https://margin-signer.vercel.app/",
+  "signerDeployment": "dpl_6mGoLz1QmrTMuz9bvjxBkY5Ynnv2",
   "runtimeIdentity": {
     "chain_id": 61999,
     "network": "studionet",
@@ -26,6 +27,14 @@
     "consumerAddress": "0x92b0c63c09c2b97aC2b2c2C5b09143cFfd94Fa6D",
     "consumerDeploymentTx": "0x6b9238514216e2058aadc845641acbbcfc1b68029299a7485837d4c64eeb3cec",
     "status": "historical; superseded by the current deployment"
+  },
+  "supersededDeploymentAfterSourceFix": {
+    "contractAddress": "0xA188e8314AeEd0C31060725b00bEd20D1feBca19",
+    "deploymentTx": "0x42bd77dbeccbbbfb46b4a06a8491c5eb654fdd9743cc7cd938152e009eff179a",
+    "consumerAddress": "0xb14dBe36C33D716018c343a5E589471A2c0F644C",
+    "consumerDeploymentTx": "0x51d53f2a96457f32a48ddfd0ada55f1f0e9e564ea07c2a3633149b3fa569bed0",
+    "sourceCommit": "b6f5b7efa02d09b0f4e02ed4c7b047a8f41beebb",
+    "status": "historical; superseded by the final warning-free deployment"
   },
   "historicalEvidence": {
     "normalClaim": {
@@ -219,20 +228,36 @@
   },
   "liveEvidence": {
     "canonicalDeploymentChecks": {
-      "contractAddress": "0xA188e8314AeEd0C31060725b00bEd20D1feBca19",
-      "deploymentTx": "0x42bd77dbeccbbbfb46b4a06a8491c5eb654fdd9743cc7cd938152e009eff179a",
+      "contractAddress": "0x0f8D86d56F1b8997475dD048579807fBFe60e227",
+      "deploymentTx": "0x1f54fb2b8520008a8bf856906a695dd35f6835e28afdedf51bded400744abebd",
       "networkReadback": {
         "chain_id": 61999,
         "network": "studionet",
         "rpc": "https://studio.genlayer.com/api"
       },
-      "sourceCommit": "b6f5b7efa02d09b0f4e02ed4c7b047a8f41beebb"
+      "sourceCommit": "826206bb1825cbcd716e0eb24288e91b8bc6d00a",
+      "deploymentFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "sourceSha256": "6F5866BCEE5569C3BA0560E172F3FF524CF43F2A7A174189DB05CC03BD9FDEAF",
+      "sourceBytes": 58790
     },
     "consumerDeployment": {
-      "contractAddress": "0xb14dBe36C33D716018c343a5E589471A2c0F644C",
-      "deploymentTx": "0x51d53f2a96457f32a48ddfd0ada55f1f0e9e564ea07c2a3633149b3fa569bed0",
-      "boundMarginAddress": "0xA188e8314AeEd0C31060725b00bEd20D1feBca19",
+      "contractAddress": "0x3Bc6566Adf5d57d427d73CdDa89b6d105e6A3b5F",
+      "deploymentTx": "0xa2984fc2eccfd90430e9811d5a4e9a6cb106b000510b017b54e90184cdf0673a",
+      "boundMarginAddress": "0x0f8D86d56F1b8997475dD048579807fBFe60e227",
       "deploymentFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS"
+    },
+    "freshNormalClaimFinalDeployment": {
+      "claimKey": "99bbd4ea502c2b56341ec9ba9c08cacbede75d8f1e32e8964b65ec4bec63ebc6",
+      "pageKey": "49276d7b8c64fcff5fcb293a2f4e5ecc91d0ebc1197c8b050735d97c44853a21",
+      "canonicalUrl": "https://genlayer.com/blog/making-genlayer-100-percent-secure-part-1-the-architecture",
+      "submitTx": "0x6db1814f354f8661a9b298af563ee4e2c3b75277ce46df376baaa3987d4da624",
+      "submitFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "resolveTx": "0x18fff3266f76cf0c648ba17767bb031bf5536851e6615b436d2a8a7ce448c7ee",
+      "resolveFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "status": "SUPPORTED",
+      "revision": 1,
+      "sourceManifestDigest": "d889d24b9d070a86de23350a7d348c2011f780410dfffac9d85c579dca3b9e0c",
+      "note": "Fresh non-browser normal claim against the final deployment; no browser automation was run in this round."
     }
   },
   "toolVersions": {
