@@ -59,12 +59,12 @@ Do not run bare `genlayer ...` commands from this repo.
 
 ## Checks completed for the corrected candidate
 
-- WSL Direct Mode: 22/22 PASS, including adversarial domain-proof rejection cases and consumer tests.
+- WSL Direct Mode: 24/24 PASS, including adversarial domain-proof rejection cases and 4/4 protected-consumer tests.
 - Contract AST lint: 3/3 PASS with `genvm-lint 0.11.1rc2`; SDK semantic validation is not claimed because the compatible v0.2.12 runner bundle is unavailable to the installed linter.
 - Python/source invariant suite: 12/12 PASS.
 - `npm exec -- genlayer --version`: `0.39.1`.
 - Studionet network info and deployed `network()` readback: `61999`, `studionet`, `https://studio.genlayer.com/api`.
-- Extension/signer typecheck, tests and builds: PASS on the current source; contract AST lint `3/3`, extension tests `16/16`, signer tests `27/27`, source invariants `12/12`, Direct Mode `22/22`.
+- Extension/signer typecheck, tests and builds: PASS on the current source; contract AST lint `3/3`, extension tests `16/16`, signer tests `27/27`, source invariants `12/12`, Direct Mode `24/24`.
 - Reproducible extension archive: `MARGIN-extension-v0.1.0.zip`, SHA-256 `c6ec12468fb129922a33e68f50e7826646e6fe4f1dddaeb3ddc0de841af4a62f`, produced by `npm run zip` from `extension/dist`; the ZIP is not committed as generated noise.
 - GitHub Actions `verify` was green for the current repository in [run `36548304731`](https://github.com/ometere123/margin/actions/runs/36548304731); the final repository SHA is reported outside the repository.
 
