@@ -6,7 +6,7 @@
   "contractAddress": "0x2a22f117bB61f6a123AfA794710cD2D13844Ff6A",
   "deploymentTx": "0x9b61671af5c70e0cb5a0bc74c0cf0804eda7a878e26cd892537923bc83a967de",
   "deploymentStatus": "FINALIZED / MAJORITY_AGREE / SUCCESS",
-  "sourceCommit": "ce99b62",
+  "sourceCommit": "ce99b627293b07f85077f1886da376c72de86fb6",
   "sourceBytes": 52435,
   "sourceSha256": "cb3269b1ccaabe75429949a3979d277c970ed0ffaef7e3c1978e9bd39117053b",
   "signerUrl": "https://margin-signer.vercel.app/",
