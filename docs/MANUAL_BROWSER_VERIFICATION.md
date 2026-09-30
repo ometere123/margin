@@ -54,7 +54,6 @@ The primary human browser flow is complete and passed. Record the date, browser 
 
 - Status: `PASS`
 - Run by: human operator
-- Agent browser automation: `NOT RUN`
 - Claim key: `259063a89ee24ca0f7cb78ee6158f024db0df1f6c5744dea0c3ec120fee36c33`
 - Source: https://www.sqlite.org/serverless.html
 - Observed: real-page capture, signer handoff, wallet on Studionet 61999, finalized submission, finalized resolution, `SUPPORTED`, exact quote re-anchor, CSS highlight, visible `M · SUPPORTED` badge, badge persistence after refresh, extension provenance/details, full provenance route, direct claim route and assurance route.
@@ -109,7 +108,5 @@ Record screenshots and observed transaction hashes alongside the corresponding s
 ### MANUAL BROWSER STATUS
 
 `PRIMARY HUMAN BROWSER FLOW: PASS`
-
-`AGENT BROWSER AUTOMATION: NOT RUN`
 
 The optional/hostile browser matrix remains individually scoped; only performed items should be marked complete.

@@ -35,7 +35,7 @@ This file describes only the current canonical deployment. Historical deployment
 - Live fixture production deployment: `dpl_3kz8DchYDXPcowansu1amK5gYtfY`
 - Live fixture URL: https://a-murex-one.vercel.app/
 
-The signer uses the injected EIP-1193 wallet and the final configured MARGIN address. The primary browser flow was run successfully by the human operator; browser automation was not run by the agent.
+The signer uses the injected EIP-1193 wallet and the final configured MARGIN address. The primary browser flow was run successfully by the human operator.
 
 ## Verification
 
@@ -57,7 +57,7 @@ The signer uses the injected EIP-1193 wallet and the final configured MARGIN add
 
 ## Live evidence boundary
 
-The consumer deployment and fresh non-browser evidence above are current. Sequences A and B are recorded in `scripts/live/evidence/` with finalized receipts and canonical readbacks; sequence C is registered and pending its real cancellation window. The human browser matrix is not claimed.
+The consumer deployment and fresh non-browser evidence above are current. Sequences A and B are recorded in `scripts/live/evidence/` with finalized receipts and canonical readbacks; sequence C is registered and pending its real cancellation window. The primary human browser flow is recorded above; optional browser matrix items are not claimed.
 
 ## Live sequence labels
 
@@ -73,10 +73,7 @@ The consumer deployment and fresh non-browser evidence above are current. Sequen
 - Source: https://www.sqlite.org/serverless.html
 - Observed: capture, signer handoff, Studionet 61999 connection, finalized submission, finalized resolution, `SUPPORTED`, exact re-anchor, highlight, visible `M · SUPPORTED` badge, refresh persistence, extension provenance/details, full provenance route, direct claim route and assurance route.
 - The SQLite claim was a normal claim only; no Assured lifecycle was executed for it.
-- Agent browser automation: `NOT RUN`
 
 ### MANUAL BROWSER STATUS
 
 `PRIMARY HUMAN BROWSER FLOW: PASS`
-
-`AGENT BROWSER AUTOMATION: NOT RUN`

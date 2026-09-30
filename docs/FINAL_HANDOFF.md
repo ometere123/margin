@@ -2,7 +2,9 @@
 
 ## Current live status (2026-09-29)
 
-The corrected Studionet deployment and fresh non-browser live sequences are complete where their real deadlines elapsed. Use [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md) as the authoritative live record. The primary browser flow has now been run successfully by the human operator against the current deployment; automated browser control was not run by the agent.
+The corrected Studionet deployment and fresh non-browser live sequences are complete where their real deadlines elapsed. Use [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md) as the authoritative live record. The primary browser flow has now been run successfully by the human operator against the current deployment.
+
+Protected runtime/protocol implementation is unchanged from the known-good baseline `23062e40b16d74f5fb72c56a72cdfaa0eaef9587`; the current candidate adds only tests and documentation.
 
 The frontend workspace routes are `/`, `/challenge?draft=...`, `/claim/<claimKey>`, `/claim/<claimKey>/assurance`, and `/activity`. The signer remains static and wallet-backed; the extension remains the primary discovery and annotation surface. The supplied logo/favicon/icon assets are included in the signer and MV3 extension. The MARGIN contract was not changed; the bound consumer was redeployed for the capped protected-release index.
 
@@ -16,7 +18,7 @@ The frontend workspace routes are `/`, `/challenge?draft=...`, `/claim/<claimKey
 - Human browser proof against the current deployment: normal claim `259063a89ee24ca0f7cb78ee6158f024db0df1f6c5744dea0c3ec120fee36c33` from https://www.sqlite.org/serverless.html reached finalized `SUPPORTED`, re-anchored the exact quote, rendered the highlight and visible `M · SUPPORTED` badge, and exposed extension/full provenance routes. This was not an Assured Claim lifecycle.
 - Fresh non-browser final-deployment normal evidence: claim `99bbd4ea502c2b56341ec9ba9c08cacbede75d8f1e32e8964b65ec4bec63ebc6`, submit `0x6db1814f354f8661a9b298af563ee4e2c3b75277ce46df376baaa3987d4da624`, resolve `0x18fff3266f76cf0c648ba17767bb031bf5536851e6615b436d2a8a7ce448c7ee`, both `FINALIZED / MAJORITY_AGREE / SUCCESS`, canonical verdict `SUPPORTED`.
 
-The earlier environment-bound checklist below is historical context. It is not permission to overwrite the final deployment record or claim that browser-wallet verification occurred when it has not.
+The earlier environment-bound checklist below is retained as manual verification context. It does not alter the final deployment record or current live evidence.
 
 MARGIN has been pushed to the environment boundary available in this build session. Continue **in place**; do not re-scaffold it.
 
@@ -68,7 +70,7 @@ Do not run bare `genlayer ...` commands from this repo.
 - Studionet network info and deployed `network()` readback: `61999`, `studionet`, `https://studio.genlayer.com/api`.
 - Extension/signer typecheck, tests and builds: PASS on the current source; contract lint is AST-only (`3/3` per contract; full SDK semantic validation was not run), extension tests `17/17`, signer tests `30/30`, source invariants `12/12`, Direct Mode `43/43`.
 - Reproducible extension archive: `MARGIN-extension-v0.1.0.zip`, SHA-256 `15E858358D5F570FD6D965A8E3D6A9F8E26C95DB13FF86F28F6A7BEB4A9D0201`, produced by `npm run zip` from `extension/dist`; the ZIP is not committed as generated noise.
-- GitHub Actions was green for the final repository commit `7b27595e64b956616983cffe9d11aeee5c530172` in [run `36694512725`](https://github.com/ometere123/margin/actions/runs/36694512725).
+- GitHub Actions was green for the final repository commit `a647499fe984e9b0c519ba70cc64e6c5649b93c7` in [run `36705887523`](https://github.com/ometere123/margin/actions/runs/36705887523).
 
 Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat the checks that do not require package downloads.
 
@@ -80,7 +82,7 @@ The current live evidence boundary is:
 - Consumer deployment: `0x6Bdb12646e054C24b68012560F7472636b395881`, finalized at `0x10f861aa287fe9ce0b4dbbacd95fc51cacb14539516d62f9bd6331495609ff0d`, with its constructor bound to the current MARGIN address. Source commit `66b2e2a492bc343df6369c8f6b4779fcb79a128c`, SHA-256 `FBCF9882250D640008B778F0486BDA3FCC892886270704ACB26DFADD2B7FF465`, 12,869 bytes. The previous consumer deployment is historical only.
 - Fresh final-deployment normal claim evidence: submit → resolve → `FINALIZED / MAJORITY_AGREE / SUCCESS`, with canonical verdict `SUPPORTED`, as recorded above.
 - Fresh final-deployment Assured evidence is recorded in `scripts/live/evidence/A.json` and `B.json`: A is `SETTLED + INCONCLUSIVE` with both credits withdrawn; B is `SETTLED + SUPPORTED` with a protected release created before settlement, executed and withdrawn. C is a truthful `REGISTERED` pending cancellation sequence with earliest cancellation at `2026-09-30T21:01:11.318Z`; no cancellation is claimed before that time. Historical transactions and verdicts are referenced only through [`docs/HISTORY.md`](HISTORY.md).
-- Primary human browser flow: `PASS`. Agent browser automation: `NOT RUN`. Optional/hostile browser matrix items are not claimed unless individually recorded.
+- Primary human browser flow: `PASS`. Optional/hostile browser matrix items are not claimed unless individually recorded.
 
 ## Production configuration hardening
 

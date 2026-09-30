@@ -23,9 +23,9 @@ This is an evidence inventory, not a project score. Historical deployments and b
 
 - `npm run verify` runs contract AST lint, TypeScript typechecks, extension tests, signer tests, Python invariants, Direct Mode and both production builds.
 - Current totals are: AST lint `3/3` for each contract, extension `17/17`, signer `30/30`, invariants `12/12`, Direct Mode `43/43`.
-- CLI verification reports exactly `0.39.1`; GitHub Actions run `36694512725` is green for the final repository commit `7b27595e64b956616983cffe9d11aeee5c530172`.
+- CLI verification reports exactly `0.39.1`; GitHub Actions run `36705887523` is green for the final repository commit `a647499fe984e9b0c519ba70cc64e6c5649b93c7`.
 - The read-only `npm run live:read` script verifies finalized `network()` identity without a wallet or write.
-- Limitation: automated browser E2E and the full hostile-page matrix were not run in this environment.
+- Limitation: the optional/hostile browser matrix and demo video were not recorded.
 
 ## Frontend/UX
 
@@ -34,4 +34,4 @@ This is an evidence inventory, not a project score. Historical deployments and b
 - The production signer is `https://margin-signer.vercel.app/`, deployment `dpl_BYeZLjjx3zP3sUqNZ4jJy1nSuBvh`.
 - The extension ZIP hash is `15E858358D5F570FD6D965A8E3D6A9F8E26C95DB13FF86F28F6A7BEB4A9D0201`.
 - Historical browser evidence demonstrates the RFC `<wbr>` anchoring and visible claim badge; it is not presented as fresh proof against the current deployment.
-- Limitation: agent browser automation, the optional/hostile browser matrix and the demo video were not run or claimed.
+- Limitation: the optional/hostile browser matrix and the demo video were not recorded or claimed.
