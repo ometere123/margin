@@ -9,6 +9,7 @@ import { assuredActions, assuredDisplay, type AssuredClaimView, type AssuredActi
 import { parseRoute, type Route } from './router';
 import { decisionHistoryHtml, type DecisionHistoryEntry } from './history';
 import { consumerErrorMessage, mergeProtectedReleases, prioritizeProtectedReleases, type ProtectedReleaseView } from './consumer';
+import { consumerActivityRecord } from './activity';
 import './style.css';
 
 declare global {
@@ -488,7 +489,7 @@ async function runConsumerAction(action: 'create' | 'execute' | 'refund' | 'with
   const txId = await client.writeContract({ address: MARGIN_CONSUMER_ADDRESS, functionName: definition.functionName, args: definition.args, value: definition.value } as any);
   const activityKey = `margin.assured.transactions.${assuredKey}`;
   const activity = JSON.parse(localStorage.getItem(activityKey) || '[]') as Array<Record<string, unknown>>;
-  activity.push({ id: txId, label: definition.functionName, claimKey: assuredKey, state: 'submitted', account, submittedAt: new Date().toISOString(), contractAddress: MARGIN_CONTRACT_ADDRESS, network: 'studionet' });
+  activity.push(consumerActivityRecord({ id: txId, functionName: definition.functionName, claimKey: assuredKey, account, submittedAt: new Date().toISOString(), consumerAddress: MARGIN_CONSUMER_ADDRESS }));
   localStorage.setItem(activityKey, JSON.stringify(activity));
   setStatus(`<div class="pending">${esc(definition.functionName)} submitted. Waiting for finalization…<br>${txLink(txId)}</div>`);
   try {

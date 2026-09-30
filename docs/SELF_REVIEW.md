@@ -22,8 +22,8 @@ This is an evidence inventory, not a project score. Historical deployments and b
 ## Engineering
 
 - `npm run verify` runs contract AST lint, TypeScript typechecks, extension tests, signer tests, Python invariants, Direct Mode and both production builds.
-- Current totals are: AST lint `3/3` for each contract, extension `17/17`, signer `30/30`, invariants `12/12`, Direct Mode `43/43`.
-- CLI verification reports exactly `0.39.1`; GitHub Actions run `36705887523` is green for the final repository commit `a647499fe984e9b0c519ba70cc64e6c5649b93c7`.
+- Current totals are: AST lint `3/3` for each contract, extension `17/17`, signer `31/31`, invariants `12/12`, Direct Mode `43/43`. The deterministic browser harness covers wallet lifecycle/recovery and built annotation persistence; it is not a live wallet/Studionet browser claim.
+- CLI verification reports exactly `0.39.1`; the exact candidate's GitHub Actions result is reported with the final handoff and must not be inferred from an older run.
 - The read-only `npm run live:read` script verifies finalized `network()` identity without a wallet or write.
 - Limitation: the optional/hostile browser matrix and demo video were not recorded.
 

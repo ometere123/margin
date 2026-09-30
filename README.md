@@ -166,7 +166,7 @@ This follows the important GenLayer rule that validators must independently veri
 
 ## What remains intentionally environment-specific
 
-The corrected contract and bound consumer are deployed, and fresh final-deployment non-browser evidence is recorded in `deployment.json` and `scripts/live/evidence/`: a normal `SUPPORTED` claim, Assured sequence A (`SETTLED + INCONCLUSIVE` with withdrawals), Assured sequence B (`SETTLED + SUPPORTED` with a pre-settlement protected release executed and withdrawn), and sequence C currently `REGISTERED` pending its real 24-hour cancellation window. No unsupported live verdict is claimed. A prior RFC browser-aligned read/annotation is retained as historical browser evidence; fresh rendering against the current deployment remains a manual verification step. The following evidence remains account/browser dependent and must not be inferred from unit tests:
+The corrected contract and bound consumer are deployed, and fresh final-deployment non-browser evidence is recorded in `deployment.json` and `scripts/live/evidence/`: a normal `SUPPORTED` claim, Assured sequence A (`SETTLED + INCONCLUSIVE` with withdrawals), Assured sequence B (`SETTLED + SUPPORTED` with a pre-settlement protected release executed and withdrawn), and sequence C currently `REGISTERED` pending its real 24-hour cancellation window. No unsupported live verdict is claimed. The primary browser flow is a separate manual verification track; automated tests cover deterministic wallet/recovery behaviour and do not substitute for a real wallet/chain run. The following evidence remains account/browser dependent and must not be inferred from unit tests:
 
 ### Frontend workspace routes
 

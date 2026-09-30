@@ -68,9 +68,9 @@ Do not run bare `genlayer ...` commands from this repo.
 - Python/source invariant suite: 12/12 PASS.
 - `npm exec -- genlayer --version`: `0.39.1`.
 - Studionet network info and deployed `network()` readback: `61999`, `studionet`, `https://studio.genlayer.com/api`.
-- Extension/signer typecheck, tests and builds: PASS on the current source; contract lint is AST-only (`3/3` per contract; full SDK semantic validation was not run), extension tests `17/17`, signer tests `30/30`, source invariants `12/12`, Direct Mode `43/43`.
+- Extension/signer typecheck, tests and builds: PASS on the current source; contract lint is AST-only (`3/3` per contract; full SDK semantic validation was not run), extension tests `17/17`, signer tests `31/31`, source invariants `12/12`, Direct Mode `43/43`. The deterministic browser harness covers fresh-profile wallet rejection/account switch/wrong-network/refresh recovery, annotation persistence, and a hostile-page fixture; it is separate from manual real-wallet verification.
 - Reproducible extension archive: `MARGIN-extension-v0.1.0.zip`, SHA-256 `15E858358D5F570FD6D965A8E3D6A9F8E26C95DB13FF86F28F6A7BEB4A9D0201`, produced by `npm run zip` from `extension/dist`; the ZIP is not committed as generated noise.
-- GitHub Actions was green for the final repository commit `a647499fe984e9b0c519ba70cc64e6c5649b93c7` in [run `36705887523`](https://github.com/ometere123/margin/actions/runs/36705887523).
+- GitHub Actions status must be read from the workflow run attached to the exact candidate commit; the prior run reference is historical and is not current verification for this hardening pass.
 
 Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat the checks that do not require package downloads.
 

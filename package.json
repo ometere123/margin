@@ -18,9 +18,11 @@
     "lint:contract": "node scripts/run-genvm-lint.mjs lint contracts/margin.py && node scripts/run-genvm-lint.mjs lint contracts/margin_consumer.py",
     "cli": "npm run cli:check",
     "cli:check": "node scripts/check-genlayer-cli.mjs",
-    "genlayer": "genlayer"
+    "genlayer": "genlayer",
+    "test:browser": "npm run build && node scripts/browser-e2e.mjs"
   },
   "devDependencies": {
+    "@playwright/test": "1.51.1",
     "genlayer": "0.39.1"
   },
   "engines": {

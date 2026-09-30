@@ -63,6 +63,8 @@ Each accepted resolution commits the accepted proposal's ordered observation man
 
 The Direct Mode trust-boundary tests make this distinction executable: `test_consensus_trust_boundary_rejects_wrong_status_semantics_and_tampering` rejects wrong status semantics, unsupported citations, `STALE` with a present claim, altered source identity/URL, source-set or adjudication-context commitments, and malformed manifest shape. `test_consensus_provenance_variation_cannot_change_status_or_consequences` records that independently differing rationale text and adequate source-index attribution remain valid proposal provenance when the bounded status agrees. Existing Assured settlement and consumer integration tests then verify that the agreed status, rather than rationale or citation wording, controls settlement and `SETTLED + SUPPORTED` consumer eligibility.
 
+The current evidence policy accepts both HTTP and HTTPS public evidence URLs; HTTPS is preferred for domain-control proofs. The contract does not currently normalize equivalent authority aliases, redirect chains or alternate host spellings into one authority identity. That is an explicit future hardening decision: any normalization/deduplication must be reviewed as protocol logic and must not make an untrusted alias authoritative by accident.
+
 ## Scope abuse
 
 MARGIN is deliberately not a universal truth oracle. UI and documentation limit v0.1 to technical, licence, compatibility, pricing and documentation claims.
