@@ -31,6 +31,9 @@ This file describes only the current canonical deployment. Historical deployment
 - Production deployment: `dpl_AskgUH19RUAjoQB8dehD4onbwzoM`
 - Extension archive: `MARGIN-extension-v0.1.0.zip`
 - Extension SHA-256: `109C2CA42B85DEE0AC1AAAD7DE6F3996DE4B00D56DD334C00C7440BACC4EF3AB`
+- Live fixture project: `a` (`prj_xPXHmh3TcvuBDvgSFyTRarWRfJgz`)
+- Live fixture production deployment: `dpl_3kz8DchYDXPcowansu1amK5gYtfY`
+- Live fixture URL: https://a-murex-one.vercel.app/
 
 The signer uses the injected EIP-1193 wallet and the final configured MARGIN address. No browser automation was run by the agent.
 

@@ -52,7 +52,7 @@ Record the date, browser version, extension ZIP SHA-256, current git SHA, signer
 
 ## Ready state for manual testing
 
-The following public fixtures are hosted on `https://a-murex-one.vercel.app` and are not the signer origin. They are read-only inspection fixtures for the browser run:
+The following public fixtures are hosted on `https://a-murex-one.vercel.app` and are not the signer origin. They are read-only inspection fixtures for the browser run. The fixture project is Vercel project `a` (`prj_xPXHmh3TcvuBDvgSFyTRarWRfJgz`), production deployment `dpl_3kz8DchYDXPcowansu1amK5gYtfY`.
 
 | Fixture | URL | Claim key | Non-browser state |
 | --- | --- | --- | --- |
