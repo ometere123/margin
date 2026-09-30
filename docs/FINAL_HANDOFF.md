@@ -2,7 +2,7 @@
 
 ## Current live status (2026-09-29)
 
-The corrected Studionet deployment and fresh non-browser live sequences are complete where their real deadlines elapsed. Use [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md) as the authoritative live record. Browser evidence from an earlier deployment is retained as historical evidence; a fresh browser-wallet run against the current deployment remains manual work.
+The corrected Studionet deployment and fresh non-browser live sequences are complete where their real deadlines elapsed. Use [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md) as the authoritative live record. The primary browser flow has now been run successfully by the human operator against the current deployment; automated browser control was not run by the agent.
 
 The frontend workspace routes are `/`, `/challenge?draft=...`, `/claim/<claimKey>`, `/claim/<claimKey>/assurance`, and `/activity`. The signer remains static and wallet-backed; the extension remains the primary discovery and annotation surface. The supplied logo/favicon/icon assets are included in the signer and MV3 extension. The MARGIN contract was not changed; the bound consumer was redeployed for the capped protected-release index.
 
@@ -13,7 +13,7 @@ The frontend workspace routes are `/`, `/challenge?draft=...`, `/claim/<claimKey
 - Deployment source commit: `826206bb1825cbcd716e0eb24288e91b8bc6d00a`.
 - Deployment source: 58,790 bytes; SHA-256 `6F5866BCEE5569C3BA0560E172F3FF524CF43F2A7A174189DB05CC03BD9FDEAF`.
 - Runtime identity: `chain_id=61999`, `network=studionet`, `rpc=https://studio.genlayer.com/api`.
-- A corrected-contract browser-aligned claim is recorded in `deployment.json`; fresh browser rendering against the current deployment is not claimed here. See [`docs/MANUAL_BROWSER_VERIFICATION.md`](MANUAL_BROWSER_VERIFICATION.md) for the exact manual proof steps.
+- Human browser proof against the current deployment: normal claim `259063a89ee24ca0f7cb78ee6158f024db0df1f6c5744dea0c3ec120fee36c33` from https://www.sqlite.org/serverless.html reached finalized `SUPPORTED`, re-anchored the exact quote, rendered the highlight and visible `M · SUPPORTED` badge, and exposed extension/full provenance routes. This was not an Assured Claim lifecycle.
 - Fresh non-browser final-deployment normal evidence: claim `99bbd4ea502c2b56341ec9ba9c08cacbede75d8f1e32e8964b65ec4bec63ebc6`, submit `0x6db1814f354f8661a9b298af563ee4e2c3b75277ce46df376baaa3987d4da624`, resolve `0x18fff3266f76cf0c648ba17767bb031bf5536851e6615b436d2a8a7ce448c7ee`, both `FINALIZED / MAJORITY_AGREE / SUCCESS`, canonical verdict `SUPPORTED`.
 
 The earlier environment-bound checklist below is historical context. It is not permission to overwrite the final deployment record or claim that browser-wallet verification occurred when it has not.
@@ -66,9 +66,9 @@ Do not run bare `genlayer ...` commands from this repo.
 - Python/source invariant suite: 12/12 PASS.
 - `npm exec -- genlayer --version`: `0.39.1`.
 - Studionet network info and deployed `network()` readback: `61999`, `studionet`, `https://studio.genlayer.com/api`.
-- Extension/signer typecheck, tests and builds: PASS on the current source; contract lint is AST-only (`3/3` per contract; full SDK semantic validation was not run), extension tests `16/16`, signer tests `30/30`, source invariants `12/12`, Direct Mode `41/41`.
+- Extension/signer typecheck, tests and builds: PASS on the current source; contract lint is AST-only (`3/3` per contract; full SDK semantic validation was not run), extension tests `17/17`, signer tests `30/30`, source invariants `12/12`, Direct Mode `41/41`.
 - Reproducible extension archive: `MARGIN-extension-v0.1.0.zip`, SHA-256 `15E858358D5F570FD6D965A8E3D6A9F8E26C95DB13FF86F28F6A7BEB4A9D0201`, produced by `npm run zip` from `extension/dist`; the ZIP is not committed as generated noise.
-- GitHub Actions was green for source commit `d7cc0727bdced6ba85400fb7c60703cb49c59e34` in [run `36637688185`](https://github.com/ometere123/margin/actions/runs/36637688185).
+- GitHub Actions was green for source commit `d7c274c44ad77c516dfb6b60b87132ea5af08850` in [run `36691020800`](https://github.com/ometere123/margin/actions/runs/36691020800).
 
 Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat the checks that do not require package downloads.
 
@@ -80,7 +80,7 @@ The current live evidence boundary is:
 - Consumer deployment: `0x6Bdb12646e054C24b68012560F7472636b395881`, finalized at `0x10f861aa287fe9ce0b4dbbacd95fc51cacb14539516d62f9bd6331495609ff0d`, with its constructor bound to the current MARGIN address. Source commit `66b2e2a492bc343df6369c8f6b4779fcb79a128c`, SHA-256 `FBCF9882250D640008B778F0486BDA3FCC892886270704ACB26DFADD2B7FF465`, 12,869 bytes. The previous consumer deployment is historical only.
 - Fresh final-deployment normal claim evidence: submit → resolve → `FINALIZED / MAJORITY_AGREE / SUCCESS`, with canonical verdict `SUPPORTED`, as recorded above.
 - Fresh final-deployment Assured evidence is recorded in `scripts/live/evidence/A.json` and `B.json`: A is `SETTLED + INCONCLUSIVE` with both credits withdrawn; B is `SETTLED + SUPPORTED` with a protected release created before settlement, executed and withdrawn. C is a truthful `REGISTERED` pending cancellation sequence with earliest cancellation at `2026-09-30T21:01:11.318Z`; no cancellation is claimed before that time. Historical transactions and verdicts are referenced only through [`docs/HISTORY.md`](HISTORY.md).
-- Browser verification remains manual; automated browser evidence is not claimed.
+- Primary human browser flow: `PASS`. Agent browser automation: `NOT RUN`. Optional/hostile browser matrix items are not claimed unless individually recorded.
 
 ## Production configuration hardening
 
@@ -94,7 +94,7 @@ No success evidence for those steps has been fabricated.
 
 ## Final state note
 
-The contracts are already deployed on Studionet 61999, the production signer is already deployed, and the extension is already built. Fresh Assured evidence A and B is recorded under `scripts/live/evidence/`; C remains pending until its derived 24-hour cancellation time. The remaining human task is to run [`docs/MANUAL_BROWSER_VERIFICATION.md`](MANUAL_BROWSER_VERIFICATION.md).
+The contracts are already deployed on Studionet 61999, the production signer is already deployed, and the extension is already built. Fresh Assured evidence A and B is recorded under `scripts/live/evidence/`; C remains pending until its derived 24-hour cancellation time. The primary human browser flow is complete; optional/hostile browser checks and the demo video remain separate, unclaimed items.
 
 ## Architecture that must not be weakened
 

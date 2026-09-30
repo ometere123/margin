@@ -35,14 +35,14 @@ This file describes only the current canonical deployment. Historical deployment
 - Live fixture production deployment: `dpl_3kz8DchYDXPcowansu1amK5gYtfY`
 - Live fixture URL: https://a-murex-one.vercel.app/
 
-The signer uses the injected EIP-1193 wallet and the final configured MARGIN address. No browser automation was run by the agent.
+The signer uses the injected EIP-1193 wallet and the final configured MARGIN address. The primary browser flow was run successfully by the human operator; browser automation was not run by the agent.
 
 ## Verification
 
 - Contract lint: `3/3` for each contract
 - Python invariants: `12/12`
 - Direct Mode: `41/41` in the current local verification after the final documentation/test polish
-- Extension tests: `16/16`
+- Extension tests: `17/17`
 - Signer tests: `30/30`
 - Extension and signer builds: passed
 - MARGIN source was not modified in this consumer-only round; its deployed SHA-256 remains unchanged.
@@ -65,6 +65,18 @@ The consumer deployment and fresh non-browser evidence above are current. Sequen
 - **B — Protected release:** create the release before settlement, settle `SUPPORTED`, execute, beneficiary withdraw.
 - **C — Cancellation:** register, wait the 24-hour challenge window, cancel, withdraw.
 
+## Primary human browser proof
+
+- Status: `PASS`
+- Run by: human operator
+- Claim: `259063a89ee24ca0f7cb78ee6158f024db0df1f6c5744dea0c3ec120fee36c33`
+- Source: https://www.sqlite.org/serverless.html
+- Observed: capture, signer handoff, Studionet 61999 connection, finalized submission, finalized resolution, `SUPPORTED`, exact re-anchor, highlight, visible `M · SUPPORTED` badge, refresh persistence, extension provenance/details, full provenance route, direct claim route and assurance route.
+- The SQLite claim was a normal claim only; no Assured lifecycle was executed for it.
+- Agent browser automation: `NOT RUN`
+
 ### MANUAL BROWSER STATUS
 
-`NOT RUN BY AGENT`
+`PRIMARY HUMAN BROWSER FLOW: PASS`
+
+`AGENT BROWSER AUTOMATION: NOT RUN`

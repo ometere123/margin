@@ -48,7 +48,17 @@ Use two separately authorised wallets: publisher and challenger. Use a domain pr
 
 ## Evidence record
 
-Record the date, browser version, extension ZIP SHA-256, current git SHA, signer deployment, wallet addresses (public only), transaction hashes, Explorer links, final canonical readbacks and screenshots. Mark any step not performed as `NOT RUN`; do not infer it from tests or an earlier deployment.
+The primary human browser flow is complete and passed. Record the date, browser version, extension ZIP SHA-256, current git SHA, signer deployment, wallet addresses (public only), current transaction hashes, Explorer links, final canonical readbacks and screenshots. Optional or hostile steps not performed remain `NOT RUN`; do not infer them from tests or an earlier deployment.
+
+## Human browser proof completed
+
+- Status: `PASS`
+- Run by: human operator
+- Agent browser automation: `NOT RUN`
+- Claim key: `259063a89ee24ca0f7cb78ee6158f024db0df1f6c5744dea0c3ec120fee36c33`
+- Source: https://www.sqlite.org/serverless.html
+- Observed: real-page capture, signer handoff, wallet on Studionet 61999, finalized submission, finalized resolution, `SUPPORTED`, exact quote re-anchor, CSS highlight, visible `M · SUPPORTED` badge, badge persistence after refresh, extension provenance/details, full provenance route, direct claim route and assurance route.
+- This was a normal claim only. No Assured Claim lifecycle was executed for this SQLite claim.
 
 ## Ready state for manual testing
 
@@ -98,6 +108,8 @@ Record screenshots and observed transaction hashes alongside the corresponding s
 
 ### MANUAL BROWSER STATUS
 
-`NOT RUN BY AGENT`
+`PRIMARY HUMAN BROWSER FLOW: PASS`
 
-The human operator should now run `docs/MANUAL_BROWSER_VERIFICATION.md`.
+`AGENT BROWSER AUTOMATION: NOT RUN`
+
+The optional/hostile browser matrix remains individually scoped; only performed items should be marked complete.
