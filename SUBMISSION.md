@@ -28,7 +28,7 @@ This file describes only the current canonical deployment. Historical deployment
 ## Production signer and release
 
 - Signer: https://margin-signer.vercel.app/
-- Production deployment: `dpl_AskgUH19RUAjoQB8dehD4onbwzoM`
+- Production deployment: `dpl_BYeZLjjx3zP3sUqNZ4jJy1nSuBvh`
 - Extension archive: `MARGIN-extension-v0.1.0.zip`
 - Extension SHA-256: `109C2CA42B85DEE0AC1AAAD7DE6F3996DE4B00D56DD334C00C7440BACC4EF3AB`
 - Live fixture project: `a` (`prj_xPXHmh3TcvuBDvgSFyTRarWRfJgz`)

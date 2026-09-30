@@ -31,7 +31,7 @@ This is an evidence inventory, not a project score. Historical deployments and b
 
 - The extension remains the primary discovery and annotation surface; the signer provides routed challenge, claim, assurance and activity workspaces.
 - The signer preserves injected EIP-1193 wallet handling, finalized reads, transaction persistence/recovery, Explorer links, global wallet controls, claim history and protected-release actions.
-- The production signer is `https://margin-signer.vercel.app/`, deployment `dpl_AskgUH19RUAjoQB8dehD4onbwzoM`.
+- The production signer is `https://margin-signer.vercel.app/`, deployment `dpl_BYeZLjjx3zP3sUqNZ4jJy1nSuBvh`.
 - The extension ZIP hash is `109C2CA42B85DEE0AC1AAAD7DE6F3996DE4B00D56DD334C00C7440BACC4EF3AB`.
 - Historical browser evidence demonstrates the RFC `<wbr>` anchoring and visible claim badge; it is not presented as fresh proof against the current deployment.
 - Limitation: fresh Chromium matrix execution, real-wallet current-deployment proof and the demo video remain manual deliverables.
