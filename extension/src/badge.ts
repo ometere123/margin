@@ -8,3 +8,8 @@ export function badgePosition(rect: Pick<DOMRect, 'left' | 'right' | 'top' | 'bo
   top = Math.max(margin, Math.min(top, viewport.height - badgeSize.height - margin));
   return { left, top };
 }
+
+export function applyBadgePosition(badge: HTMLElement, placement: { left: number; top: number }) {
+  badge.style.setProperty('left', `${placement.left}px`, 'important');
+  badge.style.setProperty('top', `${placement.top}px`, 'important');
+}

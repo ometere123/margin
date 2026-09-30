@@ -30,7 +30,7 @@ This file describes only the current canonical deployment. Historical deployment
 - Signer: https://margin-signer.vercel.app/
 - Production deployment: `dpl_BYeZLjjx3zP3sUqNZ4jJy1nSuBvh`
 - Extension archive: `MARGIN-extension-v0.1.0.zip`
-- Extension SHA-256: `109C2CA42B85DEE0AC1AAAD7DE6F3996DE4B00D56DD334C00C7440BACC4EF3AB`
+- Extension SHA-256: `15E858358D5F570FD6D965A8E3D6A9F8E26C95DB13FF86F28F6A7BEB4A9D0201`
 - Live fixture project: `a` (`prj_xPXHmh3TcvuBDvgSFyTRarWRfJgz`)
 - Live fixture production deployment: `dpl_3kz8DchYDXPcowansu1amK5gYtfY`
 - Live fixture URL: https://a-murex-one.vercel.app/

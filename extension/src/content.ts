@@ -1,6 +1,6 @@
 import { canonicalizeUrl, normalizeText, pageKeyFor, sha256Hex, type MarginClaim, type TextAnchor } from '../../shared/protocol';
 import { findRangeDetailed } from './anchor';
-import { badgePosition } from './badge';
+import { applyBadgePosition, badgePosition } from './badge';
 
 const marginContentGlobal = globalThis as typeof globalThis & { __MARGIN_CONTENT_ACTIVE__?: boolean };
 if (!marginContentGlobal.__MARGIN_CONTENT_ACTIVE__) {
@@ -113,8 +113,7 @@ function positionBadge(claimKey: string) {
   const visible = rects.find((rect) => rect.bottom >= 0 && rect.top <= window.innerHeight) || rects[0];
   badge.hidden = false;
   const placement = badgePosition(visible, { width: window.innerWidth, height: window.innerHeight }, { width: badge.offsetWidth || 120, height: badge.offsetHeight || 24 });
-  badge.style.left = `${placement.left}px`;
-  badge.style.top = `${placement.top}px`;
+  applyBadgePosition(badge, placement);
 }
 
 function repositionBadges() {

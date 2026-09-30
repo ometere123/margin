@@ -67,7 +67,7 @@ Do not run bare `genlayer ...` commands from this repo.
 - `npm exec -- genlayer --version`: `0.39.1`.
 - Studionet network info and deployed `network()` readback: `61999`, `studionet`, `https://studio.genlayer.com/api`.
 - Extension/signer typecheck, tests and builds: PASS on the current source; contract lint is AST-only (`3/3` per contract; full SDK semantic validation was not run), extension tests `16/16`, signer tests `30/30`, source invariants `12/12`, Direct Mode `41/41`.
-- Reproducible extension archive: `MARGIN-extension-v0.1.0.zip`, SHA-256 `109C2CA42B85DEE0AC1AAAD7DE6F3996DE4B00D56DD334C00C7440BACC4EF3AB`, produced by `npm run zip` from `extension/dist`; the ZIP is not committed as generated noise.
+- Reproducible extension archive: `MARGIN-extension-v0.1.0.zip`, SHA-256 `15E858358D5F570FD6D965A8E3D6A9F8E26C95DB13FF86F28F6A7BEB4A9D0201`, produced by `npm run zip` from `extension/dist`; the ZIP is not committed as generated noise.
 - GitHub Actions was green for source commit `d7cc0727bdced6ba85400fb7c60703cb49c59e34` in [run `36637688185`](https://github.com/ometere123/margin/actions/runs/36637688185).
 
 Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat the checks that do not require package downloads.
