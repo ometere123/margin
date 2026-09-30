@@ -5,6 +5,7 @@ Run with the official GenLayer testing suite:
 """
 import hashlib
 import json
+import copy
 import pytest
 
 URL = "https://example.com/docs/runtime"
@@ -215,6 +216,131 @@ def test_consensus_semantics_tolerate_validator_observation_variation(direct_vm,
     stale_with_claim = candidate(leader_manifest, [], [], status="STALE", claim_present=True)
     assert not contract._consensus_candidate_is_valid(no_support, "SUPPORTED", identities, "", 0)
     assert not contract._consensus_candidate_is_valid(stale_with_claim, "STALE", identities, "", 0)
+
+
+def test_consensus_trust_boundary_rejects_wrong_status_semantics_and_tampering(
+    direct_vm, direct_deploy
+):
+    """The validator binds status semantics and all decision-input commitments."""
+    contract = direct_deploy("contracts/margin.py")
+    identities = contract._expected_source_identities(
+        URL, "", ["https://example.com/docs/support"]
+    )
+    manifest = [
+        {"kind": "PRIMARY", "url": URL, "fetch_status": "OK", "content_digest": "a" * 64, "provenance": "PUBLIC_SOURCE"},
+        {"kind": "EVIDENCE", "url": "https://example.com/docs/support", "fetch_status": "OK", "content_digest": "b" * 64, "provenance": "PUBLIC_SOURCE"},
+    ]
+
+    def candidate(**overrides):
+        value = {
+            "status": "SUPPORTED",
+            "rationale": "A bounded explanation.",
+            "claim_present": True,
+            "supporting_source_indexes": [0],
+            "contradicting_source_indexes": [],
+            "historical_evidence_used": False,
+            "source_manifest": copy.deepcopy(manifest),
+        }
+        value.update(overrides)
+        if "source_manifest_digest" not in overrides:
+            value["source_manifest_digest"] = contract._source_manifest_digest(value["source_manifest"])
+        if "source_set_digest" not in overrides:
+            value["source_set_digest"] = contract._source_set_digest(identities)
+        if "adjudication_context_digest" not in overrides:
+            value["adjudication_context_digest"] = contract._adjudication_context_digest(
+                value["source_set_digest"], "", 0, "NORMAL"
+            )
+        return value
+
+    assert contract._consensus_candidate_is_valid(
+        candidate(), "SUPPORTED", identities, "", 0
+    )
+    # A leader cannot replace the independently derived verdict or semantic
+    # conditions with a structurally valid but substantively wrong result.
+    assert not contract._consensus_candidate_is_valid(
+        candidate(status="CONTRADICTED", supporting_source_indexes=[], contradicting_source_indexes=[0]),
+        "SUPPORTED", identities, "", 0,
+    )
+    assert not contract._consensus_candidate_is_valid(
+        candidate(supporting_source_indexes=[]), "SUPPORTED", identities, "", 0
+    )
+    assert not contract._consensus_candidate_is_valid(
+        candidate(status="CONTRADICTED", supporting_source_indexes=[], contradicting_source_indexes=[]),
+        "CONTRADICTED", identities, "", 0,
+    )
+    assert not contract._consensus_candidate_is_valid(
+        candidate(status="STALE", claim_present=True, supporting_source_indexes=[]),
+        "STALE", identities, "", 0,
+    )
+
+    # Recomputing a commitment does not let a leader alter the committed input.
+    identity_tamper = copy.deepcopy(manifest)
+    identity_tamper[0]["url"] = "https://attacker.example/"
+    assert not contract._consensus_candidate_is_valid(
+        candidate(source_manifest=identity_tamper), "SUPPORTED", identities, "", 0
+    )
+    assert not contract._consensus_candidate_is_valid(
+        candidate(source_set_digest="c" * 64), "SUPPORTED", identities, "", 0
+    )
+    assert not contract._consensus_candidate_is_valid(
+        candidate(adjudication_context_digest="d" * 64), "SUPPORTED", identities, "", 0
+    )
+    assert not contract._consensus_candidate_is_valid(
+        candidate(source_manifest=[manifest[0]]), "SUPPORTED", identities, "", 0
+    )
+
+
+def test_consensus_provenance_variation_cannot_change_status_or_consequences(
+    direct_vm, direct_deploy
+):
+    """Rationale/index attribution is proposal provenance, not settlement input."""
+    contract = direct_deploy("contracts/margin.py")
+    identities = contract._expected_source_identities(
+        URL, "", ["https://example.com/docs/support"]
+    )
+    manifests = [
+        [
+            {"kind": "PRIMARY", "url": URL, "fetch_status": "OK", "content_digest": "a" * 64, "provenance": "PUBLIC_SOURCE"},
+            {"kind": "EVIDENCE", "url": "https://example.com/docs/support", "fetch_status": "OK", "content_digest": "b" * 64, "provenance": "PUBLIC_SOURCE"},
+        ],
+        [
+            {"kind": "PRIMARY", "url": URL, "fetch_status": "OK", "content_digest": "c" * 64, "provenance": "PUBLIC_SOURCE"},
+            {"kind": "EVIDENCE", "url": "https://example.com/docs/support", "fetch_status": "OK", "content_digest": "d" * 64, "provenance": "PUBLIC_SOURCE"},
+        ],
+    ]
+
+    def candidate(manifest, rationale, supporting):
+        source_set_digest = contract._source_set_digest(identities)
+        return {
+            "status": "SUPPORTED",
+            "rationale": rationale,
+            "claim_present": True,
+            "supporting_source_indexes": supporting,
+            "contradicting_source_indexes": [],
+            "historical_evidence_used": False,
+            "source_manifest": manifest,
+            "source_manifest_digest": contract._source_manifest_digest(manifest),
+            "source_set_digest": source_set_digest,
+            "adjudication_context_digest": contract._adjudication_context_digest(
+                source_set_digest, "", 0, "NORMAL"
+            ),
+        }
+
+    leader = candidate(manifests[0], "Leader wording is unrelated but bounded.", [0])
+    validator = candidate(manifests[1], "Validator wording independently differs.", [1])
+    assert leader["rationale"] != validator["rationale"]
+    assert leader["supporting_source_indexes"] != validator["supporting_source_indexes"]
+    assert contract._consensus_candidate_is_valid(
+        leader, "SUPPORTED", identities, "", 0
+    )
+    assert contract._consensus_candidate_is_valid(
+        validator, "SUPPORTED", identities, "", 0
+    )
+
+    # All state-changing downstream decisions consume the agreed status. The
+    # same status therefore yields the same SUPPORTED winner and eligibility;
+    # rationale/index attribution is retained only as accepted provenance.
+    assert leader["status"] == validator["status"] == "SUPPORTED"
 
 
 def test_network_metadata_is_studionet(direct_vm, direct_deploy):

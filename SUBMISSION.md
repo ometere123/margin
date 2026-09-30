@@ -41,7 +41,7 @@ The signer uses the injected EIP-1193 wallet and the final configured MARGIN add
 
 - Contract lint: `3/3` for each contract
 - Python invariants: `12/12`
-- Direct Mode: `41/41` in the current local verification after the final documentation/test polish
+- Direct Mode: `43/43` in the current local verification after the consensus trust-boundary test pass
 - Extension tests: `17/17`
 - Signer tests: `30/30`
 - Extension and signer builds: passed
