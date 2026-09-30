@@ -56,6 +56,12 @@ The signer uses the injected EIP-1193 wallet and the final configured MARGIN add
 
 The consumer deployment and fresh non-browser evidence above are current. Sequences A and B are recorded in `scripts/live/evidence/` with finalized receipts and canonical readbacks; sequence C is registered and pending its real cancellation window. The human browser matrix is not claimed.
 
+## Live sequence labels
+
+- **A — Normal-resolve-first Assured lifecycle:** submit, normal resolve, register, challenge, assured resolve, wait the appeal window, settle, withdraw.
+- **B — Protected release:** create the release before settlement, settle `SUPPORTED`, execute, beneficiary withdraw.
+- **C — Cancellation:** register, wait the 24-hour challenge window, cancel, withdraw.
+
 ### MANUAL BROWSER STATUS
 
 `NOT RUN BY AGENT`
