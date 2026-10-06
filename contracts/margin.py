@@ -79,8 +79,8 @@ def _pure_archive_provenance(url: str) -> str:
     return "SUPPLEMENTAL"
 
 
-def _pure_source_record(kind: str, url: str, fetch_status: str, body: str = "") -> dict[str, str]:
-    bounded = body[:MAX_PRIMARY_CHARS if kind == "PRIMARY" else MAX_ARCHIVE_CHARS if kind == "ARCHIVE" else MAX_EVIDENCE_CHARS]
+def _pure_source_record(kind: str, url: str, fetch_status: str, body: str = "", complete: bool = False) -> dict[str, str]:
+    bounded = body if complete else body[:MAX_PRIMARY_CHARS if kind == "PRIMARY" else MAX_ARCHIVE_CHARS if kind == "ARCHIVE" else MAX_EVIDENCE_CHARS]
     return {
         "kind": kind,
         "url": url,
@@ -574,11 +574,26 @@ class Margin(gl.Contract):
                 return {"ok": False}
             if len(citation) > MAX_COVERED_CITATION_CHARS or relation not in ("SUPPORTS", "CONTRADICTS", "NEUTRAL", "INSUFFICIENT"):
                 return {"ok": False}
-            if profile == "GITHUB_COMMIT" and not isinstance(item.get("authority_metadata"), dict):
+            authority_metadata = item.get("authority_metadata")
+            if profile == "DOMAIN_CONTROLLED" and not url.startswith(expected_origin + "/"):
+                return {"ok": False}
+            if profile == "RECOGNISED_ARCHIVE" and _pure_archive_provenance(url) != "RECOGNISED_ARCHIVE":
+                return {"ok": False}
+            if profile == "GITHUB_COMMIT":
+                if not isinstance(authority_metadata, dict):
+                    return {"ok": False}
+                commit = str(authority_metadata.get("commit", "")).strip().lower()
+                repository = str(authority_metadata.get("repository", "")).strip()
+                path = str(authority_metadata.get("path", "")).strip()
+                if len(commit) != 40 or any(char not in "0123456789abcdef" for char in commit) or not repository or not path or len(repository) > 300 or len(path) > 512:
+                    return {"ok": False}
+                if not url.startswith("https://raw.githubusercontent.com/") or f"/{commit}/" not in url:
+                    return {"ok": False}
+            if relation in ("SUPPORTS", "CONTRADICTS") and citation.strip() == "":
                 return {"ok": False}
             seen.append(evidence_id)
             normalized_pack.append({
-                "authority_metadata": item.get("authority_metadata", {}),
+                "authority_metadata": authority_metadata if isinstance(authority_metadata, dict) else {},
                 "authority_profile": profile,
                 "citation_exact": citation,
                 "evidence_id": evidence_id,
@@ -1440,7 +1455,7 @@ class Margin(gl.Contract):
                     if len(primary) > MAX_COVERED_ARTIFACT_CHARS or hashlib.sha256(primary.encode("utf-8")).hexdigest() != covered_record.primary_artifact_sha256:
                         covered_integrity_ok = False
                 source_chunks.append(f"PRIMARY URL: {canonical_url}\n{primary[:MAX_PRIMARY_CHARS]}")
-                primary_record = _pure_source_record("PRIMARY", canonical_url, "OK", primary)
+                primary_record = _pure_source_record("PRIMARY", canonical_url, "OK", primary, complete=covered_record is not None)
                 if covered_record is not None:
                     primary_record["integrity_status"] = "VERIFIED" if covered_integrity_ok else "INTEGRITY_FAILED"
                 manifest.append(primary_record)
@@ -1461,7 +1476,7 @@ class Margin(gl.Contract):
                 try:
                     response = gl.nondet.web.get(evidence_url)
                     body = response.body.decode("utf-8", errors="replace")
-                    record = _pure_source_record("EVIDENCE", evidence_url, "OK", body)
+                    record = _pure_source_record("EVIDENCE", evidence_url, "OK", body, complete=covered_record is not None)
                     if covered_record is not None:
                         expected = covered_expectations.get(evidence_url)
                         if expected is None or len(body) > MAX_COVERED_ARTIFACT_CHARS:

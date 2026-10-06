@@ -148,6 +148,24 @@ def test_covered_manifest_requires_primary_artifact_commitment(direct_vm, direct
         margin.register_covered_claim(key, "covered-nonce-1", expiry)
 
 
+def test_covered_manifest_enforces_typed_authority_profile_and_citation(direct_vm, direct_deploy, direct_alice):
+    margin = direct_deploy("contracts/margin.py")
+    direct_vm.sender = direct_alice
+    key = _claim_key()
+    _submit(margin, key)
+    expiry = "2999-01-01T00:00:00+00:00"
+    parsed = json.loads(_manifest(key, expiry, "0x" + direct_alice.hex(), 5))
+    parsed["evidence_pack"][0]["authority_profile"] = "DOMAIN_CONTROLLED"
+    parsed["evidence_pack"][0]["citation_exact"] = ""
+    direct_vm.mock_web(
+        r".*example\.com/\.well-known/margin/claims/.*",
+        {"status": 200, "body": json.dumps(parsed, separators=(",", ":"), sort_keys=True)},
+    )
+    direct_vm.value = 5
+    with direct_vm.expect_revert("covered claim manifest could not be independently verified"):
+        margin.register_covered_claim(key, "covered-nonce-1", expiry)
+
+
 def test_covered_digest_mismatch_cannot_finalize_supported(direct_vm, direct_deploy, direct_alice, direct_bob):
     margin = direct_deploy("contracts/margin.py")
     direct_vm.sender = direct_alice
