@@ -11,9 +11,9 @@ This file records only current deployment evidence. Older deployments, consumer 
 
 ## Current deployment readback
 
-MARGIN is `0x0f8D86d56F1b8997475dD048579807fBFe60e227`, deployed by `0x1f54fb2b8520008a8bf856906a695dd35f6835e28afdedf51bded400744abebd`. Its source is commit `826206bb1825cbcd716e0eb24288e91b8bc6d00a`, SHA-256 `6F5866BCEE5569C3BA0560E172F3FF524CF43F2A7A174189DB05CC03BD9FDEAF`, size 58,790 bytes. `network()` reads Studionet, chain `61999`, and the required RPC. Deployment finalized `MAJORITY_AGREE / SUCCESS`.
+MARGIN V2 is `0x03197B3246a5BF0C28fad07c4E5868F52c601580`, deployed by `0x84a4b0a159205e4ba2be9c913a9d3698cb43d5bbcfe66502f24093b50fc67250`. Its source is commit `54605dae812afca03a0f9b2dacaf91e23ccdac95`, SHA-256 `F880EA25C950135FE51BBABFD9DF84C408B490216D9B4A8263638660EC6D7B01`, size 80,340 bytes. `network()` reads Studionet, chain `61999`, and the required RPC. Deployment finalized `MAJORITY_AGREE / SUCCESS`.
 
-The current consumer is `0x6Bdb12646e054C24b68012560F7472636b395881`, deployed by `0x10f861aa287fe9ce0b4dbbacd95fc51cacb14539516d62f9bd6331495609ff0d`. Its source is commit `66b2e2a492bc343df6369c8f6b4779fcb79a128c`, SHA-256 `FBCF9882250D640008B778F0486BDA3FCC892886270704ACB26DFADD2B7FF465`, size 12,869 bytes. The constructor binds it to the current MARGIN address. Consumer deployment finalized `MAJORITY_AGREE / SUCCESS`.
+The current V2 consumer is `0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24`, deployed by `0xebc599b8d667f6fc39787057cf261273f24a566a60f62d194e5c0821365a3ba3`. Its source is commit `54605dae812afca03a0f9b2dacaf91e23ccdac95`, SHA-256 `4060BFABA93A8B6BF90F6CDA6466D2066A7F1E1ED91036C1DB275047201DF6EC`, size 15,416 bytes. The constructor binding readback is `0x03197B3246a5BF0C28fad07c4E5868F52c601580`. Consumer deployment finalized `MAJORITY_AGREE / SUCCESS`.
 
 ## Current normal claim
 
@@ -28,4 +28,4 @@ Claim `99bbd4ea502c2b56341ec9ba9c08cacbede75d8f1e32e8964b65ec4bec63ebc6` on the 
 
 ## Live evidence status
 
-Fresh Assured sequence A and funded protected-release sequence B are complete against the current deployment with finalized receipts and canonical readbacks in `scripts/live/evidence/`. Sequence C is truthfully pending until `2026-09-30T21:01:11.318Z`; no cancellation is claimed before then. The primary human browser flow also passed for normal claim `259063a89ee24ca0f7cb78ee6158f024db0df1f6c5744dea0c3ec120fee36c33` from https://www.sqlite.org/serverless.html, including finalized `SUPPORTED`, exact re-anchor, highlight, visible badge and provenance routes. No Assured lifecycle was executed for that claim. Optional/hostile browser checks remain unclaimed unless individually recorded.
+No Covered Claim lifecycle has yet been run against the V2 deployment. The A/B/C JSON records under `scripts/live/evidence/` are historical V1 evidence and are not relabeled. A fresh V2 live claim, protected-release lifecycle and integrity-failure lifecycle remain outstanding. The primary human browser flow recorded in the V1 handoff is not claimed as V2 proof. Optional/hostile browser checks remain unclaimed unless individually recorded.

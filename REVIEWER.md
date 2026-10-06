@@ -7,7 +7,7 @@ This is a short, evidence-first review path for the current Studionet release.
 3. Run `npm run verify` for TypeScript checks, extension/signer tests, Python invariants and both builds.
 4. Run `npm run test:direct` from an Ubuntu/WSL environment for the Direct Mode suite. The Windows native Direct Mode runner has a known temporary-file locking limitation; CI runs this same suite on Ubuntu.
 5. Inspect [`deployment.json`](deployment.json) for the current Studionet contract, consumer binding, deployment transactions and source hash. Historical deployments are retained below the current record and are not current evidence.
-6. Open [`https://margin-signer.vercel.app/`](https://margin-signer.vercel.app/) and inspect `/claim/<claim-key>` for a finalized claim read directly from MARGIN. The signer has no backend and uses the injected EIP-1193 wallet only for writes.
+6. Open [`https://margin-signer.vercel.app/`](https://margin-signer.vercel.app/) and inspect `/claim/<claim-key>` for a finalized claim read directly from the V2 MARGIN deployment. The signer has no backend and uses the injected EIP-1193 wallet only for writes.
 7. Load `extension/dist` as an unpacked MV3 extension, open a public page, highlight a narrow technical claim and choose **Challenge with MARGIN**. The extension opens `/challenge?draft=...`; it does not hold wallet controls.
 8. For the complete manual browser and Assured Claim matrix, follow [`docs/MANUAL_BROWSER_VERIFICATION.md`](docs/MANUAL_BROWSER_VERIFICATION.md). It is an observation checklist, not recorded live evidence.
 9. For a read-only current deployment check, run `npm run live:read` or `npm run live:read -- --claim=<64-hex-claim-key>`. This verifies `network()` at `LATEST_FINAL` and optionally reads a claim; it performs no writes. The consumer binding is verified from deployment construction calldata because the bound storage field is not exposed as a callable public view in this SDK path.
@@ -36,12 +36,15 @@ This is a short, evidence-first review path for the current Studionet release.
 | Bond conservation for cancellation and abort | `test_publisher_can_cancel_unchallenged_assured_claim_once`; `test_stalled_challenge_can_abort_and_refund_both_bonds` (Direct Mode only) |
 | Bond conservation for publisher and challenger appeals | `test_publisher_appeal_conserves_and_withdraws_all_bonds`; `test_appealed_timeout_has_only_abort_refund_exit` (Direct Mode only) |
 | Protected release is pre-settlement and pull-paid | consumer lifecycle tests, `create_protected_release`, `execute_release`, `refund_release` and `withdraw_release_credit` |
+| Covered Claim requires a publisher-controlled derived manifest and typed evidence pack | `tests/direct/test_covered_claims.py`; `_validate_covered_manifest` and derived `/.well-known/margin/claims/<claim>.json` path |
+| Covered evidence binds complete primary/evidence artifact digests | `test_covered_claim_requires_primary_artifact_commitment`; `test_covered_claim_digest_mismatch_is_not_definitively_supported` |
+| Covered collateral and challenge economics are value-coupled | `test_covered_claim_collateral_and_exposure`; covered registration checks in `tests/direct/test_covered_claims.py` |
 | Current consumer deployment is bound correctly | current consumer deployment calldata, address and source SHA-256 in `deployment.json` |
 | Resolver cannot escape by waiting briefly | `abort_stalled` timeout tests and timing notes in `docs/LIVE_VALIDATION.md` |
 | Wallet signing is ordinary EIP-1193 | signer wallet tests and source review; no Snap methods |
 | Browser annotation is extension-first | extension anchor/badge tests; current browser matrix remains manual and `NOT RUN BY AGENT` |
-| Live sequence A — normal-resolve-first Assured lifecycle | `scripts/live/evidence/A.json` and `A.md`; submit → normal resolve → register → challenge → assured resolve → appeal window → settle → withdraw, with status/readback recorded after real finality |
-| Live sequence B — protected release | `scripts/live/evidence/B.json` and `B.md`; release created before settlement, then `SETTLED + SUPPORTED` execution and beneficiary withdrawal recorded truthfully |
-| Live sequence C — cancellation | `scripts/live/evidence/C.json` and `C.md`; register → full 24-hour challenge window → cancel → withdraw, with pending status and finalized-registration-derived earliest cancellation time |
+| V2 live sequence A — Covered lifecycle | Not yet run against V2; prior `scripts/live/evidence/A.*` is historical V1 evidence |
+| V2 live sequence B — Covered protected release | Not yet run against V2; prior `scripts/live/evidence/B.*` is historical V1 evidence |
+| V2 live sequence C — Covered cancellation | Not yet run against V2; prior `scripts/live/evidence/C.*` is historical V1 evidence |
 
 The current release uses Studionet chain `61999`, RPC `https://studio.genlayer.com/api`, and the addresses recorded in `deployment.json`. Browser, wallet and live lifecycle claims remain limited to the transactions and manual checks explicitly recorded there and in `docs/LIVE_VALIDATION.md`.

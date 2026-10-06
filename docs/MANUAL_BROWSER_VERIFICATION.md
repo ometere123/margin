@@ -9,7 +9,7 @@ This checklist is for the current release. It does not authorize contract redepl
 3. Run `npm run zip` and record the resulting ZIP SHA-256.
 4. Load `extension/dist` as an unpacked extension in a fresh Chromium profile.
 5. Confirm the toolbar and side-panel icons use the MARGIN assets.
-6. Open `https://margin-signer.vercel.app/` and confirm the deployment card shows Studionet `61999`, MARGIN `0x0f8D86d56F1b8997475dD048579807fBFe60e227`, and the bound consumer `0x6Bdb12646e054C24b68012560F7472636b395881` where shown.
+6. Open `https://margin-signer.vercel.app/` and confirm the deployment card shows Studionet `61999`, V2 MARGIN `0x03197B3246a5BF0C28fad07c4E5868F52c601580`, and the bound consumer `0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24` where shown.
 
 ## Normal claim flow
 
@@ -61,7 +61,7 @@ The primary human browser flow is complete and passed. Record the date, browser 
 
 ## Ready state for manual testing
 
-The following public fixtures are hosted on `https://a-murex-one.vercel.app` and are not the signer origin. They are read-only inspection fixtures for the browser run. The fixture project is Vercel project `a` (`prj_xPXHmh3TcvuBDvgSFyTRarWRfJgz`), production deployment `dpl_3kz8DchYDXPcowansu1amK5gYtfY`.
+The following public fixtures are hosted on `https://a-murex-one.vercel.app` and are not the signer origin. They are read-only inspection fixtures for the browser run. The fixture project is Vercel project `a` (`prj_xPXHmh3TcvuBDvgSFyTRarWRfJgz`), production deployment `dpl_DD43w22FgrutZMj15euqzPjaZR14`.
 
 | Fixture | URL | Claim key | Non-browser state |
 | --- | --- | --- | --- |
@@ -69,7 +69,7 @@ The following public fixtures are hosted on `https://a-murex-one.vercel.app` and
 | B | `https://a-murex-one.vercel.app/b.html` | `65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a` | `SETTLED`, `final_status=SUPPORTED`; release `0:65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a` was created before settlement, `executed=true`, `refunded=false`, beneficiary credit `0` after withdrawal, `is_claim_supported=true`, Assured credits `0`. |
 | C | `https://a-murex-one.vercel.app/c.html` | `55a4242e0958156bba84c565255ba528b49edd5b5f4974a62783c3cdc5336fcb` | `REGISTERED`, unchallenged; cancellation is not yet possible. Registration state began `2026-09-29T21:00:11.318794Z`; earliest cancel is `2026-09-30T21:01:11.318Z`. |
 
-Public wallet roles used by the non-browser evidence are: publisher `0xb29Ead15B1E8A2420faE84de974088f67a15ccC2`, challenger `0xac3AC69dC0Bde389256dD6748C75817ead9286D9`, and integrator `0x951e6B75530774fF82321a5ae54e14F778F0C855`. The current contract is `0x0f8D86d56F1b8997475dD048579807fBFe60e227`; the bound consumer is `0x6Bdb12646e054C24b68012560F7472636b395881`.
+Public wallet roles used by the historical non-browser evidence are: publisher `0xb29Ead15B1E8A2420faE84de974088f67a15ccC2`, challenger `0xac3AC69dC0Bde389256dD6748C75817ead9286D9`, and integrator `0x951e6B75530774fF82321a5ae54e14F778F0C855`. A fresh V2 lifecycle needs newly recorded role assignments. The current V2 contract is `0x03197B3246a5BF0C28fad07c4E5868F52c601580`; the bound consumer is `0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24`.
 
 The A, B and C fixture routes are read-only against canonical finalized state. They do not require importing the publisher, challenger or integrator keys. A fresh claim submission, resolution, wallet rejection and network-switch test require your own funded injected wallet; you cannot sign as the recorded publisher/challenger/integrator accounts unless you deliberately import those accounts.
 

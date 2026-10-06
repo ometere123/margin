@@ -12,38 +12,38 @@ This file describes only the current canonical deployment. Historical deployment
 
 ## Current deployments
 
-- MARGIN: [`0x0f8D86d56F1b8997475dD048579807fBFe60e227`](https://explorer-studio.genlayer.com/address/0x0f8D86d56F1b8997475dD048579807fBFe60e227)
-- MARGIN deployment: [`0x1f54fb2b8520008a8bf856906a695dd35f6835e28afdedf51bded400744abebd`](https://explorer-studio.genlayer.com/tx/0x1f54fb2b8520008a8bf856906a695dd35f6835e28afdedf51bded400744abebd)
-- MARGIN source commit: `826206bb1825cbcd716e0eb24288e91b8bc6d00a`
-- MARGIN source SHA-256: `6F5866BCEE5569C3BA0560E172F3FF524CF43F2A7A174189DB05CC03BD9FDEAF`
+- MARGIN: [`0x03197B3246a5BF0C28fad07c4E5868F52c601580`](https://explorer-studio.genlayer.com/address/0x03197B3246a5BF0C28fad07c4E5868F52c601580)
+- MARGIN deployment: [`0x84a4b0a159205e4ba2be9c913a9d3698cb43d5bbcfe66502f24093b50fc67250`](https://explorer-studio.genlayer.com/tx/0x84a4b0a159205e4ba2be9c913a9d3698cb43d5bbcfe66502f24093b50fc67250)
+- MARGIN source commit: `54605dae812afca03a0f9b2dacaf91e23ccdac95`
+- MARGIN source SHA-256: `F880EA25C950135FE51BBABFD9DF84C408B490216D9B4A8263638660EC6D7B01`
 - MARGIN deployment result: `FINALIZED / MAJORITY_AGREE / SUCCESS`
-- Consumer: [`0x6Bdb12646e054C24b68012560F7472636b395881`](https://explorer-studio.genlayer.com/address/0x6Bdb12646e054C24b68012560F7472636b395881)
-- Consumer deployment: [`0x10f861aa287fe9ce0b4dbbacd95fc51cacb14539516d62f9bd6331495609ff0d`](https://explorer-studio.genlayer.com/tx/0x10f861aa287fe9ce0b4dbbacd95fc51cacb14539516d62f9bd6331495609ff0d)
-- Consumer source commit: `66b2e2a492bc343df6369c8f6b4779fcb79a128c`
-- Consumer source SHA-256: `FBCF9882250D640008B778F0486BDA3FCC892886270704ACB26DFADD2B7FF465`
-- Consumer source size: `12869` bytes
+- Consumer: [`0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24`](https://explorer-studio.genlayer.com/address/0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24)
+- Consumer deployment: [`0xebc599b8d667f6fc39787057cf261273f24a566a60f62d194e5c0821365a3ba3`](https://explorer-studio.genlayer.com/tx/0xebc599b8d667f6fc39787057cf261273f24a566a60f62d194e5c0821365a3ba3)
+- Consumer source commit: `54605dae812afca03a0f9b2dacaf91e23ccdac95`
+- Consumer source SHA-256: `4060BFABA93A8B6BF90F6CDA6466D2066A7F1E1ED91036C1DB275047201DF6EC`
+- Consumer source size: `15416` bytes
 - Consumer constructor binding: final MARGIN address above
 - Consumer deployment result: `FINALIZED / MAJORITY_AGREE / SUCCESS`
 
 ## Production signer and release
 
 - Signer: https://margin-signer.vercel.app/
-- Production deployment: `dpl_BYeZLjjx3zP3sUqNZ4jJy1nSuBvh`
+- Production deployment: `dpl_99CS5PiZNHKfkwgqmzBNBVYmC3QL`
 - Extension archive: `MARGIN-extension-v0.1.0.zip`
-- Extension SHA-256: `15E858358D5F570FD6D965A8E3D6A9F8E26C95DB13FF86F28F6A7BEB4A9D0201`
+- Extension SHA-256: `A1121399097C9F5D425C41BDE718453D587BEE9F15A459A97DA14DF508625803`
 - Live fixture project: `a` (`prj_xPXHmh3TcvuBDvgSFyTRarWRfJgz`)
-- Live fixture production deployment: `dpl_3kz8DchYDXPcowansu1amK5gYtfY`
+- Live fixture production deployment: `dpl_DD43w22FgrutZMj15euqzPjaZR14`
 - Live fixture URL: https://a-murex-one.vercel.app/
 
-The signer uses the injected EIP-1193 wallet and the final configured MARGIN address. The primary browser flow was run successfully by the human operator.
+The signer uses the injected EIP-1193 wallet and the final configured V2 MARGIN address. A fresh V2 browser flow remains manual and is not claimed here.
 
 ## Verification
 
 - Contract lint: `3/3` for each contract
 - Python invariants: `12/12`
-- Direct Mode: `43/43` in the current local verification after the consensus trust-boundary test pass
+- Direct Mode: `51/51` in the current local verification after the Covered Claim test pass
 - Extension tests: `17/17`
-- Signer tests: `30/30`
+- Signer tests: `31/31`
 - Extension and signer builds: passed
 - MARGIN source was not modified in this consumer-only round; its deployed SHA-256 remains unchanged.
 
@@ -57,7 +57,7 @@ The signer uses the injected EIP-1193 wallet and the final configured MARGIN add
 
 ## Live evidence boundary
 
-The consumer deployment and fresh non-browser evidence above are current. Sequences A and B are recorded in `scripts/live/evidence/` with finalized receipts and canonical readbacks; sequence C is registered and pending its real cancellation window. The primary human browser flow is recorded above; optional browser matrix items are not claimed.
+The V2 contract and consumer deployments above are current. No Covered Claim lifecycle has yet been run against these V2 addresses; the older A/B/C records remain historical and are not V2 evidence. The primary human browser flow recorded above belongs to the previous canonical deployment and is not claimed as V2 proof.
 
 ## Live sequence labels
 

@@ -2,7 +2,8 @@ import { readFile } from 'node:fs/promises';
 
 const origin = 'https://a-murex-one.vercel.app';
 const signerOrigin = 'https://margin-signer.vercel.app';
-const canonicalMargin = '0x0f8D86d56F1b8997475dD048579807fBFe60e227';
+const canonicalMargin = '0x03197B3246a5BF0C28fad07c4E5868F52c601580';
+const canonicalConsumer = '0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24';
 const checks = [
   ['/', 'Every GenLayer transaction reaches consensus through independent validator adjudication before finalization.', 'MARGIN live claim A'],
   ['/b.html', 'GenLayer validators independently adjudicate transactions before the protocol finalizes them.', 'MARGIN live claim B'],
@@ -50,4 +51,7 @@ if (!bundleResponse.ok) throw new Error(`signer bundle: HTTP ${bundleResponse.st
 if (!bundle.includes(canonicalMargin)) {
   throw new Error(`signer bundle: missing canonical MARGIN address ${canonicalMargin}`);
 }
-console.log(`${signerOrigin}/ HTTP ${signerResponse.status}: bundle ${bundleUrl} contains canonical MARGIN address; no missing-config banner`);
+if (!bundle.includes(canonicalConsumer)) {
+  throw new Error(`signer bundle: missing canonical consumer address ${canonicalConsumer}`);
+}
+console.log(`${signerOrigin}/ HTTP ${signerResponse.status}: bundle ${bundleUrl} contains canonical V2 addresses; no missing-config banner`);

@@ -48,10 +48,12 @@ cannot produce a definitive `SUPPORTED` or `CONTRADICTED` result.
 
 ## Current limitations
 
-The V2 implementation is being developed on the milestone branch. Fresh
-Studionet deployment, live Covered Claim lifecycles, production signer
-configuration, and the V2 extension release remain gated on the complete local
-and CI regression suite. No V2 deployment is claimed by this document yet.
+V2 MARGIN is deployed on Studionet at
+`0x03197B3246a5BF0C28fad07c4E5868F52c601580` and the bound consumer is
+`0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24`. The production signer has been
+rebuilt for those addresses. Fresh V2 Covered Claim lifecycles, protected
+release execution/refund evidence, and a V2 browser run remain outstanding;
+the earlier A/B/C evidence is historical V1 evidence and is not relabeled.
 
 ## Local gate snapshot
 

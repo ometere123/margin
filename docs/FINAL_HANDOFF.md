@@ -2,18 +2,18 @@
 
 ## Current live status (2026-09-29)
 
-The corrected Studionet deployment and fresh non-browser live sequences are complete where their real deadlines elapsed. Use [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md) as the authoritative live record. The primary browser flow has now been run successfully by the human operator against the current deployment.
+The V2 Studionet deployments are finalized and recorded in [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md). No V2 Covered Claim lifecycle is claimed yet; prior A/B/C lifecycle records remain historical. The primary browser flow in the earlier handoff is not claimed as V2 proof.
 
 Protected runtime/protocol implementation is unchanged from the known-good baseline `23062e40b16d74f5fb72c56a72cdfaa0eaef9587`; the current candidate adds only tests and documentation.
 
 The frontend workspace routes are `/`, `/challenge?draft=...`, `/claim/<claimKey>`, `/claim/<claimKey>/assurance`, and `/activity`. The signer remains static and wallet-backed; the extension remains the primary discovery and annotation surface. The supplied logo/favicon/icon assets are included in the signer and MV3 extension. The MARGIN contract was not changed; the bound consumer was redeployed for the capped protected-release index.
 
 - Network: Studionet, chain `61999`, RPC `https://studio.genlayer.com/api`.
-- Contract: `0x0f8D86d56F1b8997475dD048579807fBFe60e227`.
-- Bound consumer: `0x6Bdb12646e054C24b68012560F7472636b395881`, deployed in a separate consumer-only correction and bound to the contract above.
-- Deployment: `0x1f54fb2b8520008a8bf856906a695dd35f6835e28afdedf51bded400744abebd`, `FINALIZED / MAJORITY_AGREE / SUCCESS`.
-- Deployment source commit: `826206bb1825cbcd716e0eb24288e91b8bc6d00a`.
-- Deployment source: 58,790 bytes; SHA-256 `6F5866BCEE5569C3BA0560E172F3FF524CF43F2A7A174189DB05CC03BD9FDEAF`.
+- Contract: `0x03197B3246a5BF0C28fad07c4E5868F52c601580`.
+- Bound consumer: `0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24`, bound to the V2 contract above.
+- Deployment: `0x84a4b0a159205e4ba2be9c913a9d3698cb43d5bbcfe66502f24093b50fc67250`, `FINALIZED / MAJORITY_AGREE / SUCCESS`.
+- Deployment source commit: `54605dae812afca03a0f9b2dacaf91e23ccdac95`.
+- Deployment source: 80,340 bytes; SHA-256 `F880EA25C950135FE51BBABFD9DF84C408B490216D9B4A8263638660EC6D7B01`.
 - Runtime identity: `chain_id=61999`, `network=studionet`, `rpc=https://studio.genlayer.com/api`.
 - Human browser proof against the current deployment: normal claim `259063a89ee24ca0f7cb78ee6158f024db0df1f6c5744dea0c3ec120fee36c33` from https://www.sqlite.org/serverless.html reached finalized `SUPPORTED`, re-anchored the exact quote, rendered the highlight and visible `M · SUPPORTED` badge, and exposed extension/full provenance routes. This was not an Assured Claim lifecycle.
 - Fresh non-browser final-deployment normal evidence: claim `99bbd4ea502c2b56341ec9ba9c08cacbede75d8f1e32e8964b65ec4bec63ebc6`, submit `0x6db1814f354f8661a9b298af563ee4e2c3b75277ce46df376baaa3987d4da624`, resolve `0x18fff3266f76cf0c648ba17767bb031bf5536851e6615b436d2a8a7ce448c7ee`, both `FINALIZED / MAJORITY_AGREE / SUCCESS`, canonical verdict `SUPPORTED`.
@@ -63,13 +63,13 @@ Do not run bare `genlayer ...` commands from this repo.
 
 ## Checks completed for the corrected candidate
 
-- Direct Mode: 43/43 PASS, including adversarial domain-proof rejection cases, timeout-race cases, per-creator release-cap enforcement, pagination, bond-conservation assertions, real MARGIN/consumer integration coverage and explicit consensus trust-boundary tamper cases.
+- Direct Mode: 51/51 PASS, including Covered Claim collateral/exposure cases, adversarial domain-proof rejection cases, timeout-race cases, per-creator release-cap enforcement, pagination, bond-conservation assertions, real MARGIN/consumer integration coverage and explicit consensus trust-boundary tamper cases.
 - Contract AST lint: 3/3 PASS for both contracts with `genvm-lint 0.11.1rc2`; SDK semantic validation is not claimed because the compatible v0.2.12 runner bundle is unavailable to the installed linter.
 - Python/source invariant suite: 12/12 PASS.
 - `npm exec -- genlayer --version`: `0.39.1`.
 - Studionet network info and deployed `network()` readback: `61999`, `studionet`, `https://studio.genlayer.com/api`.
-- Extension/signer typecheck, tests and builds: PASS on the current source; contract lint is AST-only (`3/3` per contract; full SDK semantic validation was not run), extension tests `17/17`, signer tests `31/31`, source invariants `12/12`, Direct Mode `43/43`. The deterministic browser harness covers fresh-profile wallet rejection/account switch/wrong-network/refresh recovery, annotation persistence, and a hostile-page fixture; it is separate from manual real-wallet verification.
-- Reproducible extension archive: `MARGIN-extension-v0.1.0.zip`, SHA-256 `15E858358D5F570FD6D965A8E3D6A9F8E26C95DB13FF86F28F6A7BEB4A9D0201`, produced by `npm run zip` from `extension/dist`; the ZIP is not committed as generated noise.
+- Extension/signer typecheck, tests and builds: PASS on the current source; contract lint is AST-only (`3/3` per contract; full SDK semantic validation was not run), extension tests `17/17`, signer tests `31/31`, source invariants `12/12`, Direct Mode `51/51`. The deterministic browser harness is separate from manual real-wallet verification.
+- Reproducible extension archive: `MARGIN-extension-v0.1.0.zip`, SHA-256 `A1121399097C9F5D425C41BDE718453D587BEE9F15A459A97DA14DF508625803`, produced by `npm run zip` from `extension/dist`; the ZIP is not committed as generated noise.
 - GitHub Actions status must be read from the workflow run attached to the exact candidate commit; the prior run reference is historical and is not current verification for this hardening pass.
 
 Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat the checks that do not require package downloads.
@@ -78,15 +78,15 @@ Run `bash scripts/offline-preflight.sh` immediately after unzipping to repeat th
 
 The current live evidence boundary is:
 
-- MARGIN deployment: `0x0f8D86d56F1b8997475dD048579807fBFe60e227`, finalized at `0x1f54fb2b8520008a8bf856906a695dd35f6835e28afdedf51bded400744abebd`.
-- Consumer deployment: `0x6Bdb12646e054C24b68012560F7472636b395881`, finalized at `0x10f861aa287fe9ce0b4dbbacd95fc51cacb14539516d62f9bd6331495609ff0d`, with its constructor bound to the current MARGIN address. Source commit `66b2e2a492bc343df6369c8f6b4779fcb79a128c`, SHA-256 `FBCF9882250D640008B778F0486BDA3FCC892886270704ACB26DFADD2B7FF465`, 12,869 bytes. The previous consumer deployment is historical only.
+- MARGIN V2 deployment: `0x03197B3246a5BF0C28fad07c4E5868F52c601580`, finalized at `0x84a4b0a159205e4ba2be9c913a9d3698cb43d5bbcfe66502f24093b50fc67250`.
+- Consumer V2 deployment: `0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24`, finalized at `0xebc599b8d667f6fc39787057cf261273f24a566a60f62d194e5c0821365a3ba3`, with constructor binding read back as the V2 MARGIN address. Source commit `54605dae812afca03a0f9b2dacaf91e23ccdac95`, SHA-256 `4060BFABA93A8B6BF90F6CDA6466D2066A7F1E1ED91036C1DB275047201DF6EC`, 15,416 bytes.
 - Fresh final-deployment normal claim evidence: submit → resolve → `FINALIZED / MAJORITY_AGREE / SUCCESS`, with canonical verdict `SUPPORTED`, as recorded above.
-- Fresh final-deployment Assured evidence is recorded in `scripts/live/evidence/A.json` and `B.json`: A is `SETTLED + INCONCLUSIVE` with both credits withdrawn; B is `SETTLED + SUPPORTED` with a protected release created before settlement, executed and withdrawn. C is a truthful `REGISTERED` pending cancellation sequence with earliest cancellation at `2026-09-30T21:01:11.318Z`; no cancellation is claimed before that time. Historical transactions and verdicts are referenced only through [`docs/HISTORY.md`](HISTORY.md).
+- No fresh V2 Assured evidence is recorded yet. The A/B/C files are historical V1 evidence and are not presented as V2 proof. Historical transactions and verdicts remain separated through [`docs/HISTORY.md`](HISTORY.md).
 - Primary human browser flow: `PASS`. Optional/hostile browser matrix items are not claimed unless individually recorded.
 
 ## Production configuration hardening
 
-The canonical static signer is `https://margin-signer.vercel.app/`. Its Vite production build receives the public `VITE_MARGIN_CONTRACT_ADDRESS` value for the canonical Studionet deployment. The signer no longer asks normal users to save a contract address and ignores incoming contract query parameters. The extension release similarly embeds the canonical contract and signer origin; Options is informational rather than an infrastructure editor. The current production deployment is `dpl_BYeZLjjx3zP3sUqNZ4jJy1nSuBvh`; real wallet/browser proof remains manual for this final deployment.
+The canonical static signer is `https://margin-signer.vercel.app/`. Its Vite production build receives the public V2 `VITE_MARGIN_CONTRACT_ADDRESS` and `VITE_MARGIN_CONSUMER_ADDRESS` values. The current production deployment is `dpl_99CS5PiZNHKfkwgqmzBNBVYmC3QL`; a fresh V2 real-wallet/browser proof remains manual and is not claimed here.
 
 The signer must use the injected EIP-1193 provider directly. In `genlayer-js@1.1.8`, `client.connect('studionet')` enters the legacy GenLayer Snap path (`wallet_getSnaps` / `wallet_requestSnaps`); production MARGIN therefore constructs the provider-backed client without calling that helper. `signer/src/wallet.test.ts` guards this boundary.
 

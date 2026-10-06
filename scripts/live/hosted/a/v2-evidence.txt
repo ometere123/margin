@@ -1,0 +1,1 @@
+MARGIN V2 evidence artifact: finalized evidence commitments and value coverage are part of the Covered Claim fixture.

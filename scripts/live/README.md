@@ -1,6 +1,6 @@
 # Current-deployment live evidence scripts
 
-This directory contains reproducible non-browser Studionet evidence for the final MARGIN and consumer deployments. The scripts use only public addresses in their checkpoints; private keys remain in the local CLI keychain and are never written to evidence.
+This directory contains reproducible non-browser Studionet evidence scripts for the V2 MARGIN and consumer deployments. Existing A/B/C JSON records were produced against the prior V1 deployment and remain historical; do not relabel them as V2 evidence. The scripts use only public addresses in their checkpoints; private keys remain in the local CLI keychain and are never written to evidence.
 
 Environment invariant for every command:
 
@@ -9,8 +9,8 @@ network: studionet
 chain: 61999
 rpc: https://studio.genlayer.com/api
 cli: npm exec -- genlayer (0.39.1)
-margin: 0x0f8D86d56F1b8997475dD048579807fBFe60e227
-consumer: 0x6Bdb12646e054C24b68012560F7472636b395881
+margin: 0x03197B3246a5BF0C28fad07c4E5868F52c601580
+consumer: 0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24
 ```
 
 The executable `run-current-sequences.mjs` creates durable checkpoints for sequences A, B and C. It accepts `--dry-run` and uses the existing JSON file as a resume journal; `--resume` never resubmits a recorded hash. `resume-C.mjs` invokes the same runner and can cancel only after the deadline derived from finalized registration state. These scripts never substitute Direct Mode output for live receipts, retry a write, or invent a transaction hash.
@@ -44,3 +44,15 @@ Each write must be followed by `npm exec -- genlayer receipt <hash>` and the rec
 5. Read `get_assured_claim` and record publisher credit `0` and `CANCELLED`.
 
 If a sequence cannot be completed because its real deadline has not elapsed, record it as pending rather than substituting Direct Mode evidence.
+
+## V2 Covered Claim sequence
+
+`run-v2-covered.mjs` is the V2 runner for the hosted fixture at
+`https://a-murex-one.vercel.app/v2-support.html`. It records the V2 claim,
+publisher/challenger/integrator public accounts, every transaction hash,
+`FINALIZED / MAJORITY_AGREE / SUCCESS` receipt, and canonical readbacks in
+`scripts/live/evidence/V2-covered.json`. It uses a publisher-derived manifest,
+value-coupled collateral, a pre-settlement protected release, and the real
+appeal deadline. `--dry-run` prints the plan without writing; rerunning after
+an interruption reconciles a recorded hash before continuing and never blindly
+resubmits it.
