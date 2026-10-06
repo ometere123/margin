@@ -57,6 +57,6 @@ and CI regression suite. No V2 deployment is claimed by this document yet.
 
 At the latest local run, contract AST lint passed for both contracts, extension
 tests passed `17/17`, signer tests passed `31/31`, Python invariants passed
-`12/12`, and Direct Mode passed `50/50`. Extension and signer production builds
+`12/12`, and Direct Mode passed `51/51`. Extension and signer production builds
 also passed. These are local results for this branch, not Studionet live
 evidence. The repository-local CLI guard reports GenLayer `0.39.1`.
