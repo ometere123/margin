@@ -109,6 +109,45 @@ def test_covered_manifest_rejects_wrong_claim_or_under_collateral(direct_vm, dir
         margin.register_covered_claim(key, "covered-nonce-1", expiry)
 
 
+def test_covered_registration_cannot_overwrite_an_existing_assured_claim(direct_vm, direct_deploy, direct_alice):
+    margin = direct_deploy("contracts/margin.py")
+    direct_vm.sender = direct_alice
+    key = _claim_key()
+    _submit(margin, key)
+    proof_expiry = "2999-01-01T00:00:00+00:00"
+    proof = json.dumps({
+        "protocol_version": 2,
+        "domain": "example.com",
+        "publisher_wallet": "0x" + direct_alice.hex(),
+        "nonce": "ordinary-nonce",
+        "claim_key": key,
+        "expiry": proof_expiry,
+    })
+    direct_vm.mock_web(r".*example\.com/\.well-known/margin\.json", {"status": 200, "body": proof})
+    direct_vm.value = 1
+    margin.register_assured_claim(key, "https://example.com/.well-known/margin.json", "ordinary-nonce", proof_expiry)
+    with direct_vm.expect_revert("assured claim already registered"):
+        direct_vm.value = 5
+        margin.register_covered_claim(key, "covered-nonce-1", proof_expiry)
+
+
+def test_covered_manifest_requires_primary_artifact_commitment(direct_vm, direct_deploy, direct_alice):
+    margin = direct_deploy("contracts/margin.py")
+    direct_vm.sender = direct_alice
+    key = _claim_key()
+    _submit(margin, key)
+    expiry = "2999-01-01T00:00:00+00:00"
+    parsed = json.loads(_manifest(key, expiry, "0x" + direct_alice.hex(), 5))
+    parsed.pop("primary_artifact_sha256")
+    direct_vm.mock_web(
+        r".*example\.com/\.well-known/margin/claims/.*",
+        {"status": 200, "body": json.dumps(parsed, separators=(",", ":"), sort_keys=True)},
+    )
+    direct_vm.value = 5
+    with direct_vm.expect_revert("covered claim manifest could not be independently verified"):
+        margin.register_covered_claim(key, "covered-nonce-1", expiry)
+
+
 def test_covered_digest_mismatch_cannot_finalize_supported(direct_vm, direct_deploy, direct_alice, direct_bob):
     margin = direct_deploy("contracts/margin.py")
     direct_vm.sender = direct_alice
