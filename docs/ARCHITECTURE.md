@@ -77,6 +77,17 @@ The current extension renders the latest finalized status.
 
 An Assured Claim requires an exact HTTPS `/.well-known/margin.json` proof bound to the publisher, nonce, claim and expiry. The publisher and challenger lock bounded GEN bonds. One appeal may be opened before the deadline; after the deadline, deterministic settlement allocates the funded balances according to the finalized status. `MarginConsumer` binds the canonical MARGIN address at construction and demonstrates a downstream contract reading settled MARGIN state directly rather than trusting extension data. Its protected release is a small warranty-backed payment reference: an integrator funds a release for a beneficiary, and the consumer either credits the beneficiary once for `SETTLED + SUPPORTED` or refunds the creator for a negative terminal state/expiry.
 
+The V2 milestone adds Covered Claims as an opt-in layer beside this existing
+Assured path. A publisher proves control by publishing a claim-specific
+manifest at the origin-derived
+`/.well-known/margin/claims/<claim-key>.json` URL. The manifest binds the exact
+claim/anchor, primary artifact digest, typed evidence-pack entries, coverage
+cap, nonce and expiry. Registration locks collateral at least equal to the
+coverage cap. `MarginConsumer` reads the canonical Covered state and enforces a
+claim-wide active-exposure ceiling, while retaining the existing per-creator
+release cap and pull-payment model. Covered integrity failures become
+`INCONCLUSIVE` rather than silently accepting a changed source.
+
 Example integration (the consumer must be constructed with the trusted MARGIN address):
 
 ```python

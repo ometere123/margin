@@ -23,13 +23,36 @@ export type AssuredClaimView = {
   state_started_at?: string;
 };
 
-export type AssuredAction = 'register' | 'challenge' | 'resolve' | 'appeal' | 'resolveAppeal' | 'settle' | 'withdraw' | 'cancel' | 'abort';
+export type CoveredClaimView = {
+  claim_key?: string;
+  publisher?: string;
+  manifest_url?: string;
+  manifest_digest?: string;
+  evidence_pack_digest?: string;
+  coverage_cap?: string | number | bigint;
+  publisher_collateral?: string | number | bigint;
+  required_challenge_bond?: string | number | bigint;
+  required_appeal_bond?: string | number | bigint;
+  active_exposure?: string | number | bigint;
+  available_coverage?: string | number | bigint;
+  state?: AssuredState;
+  final_status?: string;
+  challenger?: string;
+  challenge_bond?: string | number | bigint;
+  appeal_bond?: string | number | bigint;
+  appeal_deadline?: string;
+  settled?: boolean;
+  publisher_credit?: string | number | bigint;
+  challenger_credit?: string | number | bigint;
+};
+
+export type AssuredAction = 'register' | 'registerCovered' | 'challenge' | 'resolve' | 'appeal' | 'resolveAppeal' | 'settle' | 'withdraw' | 'cancel' | 'abort';
 
 const zero = (value: unknown) => BigInt(String(value ?? 0)) === 0n;
 const same = (a: string | null, b: unknown) => Boolean(a && typeof b === 'string' && a.toLowerCase() === b.toLowerCase());
 
 export function assuredActions(claim: AssuredClaimView | null, account: string | null, now = Math.floor(Date.now() / 1000)): AssuredAction[] {
-  if (!claim || !claim.state) return account ? ['register'] : [];
+  if (!claim || !claim.state) return account ? ['register', 'registerCovered'] : [];
   const state = String(claim.state).toUpperCase();
   if (state === 'REGISTERED') {
     if (same(account, claim.publisher)) return ['cancel'];

@@ -41,6 +41,9 @@ export function consumerErrorMessage(error: unknown): string {
   if (text.includes('maximum protected releases reached for creator and claim')) {
     return 'This wallet has reached the 5-release limit for this claim.';
   }
+  if (text.includes('protected release exceeds available covered claim')) {
+    return 'This release would exceed the Covered Claim coverage available for this claim.';
+  }
   if (text.includes('protected release requires SETTLED SUPPORTED state')) {
     return 'This release can execute only after the Assured Claim is finalized SUPPORTED.';
   }

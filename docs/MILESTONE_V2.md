@@ -1,0 +1,62 @@
+# MARGIN V2 — Covered Claims
+
+## Baseline
+
+MARGIN V1 baseline: `0de81fc659b16b82d35e19c22bd2c3972df95b1c`.
+
+The V1 baseline was verified on Studionet (`61999`) before this milestone
+branch was created. The existing ordinary annotation, Assured Claim, signer,
+extension, and consumer flows remain compatibility surfaces for V2.
+
+## Scope of this milestone
+
+Covered Claims add a bounded high-assurance path alongside ordinary public
+annotations. A Covered Claim binds a publisher-controlled, claim-specific
+manifest to an immutable evidence-pack digest and requires publisher
+collateral to cover the declared protected-value ceiling. The consumer tracks
+active protected exposure per claim and rejects releases that would exceed the
+canonical coverage cap.
+
+The ordinary annotation path remains permissionless and is not described as
+financial assurance.
+
+## Verification boundary
+
+The status (`SUPPORTED`, `CONTRADICTED`, `INCONCLUSIVE`, or `STALE`) remains
+the committee-consensus decision. The rationale, accepted observation manifest,
+and cited source indexes are stored as accepted-proposal provenance; they are
+not represented as byte-identical natural-language agreement by every
+validator.
+
+Covered evidence uses deterministic manifest identity, typed authority profiles,
+bounded complete artifacts, a primary-artifact SHA-256 commitment, and expected
+evidence SHA-256 commitments. Semantic adjudication remains separate from
+deterministic URL, hash, collateral, and state-transition checks. A Covered
+Claim's manifest and evidence pack are independently checked again during each
+Covered adjudication; a changed, unavailable or oversized committed artifact
+cannot produce a definitive `SUPPORTED` or `CONTRADICTED` result.
+
+## V1 → V2 traceability
+
+| V1 limitation | V2 change | Test/live proof |
+| --- | --- | --- |
+| Fixed one-unit assurance did not cover arbitrary protected value | Covered Claim `coverage_cap` and full publisher collateral | `tests/direct/test_covered_claims.py`; live proof pending |
+| Releases were not coupled to a claim-wide value ceiling | `MarginConsumer.active_exposure_by_claim` and coverage checks | consumer Direct Mode integration; live proof pending |
+| Arbitrary high-assurance evidence URLs | Derived publisher manifest URL and typed evidence pack | manifest validation tests; live proof pending |
+| Mutable or oversized evidence could be silently truncated | bounded manifest/artifact policy, primary and evidence digest commitments | integrity mutation tests; live proof pending |
+| Ordinary annotations are advisory | explicit distinction between public annotation and Covered Claim | signer/assurance UI and documentation |
+
+## Current limitations
+
+The V2 implementation is being developed on the milestone branch. Fresh
+Studionet deployment, live Covered Claim lifecycles, production signer
+configuration, and the V2 extension release remain gated on the complete local
+and CI regression suite. No V2 deployment is claimed by this document yet.
+
+## Local gate snapshot
+
+At the latest local run, contract AST lint passed for both contracts, extension
+tests passed `17/17`, signer tests passed `31/31`, Python invariants passed
+`12/12`, and Direct Mode passed `48/48`. Extension and signer production builds
+also passed. These are local results for this branch, not Studionet live
+evidence. The repository-local CLI guard reports GenLayer `0.39.1`.

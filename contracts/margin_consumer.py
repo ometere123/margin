@@ -29,6 +29,11 @@ class MarginGate:
         def get_assured_claim(self, claim_key: str) -> dict: ...
 
         def is_claim_supported(self, claim_key: str) -> bool: ...
+        def is_covered_claim_supported(self, claim_key: str) -> bool: ...
+
+        def get_covered_claim(self, claim_key: str) -> dict: ...
+
+        def get_coverage_state(self, claim_key: str) -> dict: ...
 
     class Write:
         pass
@@ -54,6 +59,7 @@ class MarginConsumer(gl.Contract):
     release_count_by_claim: TreeMap[str, u256]
     release_id_by_claim_index: TreeMap[str, str]
     release_ids_by_creator_claim: TreeMap[str, str]
+    active_exposure_by_claim: TreeMap[str, u256]
     release_count: u256
 
     def __init__(self, canonical_margin_address: str):
@@ -92,7 +98,15 @@ class MarginConsumer(gl.Contract):
 
     @gl.public.view
     def is_claim_supported(self, claim_key: str) -> bool:
-        return bool(self._margin().view().is_claim_supported(str(claim_key).strip().lower()))
+        key = str(claim_key).strip().lower()
+        margin = self._margin().view()
+        try:
+            covered = margin.get_covered_claim(key)
+            if isinstance(covered, dict) and covered.get("claim_key"):
+                return bool(margin.is_covered_claim_supported(key))
+        except Exception:
+            pass
+        return bool(margin.is_claim_supported(key))
 
     @gl.public.write
     def execute_if_supported(self, claim_key: str) -> None:
@@ -127,6 +141,19 @@ class MarginConsumer(gl.Contract):
             raise gl.vm.UserError("protected release requires an existing Assured Claim")
         if assured.get("state") not in ("REGISTERED", "CHALLENGED", "RESOLVED", "APPEALED"):
             raise gl.vm.UserError("protected release must be committed before final settlement")
+        # Keep the V1 Assured Claim compatibility path usable when this
+        # consumer is pointed at an older deployed Margin address. V2
+        # deployments expose get_covered_claim; an older interface simply
+        # falls back to the existing Assured Claim checks.
+        try:
+            covered = margin.get_covered_claim(claim_key)
+        except Exception:
+            covered = {}
+        if isinstance(covered, dict) and str(covered.get("claim_key", "")).strip().lower() == claim_key:
+            active = int(self.active_exposure_by_claim.get(claim_key, u256(0)))
+            coverage = int(covered.get("coverage_cap", 0))
+            if coverage <= 0 or active + int(gl.message.value) > coverage:
+                raise gl.vm.UserError("protected release exceeds available covered claim")
         creator_key = self._creator_claim_index_key(claim_key, gl.message.sender_address)
         creator_release_ids = self._release_ids_for_creator_claim(creator_key)
         if len(creator_release_ids) >= self.MAX_RELEASES_PER_CREATOR_PER_CLAIM:
@@ -151,6 +178,10 @@ class MarginConsumer(gl.Contract):
         self.release_count_by_claim[claim_key] = u256(claim_index + 1)
         creator_release_ids.append(release_id)
         self.release_ids_by_creator_claim[creator_key] = json.dumps(creator_release_ids, separators=(",", ":"))
+        if isinstance(covered, dict) and str(covered.get("claim_key", "")).strip().lower() == claim_key:
+            self.active_exposure_by_claim[claim_key] = u256(
+                int(self.active_exposure_by_claim.get(claim_key, u256(0))) + int(gl.message.value)
+            )
         return release_id
 
     @gl.public.write
@@ -168,6 +199,11 @@ class MarginConsumer(gl.Contract):
         record.executed = True
         record.beneficiary_credit = record.beneficiary_credit + record.amount
         self.releases[release_id] = record
+        if record.claim_key in self.active_exposure_by_claim:
+            current = int(self.active_exposure_by_claim.get(record.claim_key, u256(0)))
+            if current < int(record.amount):
+                raise gl.vm.UserError("protected exposure accounting underflow")
+            self.active_exposure_by_claim[record.claim_key] = u256(current - int(record.amount))
 
     @gl.public.write
     def refund_release(self, release_id: str) -> None:
@@ -186,6 +222,11 @@ class MarginConsumer(gl.Contract):
         record.refunded = True
         record.creator_credit = record.creator_credit + record.amount
         self.releases[release_id] = record
+        if record.claim_key in self.active_exposure_by_claim:
+            current = int(self.active_exposure_by_claim.get(record.claim_key, u256(0)))
+            if current < int(record.amount):
+                raise gl.vm.UserError("protected exposure accounting underflow")
+            self.active_exposure_by_claim[record.claim_key] = u256(current - int(record.amount))
 
     @gl.public.write
     def withdraw_release_credit(self, release_id: str) -> None:
@@ -285,3 +326,7 @@ class MarginConsumer(gl.Contract):
     @gl.public.view
     def has_executed(self, claim_key: str) -> bool:
         return str(claim_key).strip().lower() in self.executed_claims
+
+    @gl.public.view
+    def get_active_exposure(self, claim_key: str) -> u256:
+        return self.active_exposure_by_claim.get(str(claim_key).strip().lower(), u256(0))

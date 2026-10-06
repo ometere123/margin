@@ -416,3 +416,146 @@ def test_real_margin_two_creators_have_independent_releases():
         assert consumer.get_release(second)["beneficiary_credit"] == 0
     finally:
         engine.deactivate()
+
+
+def test_covered_claim_couples_collateral_and_global_exposure_to_releases():
+    """V2 coverage is claim-wide, not merely a per-creator release limit."""
+    engine, margin_address, margin, consumer_address, consumer = _new_real_system("covered-exposure")
+    try:
+        key = _claim_key("-covered")
+        _submit_real_claim(engine, margin_address, key, suffix="-covered")
+        expiry = "2999-01-01T00:00:00+00:00"
+        manifest = {
+            "protocol_version": 2,
+            "claim_key": key,
+            "publisher_wallet": ALICE,
+            "domain": "example.com",
+            "canonical_url": URL,
+            "primary_artifact_sha256": PAGE_DIGEST,
+            "claim_digest": hashlib.sha256(b"Runtime 4.2 supports Node 18 in production.").hexdigest(),
+            "anchor_digest": hashlib.sha256(("Compatibility notes say|Runtime 4.2 supports Node 18 in production.|See the support matrix below.").encode()).hexdigest(),
+            "coverage_cap": 10,
+            "evidence_pack": [{
+                "evidence_id": "support-matrix",
+                "authority_profile": "CONTENT_HASHED_HTTPS",
+                "url": "https://example.com/docs/support",
+                "expected_sha256": hashlib.sha256(b"Support matrix: Runtime 4.2 supports Node 18 in production.").hexdigest(),
+                "citation_exact": "Runtime 4.2 supports Node 18 in production.",
+                "relation": "SUPPORTS",
+                "authority_metadata": {"bounded_bytes": 40000},
+            }],
+            "issued_at": "2026-01-01T00:00:00+00:00",
+            "expires_at": expiry,
+            "nonce": "covered-integration-nonce",
+        }
+        engine.vm.mock_web(
+            r".*example\.com/\.well-known/margin/claims/.*",
+            {"status": 200, "body": json.dumps(manifest, separators=(",", ":"), sort_keys=True)},
+        )
+        engine.vm.value = 10
+        engine.call_method(
+            margin_address, "register_covered_claim", [key, "covered-integration-nonce", expiry], sender=ALICE
+        )
+        assert margin.get_covered_claim(key)["coverage_cap"] == 10
+
+        engine.vm.value = 10
+        engine.call_method(margin_address, "challenge_assured_claim", [key], sender=BOB)
+        body = "Support matrix: Runtime 4.2 supports Node 18 in production."
+        engine.vm.mock_web(r"https://example\.com/docs/runtime", {"status": 200, "body": body})
+        engine.vm.mock_web(r"https://example\.com/docs/support", {"status": 200, "body": body})
+        records = [
+            {"kind": "PRIMARY", "url": URL, "fetch_status": "OK", "content_digest": hashlib.sha256(body.encode()).hexdigest(), "provenance": "PUBLIC_SOURCE"},
+            {"kind": "EVIDENCE", "url": "https://example.com/docs/support", "fetch_status": "OK", "content_digest": hashlib.sha256(body.encode()).hexdigest(), "provenance": "PUBLIC_SOURCE"},
+        ]
+        source_digest = hashlib.sha256(json.dumps({"v": 2, "sources": records}, separators=(",", ":"), sort_keys=True).encode()).hexdigest()
+        engine.vm.mock_llm(r".*MARGIN web-claim challenge.*", json.dumps({
+            "status": "SUPPORTED", "rationale": "The committed evidence supports the claim.", "claim_present": True,
+            "supporting_source_indexes": [0], "contradicting_source_indexes": [], "historical_evidence_used": False,
+            "source_manifest_digest": source_digest,
+        }))
+        engine.call_method(margin_address, "resolve_assured_claim", [key], sender=BOB)
+
+        engine.vm.value = 6
+        release_id = engine.call_method(
+            consumer_address, "create_protected_release", [key, BOB, "2999-01-03T00:00:00+00:00"], sender=CHARLIE
+        )
+        assert consumer.get_active_exposure(key) == 6
+        engine.vm.value = 5
+        with pytest.raises(Exception, match="protected release exceeds available covered claim"):
+            engine.call_method(
+                consumer_address, "create_protected_release", [key, ALICE, "2999-01-03T00:00:00+00:00"], sender=ALICE
+            )
+
+        engine.vm.warp("2999-01-01T02:00:00+00:00")
+        engine.call_method(margin_address, "settle_assured_claim", [key], sender=BOB)
+        engine.call_method(consumer_address, "execute_release", [release_id], sender=ALICE)
+        assert consumer.get_active_exposure(key) == 0
+        engine.call_method(consumer_address, "withdraw_release_credit", [release_id], sender=BOB)
+        assert consumer.get_release(release_id)["beneficiary_credit"] == 0
+    finally:
+        engine.deactivate()
+
+
+def test_covered_claim_release_refund_is_bound_to_canonical_terminal_state():
+    engine, margin_address, margin, consumer_address, consumer = _new_real_system("covered-refund")
+    try:
+        key = _claim_key("-covered-refund")
+        _submit_real_claim(engine, margin_address, key, suffix="-covered-refund")
+        expiry = "2999-01-01T00:00:00+00:00"
+        manifest = {
+            "protocol_version": 2,
+            "claim_key": key,
+            "publisher_wallet": ALICE,
+            "domain": "example.com",
+            "canonical_url": URL,
+            "primary_artifact_sha256": PAGE_DIGEST,
+            "claim_digest": hashlib.sha256(b"Runtime 4.2 supports Node 18 in production.").hexdigest(),
+            "anchor_digest": hashlib.sha256(("Compatibility notes say|Runtime 4.2 supports Node 18 in production.|See the support matrix below.").encode()).hexdigest(),
+            "coverage_cap": 4,
+            "evidence_pack": [{
+                "evidence_id": "support-matrix",
+                "authority_profile": "CONTENT_HASHED_HTTPS",
+                "url": "https://example.com/docs/support",
+                "expected_sha256": hashlib.sha256(b"Contradictory evidence.").hexdigest(),
+                "citation_exact": "Contradictory evidence.",
+                "relation": "CONTRADICTS",
+                "authority_metadata": {"bounded_bytes": 40000},
+            }],
+            "issued_at": "2026-01-01T00:00:00+00:00",
+            "expires_at": expiry,
+            "nonce": "covered-refund-nonce",
+        }
+        engine.vm.mock_web(
+            r".*example\.com/\.well-known/margin/claims/.*",
+            {"status": 200, "body": json.dumps(manifest, separators=(",", ":"), sort_keys=True)},
+        )
+        engine.vm.value = 4
+        engine.call_method(margin_address, "register_covered_claim", [key, "covered-refund-nonce", expiry], sender=ALICE)
+        engine.vm.value = 4
+        engine.call_method(margin_address, "challenge_assured_claim", [key], sender=BOB)
+        body = "Contradictory evidence."
+        engine.vm.mock_web(r"https://example\.com/docs/runtime", {"status": 200, "body": body})
+        engine.vm.mock_web(r"https://example\.com/docs/support", {"status": 200, "body": body})
+        records = [
+            {"kind": "PRIMARY", "url": URL, "fetch_status": "OK", "content_digest": hashlib.sha256(body.encode()).hexdigest(), "provenance": "PUBLIC_SOURCE"},
+            {"kind": "EVIDENCE", "url": "https://example.com/docs/support", "fetch_status": "OK", "content_digest": hashlib.sha256(body.encode()).hexdigest(), "provenance": "PUBLIC_SOURCE"},
+        ]
+        digest = hashlib.sha256(json.dumps({"v": 2, "sources": records}, separators=(",", ":"), sort_keys=True).encode()).hexdigest()
+        engine.vm.mock_llm(r".*MARGIN web-claim challenge.*", json.dumps({
+            "status": "CONTRADICTED", "rationale": "The committed evidence contradicts the claim.", "claim_present": True,
+            "supporting_source_indexes": [], "contradicting_source_indexes": [0], "historical_evidence_used": False,
+            "source_manifest_digest": digest,
+        }))
+        engine.call_method(margin_address, "resolve_assured_claim", [key], sender=BOB)
+        engine.vm.value = 3
+        release_id = engine.call_method(consumer_address, "create_protected_release", [key, BOB, "2999-01-03T00:00:00+00:00"], sender=ALICE)
+        engine.vm.warp("2999-01-01T02:00:00+00:00")
+        engine.call_method(margin_address, "settle_assured_claim", [key], sender=BOB)
+        with pytest.raises(Exception, match="protected release requires SETTLED SUPPORTED state"):
+            engine.call_method(consumer_address, "execute_release", [release_id], sender=BOB)
+        engine.call_method(consumer_address, "refund_release", [release_id], sender=ALICE)
+        assert consumer.get_active_exposure(key) == 0
+        engine.call_method(consumer_address, "withdraw_release_credit", [release_id], sender=ALICE)
+        assert consumer.get_release(release_id)["creator_credit"] == 0
+    finally:
+        engine.deactivate()

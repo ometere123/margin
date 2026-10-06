@@ -162,6 +162,25 @@ Each accepted revision stores a source-set digest for the ordered claim-input id
 
 An optional Assured Claim binds a publisher to an HTTPS `/.well-known/margin.json` proof, requires publisher and challenger GEN bonds, permits one bounded appeal, and exposes deterministic settlement/withdrawal state. It is separate from normal permissionless annotations. `contracts/margin_consumer.py` demonstrates reading settled MARGIN state directly before allowing a protected action.
 
+### Covered Claims (V2 milestone)
+
+The milestone branch adds an opt-in Covered Claim path without changing ordinary
+annotations. A publisher registers a claim-specific manifest at the canonical
+origin-derived URL `/.well-known/margin/claims/<claim-key>.json`. The bounded
+manifest commits the exact quote/anchor, a complete typed evidence pack, a
+primary artifact SHA-256, a coverage cap and expiry. The contract independently
+re-fetches the committed artifacts during adjudication and forces
+`INCONCLUSIVE` when a committed artifact is unavailable, oversized or changed.
+Publisher collateral equals the declared coverage cap; the consumer rejects
+protected releases whose aggregate active exposure would exceed that cap.
+
+Covered Claim status is the committee-consensus decision. Rationale, observed
+content digests and cited indexes are accepted-proposal provenance and are not
+claimed to be byte-identical output from every validator. The V2 source changes
+are currently on the milestone branch; the V1 Studionet deployment documented
+above remains historical for this branch until the V2 local/CI gates and a fresh
+deployment are complete.
+
 This follows the important GenLayer rule that validators must independently verify the substance rather than only checking that the leader returned syntactically valid JSON.
 
 ## What remains intentionally environment-specific

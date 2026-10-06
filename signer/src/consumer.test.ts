@@ -24,5 +24,6 @@ describe('protected release presentation', () => {
 
   it('maps the per-creator cap revert to an actionable message', () => {
     expect(consumerErrorMessage(new Error('maximum protected releases reached for creator and claim'))).toContain('5-release limit');
+    expect(consumerErrorMessage(new Error('protected release exceeds available covered claim'))).toContain('coverage available');
   });
 });

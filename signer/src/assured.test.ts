@@ -5,7 +5,7 @@ const publisher = '0x0000000000000000000000000000000000000001';
 const challenger = '0x0000000000000000000000000000000000000002';
 
 describe('Assured Claim action gating', () => {
-  it('only offers registration for a connected empty claim', () => expect(assuredActions(null, publisher)).toEqual(['register']));
+  it('offers ordinary and Covered Claim registration for a connected empty claim', () => expect(assuredActions(null, publisher)).toEqual(['register', 'registerCovered']));
   it('lets the publisher cancel their own registered claim, but not challenge it', () => expect(assuredActions({ state: 'REGISTERED', publisher }, publisher)).toEqual(['cancel']));
   it('lets another wallet challenge a registered claim', () => expect(assuredActions({ state: 'REGISTERED', publisher }, challenger)).toEqual(['challenge']));
   it('offers resolve for a challenged claim and appeal only to a party', () => {
