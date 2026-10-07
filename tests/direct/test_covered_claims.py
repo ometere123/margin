@@ -186,6 +186,10 @@ def test_covered_digest_mismatch_cannot_finalize_supported(direct_vm, direct_dep
     _submit(margin, key)
     expiry = "2999-01-01T00:00:00+00:00"
     body = _manifest(key, expiry, "0x" + direct_alice.hex(), 5)
+    parsed_manifest = json.loads(body)
+    parsed_manifest["primary_artifact_sha256"] = hashlib.sha256(b"Support matrix: Runtime 4.2 supports Node 18 in production.").hexdigest()
+    parsed_manifest["evidence_pack"][0]["expected_sha256"] = hashlib.sha256(b"different committed artifact").hexdigest()
+    body = json.dumps(parsed_manifest, separators=(",", ":"), sort_keys=True)
     direct_vm.mock_web(r".*example\.com/\.well-known/margin/claims/.*", {"status": 200, "body": body})
     direct_vm.value = 5
     margin.register_covered_claim(key, "covered-nonce-1", expiry)
@@ -194,7 +198,10 @@ def test_covered_digest_mismatch_cannot_finalize_supported(direct_vm, direct_dep
     margin.challenge_assured_claim(key)
 
     primary = "Support matrix: Runtime 4.2 supports Node 18 in production."
-    observed_evidence = "The publisher page changed after commitment."
+    # The committed citation is present, but the fetched artifact is not the
+    # artifact named by the manifest. This isolates digest verification from
+    # citation verification.
+    observed_evidence = "The support matrix confirms Runtime 4.2 supports Node 18 in production."
     direct_vm.mock_web(r"https://example\.com/docs/runtime", {"status": 200, "body": primary})
     direct_vm.mock_web(r"https://example\.com/docs/covered-evidence", {"status": 200, "body": observed_evidence})
     records = [
@@ -204,7 +211,7 @@ def test_covered_digest_mismatch_cannot_finalize_supported(direct_vm, direct_dep
     digest = hashlib.sha256(json.dumps({"v": 2, "sources": records}, separators=(",", ":"), sort_keys=True).encode()).hexdigest()
     direct_vm.mock_llm(r".*MARGIN web-claim challenge.*", json.dumps({
         "status": "SUPPORTED", "rationale": "Committed evidence changed.", "claim_present": True,
-        "supporting_source_indexes": [], "contradicting_source_indexes": [], "historical_evidence_used": False,
+        "supporting_source_indexes": [1], "contradicting_source_indexes": [], "historical_evidence_used": False,
         "source_manifest_digest": digest,
     }))
     margin.resolve_assured_claim(key)
@@ -235,7 +242,7 @@ def test_covered_missing_citation_is_not_definitive(direct_vm, direct_deploy, di
     direct_vm.mock_web(r"https://example\.com/docs/covered-evidence", {"status": 200, "body": missing_citation})
     direct_vm.mock_llm(r".*MARGIN web-claim challenge.*", json.dumps({
         "status": "SUPPORTED", "rationale": "The committed citation is absent.", "claim_present": True,
-        "supporting_source_indexes": [], "contradicting_source_indexes": [], "historical_evidence_used": False,
+        "supporting_source_indexes": [1], "contradicting_source_indexes": [], "historical_evidence_used": False,
         "material_observations": [{
             "evidence_id": "support-matrix", "authority_profile": "CONTENT_HASHED_HTTPS", "authority_status": "ACCEPTED",
             "integrity_status": "VERIFIED", "citation_digest": hashlib.sha256(b"Runtime 4.2 supports Node 18 in production.").hexdigest(),

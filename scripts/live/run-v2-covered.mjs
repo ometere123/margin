@@ -8,8 +8,8 @@ import { createAccount, createClient } from 'genlayer-js';
 import { studionet } from 'genlayer-js/chains';
 import { TransactionHashVariant } from 'genlayer-js/types';
 
-const MARGIN = '0x03197B3246a5BF0C28fad07c4E5868F52c601580';
-const CONSUMER = '0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24';
+const MARGIN = process.env.MARGIN_V2_MARGIN ?? '0x4E0a75B63D913FC2d39A75F61905CA5973c77491';
+const CONSUMER = process.env.MARGIN_V2_CONSUMER ?? '0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F';
 const RPC = 'https://studio.genlayer.com/api';
 const ORIGIN = 'https://a-murex-one.vercel.app';
 const CLAIM = {
@@ -54,8 +54,8 @@ async function readFinal(client, address, functionName, args = []) {
 function runReceipt(hash) {
   return new Promise((resolveReceipt) => {
     const child = process.platform === 'win32'
-      ? spawn('npm.cmd', ['exec', '--', 'genlayer', 'receipt', hash], { shell: true, stdio: ['ignore', 'pipe', 'pipe'] })
-      : spawn('npm', ['exec', '--', 'genlayer', 'receipt', hash], { stdio: ['ignore', 'pipe', 'pipe'] });
+      ? spawn('npm.cmd', ['exec', '--', 'genlayer', 'receipt', hash, '--rpc', RPC], { shell: true, stdio: ['ignore', 'pipe', 'pipe'] })
+      : spawn('npm', ['exec', '--', 'genlayer', 'receipt', hash, '--rpc', RPC], { stdio: ['ignore', 'pipe', 'pipe'] });
     let output = '';
     child.stdout.on('data', (chunk) => { output += chunk; });
     child.stderr.on('data', (chunk) => { output += chunk; });

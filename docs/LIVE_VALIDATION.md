@@ -11,9 +11,9 @@ This file records only current deployment evidence. Older deployments, consumer 
 
 ## Current deployment readback
 
-MARGIN V2 is `0x03197B3246a5BF0C28fad07c4E5868F52c601580`, deployed by `0x84a4b0a159205e4ba2be9c913a9d3698cb43d5bbcfe66502f24093b50fc67250`. Its source is commit `54605dae812afca03a0f9b2dacaf91e23ccdac95`, SHA-256 `F880EA25C950135FE51BBABFD9DF84C408B490216D9B4A8263638660EC6D7B01`, size 80,340 bytes. `network()` reads Studionet, chain `61999`, and the required RPC. Deployment finalized `MAJORITY_AGREE / SUCCESS`.
+MARGIN V2 is `0x4E0a75B63D913FC2d39A75F61905CA5973c77491`, deployed by `0xa6917d417dd63f683684acdfe7168c75bad1310172a79d0a91fed21835d5a617`. Its source is commit `ab5bbef32d046cf19e6621275485b57d4268ac87`, SHA-256 `A079E57EA831456721A6982FC5A4FB5B6AA77649D71EC3636BE44540292B41F1`, size 86,605 bytes. `network()` reads Studionet, chain `61999`, and the required RPC. Deployment finalized `MAJORITY_AGREE / SUCCESS`.
 
-The current V2 consumer is `0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24`, deployed by `0xebc599b8d667f6fc39787057cf261273f24a566a60f62d194e5c0821365a3ba3`. Its source is commit `54605dae812afca03a0f9b2dacaf91e23ccdac95`, SHA-256 `4060BFABA93A8B6BF90F6CDA6466D2066A7F1E1ED91036C1DB275047201DF6EC`, size 15,416 bytes. The constructor binding readback is `0x03197B3246a5BF0C28fad07c4E5868F52c601580`. Consumer deployment finalized `MAJORITY_AGREE / SUCCESS`.
+The current V2 consumer is `0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F`, deployed by `0x521f944b8274e4f4e5bfe151c3f9a6fdba0fd4f5f4f515dd8f98b5d7976ce01d`. Its source is commit `ab5bbef32d046cf19e6621275485b57d4268ac87`, SHA-256 `4060BFABA93A8B6BF90F6CDA6466D2066A7F1E1ED91036C1DB275047201DF6EC`, size 15,416 bytes. The constructor binding readback is `0x4E0a75B63D913FC2d39A75F61905CA5973c77491`. Consumer deployment finalized `MAJORITY_AGREE / SUCCESS`.
 
 ## Current normal claim
 

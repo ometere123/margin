@@ -9,8 +9,8 @@ network: studionet
 chain: 61999
 rpc: https://studio.genlayer.com/api
 cli: npm exec -- genlayer (0.39.1)
-margin: 0x03197B3246a5BF0C28fad07c4E5868F52c601580
-consumer: 0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24
+margin: 0x4E0a75B63D913FC2d39A75F61905CA5973c77491
+consumer: 0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F
 ```
 
 The executable `run-current-sequences.mjs` creates durable checkpoints for sequences A, B and C. It accepts `--dry-run` and uses the existing JSON file as a resume journal; `--resume` never resubmits a recorded hash. `resume-C.mjs` invokes the same runner and can cancel only after the deadline derived from finalized registration state. These scripts never substitute Direct Mode output for live receipts, retry a write, or invent a transaction hash.

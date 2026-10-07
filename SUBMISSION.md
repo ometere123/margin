@@ -12,14 +12,14 @@ This file describes only the current canonical deployment. Historical deployment
 
 ## Current deployments
 
-- MARGIN: [`0x03197B3246a5BF0C28fad07c4E5868F52c601580`](https://explorer-studio.genlayer.com/address/0x03197B3246a5BF0C28fad07c4E5868F52c601580)
-- MARGIN deployment: [`0x84a4b0a159205e4ba2be9c913a9d3698cb43d5bbcfe66502f24093b50fc67250`](https://explorer-studio.genlayer.com/tx/0x84a4b0a159205e4ba2be9c913a9d3698cb43d5bbcfe66502f24093b50fc67250)
-- MARGIN source commit: `54605dae812afca03a0f9b2dacaf91e23ccdac95`
-- MARGIN source SHA-256: `F880EA25C950135FE51BBABFD9DF84C408B490216D9B4A8263638660EC6D7B01`
+- MARGIN: [`0x4E0a75B63D913FC2d39A75F61905CA5973c77491`](https://explorer-studio.genlayer.com/address/0x4E0a75B63D913FC2d39A75F61905CA5973c77491)
+- MARGIN deployment: [`0xa6917d417dd63f683684acdfe7168c75bad1310172a79d0a91fed21835d5a617`](https://explorer-studio.genlayer.com/tx/0xa6917d417dd63f683684acdfe7168c75bad1310172a79d0a91fed21835d5a617)
+- MARGIN source commit: `ab5bbef32d046cf19e6621275485b57d4268ac87`
+- MARGIN source SHA-256: `A079E57EA831456721A6982FC5A4FB5B6AA77649D71EC3636BE44540292B41F1`
 - MARGIN deployment result: `FINALIZED / MAJORITY_AGREE / SUCCESS`
-- Consumer: [`0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24`](https://explorer-studio.genlayer.com/address/0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24)
-- Consumer deployment: [`0xebc599b8d667f6fc39787057cf261273f24a566a60f62d194e5c0821365a3ba3`](https://explorer-studio.genlayer.com/tx/0xebc599b8d667f6fc39787057cf261273f24a566a60f62d194e5c0821365a3ba3)
-- Consumer source commit: `54605dae812afca03a0f9b2dacaf91e23ccdac95`
+- Consumer: [`0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F`](https://explorer-studio.genlayer.com/address/0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F)
+- Consumer deployment: [`0x521f944b8274e4f4e5bfe151c3f9a6fdba0fd4f5f4f515dd8f98b5d7976ce01d`](https://explorer-studio.genlayer.com/tx/0x521f944b8274e4f4e5bfe151c3f9a6fdba0fd4f5f4f515dd8f98b5d7976ce01d)
+- Consumer source commit: `ab5bbef32d046cf19e6621275485b57d4268ac87`
 - Consumer source SHA-256: `4060BFABA93A8B6BF90F6CDA6466D2066A7F1E1ED91036C1DB275047201DF6EC`
 - Consumer source size: `15416` bytes
 - Consumer constructor binding: final MARGIN address above
@@ -28,22 +28,22 @@ This file describes only the current canonical deployment. Historical deployment
 ## Production signer and release
 
 - Signer: https://margin-signer.vercel.app/
-- Production deployment: `dpl_99CS5PiZNHKfkwgqmzBNBVYmC3QL`
+- Production deployment: pending external Vercel rate limit; final configuration is verified in the local signer build
 - Extension archive: `MARGIN-extension-v0.1.0.zip`
-- Extension SHA-256: `A1121399097C9F5D425C41BDE718453D587BEE9F15A459A97DA14DF508625803`
+- Extension SHA-256: `29264999CA6202A184899EA3FBA0E4097BCE25088B88A602FC3622F114FB1079`
 - Live fixture project: `a` (`prj_xPXHmh3TcvuBDvgSFyTRarWRfJgz`)
 - Live fixture production deployment: `dpl_DD43w22FgrutZMj15euqzPjaZR14`
 - Live fixture URL: https://a-murex-one.vercel.app/
 
-The signer uses the injected EIP-1193 wallet and the final configured V2 MARGIN address. A fresh V2 browser flow remains manual and is not claimed here.
+The signer uses the injected EIP-1193 wallet and the final configured V2 MARGIN address. Final Covered browser acceptance remains a manual operator task.
 
 ## Verification
 
 - Contract lint: `3/3` for each contract
 - Python invariants: `12/12`
-- Direct Mode: `51/51` in the current local verification after the Covered Claim test pass
+- Direct Mode: `54/54` in the current local verification after the material-observation and citation tests
 - Extension tests: `17/17`
-- Signer tests: `31/31`
+- Signer tests: `33/33`
 - Extension and signer builds: passed
 - MARGIN source was not modified in this consumer-only round; its deployed SHA-256 remains unchanged.
 
@@ -57,7 +57,7 @@ The signer uses the injected EIP-1193 wallet and the final configured V2 MARGIN 
 
 ## Live evidence boundary
 
-The V2 contract and consumer deployments above are current. Fresh final-deployment evidence is recorded in `scripts/live/evidence/`: the render-matched fixture reached `SETTLED + SUPPORTED` and executed its pre-settlement release; the strong contradiction reached `SETTLED + CONTRADICTED` and refunded its release; the integrity-mismatch and weak-contradiction fixtures reached `SETTLED + INCONCLUSIVE` and refunded their releases. All listed credits were withdrawn to zero. The older A/B/C records remain historical and are not V2 evidence. The primary human browser flow is manual evidence and is not claimed as an automated V2 run.
+The material-observation V2 contract and bound consumer above are current. Final-deployment economic evidence is recorded only in the final checkpoint named below; prior V2 checkpoints are historical. The primary Covered browser acceptance remains manual.
 
 ## Live sequence labels
 

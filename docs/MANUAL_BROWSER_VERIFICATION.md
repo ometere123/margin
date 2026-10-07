@@ -9,7 +9,7 @@ This checklist is for the current release. It does not authorize contract redepl
 3. Run `npm run zip` and record the resulting ZIP SHA-256.
 4. Load `extension/dist` as an unpacked extension in a fresh Chromium profile.
 5. Confirm the toolbar and side-panel icons use the MARGIN assets.
-6. Open `https://margin-signer.vercel.app/` and confirm the deployment card shows Studionet `61999`, V2 MARGIN `0x03197B3246a5BF0C28fad07c4E5868F52c601580`, and the bound consumer `0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24` where shown.
+6. Open the local signer build and confirm the deployment card shows Studionet `61999`, final MARGIN `0x4E0a75B63D913FC2d39A75F61905CA5973c77491`, and bound consumer `0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F` where shown.
 
 ## Normal claim flow
 
@@ -80,7 +80,7 @@ These current-deployment fixtures are also read-only for browser inspection:
 | Weak contradiction | `https://a-murex-one.vercel.app/v2-contradicted.html` | `d5ddb9e0eb1932861a75f8e6ef144e8fdcef17dd5cb207a6c6c2ce6ac4e33c94` | `SETTLED + INCONCLUSIVE` | release `6:d5ddb9e0eb1932861a75f8e6ef144e8fdcef17dd5cb207a6c6c2ce6ac4e33c94` refunded; credits withdrawn |
 | Strong contradiction | `https://a-murex-one.vercel.app/v2-contradicted-strong.html` | `006e13f4fee1713961c4a45148e7e196fb5e35204c9ab97c5831da2fe7c87880` | `SETTLED + CONTRADICTED` | release `7:006e13f4fee1713961c4a45148e7e196fb5e35204c9ab97c5831da2fe7c87880` refunded; credits withdrawn |
 
-Public V2 evidence roles are: publisher `0xac3AC69dC0Bde389256dD6748C75817ead9286D9`, challenger `0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB`, and integrator `0x951e6B75530774fF82321a5ae54e14F778F0C855`. Read-only inspection does not require importing them. The current V2 contract is `0x03197B3246a5BF0C28fad07c4E5868F52c601580`; the bound consumer is `0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24`.
+Public V2 evidence roles are: publisher `0xac3AC69dC0Bde389256dD6748C75817ead9286D9`, challenger `0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB`, and integrator `0x951e6B75530774fF82321a5ae54e14F778F0C855`. Read-only inspection does not require importing them. The final V2 contract is `0x4E0a75B63D913FC2d39A75F61905CA5973c77491`; the bound consumer is `0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F`.
 
 The A, B and C fixture routes are read-only against canonical finalized state. They do not require importing the publisher, challenger or integrator keys. A fresh claim submission, resolution, wallet rejection and network-switch test require your own funded injected wallet; you cannot sign as the recorded publisher/challenger/integrator accounts unless you deliberately import those accounts.
 

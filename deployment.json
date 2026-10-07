@@ -3,15 +3,24 @@
   "chainId": 61999,
   "rpc": "https://studio.genlayer.com/api",
   "explorer": "https://explorer-studio.genlayer.com",
-  "contractAddress": "0x03197B3246a5BF0C28fad07c4E5868F52c601580",
-  "deploymentTx": "0x84a4b0a159205e4ba2be9c913a9d3698cb43d5bbcfe66502f24093b50fc67250",
+  "contractAddress": "0x4E0a75B63D913FC2d39A75F61905CA5973c77491",
+  "deploymentTx": "0xa6917d417dd63f683684acdfe7168c75bad1310172a79d0a91fed21835d5a617",
   "deploymentStatus": "FINALIZED / MAJORITY_AGREE / SUCCESS",
-  "sourceCommit": "54605dae812afca03a0f9b2dacaf91e23ccdac95",
-  "sourceBytes": 80340,
-  "sourceSha256": "F880EA25C950135FE51BBABFD9DF84C408B490216D9B4A8263638660EC6D7B01",
+  "sourceCommit": "ab5bbef32d046cf19e6621275485b57d4268ac87",
+  "sourceBytes": 86605,
+  "sourceSha256": "A079E57EA831456721A6982FC5A4FB5B6AA77649D71EC3636BE44540292B41F1",
   "signerUrl": "https://margin-signer.vercel.app/",
-  "signerDeployment": "dpl_99CS5PiZNHKfkwgqmzBNBVYmC3QL",
+  "signerDeployment": null,
+  "signerDeploymentStatus": "pending external Vercel rate limit; final signer configuration is available in the local build",
   "supersededSignerDeployment": "dpl_BYeZLjjx3zP3sUqNZ4jJy1nSuBvh",
+  "supersededV2Deployment": {
+    "contractAddress": "0x03197B3246a5BF0C28fad07c4E5868F52c601580",
+    "deploymentTx": "0x84a4b0a159205e4ba2be9c913a9d3698cb43d5bbcfe66502f24093b50fc67250",
+    "consumerAddress": "0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24",
+    "consumerDeploymentTx": "0xebc599b8d667f6fc39787057cf261273f24a566a60f62d194e5c0821365a3ba3",
+    "sourceCommit": "54605dae812afca03a0f9b2dacaf91e23ccdac95",
+    "status": "historical; superseded by the final material-observation deployment"
+  },
   "runtimeIdentity": {
     "chain_id": 61999,
     "network": "studionet",
@@ -347,7 +356,7 @@
       "readback": "registered=true; unchallenged=true; cancellation not yet attempted"
     }
   },
-  "liveEvidence": {
+  "historicalDeploymentEvidence": {
     "canonicalDeploymentChecks": {
       "contractAddress": "0x03197B3246a5BF0C28fad07c4E5868F52c601580",
       "deploymentTx": "0x84a4b0a159205e4ba2be9c913a9d3698cb43d5bbcfe66502f24093b50fc67250",
@@ -524,6 +533,32 @@
       },
       "allWrites": "FINALIZED / MAJORITY_AGREE / SUCCESS except the explicitly recorded rolled-back first strong-fixture submit, which finalized with execution ERROR and made no state change"
     }
+  },
+  "liveEvidence": {
+    "canonicalDeploymentChecks": {
+      "contractAddress": "0x4E0a75B63D913FC2d39A75F61905CA5973c77491",
+      "deploymentTx": "0xa6917d417dd63f683684acdfe7168c75bad1310172a79d0a91fed21835d5a617",
+      "networkReadback": {
+        "chain_id": 61999,
+        "network": "studionet",
+        "rpc": "https://studio.genlayer.com/api"
+      },
+      "sourceCommit": "ab5bbef32d046cf19e6621275485b57d4268ac87",
+      "deploymentFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "sourceSha256": "A079E57EA831456721A6982FC5A4FB5B6AA77649D71EC3636BE44540292B41F1",
+      "sourceBytes": 86605
+    },
+    "consumerDeployment": {
+      "contractAddress": "0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F",
+      "deploymentTx": "0x521f944b8274e4f4e5bfe151c3f9a6fdba0fd4f5f4f515dd8f98b5d7976ce01d",
+      "boundMarginAddress": "0x4E0a75B63D913FC2d39A75F61905CA5973c77491",
+      "deploymentFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "sourceCommit": "ab5bbef32d046cf19e6621275485b57d4268ac87",
+      "sourceSha256": "4060BFABA93A8B6BF90F6CDA6466D2066A7F1E1ED91036C1DB275047201DF6EC",
+      "sourceBytes": 15416,
+      "boundAddressReadback": "0x4E0a75B63D913FC2d39A75F61905CA5973c77491"
+    },
+    "status": "Final deployment checks only; fresh final economic lifecycle is recorded after execution."
   },
   "toolVersions": {
     "genlayerCli": "0.39.1",

@@ -8,8 +8,8 @@ import { createAccount, createClient } from 'genlayer-js';
 import { studionet } from 'genlayer-js/chains';
 import { TransactionHashVariant } from 'genlayer-js/types';
 
-const MARGIN = '0x03197B3246a5BF0C28fad07c4E5868F52c601580';
-const CONSUMER = '0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24';
+const MARGIN = '0x4E0a75B63D913FC2d39A75F61905CA5973c77491';
+const CONSUMER = '0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F';
 const RPC = 'https://studio.genlayer.com/api';
 const values = new Map(process.argv.slice(2).reduce((out, value, i, all) => {
   if (value.startsWith('--')) out.push([value.slice(2), all[i + 1] ?? true]);
