@@ -405,7 +405,81 @@
       },
       "finality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
       "evidenceFile": "scripts/live/evidence/V2-covered.json"
-    }
+    },
+    "freshFollowupAssuredAttempts": [
+      {
+        "claimKey": "511a51196d26e6da63ef4f24e94313ae1b5d66bf6bfc4681f8f886159d25794f",
+        "pageUrl": "https://a-murex-one.vercel.app/v2-support.html",
+        "evidenceFile": "scripts/live/evidence/V2-supported.json",
+        "finalState": "SETTLED",
+        "finalStatus": "INCONCLUSIVE",
+        "creditsAfterWithdrawal": { "publisher": 0, "challenger": 0 },
+        "release": { "refunded": true, "executed": false, "creatorCreditAfterWithdrawal": 0 },
+        "finality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+        "note": "Fresh follow-up attempt; accepted primary observation did not match the precommitted artifact, so settlement refunded the release.",
+        "steps": {
+          "submit": "0x8ecde3189575cfcc55170fbd1cdb4b6f87daf6ea4974c1aaee0746745927e25d",
+          "normalResolve": "0x9cfe88cdab1519fe0ba8c3ba6e72158c7d3ce800a599a4ee6841304dc9dbb95b",
+          "registerCovered": "0x7418a0ee0c3f64f900b768921a1fdee2fbad85b1774f30e99d2254fcc1fe6c84",
+          "createProtectedRelease": "0x7bf8d8bca60a64e0aa288e2f20b9e6b6c7e1e726e00d2643a960cc5b114da851",
+          "challenge": "0x3618dece94a3452ac679d25287524958bf4b678e3b7675287ca3cb4f5b8299cb",
+          "resolveAssured": "0x176c93331a27b1cadd5c69170b2dd8f34a986659d46ad00ad7cd76ae59271425",
+          "settle": "0x0c913684924d88dd60736e0196962633b2a8ea5cb76f1293451271ced6579a1f",
+          "refundRelease": "0xb7ec2bdec157664c1886c3cb9afd41919b42dbf3943563fe557807b859a088ef",
+          "withdrawReleaseCredit": "0x264aad5e822c7b6528299025b5a786533ddf13f00d1bc6478649b7573782565f",
+          "withdrawPublisherCredit": "0x4ab66e63196146e73ee875952cd4395f0ba4e74d746115e421f420aaa90db289",
+          "withdrawChallengerCredit": "0xe9961401f2a7f5517aef5468fb5c5e2fed71100bab34f7e3d8cab8f33fd28ca0"
+        }
+      },
+      {
+        "claimKey": "d8cba45b4b33224daaf140669a9e666eb24be9c130251d57b70dea8589119682",
+        "pageUrl": "https://a-murex-one.vercel.app/v2-supported-positive.html",
+        "evidenceFile": "scripts/live/evidence/V2-supported-positive.json",
+        "finalState": "SETTLED",
+        "finalStatus": "INCONCLUSIVE",
+        "creditsAfterWithdrawal": { "publisher": 0, "challenger": 0 },
+        "release": { "refunded": true, "executed": false, "creatorCreditAfterWithdrawal": 0 },
+        "finality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+        "note": "Fresh follow-up attempt; accepted primary observation did not match the precommitted artifact, so settlement refunded the release.",
+        "steps": {
+          "submit": "0x81893af784f4091ea8ab5e57ca0ef3f4bf7df243e726b9364f82ae2dd02fd56b",
+          "normalResolve": "0x1739cfb0c28aef5fa9f07f4772b5a19f8aacc456256675433789f296f03730bd",
+          "registerCovered": "0x16d983b72149061ca06c2aa15bfa5f271fe9780341e41570bfc927b2d58883ac",
+          "createProtectedRelease": "0x93f4663df7b9446ad47263648e835243e3101bec0f8972a7c981b4badc8e0727",
+          "challenge": "0xe721de9f13fb6ae91a2901bc68efaad7388658f4912994e68fde6a65d3c9e582",
+          "resolveAssured": "0xb5d7d8fa2a03e8e60a7202c06f5171652ad4831c242b18ae6e11dc1962bb1880",
+          "settle": "0x755e166c2142df379b4709f5e74fe057a8e95b306b8ba83a374c6dbab6761400",
+          "refundRelease": "0xb822eb5f0b3cfc8d5d2929e47b07facc40682bcd529265c64f5d03935a235faa",
+          "withdrawReleaseCredit": "0xfff4e7c9527408f30d972113f67b95ae5975851da3e2a213032556aeff7fe96f",
+          "withdrawPublisherCredit": "0x853c49cee39acf7d0dd7b370eac0527e69bb64f4c1276bc737b6f5574917df97",
+          "withdrawChallengerCredit": "0xefbf3cf9a73ec0d8082cf5fc2a648771c364cb84dd519e669e2d131422b9ccd4"
+        }
+      },
+      {
+        "claimKey": "b64330db09c94539ada2a544b16f83dd7d4b673aa075bcd1cab68dd73f36d888",
+        "pageUrl": "https://a-murex-one.vercel.app/v2-supported-positive.txt",
+        "evidenceFile": "scripts/live/evidence/V2-supported-text.json",
+        "finalState": "SETTLED",
+        "finalStatus": "INCONCLUSIVE",
+        "creditsAfterWithdrawal": { "publisher": 0, "challenger": 0 },
+        "release": { "refunded": true, "executed": false, "creatorCreditAfterWithdrawal": 0 },
+        "finality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+        "note": "Fresh follow-up attempt; accepted primary observation did not match the precommitted artifact, so settlement refunded the release.",
+        "steps": {
+          "submit": "0x93e61c6e3cc7a2c22a02407f64c30ce9b0f7addca4fbda282cfb5842c9ef5e05",
+          "normalResolve": "0xf8dce838476e99903567226f4774a529b92db38bc3b61b762faa2d9f372b85f1",
+          "registerCovered": "0x7897ee6f981867b4f1d9cee2e54eba7ecbe2c408f827b00649969e4bdea0e123",
+          "createProtectedRelease": "0x3adc3b5ca05463f1aa0ff16f69fe4567aeaaf945c6477d2349a67b3ea6cf6058",
+          "challenge": "0x291f219d37c16e39875489b34ef91c2f6e13821919308a442ab1fcaabe538130",
+          "resolveAssured": "0x7a7aaeac11b4e1edc4ccd08d1fcf6b1e3a305dc664a883e526c30924071acb15",
+          "settle": "0x7dcc98749ff94e8d1f25b08b0417fb6f013add19797cdf018b8c5c5eae1e595c",
+          "refundRelease": "0x64288158d7a134cf4ba7d8fa77753f143b6ad6887b22ff9d7ca4f6beeaf0673e",
+          "withdrawReleaseCredit": "0x83927a68350255f784cab83f270bfa420452d31a626c8a16d8c85affad605db9",
+          "withdrawPublisherCredit": "0x52fbe52cc6ca2d55ae98001d377d18b4d5130ca1499971fc1320123fd2080112",
+          "withdrawChallengerCredit": "0x95e80ec918957a70ff336d4ba975978d3c69833d192b08ce007bbd6d0d7589e7"
+        }
+      }
+    ]
   },
   "toolVersions": {
     "genlayerCli": "0.39.1",

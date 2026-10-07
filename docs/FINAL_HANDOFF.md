@@ -81,7 +81,7 @@ The current live evidence boundary is:
 - MARGIN V2 deployment: `0x03197B3246a5BF0C28fad07c4E5868F52c601580`, finalized at `0x84a4b0a159205e4ba2be9c913a9d3698cb43d5bbcfe66502f24093b50fc67250`.
 - Consumer V2 deployment: `0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24`, finalized at `0xebc599b8d667f6fc39787057cf261273f24a566a60f62d194e5c0821365a3ba3`, with constructor binding read back as the V2 MARGIN address. Source commit `54605dae812afca03a0f9b2dacaf91e23ccdac95`, SHA-256 `4060BFABA93A8B6BF90F6CDA6466D2066A7F1E1ED91036C1DB275047201DF6EC`, 15,416 bytes.
 - Fresh final-deployment normal claim evidence: submit → resolve → `FINALIZED / MAJORITY_AGREE / SUCCESS`, with canonical verdict `SUPPORTED`, as recorded above.
-- No fresh V2 Assured evidence is recorded yet. The A/B/C files are historical V1 evidence and are not presented as V2 proof. Historical transactions and verdicts remain separated through [`docs/HISTORY.md`](HISTORY.md).
+- Fresh V2 Assured follow-up evidence is recorded in `scripts/live/evidence/V2-supported.json`, `V2-supported-positive.json` and `V2-supported-text.json`. All three finalized `SETTLED + INCONCLUSIVE`; each pre-settlement release was refunded and withdrawn, and publisher/challenger credits were withdrawn to zero. No positive V2 `SUPPORTED` release execution is claimed. Historical transactions and verdicts remain separated through [`docs/HISTORY.md`](HISTORY.md).
 - Primary human browser flow: `PASS`. Optional/hostile browser matrix items are not claimed unless individually recorded.
 
 ## Production configuration hardening
@@ -96,7 +96,7 @@ No success evidence for those steps has been fabricated.
 
 ## Final state note
 
-The contracts are already deployed on Studionet 61999, the production signer is already deployed, and the extension is already built. Fresh Assured evidence A and B is recorded under `scripts/live/evidence/`; C remains pending until its derived 24-hour cancellation time. The primary human browser flow is complete; optional/hostile browser checks and the demo video remain separate, unclaimed items.
+The contracts are already deployed on Studionet 61999, the production signer is already deployed, and the extension is already built. Fresh V2 Assured attempts are recorded under `scripts/live/evidence/`; they all ended in the integrity-protective `SETTLED + INCONCLUSIVE` refund path. No positive V2 `SUPPORTED` release execution is claimed. The primary human browser flow is complete; optional/hostile browser checks and the demo video remain separate, unclaimed items.
 
 ## Architecture that must not be weakened
 
