@@ -75,7 +75,9 @@ async function waitFinal(hash) {
   throw new Error(`Could not confirm FINALIZED for ${hash}; inspect this hash before resuming.`);
 }
 async function step(state, who, address, functionName, args, value, readbacks) {
-  const existing = state.steps.find((item) => item.function === functionName);
+  const existing = state.steps.find((item) => item.function === functionName
+    && item.account?.toLowerCase() === who.address.toLowerCase()
+    && JSON.stringify(item.args) === JSON.stringify(args));
   if (existing?.txHash) {
     if (existing.status !== 'FINALIZED') {
       existing.finality = await waitFinal(existing.txHash);

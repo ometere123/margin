@@ -43,7 +43,7 @@ Each write must be followed by `npm exec -- genlayer receipt <hash>` and the rec
 4. Call `withdraw_assured_credit` as publisher.
 5. Read `get_assured_claim` and record publisher credit `0` and `CANCELLED`.
 
-If a sequence cannot be completed because its real deadline has not elapsed, record it as pending rather than substituting Direct Mode evidence.
+If a sequence cannot be completed because its real deadline has not elapsed, record it as pending rather than substituting Direct Mode evidence. The V2 Covered run below completed its real appeal wait and records its final result in `V2-covered.json`.
 
 ## V2 Covered Claim sequence
 
@@ -53,6 +53,8 @@ publisher/challenger/integrator public accounts, every transaction hash,
 `FINALIZED / MAJORITY_AGREE / SUCCESS` receipt, and canonical readbacks in
 `scripts/live/evidence/V2-covered.json`. It uses a publisher-derived manifest,
 value-coupled collateral, a pre-settlement protected release, and the real
-appeal deadline. `--dry-run` prints the plan without writing; rerunning after
-an interruption reconciles a recorded hash before continuing and never blindly
-resubmits it.
+appeal deadline. The recorded run settled `INCONCLUSIVE` after a primary
+observation mismatch, refunded the release, and withdrew publisher,
+challenger, and creator credits. `--dry-run` prints the plan without writing;
+rerunning after an interruption reconciles a recorded hash before continuing
+and never blindly resubmits it.

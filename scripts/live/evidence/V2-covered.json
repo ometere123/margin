@@ -395,6 +395,201 @@
           "state": "RESOLVED"
         }
       }
+    },
+    {
+      "account": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+      "function": "settle_assured_claim",
+      "args": [
+        "327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698"
+      ],
+      "value": "0",
+      "submittedAt": "2026-10-07T00:07:34.245Z",
+      "txHash": "0xc93a97457a99daf80b94135aaca7156b6d7544e241eb59f0fff3d261a1e92071",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "txHash": "0xc93a97457a99daf80b94135aaca7156b6d7544e241eb59f0fff3d261a1e92071"
+      },
+      "readback": {
+        "assured": {
+          "appeal_bond": 0,
+          "appeal_context_digest": "4638922bf96eb7f6195b4cd7ee483afdbd099fda0b93c977d81ad3c67de62bd9",
+          "appeal_count": 0,
+          "appeal_deadline": "2026-10-07T00:07:25.348431+00:00",
+          "appeal_reason": "",
+          "challenge_bond": 0,
+          "challenger": "0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB",
+          "challenger_credit": 2,
+          "claim_key": "327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698",
+          "domain_nonce": "margin-v2-covered-20261006",
+          "domain_proof_url": "https://a-murex-one.vercel.app/.well-known/margin/claims/327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698.json",
+          "final_status": "INCONCLUSIVE",
+          "proof_digest": "bae4ab125c7283fb20662cf1d010b0e7ffed25df28ed3f7aa9eb3e688e71d7fc",
+          "proof_expires_at": "2027-01-01T00:00:00+00:00",
+          "publisher": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "publisher_bond": 0,
+          "publisher_credit": 2,
+          "settled": true,
+          "state": "SETTLED",
+          "state_started_at": "2026-10-06T23:07:25.348431+00:00"
+        },
+        "coverage": {
+          "active_exposure": 0,
+          "available_coverage": 2,
+          "claim_key": "327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698",
+          "coverage_cap": 2,
+          "final_status": "INCONCLUSIVE",
+          "required_appeal_bond": 2,
+          "required_challenge_bond": 2,
+          "state": "SETTLED"
+        }
+      }
+    },
+    {
+      "account": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+      "function": "refund_release",
+      "args": [
+        "0:327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698"
+      ],
+      "value": "0",
+      "submittedAt": "2026-10-07T00:08:21.037Z",
+      "txHash": "0xfb34c57352f5ca7144e651f77c28d59d49c64af29da0df9a4da81cd9d9de3f0e",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "txHash": "0xfb34c57352f5ca7144e651f77c28d59d49c64af29da0df9a4da81cd9d9de3f0e"
+      },
+      "readback": {
+        "release": {
+          "amount": 1,
+          "beneficiary": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "beneficiary_credit": 0,
+          "claim_key": "327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698",
+          "creator": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+          "creator_credit": 1,
+          "executed": false,
+          "expiry": "2027-02-01T00:00:00+00:00",
+          "refunded": true,
+          "release_id": "0:327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698"
+        }
+      }
+    },
+    {
+      "account": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+      "function": "withdraw_release_credit",
+      "args": [
+        "0:327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698"
+      ],
+      "value": "0",
+      "submittedAt": "2026-10-07T00:09:03.132Z",
+      "txHash": "0xd6153db506ebd95dedff4b8ea91501cf1c40aa79911c42e0680a1d22153ec578",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "txHash": "0xd6153db506ebd95dedff4b8ea91501cf1c40aa79911c42e0680a1d22153ec578"
+      },
+      "readback": {
+        "release": {
+          "amount": 1,
+          "beneficiary": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "beneficiary_credit": 0,
+          "claim_key": "327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698",
+          "creator": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+          "creator_credit": 0,
+          "executed": false,
+          "expiry": "2027-02-01T00:00:00+00:00",
+          "refunded": true,
+          "release_id": "0:327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698"
+        }
+      }
+    },
+    {
+      "account": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+      "function": "withdraw_assured_credit",
+      "args": [
+        "327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698"
+      ],
+      "value": "0",
+      "submittedAt": "2026-10-07T00:09:44.696Z",
+      "txHash": "0xda197db4f29a6df60a3f06603ea481c3b62ad0880efa87b8eeb52582ae6c031a",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "txHash": "0xda197db4f29a6df60a3f06603ea481c3b62ad0880efa87b8eeb52582ae6c031a"
+      },
+      "readback": {
+        "assured": {
+          "appeal_bond": 0,
+          "appeal_context_digest": "4638922bf96eb7f6195b4cd7ee483afdbd099fda0b93c977d81ad3c67de62bd9",
+          "appeal_count": 0,
+          "appeal_deadline": "2026-10-07T00:07:25.348431+00:00",
+          "appeal_reason": "",
+          "challenge_bond": 0,
+          "challenger": "0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB",
+          "challenger_credit": 2,
+          "claim_key": "327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698",
+          "domain_nonce": "margin-v2-covered-20261006",
+          "domain_proof_url": "https://a-murex-one.vercel.app/.well-known/margin/claims/327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698.json",
+          "final_status": "INCONCLUSIVE",
+          "proof_digest": "bae4ab125c7283fb20662cf1d010b0e7ffed25df28ed3f7aa9eb3e688e71d7fc",
+          "proof_expires_at": "2027-01-01T00:00:00+00:00",
+          "publisher": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "publisher_bond": 0,
+          "publisher_credit": 0,
+          "settled": true,
+          "state": "SETTLED",
+          "state_started_at": "2026-10-06T23:07:25.348431+00:00"
+        }
+      }
+    },
+    {
+      "account": "0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB",
+      "function": "withdraw_assured_credit",
+      "args": [
+        "327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698"
+      ],
+      "value": "0",
+      "submittedAt": "2026-10-07T00:20:40.184Z",
+      "txHash": "0x8610e14c4c91e144585d10547dc578eb1f6410609eaa46157f6be1715c9db7d5",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "txHash": "0x8610e14c4c91e144585d10547dc578eb1f6410609eaa46157f6be1715c9db7d5"
+      },
+      "readback": {
+        "assured": {
+          "appeal_bond": 0,
+          "appeal_context_digest": "4638922bf96eb7f6195b4cd7ee483afdbd099fda0b93c977d81ad3c67de62bd9",
+          "appeal_count": 0,
+          "appeal_deadline": "2026-10-07T00:07:25.348431+00:00",
+          "appeal_reason": "",
+          "challenge_bond": 0,
+          "challenger": "0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB",
+          "challenger_credit": 0,
+          "claim_key": "327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698",
+          "domain_nonce": "margin-v2-covered-20261006",
+          "domain_proof_url": "https://a-murex-one.vercel.app/.well-known/margin/claims/327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698.json",
+          "final_status": "INCONCLUSIVE",
+          "proof_digest": "bae4ab125c7283fb20662cf1d010b0e7ffed25df28ed3f7aa9eb3e688e71d7fc",
+          "proof_expires_at": "2027-01-01T00:00:00+00:00",
+          "publisher": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "publisher_bond": 0,
+          "publisher_credit": 0,
+          "settled": true,
+          "state": "SETTLED",
+          "state_started_at": "2026-10-06T23:07:25.348431+00:00"
+        }
+      }
     }
   ],
   "publicAccounts": {
@@ -402,5 +597,52 @@
     "challenger": "0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB",
     "integrator": "0x951e6B75530774fF82321a5ae54e14F778F0C855"
   },
-  "appealDeadline": "2026-10-07T00:07:25.348431+00:00"
+  "appealDeadline": "2026-10-07T00:07:25.348431+00:00",
+  "releaseId": "0:327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698",
+  "finalReadback": {
+    "assured": {
+      "appeal_bond": 0,
+      "appeal_context_digest": "4638922bf96eb7f6195b4cd7ee483afdbd099fda0b93c977d81ad3c67de62bd9",
+      "appeal_count": 0,
+      "appeal_deadline": "2026-10-07T00:07:25.348431+00:00",
+      "appeal_reason": "",
+      "challenge_bond": 0,
+      "challenger": "0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB",
+      "challenger_credit": 0,
+      "claim_key": "327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698",
+      "domain_nonce": "margin-v2-covered-20261006",
+      "domain_proof_url": "https://a-murex-one.vercel.app/.well-known/margin/claims/327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698.json",
+      "final_status": "INCONCLUSIVE",
+      "proof_digest": "bae4ab125c7283fb20662cf1d010b0e7ffed25df28ed3f7aa9eb3e688e71d7fc",
+      "proof_expires_at": "2027-01-01T00:00:00+00:00",
+      "publisher": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+      "publisher_bond": 0,
+      "publisher_credit": 0,
+      "settled": true,
+      "state": "SETTLED",
+      "state_started_at": "2026-10-06T23:07:25.348431+00:00"
+    },
+    "coverage": {
+      "active_exposure": 0,
+      "available_coverage": 2,
+      "claim_key": "327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698",
+      "coverage_cap": 2,
+      "final_status": "INCONCLUSIVE",
+      "required_appeal_bond": 2,
+      "required_challenge_bond": 2,
+      "state": "SETTLED"
+    },
+    "release": {
+      "amount": 1,
+      "beneficiary": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+      "beneficiary_credit": 0,
+      "claim_key": "327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698",
+      "creator": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+      "creator_credit": 0,
+      "executed": false,
+      "expiry": "2027-02-01T00:00:00+00:00",
+      "refunded": true,
+      "release_id": "0:327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698"
+    }
+  }
 }

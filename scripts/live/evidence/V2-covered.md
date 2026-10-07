@@ -23,16 +23,25 @@ transaction hashes and canonical readbacks are in `V2-covered.json`.
 5. `challenge_assured_claim` with `2` GEN: `0xe8a7923b6a927af2bacd07775dad3af57ee0a082047ed6b3a2d82f725a23ab40`
 6. `resolve_assured_claim`: `0x1b70414d78290e938bfa8ad90a53eb82553048d338f79dd62f2b27e9b398a240`
 
-The canonical Assured readback after step 6 is `RESOLVED` with
+The canonical Assured readback after step 6 was `RESOLVED` with
 `final_status=INCONCLUSIVE`. This is not claimed as a positive execution
 path: the accepted primary observation digest differs from the precommitted
 primary artifact digest, so the integrity-bound path did not produce a
-definitive supported result. The protected release remains unexecuted.
+definitive supported result.
 
-## Pending deadline-gated continuation
+## Post-deadline settlement and refund
 
-The canonical appeal deadline is `2026-10-07T00:07:25.348431+00:00`. The
-runner must be resumed only after that time. It will settle the resolved
-`INCONCLUSIVE` claim, refund the protected release, withdraw the resulting
-credits, and save the final canonical readbacks. No write is to be retried;
-the durable runner reconciles the hashes above before continuing.
+The canonical appeal deadline was `2026-10-07T00:07:25.348431+00:00`.
+After it elapsed, the following writes each finalized successfully:
+
+7. `settle_assured_claim`: `0xc93a97457a99daf80b94135aaca7156b6d7544e241eb59f0fff3d261a1e92071`
+8. `refund_release`: `0xfb34c57352f5ca7144e651f77c28d59d49c64af29da0df9a4da81cd9d9de3f0e`
+9. `withdraw_release_credit`: `0xd6153db506ebd95dedff4b8ea91501cf1c40aa79911c42e0680a1d22153ec578`
+10. publisher `withdraw_assured_credit`: `0xda197db4f29a6df60a3f06603ea481c3b62ad0880efa87b8eeb52582ae6c031a`
+11. challenger `withdraw_assured_credit`: `0x8610e14c4c91e144585d10547dc578eb1f6410609eaa46157f6be1715c9db7d5`
+
+Final canonical readback: Assured state `SETTLED`, `final_status=INCONCLUSIVE`,
+publisher and challenger credits `0`, active exposure `0`; the protected
+release is `refunded=true`, `executed=false`, and both creator and beneficiary
+credits are `0`. The complete structured readbacks are preserved in
+`V2-covered.json`.

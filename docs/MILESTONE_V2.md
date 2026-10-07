@@ -40,10 +40,10 @@ cannot produce a definitive `SUPPORTED` or `CONTRADICTED` result.
 
 | V1 limitation | V2 change | Test/live proof |
 | --- | --- | --- |
-| Fixed one-unit assurance did not cover arbitrary protected value | Covered Claim `coverage_cap` and full publisher collateral | `tests/direct/test_covered_claims.py`; live proof pending |
-| Releases were not coupled to a claim-wide value ceiling | `MarginConsumer.active_exposure_by_claim` and coverage checks | consumer Direct Mode integration; live proof pending |
-| Arbitrary high-assurance evidence URLs | Derived publisher manifest URL and typed evidence pack | manifest validation tests; live proof pending |
-| Mutable or oversized evidence could be silently truncated | bounded manifest/artifact policy, primary and evidence digest commitments | integrity mutation tests; live proof pending |
+| Fixed one-unit assurance did not cover arbitrary protected value | Covered Claim `coverage_cap` and full publisher collateral | `tests/direct/test_covered_claims.py`; V2 live pre-settlement release and settlement readback |
+| Releases were not coupled to a claim-wide value ceiling | `MarginConsumer.active_exposure_by_claim` and coverage checks | consumer Direct Mode integration; V2 live release refunded after `INCONCLUSIVE` |
+| Arbitrary high-assurance evidence URLs | Derived publisher manifest URL and typed evidence pack | manifest validation tests; V2 live manifest readback |
+| Mutable or oversized evidence could be silently truncated | bounded manifest/artifact policy, primary and evidence digest commitments | integrity mutation tests; V2 live primary-observation mismatch produced `INCONCLUSIVE` |
 | Ordinary annotations are advisory | explicit distinction between public annotation and Covered Claim | signer/assurance UI and documentation |
 
 ## Current limitations
@@ -51,9 +51,12 @@ cannot produce a definitive `SUPPORTED` or `CONTRADICTED` result.
 V2 MARGIN is deployed on Studionet at
 `0x03197B3246a5BF0C28fad07c4E5868F52c601580` and the bound consumer is
 `0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24`. The production signer has been
-rebuilt for those addresses. Fresh V2 Covered Claim lifecycles, protected
-release execution/refund evidence, and a V2 browser run remain outstanding;
-the earlier A/B/C evidence is historical V1 evidence and is not relabeled.
+rebuilt for those addresses. A fresh V2 Covered Claim lifecycle, including a
+pre-settlement release, real appeal wait, `SETTLED + INCONCLUSIVE` integrity
+outcome, refund and credit withdrawals, is recorded in
+`scripts/live/evidence/V2-covered.json`. A positive `SUPPORTED` protected
+release execution and a V2 browser run remain outstanding; the earlier A/B/C
+evidence is historical V1 evidence and is not relabeled.
 
 ## Local gate snapshot
 

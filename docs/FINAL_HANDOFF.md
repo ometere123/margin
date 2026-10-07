@@ -2,7 +2,7 @@
 
 ## Current live status (2026-09-29)
 
-The V2 Studionet deployments are finalized and recorded in [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md). No V2 Covered Claim lifecycle is claimed yet; prior A/B/C lifecycle records remain historical. The primary browser flow in the earlier handoff is not claimed as V2 proof.
+The V2 Studionet deployments are finalized and recorded in [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md). A fresh V2 Covered lifecycle is recorded in `scripts/live/evidence/V2-covered.json`: it settled `INCONCLUSIVE` after a real appeal wait, refunded the pre-settlement release, and withdrew all credits. No positive V2 `SUPPORTED` release execution is claimed. Prior A/B/C lifecycle records remain historical. The primary browser flow in the earlier handoff is not claimed as V2 proof.
 
 Protected runtime/protocol implementation is unchanged from the known-good baseline `23062e40b16d74f5fb72c56a72cdfaa0eaef9587`; the current candidate adds only tests and documentation.
 

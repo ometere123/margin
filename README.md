@@ -185,7 +185,7 @@ This follows the important GenLayer rule that validators must independently veri
 
 ## What remains intentionally environment-specific
 
-The V2 contract and bound consumer are deployed, and deployment-only readbacks are recorded in `deployment.json`. The older normal/Assured A/B/C records remain historical V1 evidence and are not presented as V2 lifecycle proof. Fresh V2 live Covered Claim, protected-release and integrity-failure runs remain outstanding. Browser verification is a separate manual track and is not inferred from unit tests. The following evidence remains account/browser dependent and must not be inferred from unit tests:
+The V2 contract and bound consumer are deployed, and the fresh V2 Covered lifecycle is recorded in `deployment.json` and `scripts/live/evidence/V2-covered.json`. It demonstrates a pre-settlement protected release reaching `SETTLED + INCONCLUSIVE` after an integrity-observation mismatch, followed by deterministic refund and withdrawal; no positive V2 `SUPPORTED` release execution is claimed. The older normal/Assured A/B/C records remain historical V1 evidence. Browser verification is a separate manual track and is not inferred from unit tests. The following evidence remains account/browser dependent and must not be inferred from unit tests:
 
 ### Frontend workspace routes
 
