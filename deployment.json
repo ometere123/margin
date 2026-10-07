@@ -558,7 +558,31 @@
       "sourceBytes": 15416,
       "boundAddressReadback": "0x4E0a75B63D913FC2d39A75F61905CA5973c77491"
     },
-    "status": "Final deployment checks only; fresh final economic lifecycle is recorded after execution."
+    "finalEconomicLifecycle": {
+      "evidenceFile": "scripts/live/evidence/final-v2-economic-contradicted.json",
+      "claimKey": "006e13f4fee1713961c4a45148e7e196fb5e35204c9ab97c5831da2fe7c87880",
+      "page": "https://a-murex-one.vercel.app/v2-contradicted-strong.html",
+      "state": "SETTLED",
+      "finalStatus": "CONTRADICTED",
+      "releaseId": "2:006e13f4fee1713961c4a45148e7e196fb5e35204c9ab97c5831da2fe7c87880",
+      "releaseOutcome": "REFUNDED",
+      "activeExposure": 0,
+      "postWithdrawalCredits": { "publisher": 0, "challenger": 0, "creator": 0 },
+      "transactions": {
+        "submit": "0xd5ea31415a05ddef336b1b6bb8607539f79926becab98245a0e9977fc20adc06",
+        "normalResolve": "0xeeece74db4c82f21351f252bc4f69342045dc4991fadee35e3550bd3f1bb056f",
+        "registerCovered": "0x8df2cfda100f2ada0a2945358b3837eceec7835939e6d9c454b7dec18596a61d",
+        "createProtectedRelease": "0x898587d82463671404ca48e544de29b5c5ce6f10b7555646fb21db3b75b5ce07",
+        "challenge": "0x4649e2587d3c51f31d8eee7dcf4dd2b4b3efc6067a9efc0468424b1842fd7a60",
+        "resolveCovered": "0xfc5a979290579177341e5645228891ed6aa05527596d2b7a79e030d6fa1177a5",
+        "settle": "0xecd78cb02684a3ae2cff8145ae588dd579bbc82f50d38afeacdee8ad03fb82d2",
+        "refundRelease": "0x95b9f5d763e98e942c14a03ec2eb3e780b95a7c9af67d43f769de77c08a642e0",
+        "withdrawReleaseCredit": "0x70033ff56ac3914841f286d923ec84073d1631c3360e0866ff61c9874fbf87ee",
+        "withdrawChallengerCredit": "0xe88947412cb05f2ad8af0c7bdef8739ebad9eedf0d8c1e8a0d15f3de6934b8dc"
+      },
+      "allWrites": "FINALIZED / MAJORITY_AGREE / SUCCESS"
+    },
+    "status": "Final deployment checks and one fresh final-deployment economic lifecycle recorded."
   },
   "toolVersions": {
     "genlayerCli": "0.39.1",

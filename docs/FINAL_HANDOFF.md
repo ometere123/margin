@@ -2,7 +2,7 @@
 
 ## Current live status (2026-10-07)
 
-The final material-observation V2 Studionet MARGIN and bound-consumer deployments are finalized and recorded in [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md). The final-deployment economic lifecycle is being recorded in the separate checkpoint under `scripts/live/evidence/final-v2-economic-contradicted.json`; its writes are kept distinct from historical V2 evidence. The primary Covered browser acceptance remains a manual operator task.
+The final material-observation V2 Studionet MARGIN and bound-consumer deployments are finalized and recorded in [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md). The final-deployment economic lifecycle is recorded in [`scripts/live/evidence/final-v2-economic-contradicted.json`](../scripts/live/evidence/final-v2-economic-contradicted.json); its writes are kept distinct from historical V2 evidence. The primary Covered browser acceptance remains a manual operator task.
 
 The final candidate includes the material-observation/citation contract hardening and corresponding tests; the prior V2 deployment is historical.
 
@@ -81,7 +81,7 @@ The current live evidence boundary is:
 - MARGIN V2 deployment: `0x4E0a75B63D913FC2d39A75F61905CA5973c77491`, finalized at `0xa6917d417dd63f683684acdfe7168c75bad1310172a79d0a91fed21835d5a617`.
 - Consumer V2 deployment: `0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F`, finalized at `0x521f944b8274e4f4e5bfe151c3f9a6fdba0fd4f5f4f515dd8f98b5d7976ce01d`, with constructor binding read back as the final MARGIN address. Source commit `ab5bbef32d046cf19e6621275485b57d4268ac87`, SHA-256 `4060BFABA93A8B6BF90F6CDA6466D2066A7F1E1ED91036C1DB275047201DF6EC`, 15,416 bytes.
 - Fresh final-deployment normal claim evidence: submit → resolve → `FINALIZED / MAJORITY_AGREE / SUCCESS`, with canonical verdict `SUPPORTED`, as recorded above.
-- Fresh V2 evidence is recorded in `deployment.json` and the checkpoint files `V2-final-supported.json`, `V2-render-supported.json`, `V2-contradicted.json` and `V2-contradicted-strong.json`. The render-matched fixture finalized `SETTLED + SUPPORTED`; its pre-settlement release executed and the beneficiary withdrew. The strong contradiction finalized `SETTLED + CONTRADICTED`; its release was refunded and withdrawn. The integrity-mismatch and weak-contradiction fixtures finalized `SETTLED + INCONCLUSIVE` with deterministic refunds and zero post-withdrawal credits. Historical transactions and verdicts remain separated through [`docs/HISTORY.md`](HISTORY.md).
+- The superseded V2 evidence checkpoints `V2-final-supported.json`, `V2-render-supported.json`, `V2-contradicted.json` and `V2-contradicted-strong.json` are historical. Current final-deployment evidence is recorded separately in `scripts/live/evidence/final-v2-economic-contradicted.json`; no historical checkpoint is relabeled as final evidence.
 - Primary human browser flow: `PASS`. Optional/hostile browser matrix items are not claimed unless individually recorded.
 
 ## Production configuration hardening
@@ -96,7 +96,20 @@ No success evidence for those steps has been fabricated.
 
 ## Final state note
 
-The contracts are already deployed on Studionet 61999, the production signer is already deployed, and the extension is already built. Fresh V2 Covered Claim evidence is recorded under `scripts/live/evidence/`, including both a positive protected-release execution and a genuine contradicted refund. The primary human browser flow is complete; optional/hostile browser checks and the demo video remain separate, unclaimed items.
+The contracts are deployed on Studionet 61999 and the extension is built. The final signer is available locally with `npm run dev -w signer` at `http://localhost:5174/`; production Vercel deployment is pending the external rate limit. Final Covered browser acceptance is manual and has not been started for this candidate.
+
+### Manual Covered browser checklist
+
+1. Run `npm run build` and load `extension/dist` as an unpacked MV3 extension.
+2. Run `npm run dev -w signer` and open `http://localhost:5174/`.
+3. Confirm the deployment card shows Studionet `61999`, MARGIN `0x4E0a75B63D913FC2d39A75F61905CA5973c77491` and consumer `0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F`.
+4. On a real public HTTPS page, select a narrow technical claim and choose **Challenge with MARGIN**.
+5. Confirm `/challenge?draft=...` preserves the exact quote, prefix, suffix, evidence and claim key; connect an injected wallet and verify off-network writes are blocked.
+6. Submit once, record the immediate transaction ID, wait for `FINALIZED` plus successful execution, resolve once, and wait for the separate resolution transaction to finalize.
+7. Return to the source page, confirm exact re-anchoring, `M · SUPPORTED`/bounded verdict display, provenance, evidence and the assurance route.
+8. For a Covered flow, use a publisher-controlled proof, verify the canonical required challenge/appeal bond values, create a protected release before settlement, and confirm the final release/withdrawal state from canonical reads.
+
+Manual status: `MANUAL VERIFICATION REQUIRED`.
 
 ## Architecture that must not be weakened
 

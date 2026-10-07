@@ -45,7 +45,7 @@ The signer uses the injected EIP-1193 wallet and the final configured V2 MARGIN 
 - Extension tests: `17/17`
 - Signer tests: `33/33`
 - Extension and signer builds: passed
-- MARGIN source was not modified in this consumer-only round; its deployed SHA-256 remains unchanged.
+- MARGIN source commit `ab5bbef32d046cf19e6621275485b57d4268ac87` matches the deployed source SHA-256 above.
 
 ## Fresh final-MARGIN normal evidence
 
@@ -58,6 +58,8 @@ The signer uses the injected EIP-1193 wallet and the final configured V2 MARGIN 
 ## Live evidence boundary
 
 The material-observation V2 contract and bound consumer above are current. Final-deployment economic evidence is recorded only in the final checkpoint named below; prior V2 checkpoints are historical. The primary Covered browser acceptance remains manual.
+
+Fresh final-deployment economic lifecycle: [`scripts/live/evidence/final-v2-economic-contradicted.json`](scripts/live/evidence/final-v2-economic-contradicted.json). It reached `SETTLED + CONTRADICTED` after the real appeal window; the protected release was created before settlement, refunded, and withdrawn. Final readback reports active exposure `0` and publisher/challenger/creator credits `0`.
 
 ## Live sequence labels
 

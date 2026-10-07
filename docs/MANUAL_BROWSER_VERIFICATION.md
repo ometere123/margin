@@ -69,9 +69,9 @@ The following public fixtures are hosted on `https://a-murex-one.vercel.app` and
 | B | `https://a-murex-one.vercel.app/b.html` | `65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a` | `SETTLED`, `final_status=SUPPORTED`; release `0:65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a` was created before settlement, `executed=true`, `refunded=false`, beneficiary credit `0` after withdrawal, `is_claim_supported=true`, Assured credits `0`. |
 | C | `https://a-murex-one.vercel.app/c.html` | `55a4242e0958156bba84c565255ba528b49edd5b5f4974a62783c3cdc5336fcb` | `REGISTERED`, unchallenged; cancellation is not yet possible. Registration state began `2026-09-29T21:00:11.318794Z`; earliest cancel is `2026-09-30T21:01:11.318Z`. |
 
-### Current V2 live fixtures
+### Historical pre-final V2 fixtures
 
-These current-deployment fixtures are also read-only for browser inspection:
+These fixtures were produced against the superseded V2 deployment and are retained for audit context; they are not current final-deployment browser evidence:
 
 | Fixture | URL | Claim key | Finalized state | Protected release |
 | --- | --- | --- | --- | --- |

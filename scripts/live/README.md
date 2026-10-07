@@ -58,7 +58,12 @@ observation mismatch, refunded the release, and withdrew publisher,
 challenger, and creator credits. `--dry-run` prints the plan without writing;
 rerunning after an interruption reconciles a recorded hash before continuing
 and never blindly resubmits it. The same runner produced the render-matched
-`SUPPORTED` execution and the two contradiction records. The render-matched
-release executed and its beneficiary withdrew; the strong contradiction
-refunded its release and withdrew the creator credit; the weak contradiction
-remained correctly `INCONCLUSIVE`.
+`SUPPORTED` execution and the two contradiction records are historical
+pre-final-deployment evidence. `final-v2-economic-contradicted.json` is the
+fresh final-deployment economic lifecycle record: it settled `CONTRADICTED`,
+refunded the pre-settlement release, withdrew the creator and challenger
+credits, and ended with zero active exposure and zero credits.
+`resume-final-v2.mjs` is the final deployment
+resume helper; it waits for the saved appeal deadline and then continues the
+saved final checkpoint without shortening the protocol window or resubmitting
+any recorded write.
