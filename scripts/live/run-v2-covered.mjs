@@ -13,19 +13,19 @@ const CONSUMER = '0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24';
 const RPC = 'https://studio.genlayer.com/api';
 const ORIGIN = 'https://a-murex-one.vercel.app';
 const CLAIM = {
-  key: '327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698',
-  pageKey: '8b6553dc8c53ae90e6a09617b7e20232eb68035850be8e5dfb63d842776fe7af',
-  url: `${ORIGIN}/v2-support.html`,
+  key: process.env.MARGIN_V2_CLAIM_KEY ?? '327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698',
+  pageKey: process.env.MARGIN_V2_PAGE_KEY ?? '8b6553dc8c53ae90e6a09617b7e20232eb68035850be8e5dfb63d842776fe7af',
+  url: process.env.MARGIN_V2_PAGE_URL ?? `${ORIGIN}/v2-support.html`,
   quote: 'The MARGIN protocol records finalized evidence commitments before a Covered Claim can protect value.',
-  prefix: 'Covered Claim evidence: ',
-  suffix: ' This statement is published as a V2 evidence fixture.',
-  pageDigest: '146e27235c63aed2ec7d1ec3b55b88772afbce5586c65baea477ddb388c88d00',
-  challenge: 'Verify that this Covered Claim evidence commitment and value coverage statement is supported.',
+  prefix: process.env.MARGIN_V2_PREFIX ?? 'Covered Claim evidence: ',
+  suffix: process.env.MARGIN_V2_SUFFIX ?? ' This statement is published as a V2 evidence fixture.',
+  pageDigest: process.env.MARGIN_V2_PAGE_DIGEST ?? '146e27235c63aed2ec7d1ec3b55b88772afbce5586c65baea477ddb388c88d00',
+  challenge: process.env.MARGIN_V2_CHALLENGE ?? 'Verify that this Covered Claim evidence commitment and value coverage statement is supported.',
   evidence: 'https://a-murex-one.vercel.app/v2-evidence.txt',
-  nonce: 'margin-v2-covered-20261006',
+  nonce: process.env.MARGIN_V2_NONCE ?? 'margin-v2-covered-20261006',
   expiry: '2027-01-01T00:00:00+00:00',
 };
-const statePath = resolve('scripts/live/evidence/V2-covered.json');
+const statePath = resolve(process.env.MARGIN_V2_STATE_PATH ?? 'scripts/live/evidence/V2-covered.json');
 const dryRun = process.argv.includes('--dry-run');
 const sha = (value) => crypto.createHash('sha256').update(value).digest('hex');
 

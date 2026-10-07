@@ -1,0 +1,11 @@
+import crypto from 'node:crypto';
+import { readFile } from 'node:fs/promises';
+const sha = (value) => crypto.createHash('sha256').update(value).digest('hex');
+const canonicalJson = (value) => Array.isArray(value) ? `[${value.map(canonicalJson).join(',')}]` : value && typeof value === 'object' ? `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`).join(',')}}` : JSON.stringify(value);
+const url = 'https://a-murex-one.vercel.app/v2-supported-positive.txt';
+const body = await readFile('scripts/live/hosted/a/v2-supported-positive.txt', 'utf8');
+const quote = 'The MARGIN protocol records finalized evidence commitments before a Covered Claim can protect value.';
+const prefix = 'Positive Covered Claim fixture: ';
+const suffix = ' This statement is published as a fresh V2 evidence fixture.';
+const payload = { archiveUrl: '', canonicalUrl: url, challengeStatement: 'Confirm that this plain-text Covered Claim fixture is supported by the published evidence artifact.', claimClass: 'TECHNICAL', exact: quote, evidenceUrls: ['https://a-murex-one.vercel.app/v2-evidence.txt'], pageDigest: sha(body), pageKey: sha(url), prefix, suffix, v: 1 };
+console.log(JSON.stringify({ pageKey: payload.pageKey, pageDigest: payload.pageDigest, claimKey: sha(canonicalJson(payload)), claimDigest: sha(quote), anchorDigest: sha(`${prefix}|${quote}|${suffix}`), pageUrl: url, quote, prefix, suffix, challengeStatement: payload.challengeStatement }, null, 2));

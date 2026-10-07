@@ -1,0 +1,1 @@
+Positive Covered Claim fixture: The MARGIN protocol records finalized evidence commitments before a Covered Claim can protect value. This statement is published as a fresh V2 evidence fixture.
