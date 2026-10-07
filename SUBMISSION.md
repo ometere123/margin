@@ -57,7 +57,7 @@ The signer uses the injected EIP-1193 wallet and the final configured V2 MARGIN 
 
 ## Live evidence boundary
 
-The V2 contract and consumer deployments above are current. The fresh V2 Covered Claim lifecycle and three follow-up attempts are recorded in `scripts/live/evidence/`: each pre-settlement release reached a genuine `SETTLED + INCONCLUSIVE` integrity outcome, was refunded, and all credits were withdrawn. No positive V2 `SUPPORTED` protected-release execution is claimed. The older A/B/C records remain historical and are not V2 evidence. The primary human browser flow recorded above belongs to the previous canonical deployment and is not claimed as V2 proof.
+The V2 contract and consumer deployments above are current. Fresh final-deployment evidence is recorded in `scripts/live/evidence/`: the render-matched fixture reached `SETTLED + SUPPORTED` and executed its pre-settlement release; the strong contradiction reached `SETTLED + CONTRADICTED` and refunded its release; the integrity-mismatch and weak-contradiction fixtures reached `SETTLED + INCONCLUSIVE` and refunded their releases. All listed credits were withdrawn to zero. The older A/B/C records remain historical and are not V2 evidence. The primary human browser flow is manual evidence and is not claimed as an automated V2 run.
 
 ## Live sequence labels
 

@@ -1,0 +1,1 @@
+The highlighted proposition is false. Covered Claim registration requires publisher collateral before protected value can be created, and the required challenge bond is also value-coupled. A Covered Claim cannot protect value without the required publisher collateral.

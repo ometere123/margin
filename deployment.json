@@ -479,7 +479,51 @@
           "withdrawChallengerCredit": "0x95e80ec918957a70ff336d4ba975978d3c69833d192b08ce007bbd6d0d7589e7"
         }
       }
-    ]
+    ],
+    "finalV2CoveredEvidence": {
+      "network": "studionet",
+      "chainId": 61999,
+      "margin": "0x03197B3246a5BF0C28fad07c4E5868F52c601580",
+      "consumer": "0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24",
+      "integrityProtectiveRefund": {
+        "claimKey": "e8f9371b3bd921364517e4142445073386c4ff24356419b14f3fb852c2f45f1a",
+        "finalStatus": "INCONCLUSIVE",
+        "state": "SETTLED",
+        "releaseId": "4:e8f9371b3bd921364517e4142445073386c4ff24356419b14f3fb852c2f45f1a",
+        "release": "REFUNDED",
+        "creditsAfterWithdrawal": { "publisher": 0, "challenger": 0, "creator": 0 },
+        "evidenceFile": "scripts/live/evidence/V2-final-supported.json"
+      },
+      "renderMatchedSupported": {
+        "claimKey": "8f498b871dfb7fb54dacc77c751c8487e271b4eabc8cdf79f3a3dc7a0ad9e162",
+        "finalStatus": "SUPPORTED",
+        "state": "SETTLED",
+        "releaseId": "5:8f498b871dfb7fb54dacc77c751c8487e271b4eabc8cdf79f3a3dc7a0ad9e162",
+        "release": "EXECUTED",
+        "beneficiaryCreditAfterWithdrawal": 0,
+        "creditsAfterWithdrawal": { "publisher": 0, "challenger": 0 },
+        "evidenceFile": "scripts/live/evidence/V2-render-supported.json"
+      },
+      "weakContradiction": {
+        "claimKey": "d5ddb9e0eb1932861a75f8e6ef144e8fdcef17dd5cb207a6c6c2ce6ac4e33c94",
+        "finalStatus": "INCONCLUSIVE",
+        "state": "SETTLED",
+        "releaseId": "6:d5ddb9e0eb1932861a75f8e6ef144e8fdcef17dd5cb207a6c6c2ce6ac4e33c94",
+        "release": "REFUNDED",
+        "creditsAfterWithdrawal": { "publisher": 0, "challenger": 0, "creator": 0 },
+        "evidenceFile": "scripts/live/evidence/V2-contradicted.json"
+      },
+      "strongContradiction": {
+        "claimKey": "006e13f4fee1713961c4a45148e7e196fb5e35204c9ab97c5831da2fe7c87880",
+        "finalStatus": "CONTRADICTED",
+        "state": "SETTLED",
+        "releaseId": "7:006e13f4fee1713961c4a45148e7e196fb5e35204c9ab97c5831da2fe7c87880",
+        "release": "REFUNDED",
+        "creditsAfterWithdrawal": { "publisher": 0, "challenger": 0, "creator": 0 },
+        "evidenceFile": "scripts/live/evidence/V2-contradicted-strong.json"
+      },
+      "allWrites": "FINALIZED / MAJORITY_AGREE / SUCCESS except the explicitly recorded rolled-back first strong-fixture submit, which finalized with execution ERROR and made no state change"
+    }
   },
   "toolVersions": {
     "genlayerCli": "0.39.1",

@@ -1,0 +1,1 @@
+Authoritative contradiction fixture: the committed Covered Claim policy requires publisher collateral and a value-coupled challenge bond; it does not permit a Covered Claim to protect value without economic collateral.

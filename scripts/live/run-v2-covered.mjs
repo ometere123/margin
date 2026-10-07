@@ -16,12 +16,12 @@ const CLAIM = {
   key: process.env.MARGIN_V2_CLAIM_KEY ?? '327d4778e40708a227e26c52108830b035453d8eaf4e3ab0588150c212c20698',
   pageKey: process.env.MARGIN_V2_PAGE_KEY ?? '8b6553dc8c53ae90e6a09617b7e20232eb68035850be8e5dfb63d842776fe7af',
   url: process.env.MARGIN_V2_PAGE_URL ?? `${ORIGIN}/v2-support.html`,
-  quote: 'The MARGIN protocol records finalized evidence commitments before a Covered Claim can protect value.',
+  quote: process.env.MARGIN_V2_QUOTE ?? 'The MARGIN protocol records finalized evidence commitments before a Covered Claim can protect value.',
   prefix: process.env.MARGIN_V2_PREFIX ?? 'Covered Claim evidence: ',
   suffix: process.env.MARGIN_V2_SUFFIX ?? ' This statement is published as a V2 evidence fixture.',
   pageDigest: process.env.MARGIN_V2_PAGE_DIGEST ?? '146e27235c63aed2ec7d1ec3b55b88772afbce5586c65baea477ddb388c88d00',
   challenge: process.env.MARGIN_V2_CHALLENGE ?? 'Verify that this Covered Claim evidence commitment and value coverage statement is supported.',
-  evidence: 'https://a-murex-one.vercel.app/v2-evidence.txt',
+  evidence: process.env.MARGIN_V2_EVIDENCE_URL ?? 'https://a-murex-one.vercel.app/v2-evidence.txt',
   nonce: process.env.MARGIN_V2_NONCE ?? 'margin-v2-covered-20261006',
   expiry: '2027-01-01T00:00:00+00:00',
 };
@@ -100,6 +100,10 @@ async function step(state, who, address, functionName, args, value, readbacks) {
 }
 async function main() {
   const state = await load();
+  // An explicit fixture environment is authoritative when resuming a
+  // checkpoint. This prevents a prior failed attempt with a different quote
+  // from leaving stale claim metadata in the evidence record.
+  if (process.env.MARGIN_V2_CLAIM_KEY) state.claim = CLAIM;
   const publisher = await account('party_a');
   const challenger = await account('party_b');
   const integrator = await account('walletA');
@@ -108,6 +112,10 @@ async function main() {
   if (dryRun) { console.log(JSON.stringify({ statePath, claim: CLAIM, plan: 'submit → normal resolve → register Covered → create release → challenge → assured resolve → wait appeal deadline → settle → execute/withdraw' }, null, 2)); return; }
   await step(state, publisher, MARGIN, 'submit_claim', [CLAIM.key, CLAIM.pageKey, CLAIM.url, CLAIM.quote, CLAIM.prefix, CLAIM.suffix, CLAIM.pageDigest, 'TECHNICAL', CLAIM.challenge, JSON.stringify([CLAIM.evidence]), ''], 0n, [['claim', MARGIN, 'get_claim', [CLAIM.key]]]);
   await step(state, publisher, MARGIN, 'resolve_claim', [CLAIM.key], 0n, [['claim', MARGIN, 'get_claim', [CLAIM.key]]]);
+  if (process.env.MARGIN_V2_ONLY_NORMAL === '1') {
+    console.log(JSON.stringify({ status: 'NORMAL_RESOLUTION_COMPLETE', statePath, claim: CLAIM.key }, null, 2));
+    return;
+  }
   await step(state, publisher, MARGIN, 'register_covered_claim', [CLAIM.key, CLAIM.nonce, CLAIM.expiry], 2n, [['covered', MARGIN, 'get_covered_claim', [CLAIM.key]], ['coverage', MARGIN, 'get_coverage_state', [CLAIM.key]]]);
   await step(state, integrator, CONSUMER, 'create_protected_release', [CLAIM.key, publisher.address, '2027-02-01T00:00:00+00:00'], 1n, [['releases', CONSUMER, 'get_releases_for_claim_page', [CLAIM.key, 0, 25]], ['coverage', MARGIN, 'get_coverage_state', [CLAIM.key]]]);
   await step(state, challenger, MARGIN, 'challenge_assured_claim', [CLAIM.key], 2n, [['assured', MARGIN, 'get_assured_claim', [CLAIM.key]], ['covered', MARGIN, 'get_covered_claim', [CLAIM.key]]]);

@@ -69,7 +69,18 @@ The following public fixtures are hosted on `https://a-murex-one.vercel.app` and
 | B | `https://a-murex-one.vercel.app/b.html` | `65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a` | `SETTLED`, `final_status=SUPPORTED`; release `0:65f1b09a71526bff2b651e2a61ade05c54c40fdf77f94876b034c8cc1b50399a` was created before settlement, `executed=true`, `refunded=false`, beneficiary credit `0` after withdrawal, `is_claim_supported=true`, Assured credits `0`. |
 | C | `https://a-murex-one.vercel.app/c.html` | `55a4242e0958156bba84c565255ba528b49edd5b5f4974a62783c3cdc5336fcb` | `REGISTERED`, unchallenged; cancellation is not yet possible. Registration state began `2026-09-29T21:00:11.318794Z`; earliest cancel is `2026-09-30T21:01:11.318Z`. |
 
-Public wallet roles used by the historical non-browser evidence are: publisher `0xb29Ead15B1E8A2420faE84de974088f67a15ccC2`, challenger `0xac3AC69dC0Bde389256dD6748C75817ead9286D9`, and integrator `0x951e6B75530774fF82321a5ae54e14F778F0C855`. A fresh V2 lifecycle needs newly recorded role assignments. The current V2 contract is `0x03197B3246a5BF0C28fad07c4E5868F52c601580`; the bound consumer is `0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24`.
+### Current V2 live fixtures
+
+These current-deployment fixtures are also read-only for browser inspection:
+
+| Fixture | URL | Claim key | Finalized state | Protected release |
+| --- | --- | --- | --- | --- |
+| Integrity/refund | `https://a-murex-one.vercel.app/v2-final-supported.html` | `e8f9371b3bd921364517e4142445073386c4ff24356419b14f3fb852c2f45f1a` | `SETTLED + INCONCLUSIVE` | release `4:e8f9371b3bd921364517e4142445073386c4ff24356419b14f3fb852c2f45f1a` refunded; credits withdrawn |
+| Render-matched support | `https://a-murex-one.vercel.app/v2-render-supported.html` | `8f498b871dfb7fb54dacc77c751c8487e271b4eabc8cdf79f3a3dc7a0ad9e162` | `SETTLED + SUPPORTED` | release `5:8f498b871dfb7fb54dacc77c751c8487e271b4eabc8cdf79f3a3dc7a0ad9e162` executed; beneficiary credit withdrawn |
+| Weak contradiction | `https://a-murex-one.vercel.app/v2-contradicted.html` | `d5ddb9e0eb1932861a75f8e6ef144e8fdcef17dd5cb207a6c6c2ce6ac4e33c94` | `SETTLED + INCONCLUSIVE` | release `6:d5ddb9e0eb1932861a75f8e6ef144e8fdcef17dd5cb207a6c6c2ce6ac4e33c94` refunded; credits withdrawn |
+| Strong contradiction | `https://a-murex-one.vercel.app/v2-contradicted-strong.html` | `006e13f4fee1713961c4a45148e7e196fb5e35204c9ab97c5831da2fe7c87880` | `SETTLED + CONTRADICTED` | release `7:006e13f4fee1713961c4a45148e7e196fb5e35204c9ab97c5831da2fe7c87880` refunded; credits withdrawn |
+
+Public V2 evidence roles are: publisher `0xac3AC69dC0Bde389256dD6748C75817ead9286D9`, challenger `0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB`, and integrator `0x951e6B75530774fF82321a5ae54e14F778F0C855`. Read-only inspection does not require importing them. The current V2 contract is `0x03197B3246a5BF0C28fad07c4E5868F52c601580`; the bound consumer is `0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24`.
 
 The A, B and C fixture routes are read-only against canonical finalized state. They do not require importing the publisher, challenger or integrator keys. A fresh claim submission, resolution, wallet rejection and network-switch test require your own funded injected wallet; you cannot sign as the recorded publisher/challenger/integrator accounts unless you deliberately import those accounts.
 

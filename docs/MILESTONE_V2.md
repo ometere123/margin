@@ -51,11 +51,12 @@ cannot produce a definitive `SUPPORTED` or `CONTRADICTED` result.
 V2 MARGIN is deployed on Studionet at
 `0x03197B3246a5BF0C28fad07c4E5868F52c601580` and the bound consumer is
 `0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24`. The production signer has been
-rebuilt for those addresses. A fresh V2 Covered Claim lifecycle, including a
-pre-settlement release, real appeal wait, `SETTLED + INCONCLUSIVE` integrity
-outcome, refund and credit withdrawals, is recorded in
-`scripts/live/evidence/V2-covered.json`. A positive `SUPPORTED` protected
-release execution and a V2 browser run remain outstanding; the earlier A/B/C
+rebuilt for those addresses. Fresh V2 Covered Claim evidence includes the
+integrity-protective `SETTLED + INCONCLUSIVE` refund in
+`V2-final-supported.json`, a render-matched `SETTLED + SUPPORTED` execution in
+`V2-render-supported.json`, and a genuine `SETTLED + CONTRADICTED` refund in
+`V2-contradicted-strong.json`. The weak contradiction is recorded separately
+as `SETTLED + INCONCLUSIVE`. A V2 browser run remains manual; the earlier A/B/C
 evidence is historical V1 evidence and is not relabeled.
 
 ## Local gate snapshot

@@ -43,7 +43,7 @@ Each write must be followed by `npm exec -- genlayer receipt <hash>` and the rec
 4. Call `withdraw_assured_credit` as publisher.
 5. Read `get_assured_claim` and record publisher credit `0` and `CANCELLED`.
 
-If a sequence cannot be completed because its real deadline has not elapsed, record it as pending rather than substituting Direct Mode evidence. The V2 Covered run and three fresh follow-up attempts completed their real appeal waits; their final results are recorded in `V2-covered.json`, `V2-supported.json`, `V2-supported-positive.json` and `V2-supported-text.json`.
+If a sequence cannot be completed because its real deadline has not elapsed, record it as pending rather than substituting Direct Mode evidence. The final V2 runs completed their real appeal waits; their results are recorded in `V2-final-supported.json`, `V2-render-supported.json`, `V2-contradicted.json` and `V2-contradicted-strong.json`.
 
 ## V2 Covered Claim sequence
 
@@ -57,7 +57,8 @@ appeal deadline. The recorded run settled `INCONCLUSIVE` after a primary
 observation mismatch, refunded the release, and withdrew publisher,
 challenger, and creator credits. `--dry-run` prints the plan without writing;
 rerunning after an interruption reconciles a recorded hash before continuing
-and never blindly resubmits it. The same runner produced the three fresh
-follow-up records. All four runs settled `INCONCLUSIVE` after a primary
-observation mismatch; each protected release was refunded and its credits
-withdrawn. No positive V2 `SUPPORTED` execution is claimed.
+and never blindly resubmits it. The same runner produced the render-matched
+`SUPPORTED` execution and the two contradiction records. The render-matched
+release executed and its beneficiary withdrew; the strong contradiction
+refunded its release and withdrew the creator credit; the weak contradiction
+remained correctly `INCONCLUSIVE`.

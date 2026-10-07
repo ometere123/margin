@@ -1,10 +1,10 @@
 # MARGIN final handoff status
 
-## Current live status (2026-09-29)
+## Current live status (2026-10-07)
 
-The V2 Studionet deployments are finalized and recorded in [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md). A fresh V2 Covered lifecycle is recorded in `scripts/live/evidence/V2-covered.json`: it settled `INCONCLUSIVE` after a real appeal wait, refunded the pre-settlement release, and withdrew all credits. No positive V2 `SUPPORTED` release execution is claimed. Prior A/B/C lifecycle records remain historical. The primary browser flow in the earlier handoff is not claimed as V2 proof.
+The V2 Studionet deployments are finalized and recorded in [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md). Fresh final-deployment Covered Claim evidence now includes an integrity-protective `SETTLED + INCONCLUSIVE` refund, a render-matched `SETTLED + SUPPORTED` release execution, a weak contradiction that correctly settled `INCONCLUSIVE`, and a strong contradiction that settled `CONTRADICTED` with a refunded release. Every listed write is finalized and every listed credit is withdrawn to zero. Prior A/B/C lifecycle records remain historical. The primary browser flow is manual evidence, not an automated V2 proof.
 
-Protected runtime/protocol implementation is unchanged from the known-good baseline `23062e40b16d74f5fb72c56a72cdfaa0eaef9587`; the current candidate adds only tests and documentation.
+Protected runtime/protocol implementation is unchanged from the known-good baseline `23062e40b16d74f5fb72c56a72cdfaa0eaef9587`; this candidate adds evidence scripts, live checkpoints, tests and documentation.
 
 The frontend workspace routes are `/`, `/challenge?draft=...`, `/claim/<claimKey>`, `/claim/<claimKey>/assurance`, and `/activity`. The signer remains static and wallet-backed; the extension remains the primary discovery and annotation surface. The supplied logo/favicon/icon assets are included in the signer and MV3 extension. The MARGIN contract was not changed; the bound consumer was redeployed for the capped protected-release index.
 
@@ -81,7 +81,7 @@ The current live evidence boundary is:
 - MARGIN V2 deployment: `0x03197B3246a5BF0C28fad07c4E5868F52c601580`, finalized at `0x84a4b0a159205e4ba2be9c913a9d3698cb43d5bbcfe66502f24093b50fc67250`.
 - Consumer V2 deployment: `0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24`, finalized at `0xebc599b8d667f6fc39787057cf261273f24a566a60f62d194e5c0821365a3ba3`, with constructor binding read back as the V2 MARGIN address. Source commit `54605dae812afca03a0f9b2dacaf91e23ccdac95`, SHA-256 `4060BFABA93A8B6BF90F6CDA6466D2066A7F1E1ED91036C1DB275047201DF6EC`, 15,416 bytes.
 - Fresh final-deployment normal claim evidence: submit → resolve → `FINALIZED / MAJORITY_AGREE / SUCCESS`, with canonical verdict `SUPPORTED`, as recorded above.
-- Fresh V2 Assured follow-up evidence is recorded in `scripts/live/evidence/V2-supported.json`, `V2-supported-positive.json` and `V2-supported-text.json`. All three finalized `SETTLED + INCONCLUSIVE`; each pre-settlement release was refunded and withdrawn, and publisher/challenger credits were withdrawn to zero. No positive V2 `SUPPORTED` release execution is claimed. Historical transactions and verdicts remain separated through [`docs/HISTORY.md`](HISTORY.md).
+- Fresh V2 evidence is recorded in `deployment.json` and the checkpoint files `V2-final-supported.json`, `V2-render-supported.json`, `V2-contradicted.json` and `V2-contradicted-strong.json`. The render-matched fixture finalized `SETTLED + SUPPORTED`; its pre-settlement release executed and the beneficiary withdrew. The strong contradiction finalized `SETTLED + CONTRADICTED`; its release was refunded and withdrawn. The integrity-mismatch and weak-contradiction fixtures finalized `SETTLED + INCONCLUSIVE` with deterministic refunds and zero post-withdrawal credits. Historical transactions and verdicts remain separated through [`docs/HISTORY.md`](HISTORY.md).
 - Primary human browser flow: `PASS`. Optional/hostile browser matrix items are not claimed unless individually recorded.
 
 ## Production configuration hardening
@@ -96,7 +96,7 @@ No success evidence for those steps has been fabricated.
 
 ## Final state note
 
-The contracts are already deployed on Studionet 61999, the production signer is already deployed, and the extension is already built. Fresh V2 Assured attempts are recorded under `scripts/live/evidence/`; they all ended in the integrity-protective `SETTLED + INCONCLUSIVE` refund path. No positive V2 `SUPPORTED` release execution is claimed. The primary human browser flow is complete; optional/hostile browser checks and the demo video remain separate, unclaimed items.
+The contracts are already deployed on Studionet 61999, the production signer is already deployed, and the extension is already built. Fresh V2 Covered Claim evidence is recorded under `scripts/live/evidence/`, including both a positive protected-release execution and a genuine contradicted refund. The primary human browser flow is complete; optional/hostile browser checks and the demo video remain separate, unclaimed items.
 
 ## Architecture that must not be weakened
 
