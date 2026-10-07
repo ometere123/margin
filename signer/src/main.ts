@@ -5,7 +5,7 @@ import { canonicalizeUrl, claimKeyFor, decodeDraft, MARGIN_CHAIN_ID, MARGIN_CONS
 import { disconnectStorageKey, executionSummary, isSuccessfulFinalizedReceipt, pendingAccountMatches, trackingFailureMessage, transactionsStorageKey, type PendingTransaction } from './transaction';
 import { createProviderBackedClient } from './wallet';
 import { accountFromProvider, accountRequestMethod, isStudionetChainHex, shouldAutoRestore, walletHeaderState } from './session';
-import { assuredActions, assuredDisplay, type AssuredClaimView, type CoveredClaimView, type AssuredAction } from './assured';
+import { assuredActions, assuredDisplay, coveredBondValue, protectedReleaseCoverageError, type AssuredClaimView, type CoveredClaimView, type AssuredAction } from './assured';
 import { parseRoute, type Route } from './router';
 import { decisionHistoryHtml, type DecisionHistoryEntry } from './history';
 import { consumerErrorMessage, mergeProtectedReleases, prioritizeProtectedReleases, type ProtectedReleaseView } from './consumer';
@@ -36,6 +36,7 @@ let statusMessage = '';
 let listenersBound = false;
 let assuredClaim: AssuredClaimView | null = null;
 let coveredClaim: CoveredClaimView | null = null;
+let coveredReadHealthy = true;
 let assuredError = '';
 let consumerExecuted: boolean | null = null;
 let protectedReleases: ProtectedReleaseView[] = [];
@@ -368,7 +369,8 @@ async function readAssuredState(redraw = true) {
     try {
       const covered = await readClient.readContract({ address: contractAddress, functionName: 'get_covered_claim', args: [assuredKey], transactionHashVariant: TransactionHashVariant.LATEST_FINAL }) as CoveredClaimView;
       coveredClaim = covered && Object.keys(covered as object).length ? covered : null;
-    } catch { coveredClaim = null; }
+      coveredReadHealthy = true;
+    } catch { coveredClaim = null; coveredReadHealthy = false; }
     consumerExecuted = null;
     protectedReleases = [];
     selectedReleaseId = '';
@@ -444,9 +446,9 @@ async function runAssuredAction(action: AssuredAction) {
   const definitions: Record<AssuredAction, { functionName: string; args: unknown[]; value: bigint }> = {
     register: { functionName: 'register_assured_claim', args: [assuredKey, proofUrl, proofNonce, proofExpiry], value: 1n },
     registerCovered: { functionName: 'register_covered_claim', args: [assuredKey, coveredNonce, coveredExpiry], value: BigInt(coveredCoverageCap || 0) },
-    challenge: { functionName: 'challenge_assured_claim', args: [assuredKey], value: 1n },
+    challenge: { functionName: 'challenge_assured_claim', args: [assuredKey], value: coveredBondValue('challenge', coveredClaim, coveredReadHealthy) },
     resolve: { functionName: 'resolve_assured_claim', args: [assuredKey], value: 0n },
-    appeal: { functionName: 'appeal_assured_claim', args: [assuredKey, appealReason], value: 1n },
+    appeal: { functionName: 'appeal_assured_claim', args: [assuredKey, appealReason], value: coveredBondValue('appeal', coveredClaim, coveredReadHealthy) },
     resolveAppeal: { functionName: 'resolve_assured_appeal', args: [assuredKey], value: 0n },
     settle: { functionName: 'settle_assured_claim', args: [assuredKey], value: 0n },
     withdraw: { functionName: 'withdraw_assured_credit', args: [assuredKey], value: 0n },
@@ -488,6 +490,8 @@ async function runConsumerAction(action: 'create' | 'execute' | 'refund' | 'with
     if (!validAddress(beneficiary)) throw new Error('Enter a valid beneficiary address.');
     if (!amount || !/^\d+$/.test(amount) || BigInt(amount) <= 0n) throw new Error('Enter a positive GEN amount in smallest units.');
     if (!Number.isFinite(Date.parse(expiry))) throw new Error('Release expiry must be a valid ISO datetime.');
+    const coverageError = protectedReleaseCoverageError(BigInt(amount), coveredClaim);
+    if (coverageError) throw new Error(coverageError);
   }
   const selectedRelease = protectedReleases.find((release) => release.release_id === releaseId) || protectedReleases.find((release) => release.release_id === selectedReleaseId) || protectedReleases[0];
   if ((action === 'execute' || action === 'refund' || action === 'withdraw') && !selectedRelease?.release_id) throw new Error('No protected release is available.');

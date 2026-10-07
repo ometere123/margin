@@ -425,13 +425,14 @@ def test_covered_claim_couples_collateral_and_global_exposure_to_releases():
         key = _claim_key("-covered")
         _submit_real_claim(engine, margin_address, key, suffix="-covered")
         expiry = "2999-01-01T00:00:00+00:00"
+        body = "Support matrix: Runtime 4.2 supports Node 18 in production."
         manifest = {
             "protocol_version": 2,
             "claim_key": key,
             "publisher_wallet": ALICE,
             "domain": "example.com",
             "canonical_url": URL,
-            "primary_artifact_sha256": PAGE_DIGEST,
+            "primary_artifact_sha256": hashlib.sha256(body.encode()).hexdigest(),
             "claim_digest": hashlib.sha256(b"Runtime 4.2 supports Node 18 in production.").hexdigest(),
             "anchor_digest": hashlib.sha256(("Compatibility notes say|Runtime 4.2 supports Node 18 in production.|See the support matrix below.").encode()).hexdigest(),
             "coverage_cap": 10,
@@ -460,7 +461,6 @@ def test_covered_claim_couples_collateral_and_global_exposure_to_releases():
 
         engine.vm.value = 10
         engine.call_method(margin_address, "challenge_assured_claim", [key], sender=BOB)
-        body = "Support matrix: Runtime 4.2 supports Node 18 in production."
         engine.vm.mock_web(r"https://example\.com/docs/runtime", {"status": 200, "body": body})
         engine.vm.mock_web(r"https://example\.com/docs/support", {"status": 200, "body": body})
         records = [
@@ -472,6 +472,7 @@ def test_covered_claim_couples_collateral_and_global_exposure_to_releases():
             "status": "SUPPORTED", "rationale": "The committed evidence supports the claim.", "claim_present": True,
             "supporting_source_indexes": [0], "contradicting_source_indexes": [], "historical_evidence_used": False,
             "source_manifest_digest": source_digest,
+            "material_observations": [{"evidence_id": "support-matrix", "authority_profile": "CONTENT_HASHED_HTTPS", "authority_status": "ACCEPTED", "integrity_status": "VERIFIED", "citation_digest": hashlib.sha256(b"Runtime 4.2 supports Node 18 in production.").hexdigest(), "citation_present": True, "semantic_relation": "SUPPORTS"}],
         }))
         engine.call_method(margin_address, "resolve_assured_claim", [key], sender=BOB)
 
@@ -502,13 +503,14 @@ def test_covered_claim_release_refund_is_bound_to_canonical_terminal_state():
         key = _claim_key("-covered-refund")
         _submit_real_claim(engine, margin_address, key, suffix="-covered-refund")
         expiry = "2999-01-01T00:00:00+00:00"
+        body = "Contradictory evidence."
         manifest = {
             "protocol_version": 2,
             "claim_key": key,
             "publisher_wallet": ALICE,
             "domain": "example.com",
             "canonical_url": URL,
-            "primary_artifact_sha256": PAGE_DIGEST,
+            "primary_artifact_sha256": hashlib.sha256(body.encode()).hexdigest(),
             "claim_digest": hashlib.sha256(b"Runtime 4.2 supports Node 18 in production.").hexdigest(),
             "anchor_digest": hashlib.sha256(("Compatibility notes say|Runtime 4.2 supports Node 18 in production.|See the support matrix below.").encode()).hexdigest(),
             "coverage_cap": 4,
@@ -533,7 +535,6 @@ def test_covered_claim_release_refund_is_bound_to_canonical_terminal_state():
         engine.call_method(margin_address, "register_covered_claim", [key, "covered-refund-nonce", expiry], sender=ALICE)
         engine.vm.value = 4
         engine.call_method(margin_address, "challenge_assured_claim", [key], sender=BOB)
-        body = "Contradictory evidence."
         engine.vm.mock_web(r"https://example\.com/docs/runtime", {"status": 200, "body": body})
         engine.vm.mock_web(r"https://example\.com/docs/support", {"status": 200, "body": body})
         records = [
@@ -545,6 +546,7 @@ def test_covered_claim_release_refund_is_bound_to_canonical_terminal_state():
             "status": "CONTRADICTED", "rationale": "The committed evidence contradicts the claim.", "claim_present": True,
             "supporting_source_indexes": [], "contradicting_source_indexes": [0], "historical_evidence_used": False,
             "source_manifest_digest": digest,
+            "material_observations": [{"evidence_id": "support-matrix", "authority_profile": "CONTENT_HASHED_HTTPS", "authority_status": "ACCEPTED", "integrity_status": "VERIFIED", "citation_digest": hashlib.sha256(b"Contradictory evidence.").hexdigest(), "citation_present": True, "semantic_relation": "CONTRADICTS"}],
         }))
         engine.call_method(margin_address, "resolve_assured_claim", [key], sender=BOB)
         engine.vm.value = 3

@@ -48,6 +48,30 @@ export type CoveredClaimView = {
 
 export type AssuredAction = 'register' | 'registerCovered' | 'challenge' | 'resolve' | 'appeal' | 'resolveAppeal' | 'settle' | 'withdraw' | 'cancel' | 'abort';
 
+export function coveredBondValue(
+  action: 'challenge' | 'appeal',
+  coveredClaim: CoveredClaimView | null,
+  coveredReadHealthy = true,
+): bigint {
+  if (!coveredClaim) {
+    if (!coveredReadHealthy) throw new Error('Covered Claim state could not be read safely; retry before signing.');
+    return 1n;
+  }
+  const raw = action === 'challenge' ? coveredClaim.required_challenge_bond : coveredClaim.required_appeal_bond;
+  if (raw === undefined || raw === null || !/^\d+$/.test(String(raw)) || BigInt(String(raw)) <= 0n) {
+    throw new Error(`Canonical Covered Claim ${action} bond is unavailable; transaction blocked.`);
+  }
+  return BigInt(String(raw));
+}
+
+export function protectedReleaseCoverageError(amount: bigint, coveredClaim: CoveredClaimView | null): string | null {
+  if (!coveredClaim) return null;
+  const available = BigInt(String(coveredClaim.available_coverage ?? 0));
+  return amount <= available
+    ? null
+    : `Protected release amount ${amount.toString()} exceeds available Covered Claim coverage ${available.toString()}.`;
+}
+
 const zero = (value: unknown) => BigInt(String(value ?? 0)) === 0n;
 const same = (a: string | null, b: unknown) => Boolean(a && typeof b === 'string' && a.toLowerCase() === b.toLowerCase());
 

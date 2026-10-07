@@ -290,6 +290,45 @@ def test_consensus_trust_boundary_rejects_wrong_status_semantics_and_tampering(
     )
 
 
+def test_covered_material_observation_fields_are_consensus_bound(direct_vm, direct_deploy):
+    contract = direct_deploy("contracts/margin.py")
+    identities = contract._expected_source_identities(URL, "", ["https://example.com/docs/support"])
+    material = [{
+        "evidence_id": "support-matrix",
+        "authority_profile": "CONTENT_HASHED_HTTPS",
+        "authority_status": "ACCEPTED",
+        "integrity_status": "VERIFIED",
+        "citation_digest": "c" * 64,
+        "citation_present": True,
+        "semantic_relation": "SUPPORTS",
+    }]
+    manifest = [
+        {"kind": "PRIMARY", "url": URL, "fetch_status": "OK", "content_digest": "a" * 64, "provenance": "PUBLIC_SOURCE"},
+        {"kind": "EVIDENCE", "url": "https://example.com/docs/support", "fetch_status": "OK", "content_digest": "b" * 64, "provenance": "PUBLIC_SOURCE"},
+    ]
+    source_set = contract._source_set_digest(identities)
+    candidate = {
+        "status": "SUPPORTED", "claim_present": True, "historical_evidence_used": False,
+        "supporting_source_indexes": [1], "contradicting_source_indexes": [],
+        "source_manifest": manifest, "source_manifest_digest": contract._source_manifest_digest(manifest),
+        "source_set_digest": source_set,
+        "adjudication_context_digest": contract._adjudication_context_digest(source_set, "", 0, "NORMAL"),
+        "material_observations": material,
+    }
+    assert contract._consensus_candidate_is_valid(candidate, "SUPPORTED", identities, "", 0, "NORMAL", material)
+    for field, value in (
+        ("evidence_id", "attacker-evidence"),
+        ("citation_digest", "d" * 64),
+        ("citation_present", False),
+        ("semantic_relation", "CONTRADICTS"),
+        ("integrity_status", "INTEGRITY_FAILED"),
+        ("authority_status", "UNVERIFIED"),
+    ):
+        tampered = json.loads(json.dumps(candidate))
+        tampered["material_observations"][0][field] = value
+        assert not contract._consensus_candidate_is_valid(tampered, "SUPPORTED", identities, "", 0, "NORMAL", material)
+
+
 def test_consensus_provenance_variation_cannot_change_status_or_consequences(
     direct_vm, direct_deploy
 ):
@@ -540,6 +579,10 @@ def test_assured_appeal_same_source_context_and_settles_once(direct_vm, direct_d
         contract.appeal_assured_claim(key, "An unauthorized appeal attempt.")
 
     direct_vm.sender = direct_bob
+    direct_vm.value = 1
+    with direct_vm.expect_revert("appeal bond is required"):
+        direct_vm.value = 0
+        contract.appeal_assured_claim(key, "A new authoritative support matrix is now available.")
     direct_vm.value = 1
     contract.appeal_assured_claim(key, "A new authoritative support matrix is now available.")
     assert contract.get_assured_claim(key)["state"] == "APPEALED"
