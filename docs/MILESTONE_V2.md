@@ -49,9 +49,9 @@ cannot produce a definitive `SUPPORTED` or `CONTRADICTED` result.
 ## Current limitations
 
 V2 MARGIN is deployed on Studionet at
-`0x03197B3246a5BF0C28fad07c4E5868F52c601580` and the bound consumer is
-`0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24`. The production signer has been
-rebuilt for those addresses. Fresh V2 Covered Claim evidence includes the
+`0x4E0a75B63D913FC2d39A75F61905CA5973c77491` and the bound consumer is
+`0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F`. The production signer is
+configured for those addresses. Fresh V2 Covered Claim evidence includes the
 integrity-protective `SETTLED + INCONCLUSIVE` refund in
 `V2-final-supported.json`, a render-matched `SETTLED + SUPPORTED` execution in
 `V2-render-supported.json`, and a genuine `SETTLED + CONTRADICTED` refund in

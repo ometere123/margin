@@ -28,7 +28,7 @@ This file describes only the current canonical deployment. Historical deployment
 ## Production signer and release
 
 - Signer: https://margin-signer.vercel.app/
-- Production deployment: pending external Vercel rate limit; final configuration is verified in the local signer build
+- Production deployment: the live signer is configured for the current MARGIN and Consumer addresses below; deployment ID is recorded in `deployment.json` after verification.
 - Extension archive: `MARGIN-extension-v0.1.0.zip`
 - Extension SHA-256: `29264999CA6202A184899EA3FBA0E4097BCE25088B88A602FC3622F114FB1079`
 - Live fixture project: `a` (`prj_xPXHmh3TcvuBDvgSFyTRarWRfJgz`)
@@ -36,6 +36,16 @@ This file describes only the current canonical deployment. Historical deployment
 - Live fixture URL: https://a-murex-one.vercel.app/
 
 The signer uses the injected EIP-1193 wallet and the final configured V2 MARGIN address. Final Covered browser acceptance remains a manual operator task.
+
+## Final production browser proof
+
+- Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
+- Claim: `Negative index counts back from the end of the array — if index < 0, index + array.length is accessed.`
+- Challenge: `Verify whether Array.prototype.at() handles a negative index by adding it to the array length, rather than treating it as an ordinary string property.`
+- Evidence: https://tc39.es/ecma262/2026/multipage/indexed-collections.html#sec-array.prototype.at
+- Class: `TECHNICAL`
+- Result: human-observed `FINALIZED / Accepted / SUCCESS` submission and resolution on Studionet 61999; canonical verdict `SUPPORTED`; exact re-anchor, highlight, visible `M · SUPPORTED` badge and finalized provenance were confirmed against the final MARGIN deployment.
+- Submission/resolution transaction hashes: not present in the repository evidence; intentionally not invented.
 
 ## Verification
 

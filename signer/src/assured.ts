@@ -46,6 +46,35 @@ export type CoveredClaimView = {
   challenger_credit?: string | number | bigint;
 };
 
+export type CoveredExposureView = {
+  activeExposure: bigint;
+  availableCoverage: bigint;
+  error: string | null;
+};
+
+function nonNegativeBigInt(value: unknown): bigint | null {
+  if (typeof value === 'bigint') return value >= 0n ? value : null;
+  if (typeof value === 'number') return Number.isSafeInteger(value) && value >= 0 ? BigInt(value) : null;
+  if (typeof value === 'string' && /^\d+$/.test(value)) return BigInt(value);
+  return null;
+}
+
+export function canonicalCoveredExposure(
+  coveredClaim: CoveredClaimView | null,
+  consumerExposure: unknown,
+): CoveredExposureView | null {
+  if (!coveredClaim) return null;
+  const cap = nonNegativeBigInt(coveredClaim.coverage_cap);
+  const activeExposure = nonNegativeBigInt(consumerExposure);
+  if (cap === null || activeExposure === null) {
+    return { activeExposure: 0n, availableCoverage: 0n, error: 'Canonical protected exposure could not be read safely.' };
+  }
+  if (activeExposure > cap) {
+    return { activeExposure, availableCoverage: 0n, error: 'Canonical protected exposure exceeds the Covered Claim coverage cap.' };
+  }
+  return { activeExposure, availableCoverage: cap - activeExposure, error: null };
+}
+
 export type AssuredAction = 'register' | 'registerCovered' | 'challenge' | 'resolve' | 'appeal' | 'resolveAppeal' | 'settle' | 'withdraw' | 'cancel' | 'abort';
 
 export function coveredBondValue(
@@ -64,9 +93,11 @@ export function coveredBondValue(
   return BigInt(String(raw));
 }
 
-export function protectedReleaseCoverageError(amount: bigint, coveredClaim: CoveredClaimView | null): string | null {
+export function protectedReleaseCoverageError(amount: bigint, coveredClaim: CoveredClaimView | null, consumerExposure?: unknown): string | null {
   if (!coveredClaim) return null;
-  const available = BigInt(String(coveredClaim.available_coverage ?? 0));
+  const exposure = canonicalCoveredExposure(coveredClaim, consumerExposure);
+  if (!exposure || exposure.error) return exposure?.error || 'Canonical protected exposure could not be read safely.';
+  const available = exposure.availableCoverage;
   return amount <= available
     ? null
     : `Protected release amount ${amount.toString()} exceeds available Covered Claim coverage ${available.toString()}.`;

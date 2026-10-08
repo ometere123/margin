@@ -2,7 +2,7 @@
 
 ## Current live status (2026-10-07)
 
-The final material-observation V2 Studionet MARGIN and bound-consumer deployments are finalized and recorded in [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md). The final-deployment economic lifecycle is recorded in [`scripts/live/evidence/final-v2-economic-contradicted.json`](../scripts/live/evidence/final-v2-economic-contradicted.json); its writes are kept distinct from historical V2 evidence. The primary Covered browser acceptance remains a manual operator task.
+The final material-observation V2 Studionet MARGIN and bound-consumer deployments are finalized and recorded in [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md). The final-deployment economic lifecycle is recorded in [`scripts/live/evidence/final-v2-economic-contradicted.json`](../scripts/live/evidence/final-v2-economic-contradicted.json); its writes are kept distinct from historical V2 evidence. The final production browser proof is recorded below; no Covered/Assured economic lifecycle was rerun for that browser proof.
 
 The final candidate includes the material-observation/citation contract hardening and corresponding tests; the prior V2 deployment is historical.
 
@@ -16,6 +16,7 @@ The frontend workspace routes are `/`, `/challenge?draft=...`, `/claim/<claimKey
 - Deployment source: 86,605 bytes; SHA-256 `A079E57EA831456721A6982FC5A4FB5B6AA77649D71EC3636BE44540292B41F1`.
 - Runtime identity: `chain_id=61999`, `network=studionet`, `rpc=https://studio.genlayer.com/api`.
 - Human browser proof against the current deployment: normal claim `259063a89ee24ca0f7cb78ee6158f024db0df1f6c5744dea0c3ec120fee36c33` from https://www.sqlite.org/serverless.html reached finalized `SUPPORTED`, re-anchored the exact quote, rendered the highlight and visible `M · SUPPORTED` badge, and exposed extension/full provenance routes. This was not an Assured Claim lifecycle.
+- Final production browser proof: the MDN Array.prototype.at claim at https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at reached finalized `SUPPORTED` through the production signer on the final MARGIN deployment. The exact quote was re-anchored, highlighted, and rendered with a visible `M · SUPPORTED` badge; side-panel and full provenance routes rendered successfully. Exact transaction hashes were not committed and are not inferred here.
 - Fresh non-browser final-deployment normal evidence: claim `99bbd4ea502c2b56341ec9ba9c08cacbede75d8f1e32e8964b65ec4bec63ebc6`, submit `0x6db1814f354f8661a9b298af563ee4e2c3b75277ce46df376baaa3987d4da624`, resolve `0x18fff3266f76cf0c648ba17767bb031bf5536851e6615b436d2a8a7ce448c7ee`, both `FINALIZED / MAJORITY_AGREE / SUCCESS`, canonical verdict `SUPPORTED`.
 
 The earlier environment-bound checklist below is retained as manual verification context. It does not alter the final deployment record or current live evidence.
@@ -86,7 +87,7 @@ The current live evidence boundary is:
 
 ## Production configuration hardening
 
-The local static signer build receives the final V2 `VITE_MARGIN_CONTRACT_ADDRESS` and `VITE_MARGIN_CONSUMER_ADDRESS` values. Production Vercel deployment is pending the external rate limit; no production deployment is claimed for this final contract.
+The local static signer build and production Vercel signer receive the final V2 `VITE_MARGIN_CONTRACT_ADDRESS` and `VITE_MARGIN_CONSUMER_ADDRESS` values. The verified production deployment ID is recorded in `deployment.json`.
 
 The signer must use the injected EIP-1193 provider directly. In `genlayer-js@1.1.8`, `client.connect('studionet')` enters the legacy GenLayer Snap path (`wallet_getSnaps` / `wallet_requestSnaps`); production MARGIN therefore constructs the provider-backed client without calling that helper. `signer/src/wallet.test.ts` guards this boundary.
 
@@ -96,7 +97,7 @@ No success evidence for those steps has been fabricated.
 
 ## Final state note
 
-The contracts are deployed on Studionet 61999 and the extension is built. The final signer is available locally with `npm run dev -w signer` at `http://localhost:5174/`; production Vercel deployment is pending the external rate limit. Final Covered browser acceptance is manual and has not been started for this candidate.
+The contracts are deployed on Studionet 61999 and the extension is built. The final signer is available locally with `npm run dev -w signer` at `http://localhost:5174/`, and the production signer is deployed at `https://margin-signer.vercel.app/`. Final Covered/Assured economic evidence remains the recorded non-browser lifecycle; the MDN browser proof was a normal claim only.
 
 ### Manual Covered browser checklist
 

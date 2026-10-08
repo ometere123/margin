@@ -5,7 +5,7 @@ import { canonicalizeUrl, claimKeyFor, decodeDraft, MARGIN_CHAIN_ID, MARGIN_CONS
 import { disconnectStorageKey, executionSummary, isSuccessfulFinalizedReceipt, pendingAccountMatches, trackingFailureMessage, transactionsStorageKey, type PendingTransaction } from './transaction';
 import { createProviderBackedClient } from './wallet';
 import { accountFromProvider, accountRequestMethod, isStudionetChainHex, shouldAutoRestore, walletHeaderState } from './session';
-import { assuredActions, assuredDisplay, coveredBondValue, protectedReleaseCoverageError, type AssuredClaimView, type CoveredClaimView, type AssuredAction } from './assured';
+import { assuredActions, assuredDisplay, canonicalCoveredExposure, coveredBondValue, protectedReleaseCoverageError, type AssuredClaimView, type CoveredClaimView, type AssuredAction, type CoveredExposureView } from './assured';
 import { parseRoute, type Route } from './router';
 import { decisionHistoryHtml, type DecisionHistoryEntry } from './history';
 import { consumerErrorMessage, mergeProtectedReleases, prioritizeProtectedReleases, type ProtectedReleaseView } from './consumer';
@@ -37,6 +37,7 @@ let listenersBound = false;
 let assuredClaim: AssuredClaimView | null = null;
 let coveredClaim: CoveredClaimView | null = null;
 let coveredReadHealthy = true;
+let coveredExposure: CoveredExposureView | null = null;
 let assuredError = '';
 let consumerExecuted: boolean | null = null;
 let protectedReleases: ProtectedReleaseView[] = [];
@@ -126,7 +127,7 @@ function assuredPanel() {
   const releaseRows = protectedRelease ? `<div class="detail-grid"><span>Selected release</span><code>${esc(assuredDisplay(protectedRelease.release_id))}</code><span>Creator</span><code>${esc(assuredDisplay(protectedRelease.creator))}</code><span>Beneficiary</span><code>${esc(assuredDisplay(protectedRelease.beneficiary))}</code><span>Amount</span><code>${esc(assuredDisplay(protectedRelease.amount))}</code><span>Expiry</span><span>${esc(assuredDisplay(protectedRelease.expiry))}</span><span>Executed</span><strong>${protectedRelease.executed ? 'Yes' : 'No'}</strong><span>Refunded</span><strong>${protectedRelease.refunded ? 'Yes' : 'No'}</strong><span>Beneficiary credit</span><code>${esc(assuredDisplay(protectedRelease.beneficiary_credit))}</code><span>Creator credit</span><code>${esc(assuredDisplay(protectedRelease.creator_credit))}</code></div>` : '';
   const canCreateRelease = ['REGISTERED', 'CHALLENGED', 'RESOLVED', 'APPEALED'].includes(state);
   const releaseCreate = canCreateRelease ? '<label for="release-beneficiary">Protected release beneficiary</label><input id="release-beneficiary" placeholder="0x…"><label for="release-amount">GEN amount (smallest units)</label><input id="release-amount" inputmode="numeric" placeholder="1000000000000000000"><label for="release-expiry">Release expiry (ISO datetime)</label><input id="release-expiry" placeholder="2026-10-01T00:00:00+00:00"><button class="dark" data-consumer-action="create">Create protected release</button>' : '';
-  const coveredRows = coveredClaim ? `<section class="covered-card"><div class="eyebrow">Covered Claim</div><div class="detail-grid"><span>Publisher</span><code>${esc(assuredDisplay(coveredClaim.publisher))}</code><span>Manifest</span><a href="${esc(assuredDisplay(coveredClaim.manifest_url))}" target="_blank" rel="noreferrer">${esc(assuredDisplay(coveredClaim.manifest_url))} ↗</a><span>Coverage cap</span><code>${esc(assuredDisplay(coveredClaim.coverage_cap))}</code><span>Publisher collateral</span><code>${esc(assuredDisplay(coveredClaim.publisher_collateral))}</code><span>Required challenge bond</span><code>${esc(assuredDisplay(coveredClaim.required_challenge_bond))}</code><span>Required appeal bond</span><code>${esc(assuredDisplay(coveredClaim.required_appeal_bond))}</code><span>Active exposure</span><code>${esc(assuredDisplay(coveredClaim.active_exposure))}</code><span>Available coverage</span><code>${esc(assuredDisplay(coveredClaim.available_coverage))}</code><span>Manifest digest</span><code>${esc(assuredDisplay(coveredClaim.manifest_digest))}</code><span>Evidence-pack digest</span><code>${esc(assuredDisplay(coveredClaim.evidence_pack_digest))}</code></div></section>` : '';
+  const coveredRows = coveredClaim ? `<section class="covered-card"><div class="eyebrow">Covered Claim</div><div class="detail-grid"><span>Publisher</span><code>${esc(assuredDisplay(coveredClaim.publisher))}</code><span>Manifest</span><a href="${esc(assuredDisplay(coveredClaim.manifest_url))}" target="_blank" rel="noreferrer">${esc(assuredDisplay(coveredClaim.manifest_url))} ↗</a><span>Coverage cap</span><code>${esc(assuredDisplay(coveredClaim.coverage_cap))}</code><span>Publisher collateral</span><code>${esc(assuredDisplay(coveredClaim.publisher_collateral))}</code><span>Required challenge bond</span><code>${esc(assuredDisplay(coveredClaim.required_challenge_bond))}</code><span>Required appeal bond</span><code>${esc(assuredDisplay(coveredClaim.required_appeal_bond))}</code><span>Active exposure</span><code>${coveredExposure?.error ? 'Unavailable' : esc(assuredDisplay(coveredExposure?.activeExposure))}</code><span>Available coverage</span><code>${coveredExposure?.error ? 'Unavailable' : esc(assuredDisplay(coveredExposure?.availableCoverage))}</code><span>Manifest digest</span><code>${esc(assuredDisplay(coveredClaim.manifest_digest))}</code><span>Evidence-pack digest</span><code>${esc(assuredDisplay(coveredClaim.evidence_pack_digest))}</code></div>${coveredExposure?.error ? `<p class="bad">${esc(coveredExposure.error)}</p>` : ''}</section>` : '';
   const coveredRegistration = !coveredClaim && state === 'NOT REGISTERED' ? `<div class="covered-registration"><div class="eyebrow">Register Covered Claim</div><p class="meta">The canonical manifest URL is derived from the claim origin and claim key.</p><label for="covered-coverage-cap">Coverage cap (GEN base units)</label><input id="covered-coverage-cap" inputmode="numeric" placeholder="100"><label for="covered-nonce">Manifest nonce</label><input id="covered-nonce" placeholder="Publisher nonce"><label for="covered-expiry">Manifest expiry (ISO datetime)</label><input id="covered-expiry" placeholder="2026-10-01T00:00:00+00:00">${action('registerCovered','Register Covered Claim')}</div>` : '';
   return `<section><div class="eyebrow">Assured Claim</div><div class="row"><strong>${esc(state)}</strong><span class="meta">Optional bonded lifecycle</span></div>${rows}${coveredRows}${state === 'NOT REGISTERED' ? '<label for="proof-url">HTTPS domain proof URL</label><input id="proof-url" value="" placeholder="https://example.com/.well-known/margin.json"><label for="proof-nonce">Proof nonce</label><input id="proof-nonce" value="" placeholder="Publisher nonce"><label for="proof-expiry">Proof expiry (ISO datetime)</label><input id="proof-expiry" value="" placeholder="2026-10-01T00:00:00+00:00">' : ''}${coveredRegistration}${assuredClaim ? `<p class="meta">Appeal window: ${esc(appealWindow)}</p>` : ''}<label for="appeal-reason">Appeal reason</label><textarea id="appeal-reason" maxlength="800" placeholder="Bounded new evidence or adjudication issue"></textarea><div class="row assured-actions">${action('register','Register Assured Claim')}${action('challenge','Challenge Assured Claim')}${action('resolve','Resolve Assured Claim')}${action('cancel','Cancel Assured Claim')}${action('abort','Abort stalled lifecycle')}${action('appeal','Appeal Assured Claim')}${action('resolveAppeal','Resolve Assured Appeal')}${action('settle','Settle Assured Claim')}${action('withdraw','Withdraw Assured Credit')}</div><p class="meta">${assuredError ? esc(assuredError) : 'Bonds, deadlines and credits are read from the canonical MARGIN contract.'}</p><p class="meta">${contractLink(contractAddress)}</p><div class="consumer-proof"><div class="eyebrow">Downstream use</div><p class="meta">Bound reference consumer: ${esc(MARGIN_CONSUMER_ADDRESS)}</p><p>The consumer permits protected execution only for a SETTLED + SUPPORTED Assured Claim.</p><p>${releaseEligible ? 'Eligible ✓' : 'Not eligible until the claim is SETTLED + SUPPORTED'} · ${consumerExecuted === true ? 'Legacy execution: Yes ✓' : consumerExecuted === false ? 'Legacy execution: No' : 'Legacy execution: not read'}</p>${releaseList}${releaseRows}${releaseCreate}${releaseActions}${consumerError ? `<p class="bad">${esc(consumerError)}</p>` : ''}<button id="refresh-assured" class="quiet">Refresh Assured state</button></div></section>`;
 }
@@ -370,7 +371,18 @@ async function readAssuredState(redraw = true) {
       const covered = await readClient.readContract({ address: contractAddress, functionName: 'get_covered_claim', args: [assuredKey], transactionHashVariant: TransactionHashVariant.LATEST_FINAL }) as CoveredClaimView;
       coveredClaim = covered && Object.keys(covered as object).length ? covered : null;
       coveredReadHealthy = true;
-    } catch { coveredClaim = null; coveredReadHealthy = false; }
+      coveredExposure = coveredClaim ? null : null;
+      if (coveredClaim) {
+        try {
+          const rawExposure = await readClient.readContract({ address: MARGIN_CONSUMER_ADDRESS, functionName: 'get_active_exposure', args: [assuredKey], transactionHashVariant: TransactionHashVariant.LATEST_FINAL });
+          coveredExposure = canonicalCoveredExposure(coveredClaim, rawExposure);
+          coveredReadHealthy = !coveredExposure?.error;
+        } catch {
+          coveredExposure = { activeExposure: 0n, availableCoverage: 0n, error: 'Canonical protected exposure could not be read safely.' };
+          coveredReadHealthy = false;
+        }
+      }
+    } catch { coveredClaim = null; coveredExposure = null; coveredReadHealthy = false; }
     consumerExecuted = null;
     protectedReleases = [];
     selectedReleaseId = '';
@@ -490,7 +502,7 @@ async function runConsumerAction(action: 'create' | 'execute' | 'refund' | 'with
     if (!validAddress(beneficiary)) throw new Error('Enter a valid beneficiary address.');
     if (!amount || !/^\d+$/.test(amount) || BigInt(amount) <= 0n) throw new Error('Enter a positive GEN amount in smallest units.');
     if (!Number.isFinite(Date.parse(expiry))) throw new Error('Release expiry must be a valid ISO datetime.');
-    const coverageError = protectedReleaseCoverageError(BigInt(amount), coveredClaim);
+    const coverageError = protectedReleaseCoverageError(BigInt(amount), coveredClaim, coveredExposure?.error ? undefined : coveredExposure?.activeExposure);
     if (coverageError) throw new Error(coverageError);
   }
   const selectedRelease = protectedReleases.find((release) => release.release_id === releaseId) || protectedReleases.find((release) => release.release_id === selectedReleaseId) || protectedReleases[0];

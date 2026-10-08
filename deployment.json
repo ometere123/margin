@@ -11,7 +11,7 @@
   "sourceSha256": "A079E57EA831456721A6982FC5A4FB5B6AA77649D71EC3636BE44540292B41F1",
   "signerUrl": "https://margin-signer.vercel.app/",
   "signerDeployment": null,
-  "signerDeploymentStatus": "pending external Vercel rate limit; final signer configuration is available in the local build",
+  "signerDeploymentStatus": "production deployment will be recorded after the signer-only correction is deployed and verified",
   "supersededSignerDeployment": "dpl_BYeZLjjx3zP3sUqNZ4jJy1nSuBvh",
   "supersededV2Deployment": {
     "contractAddress": "0x03197B3246a5BF0C28fad07c4E5868F52c601580",
@@ -74,6 +74,18 @@
     "deploymentTx": "0xad7f1e7fd54b945c5f109471266557eaa5c0a8c5b2804b56b788aeaee50f6745",
     "boundMarginAddress": "0x0f8D86d56F1b8997475dD048579807fBFe60e227",
     "status": "historical; constructor argument encoding error, execution failed; not current evidence"
+  },
+  "currentProductionBrowserProof": {
+    "canonicalUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at",
+    "claim": "Negative index counts back from the end of the array — if index < 0, index + array.length is accessed.",
+    "challenge": "Verify whether Array.prototype.at() handles a negative index by adding it to the array length, rather than treating it as an ordinary string property.",
+    "evidenceUrl": "https://tc39.es/ecma262/2026/multipage/indexed-collections.html#sec-array.prototype.at",
+    "claimClass": "TECHNICAL",
+    "marginAddress": "0x4E0a75B63D913FC2d39A75F61905CA5973c77491",
+    "result": "Human-observed production signer submission and resolution finalized on Studionet 61999 with canonical verdict SUPPORTED; exact re-anchor, highlight, visible badge and provenance were confirmed.",
+    "submissionTx": null,
+    "resolutionTx": null,
+    "note": "Transaction hashes were not committed and are intentionally not invented. This was a normal claim only; no Covered/Assured economic lifecycle was rerun."
   },
   "historicalEvidence": {
     "normalClaim": {

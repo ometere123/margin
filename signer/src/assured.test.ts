@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { assuredActions, coveredBondValue, protectedReleaseCoverageError } from './assured';
+import { assuredActions, canonicalCoveredExposure, coveredBondValue, protectedReleaseCoverageError } from './assured';
 
 const publisher = '0x0000000000000000000000000000000000000001';
 const challenger = '0x0000000000000000000000000000000000000002';
@@ -31,11 +31,25 @@ describe('Assured Claim action gating', () => {
     expect(() => coveredBondValue('appeal', null, false)).toThrow('could not be read safely');
     expect(coveredBondValue('challenge', { required_challenge_bond: '7', required_appeal_bond: '11' })).toBe(7n);
   });
-  it('blocks a protected release above canonical available coverage', () => {
-    const covered = { available_coverage: 3 };
-    expect(protectedReleaseCoverageError(3n, covered)).toBeNull();
-    expect(protectedReleaseCoverageError(4n, covered)).toContain('4');
-    expect(protectedReleaseCoverageError(4n, covered)).toContain('3');
-    expect(protectedReleaseCoverageError(4n, null)).toBeNull();
+  it('derives displayed coverage from the canonical Consumer exposure', () => {
+    const covered = { coverage_cap: 10 };
+    expect(canonicalCoveredExposure(covered, 0)).toMatchObject({ activeExposure: 0n, availableCoverage: 10n, error: null });
+    expect(canonicalCoveredExposure(covered, 6)).toMatchObject({ activeExposure: 6n, availableCoverage: 4n, error: null });
+  });
+  it('uses that same canonical value for release preflight', () => {
+    const covered = { coverage_cap: 10 };
+    expect(protectedReleaseCoverageError(4n, covered, 6)).toBeNull();
+    expect(protectedReleaseCoverageError(5n, covered, 6)).toContain('5');
+    expect(protectedReleaseCoverageError(5n, covered, 6)).toContain('4');
+  });
+  it('fails closed for missing, malformed, or over-cap Consumer exposure', () => {
+    const covered = { coverage_cap: 10 };
+    expect(canonicalCoveredExposure(covered, undefined)?.error).toContain('could not be read safely');
+    expect(canonicalCoveredExposure(covered, 'not-a-number')?.error).toContain('could not be read safely');
+    expect(canonicalCoveredExposure(covered, 11)?.error).toContain('exceeds');
+    expect(protectedReleaseCoverageError(1n, covered, undefined)).toContain('could not be read safely');
+  });
+  it('leaves legacy non-Covered Assured releases unchanged', () => {
+    expect(protectedReleaseCoverageError(5n, null)).toBeNull();
   });
 });

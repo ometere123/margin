@@ -59,6 +59,17 @@ The primary human browser flow is complete and passed. Record the date, browser 
 - Observed: real-page capture, signer handoff, wallet on Studionet 61999, finalized submission, finalized resolution, `SUPPORTED`, exact quote re-anchor, CSS highlight, visible `M · SUPPORTED` badge, badge persistence after refresh, extension provenance/details, full provenance route, direct claim route and assurance route.
 - This was a normal claim only. No Assured Claim lifecycle was executed for this SQLite claim.
 
+## Final production MDN proof
+
+- Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
+- Exact claim: `Negative index counts back from the end of the array — if index < 0, index + array.length is accessed.`
+- Challenge: `Verify whether Array.prototype.at() handles a negative index by adding it to the array length, rather than treating it as an ordinary string property.`
+- Evidence: https://tc39.es/ecma262/2026/multipage/indexed-collections.html#sec-array.prototype.at
+- Class: `TECHNICAL`
+- Result: production signer, injected wallet and Studionet 61999; submission and resolution finalized with `SUPPORTED`; exact re-anchor, highlight, visible `M · SUPPORTED` badge and side-panel/full provenance were observed against final MARGIN `0x4E0a75B63D913FC2d39A75F61905CA5973c77491`.
+- This was a normal claim only. No Covered/Assured lifecycle was executed for this claim.
+- Exact transaction hashes were not committed and are intentionally not inferred.
+
 ## Ready state for manual testing
 
 The following public fixtures are hosted on `https://a-murex-one.vercel.app` and are not the signer origin. They are read-only inspection fixtures for the browser run. The fixture project is Vercel project `a` (`prj_xPXHmh3TcvuBDvgSFyTRarWRfJgz`), production deployment `dpl_DD43w22FgrutZMj15euqzPjaZR14`.

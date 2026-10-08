@@ -15,6 +15,8 @@ MARGIN V2 is `0x4E0a75B63D913FC2d39A75F61905CA5973c77491`, deployed by `0xa6917d
 
 The current V2 consumer is `0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F`, deployed by `0x521f944b8274e4f4e5bfe151c3f9a6fdba0fd4f5f4f515dd8f98b5d7976ce01d`. Its source is commit `ab5bbef32d046cf19e6621275485b57d4268ac87`, SHA-256 `4060BFABA93A8B6BF90F6CDA6466D2066A7F1E1ED91036C1DB275047201DF6EC`, size 15,416 bytes. The constructor binding readback is `0x4E0a75B63D913FC2d39A75F61905CA5973c77491`. Consumer deployment finalized `MAJORITY_AGREE / SUCCESS`.
 
+The production signer at https://margin-signer.vercel.app/ is configured for those final addresses. A human browser run against the final deployment used the MDN Array.prototype.at page and the TC39 indexed-collections evidence URL; submission and resolution finalized with `SUPPORTED`, and exact re-anchoring, highlight, badge and provenance were observed. The transaction hashes were not committed, so they are not reproduced here.
+
 ## Current normal claim
 
 Claim `99bbd4ea502c2b56341ec9ba9c08cacbede75d8f1e32e8964b65ec4bec63ebc6` on the GenLayer architecture article was submitted in `0x6db1814f354f8661a9b298af563ee4e2c3b75277ce46df376baaa3987d4da624` and resolved in `0x18fff3266f76cf0c648ba17767bb031bf5536851e6615b436d2a8a7ce448c7ee`. Both finalized `MAJORITY_AGREE / SUCCESS`; canonical readback is `SUPPORTED`, revision `1`. The final resolve emitted no nondeterministic storage-read warning.
