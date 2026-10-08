@@ -19,5 +19,6 @@ jobs:
       - run: npm run cli
       - run: mkdir -p "$HOME/.cache/gltest-direct" && curl --fail --location --retry 3 https://github.com/genlayerlabs/genvm/releases/download/v0.2.12/genvm-universal.tar.xz --output "$HOME/.cache/gltest-direct/genvm-universal-v0.2.12.tar.xz"
       - run: npm run verify
+      - run: npm run test:mutation
       - run: npx playwright install --with-deps chromium
       - run: npm run test:browser
