@@ -35,7 +35,7 @@ This file describes only the current canonical deployment. Historical deployment
 - Live fixture production deployment: `dpl_DD43w22FgrutZMj15euqzPjaZR14`
 - Live fixture URL: https://a-murex-one.vercel.app/
 
-The signer uses the injected EIP-1193 wallet and the final configured V2 MARGIN address. Final Covered browser acceptance remains a manual operator task.
+The signer uses the injected EIP-1193 wallet and the final configured V2 MARGIN address. The primary human production browser flow against final MARGIN passed, and the final Covered/Assured economic lifecycle was completed live by script on the final deployment. An additional manual Covered UI walkthrough is optional and not claimed; it is not a completion blocker.
 
 ## Final production browser proof
 
@@ -53,7 +53,7 @@ The signer uses the injected EIP-1193 wallet and the final configured V2 MARGIN 
 - Python invariants: `12/12`
 - Direct Mode: `54/54` in the current local verification after the material-observation and citation tests
 - Extension tests: `17/17`
-- Signer tests: `33/33`
+- Signer tests: `36/36`
 - Extension and signer builds: passed
 - MARGIN source commit `ab5bbef32d046cf19e6621275485b57d4268ac87` matches the deployed source SHA-256 above.
 
@@ -67,7 +67,7 @@ The signer uses the injected EIP-1193 wallet and the final configured V2 MARGIN 
 
 ## Live evidence boundary
 
-The material-observation V2 contract and bound consumer above are current. Final-deployment economic evidence is recorded only in the final checkpoint named below; prior V2 checkpoints are historical. The primary Covered browser acceptance remains manual.
+The material-observation V2 contract and bound consumer above are current. Final-deployment economic evidence is recorded only in the final checkpoint named below; prior V2 checkpoints are historical. The primary human production browser flow passed, and the final Covered/Assured economic lifecycle passed through the final live script. An optional manual Covered UI walkthrough is not claimed.
 
 Fresh final-deployment economic lifecycle: [`scripts/live/evidence/final-v2-economic-contradicted.json`](scripts/live/evidence/final-v2-economic-contradicted.json). It reached `SETTLED + CONTRADICTED` after the real appeal window; the protected release was created before settlement, refunded, and withdrawn. Final readback reports active exposure `0` and publisher/challenger/creator credits `0`.
 

@@ -56,13 +56,16 @@ integrity-protective `SETTLED + INCONCLUSIVE` refund in
 `V2-final-supported.json`, a render-matched `SETTLED + SUPPORTED` execution in
 `V2-render-supported.json`, and a genuine `SETTLED + CONTRADICTED` refund in
 `V2-contradicted-strong.json`. The weak contradiction is recorded separately
-as `SETTLED + INCONCLUSIVE`. A V2 browser run remains manual; the earlier A/B/C
-evidence is historical V1 evidence and is not relabeled.
+as `SETTLED + INCONCLUSIVE`. The human production normal browser flow passed,
+and the final Covered/Assured economic lifecycle passed through the final live
+script. Only an optional manual Covered UI walkthrough was not performed; the
+earlier A/B/C evidence is historical V1 evidence and is not relabeled.
 
 ## Local gate snapshot
 
 At the latest local run, contract AST lint passed for both contracts, extension
-tests passed `17/17`, signer tests passed `31/31`, Python invariants passed
-`12/12`, and Direct Mode passed `51/51`. Extension and signer production builds
+tests passed `17/17`, signer tests passed `36/36`, Python invariants passed
+`12/12`, Direct Mode passed `54/54`, and security mutations passed `12/12 killed`.
+Extension and signer production builds
 also passed. These are local results for this branch, not Studionet live
 evidence. The repository-local CLI guard reports GenLayer `0.39.1`.

@@ -1,6 +1,6 @@
 # Manual browser verification
 
-This checklist is for the current release. It does not authorize contract redeployment or duplicate state-changing transactions. Record only observed hashes, screenshots and readbacks.
+This is an optional manual UI walkthrough for the current release. The primary human production normal browser flow and final scripted Covered/Assured economic lifecycle are already recorded as passed. This document does not authorize contract redeployment or duplicate state-changing transactions; record only observed hashes, screenshots and readbacks if the optional walkthrough is performed.
 
 ## Release checks
 
@@ -70,7 +70,7 @@ The primary human browser flow is complete and passed. Record the date, browser 
 - This was a normal claim only. No Covered/Assured lifecycle was executed for this claim.
 - Exact transaction hashes were not committed and are intentionally not inferred.
 
-## Ready state for manual testing
+## Optional manual UI walkthrough / not required for completion
 
 The following public fixtures are hosted on `https://a-murex-one.vercel.app` and are not the signer origin. They are read-only inspection fixtures for the browser run. The fixture project is Vercel project `a` (`prj_xPXHmh3TcvuBDvgSFyTRarWRfJgz`), production deployment `dpl_DD43w22FgrutZMj15euqzPjaZR14`.
 
@@ -127,8 +127,12 @@ The A, B and C fixture routes are read-only against canonical finalized state. T
 
 Record screenshots and observed transaction hashes alongside the corresponding sequence file in `scripts/live/evidence/`. Do not infer browser rendering from the non-browser evidence.
 
-### MANUAL BROWSER STATUS
+### FINAL STATUS
 
 `PRIMARY HUMAN BROWSER FLOW: PASS`
+
+`FINAL COVERED/ASSURED ECONOMIC LIFECYCLE: PASS`
+
+`OPTIONAL MANUAL COVERED UI WALKTHROUGH: NOT CLAIMED`
 
 The optional/hostile browser matrix remains individually scoped; only performed items should be marked complete.

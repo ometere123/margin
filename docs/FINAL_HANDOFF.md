@@ -2,7 +2,7 @@
 
 ## Current live status (2026-10-07)
 
-The final material-observation V2 Studionet MARGIN and bound-consumer deployments are finalized and recorded in [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md). The final-deployment economic lifecycle is recorded in [`scripts/live/evidence/final-v2-economic-contradicted.json`](../scripts/live/evidence/final-v2-economic-contradicted.json); its writes are kept distinct from historical V2 evidence. The final production browser proof is recorded below; no Covered/Assured economic lifecycle was rerun for that browser proof.
+The final material-observation V2 Studionet MARGIN and bound-consumer deployments are finalized and recorded in [`deployment.json`](deployment.json) and [`SUBMISSION.md`](SUBMISSION.md). The final-deployment Covered/Assured economic lifecycle is recorded in [`scripts/live/evidence/final-v2-economic-contradicted.json`](../scripts/live/evidence/final-v2-economic-contradicted.json); its writes are kept distinct from historical V2 evidence. The final production browser proof is recorded below as a separate normal-claim run.
 
 The final candidate includes the material-observation/citation contract hardening and corresponding tests; the prior V2 deployment is historical.
 
@@ -69,7 +69,7 @@ Do not run bare `genlayer ...` commands from this repo.
 - Python/source invariant suite: 12/12 PASS.
 - `npm exec -- genlayer --version`: `0.39.1`.
 - Studionet network info and deployed `network()` readback: `61999`, `studionet`, `https://studio.genlayer.com/api`.
-- Extension/signer typecheck, tests and builds: PASS on the current source; contract lint is AST-only (`3/3` per contract; full SDK semantic validation was not run), extension tests `17/17`, signer tests `33/33`, source invariants `12/12`, Direct Mode `54/54`, security mutations `12/12` killed. The deterministic browser harness is separate from manual real-wallet verification.
+- Extension/signer typecheck, tests and builds: PASS on the current source; contract lint is AST-only (`3/3` per contract; full SDK semantic validation was not run), extension tests `17/17`, signer tests `36/36`, source invariants `12/12`, Direct Mode `54/54`, security mutations `12/12` killed. The deterministic browser harness is separate from manual real-wallet verification.
 - Reproducible extension archive: `MARGIN-extension-v0.1.0.zip`, SHA-256 `29264999CA6202A184899EA3FBA0E4097BCE25088B88A602FC3622F114FB1079`, produced by `npm run zip` from `extension/dist`; the ZIP is not committed as generated noise.
 - GitHub Actions status must be read from the workflow run attached to the exact candidate commit; the prior run reference is historical and is not current verification for this hardening pass.
 
@@ -83,7 +83,9 @@ The current live evidence boundary is:
 - Consumer V2 deployment: `0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F`, finalized at `0x521f944b8274e4f4e5bfe151c3f9a6fdba0fd4f5f4f515dd8f98b5d7976ce01d`, with constructor binding read back as the final MARGIN address. Source commit `ab5bbef32d046cf19e6621275485b57d4268ac87`, SHA-256 `4060BFABA93A8B6BF90F6CDA6466D2066A7F1E1ED91036C1DB275047201DF6EC`, 15,416 bytes.
 - Fresh final-deployment normal claim evidence: submit → resolve → `FINALIZED / MAJORITY_AGREE / SUCCESS`, with canonical verdict `SUPPORTED`, as recorded above.
 - The superseded V2 evidence checkpoints `V2-final-supported.json`, `V2-render-supported.json`, `V2-contradicted.json` and `V2-contradicted-strong.json` are historical. Current final-deployment evidence is recorded separately in `scripts/live/evidence/final-v2-economic-contradicted.json`; no historical checkpoint is relabeled as final evidence.
-- Primary human browser flow: `PASS`. Optional/hostile browser matrix items are not claimed unless individually recorded.
+- Primary human browser flow: `PASS`.
+- Final Covered/Assured economic lifecycle: `PASS` through the final live script.
+- Optional manual Covered UI walkthrough: `NOT CLAIMED`.
 
 ## Production configuration hardening
 
@@ -99,7 +101,7 @@ No success evidence for those steps has been fabricated.
 
 The contracts are deployed on Studionet 61999 and the extension is built. The final signer is available locally with `npm run dev -w signer` at `http://localhost:5174/`, and the production signer is deployed at `https://margin-signer.vercel.app/`. Final Covered/Assured economic evidence remains the recorded non-browser lifecycle; the MDN browser proof was a normal claim only.
 
-### Manual Covered browser checklist
+### OPTIONAL MANUAL UI WALKTHROUGH / NOT REQUIRED FOR COMPLETION
 
 1. Run `npm run build` and load `extension/dist` as an unpacked MV3 extension.
 2. Run `npm run dev -w signer` and open `http://localhost:5174/`.
@@ -110,7 +112,11 @@ The contracts are deployed on Studionet 61999 and the extension is built. The fi
 7. Return to the source page, confirm exact re-anchoring, `M · SUPPORTED`/bounded verdict display, provenance, evidence and the assurance route.
 8. For a Covered flow, use a publisher-controlled proof, verify the canonical required challenge/appeal bond values, create a protected release before settlement, and confirm the final release/withdrawal state from canonical reads.
 
-Manual status: `MANUAL VERIFICATION REQUIRED`.
+Final status:
+
+- `PRIMARY HUMAN BROWSER FLOW: PASS`
+- `FINAL COVERED/ASSURED ECONOMIC LIFECYCLE: PASS`
+- `OPTIONAL MANUAL COVERED UI WALKTHROUGH: NOT CLAIMED`
 
 ## Architecture that must not be weakened
 

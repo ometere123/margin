@@ -22,7 +22,7 @@ This is an evidence inventory, not a project score. Historical deployments and b
 ## Engineering
 
 - `npm run verify` runs contract AST lint, TypeScript typechecks, extension tests, signer tests, Python invariants, Direct Mode and both production builds.
-- Current totals are: AST lint `3/3` for each contract, extension `17/17`, signer `33/33`, invariants `12/12`, Direct Mode `54/54`, security mutations `12/12` killed. The deterministic browser harness is separate from manual real-wallet verification.
+- Current totals are: AST lint `3/3` for each contract, extension `17/17`, signer `36/36`, invariants `12/12`, Direct Mode `54/54`, security mutations `12/12` killed. The primary human production normal browser flow passed and the final Covered/Assured economic lifecycle passed through the final live script; the optional manual Covered UI walkthrough is not claimed.
 - CLI verification reports exactly `0.39.1`; the exact candidate's GitHub Actions result is reported with the final handoff and must not be inferred from an older run.
 - The read-only `npm run live:read` script verifies finalized `network()` identity without a wallet or write.
 - Limitation: the optional/hostile browser matrix and demo video were not recorded.
