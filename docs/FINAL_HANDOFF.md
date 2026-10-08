@@ -87,7 +87,7 @@ The current live evidence boundary is:
 
 ## Production configuration hardening
 
-The local static signer build and production Vercel signer receive the final V2 `VITE_MARGIN_CONTRACT_ADDRESS` and `VITE_MARGIN_CONSUMER_ADDRESS` values. The verified production deployment ID is recorded in `deployment.json`.
+The local static signer build and production Vercel signer receive the final V2 `VITE_MARGIN_CONTRACT_ADDRESS` and `VITE_MARGIN_CONSUMER_ADDRESS` values. Production deployment `dpl_9Avj9b5Mx7BwgtbBYsZhdVKazJmV` was built from signer-only patch commit `e35e27ea2c76fcb5482d285b6b41b858813b684e` and verified at `https://margin-signer.vercel.app/`.
 
 The signer must use the injected EIP-1193 provider directly. In `genlayer-js@1.1.8`, `client.connect('studionet')` enters the legacy GenLayer Snap path (`wallet_getSnaps` / `wallet_requestSnaps`); production MARGIN therefore constructs the provider-backed client without calling that helper. `signer/src/wallet.test.ts` guards this boundary.
 

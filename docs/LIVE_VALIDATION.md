@@ -15,7 +15,7 @@ MARGIN V2 is `0x4E0a75B63D913FC2d39A75F61905CA5973c77491`, deployed by `0xa6917d
 
 The current V2 consumer is `0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F`, deployed by `0x521f944b8274e4f4e5bfe151c3f9a6fdba0fd4f5f4f515dd8f98b5d7976ce01d`. Its source is commit `ab5bbef32d046cf19e6621275485b57d4268ac87`, SHA-256 `4060BFABA93A8B6BF90F6CDA6466D2066A7F1E1ED91036C1DB275047201DF6EC`, size 15,416 bytes. The constructor binding readback is `0x4E0a75B63D913FC2d39A75F61905CA5973c77491`. Consumer deployment finalized `MAJORITY_AGREE / SUCCESS`.
 
-The production signer at https://margin-signer.vercel.app/ is configured for those final addresses. A human browser run against the final deployment used the MDN Array.prototype.at page and the TC39 indexed-collections evidence URL; submission and resolution finalized with `SUPPORTED`, and exact re-anchoring, highlight, badge and provenance were observed. The transaction hashes were not committed, so they are not reproduced here.
+The production signer at https://margin-signer.vercel.app/ is configured for those final addresses in deployment `dpl_9Avj9b5Mx7BwgtbBYsZhdVKazJmV`, built from signer-only patch commit `e35e27ea2c76fcb5482d285b6b41b858813b684e`. A human browser run against the final deployment used the MDN Array.prototype.at page and the TC39 indexed-collections evidence URL; submission and resolution finalized with `SUPPORTED`, and exact re-anchoring, highlight, badge and provenance were observed. The transaction hashes were not committed, so they are not reproduced here.
 
 ## Current normal claim
 

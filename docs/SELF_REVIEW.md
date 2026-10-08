@@ -31,7 +31,7 @@ This is an evidence inventory, not a project score. Historical deployments and b
 
 - The extension remains the primary discovery and annotation surface; the signer provides routed challenge, claim, assurance and activity workspaces.
 - The signer preserves injected EIP-1193 wallet handling, finalized reads, transaction persistence/recovery, Explorer links, global wallet controls, claim history and protected-release actions.
-- The local and production signer builds are configured for the final V2 addresses; the verified production deployment ID is recorded in `deployment.json`.
+- The local and production signer builds are configured for the final V2 addresses; production deployment `dpl_9Avj9b5Mx7BwgtbBYsZhdVKazJmV` is recorded in `deployment.json`.
 - The extension ZIP hash is `29264999CA6202A184899EA3FBA0E4097BCE25088B88A602FC3622F114FB1079`.
 - Historical browser evidence demonstrates the RFC `<wbr>` anchoring and visible claim badge; it is not presented as fresh proof against the current deployment.
 - Limitation: the optional/hostile browser matrix and the demo video were not recorded or claimed.

@@ -10,8 +10,9 @@
   "sourceBytes": 86605,
   "sourceSha256": "A079E57EA831456721A6982FC5A4FB5B6AA77649D71EC3636BE44540292B41F1",
   "signerUrl": "https://margin-signer.vercel.app/",
-  "signerDeployment": null,
-  "signerDeploymentStatus": "production deployment will be recorded after the signer-only correction is deployed and verified",
+  "signerDeployment": "dpl_9Avj9b5Mx7BwgtbBYsZhdVKazJmV",
+  "signerDeploymentStatus": "READY / production; verified at https://margin-signer.vercel.app/",
+  "signerSourceCommit": "e35e27ea2c76fcb5482d285b6b41b858813b684e",
   "supersededSignerDeployment": "dpl_BYeZLjjx3zP3sUqNZ4jJy1nSuBvh",
   "supersededV2Deployment": {
     "contractAddress": "0x03197B3246a5BF0C28fad07c4E5868F52c601580",
