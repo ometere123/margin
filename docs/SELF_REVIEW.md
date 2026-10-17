@@ -31,7 +31,7 @@ This is an evidence inventory, not a project score. Historical deployments and b
 
 - The extension remains the primary discovery and annotation surface; the signer provides routed challenge, claim, assurance and activity workspaces.
 - The signer preserves injected EIP-1193 wallet handling, finalized reads, transaction persistence/recovery, Explorer links, global wallet controls, claim history and protected-release actions.
-- The local signer and the production project's build environment are configured for the corrected canonical addresses; the fixture deployment is GitHub-triggered and the signer release is controlled by a separate GitHub push. The final public deployment ID and bundle verification are recorded in `deployment.json` after release verification; direct Vercel CLI deployment is not used.
+- The local signer and production build are configured for the corrected canonical addresses. Fixture deployment `dpl_4wUiXh9LEKoAkP4Qih5pLBA3oi7F` and signer deployment `dpl_6iwqfSVyQCwAaZY3GkpsqyMQiUTw` were GitHub-triggered; the final signer bundle verification is recorded in `deployment.json`, and direct Vercel CLI deployment was not used. Both projects are locked against further automatic Git deployments.
 - The extension ZIP hash is `59230A8330579C5D2126CD31DEC72F51C0A4BE42B985817C8FE038A1DB95B7E4`.
 - Historical browser evidence demonstrates the RFC `<wbr>` anchoring and visible claim badge; it is not presented as fresh proof against the current deployment.
 - Limitation: the optional/hostile browser matrix and the demo video were not recorded or claimed.

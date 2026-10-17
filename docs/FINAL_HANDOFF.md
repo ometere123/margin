@@ -89,7 +89,7 @@ The current live evidence boundary is:
 
 ## Production configuration hardening
 
-The local static signer build and production Vercel project environment contain the corrected `VITE_MARGIN_CONTRACT_ADDRESS` and `VITE_MARGIN_CONSUMER_ADDRESS` values. The fixture release is GitHub-triggered and verified READY; the controlled signer release is performed by the separate GitHub release push, never by direct Vercel CLI upload. Final Vercel deployment IDs and public-bundle verification are recorded in `deployment.json` after that release.
+The local static signer build and production Vercel project environment contain the corrected `VITE_MARGIN_CONTRACT_ADDRESS` and `VITE_MARGIN_CONSUMER_ADDRESS` values. The fixture deployment is `dpl_4wUiXh9LEKoAkP4Qih5pLBA3oi7F` and the signer deployment is `dpl_6iwqfSVyQCwAaZY3GkpsqyMQiUTw`; both were GitHub-triggered, and the signer is `READY / production / PROMOTED`. The public bundle includes both canonical addresses and excludes both superseded addresses. No direct Vercel CLI upload was used; both projects are locked again against automatic Git deployments after verification.
 
 The signer must use the injected EIP-1193 provider directly. In `genlayer-js@1.1.8`, `client.connect('studionet')` enters the legacy GenLayer Snap path (`wallet_getSnaps` / `wallet_requestSnaps`); production MARGIN therefore constructs the provider-backed client without calling that helper. `signer/src/wallet.test.ts` guards this boundary.
 

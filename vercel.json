@@ -1,6 +1,6 @@
 {
   "git": {
-    "deploymentEnabled": true
+    "deploymentEnabled": false
   },
   "buildCommand": "npm run build -w signer",
   "installCommand": "npm ci",

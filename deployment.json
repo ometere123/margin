@@ -28,14 +28,25 @@
     "status": "historical; superseded by the canonical-consumer exposure deployment"
   },
   "signerUrl": "https://margin-signer.vercel.app/",
-  "signerDeployment": "dpl_9Avj9b5Mx7BwgtbBYsZhdVKazJmV",
-  "signerDeploymentStatus": "historical; corrected production environment variables are configured, but this deployment targets the superseded MARGIN address",
+  "signerDeployment": "dpl_6iwqfSVyQCwAaZY3GkpsqyMQiUTw",
+  "signerDeploymentStatus": "READY / production / PROMOTED",
+  "signerDeploymentGithubCommit": "84a725dbe3cc89293a60df13809ffa9376080c25",
+  "signerDeploymentBundle": {
+    "url": "https://margin-signer.vercel.app/assets/index-6qCDYSbI.js",
+    "bytes": 575462,
+    "sha256": "754fe219d0eee0408c0d24e2eefb2da8fff9cd74b67c931fc5af6a0ad774685a",
+    "canonicalMarginPresent": true,
+    "canonicalConsumerPresent": true,
+    "supersededAddressesAbsent": true
+  },
   "vercelGitDeployments": {
     "signerProject": "prj_sLtSr9PeurxKRzR8buv1KA99zWL8",
     "fixtureProject": "prj_xPXHmh3TcvuBDvgSFyTRarWRfJgz",
-    "signerCreateDeployments": "enabled",
+    "signerCreateDeployments": "disabled",
     "fixtureCreateDeployments": "disabled",
-    "verifiedVia": "authenticated Vercel project API before signer release push"
+    "verifiedVia": "authenticated Vercel project API after signer release and final lock push",
+    "newProductionDeployments": 2,
+    "deploymentPolicy": "GitHub-triggered only; final automatic Git deployments disabled for both projects"
   },
   "fixtureDeployment": {
     "project": "a",
@@ -48,7 +59,7 @@
     "purpose": "fresh immutable final-deployment evidence fixtures",
     "deploymentTrigger": "GitHub push only"
   },
-  "signerSourceCommit": "e35e27ea2c76fcb5482d285b6b41b858813b684e",
+  "signerSourceCommit": "84a725dbe3cc89293a60df13809ffa9376080c25",
   "supersededSignerDeployment": "dpl_BYeZLjjx3zP3sUqNZ4jJy1nSuBvh",
   "historicalSignerDeployment": {
     "deployment": "dpl_9Avj9b5Mx7BwgtbBYsZhdVKazJmV",

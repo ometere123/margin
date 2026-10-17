@@ -29,14 +29,14 @@ This file describes only the current canonical deployment. Historical deployment
 ## Production signer and release
 
 - Signer: https://margin-signer.vercel.app/
-- Production deployment: the signer release is performed only by the controlled GitHub-triggered release push; the final READY deployment ID and source SHA are recorded in `deployment.json` after Vercel verification. No direct Vercel CLI deployment is used.
+- Production deployment: GitHub-triggered Vercel deployment [`dpl_6iwqfSVyQCwAaZY3GkpsqyMQiUTw`](https://vercel.com/delealufejoel-4184s-projects/margin-signer/dpl_6iwqfSVyQCwAaZY3GkpsqyMQiUTw) is `READY / production / PROMOTED` for commit `84a725dbe3cc89293a60df13809ffa9376080c25`; the public bundle verification is recorded in `deployment.json`. No direct Vercel CLI deployment was used.
 - Extension archive: `MARGIN-extension-v0.1.0.zip`
 - Extension SHA-256: `59230A8330579C5D2126CD31DEC72F51C0A4BE42B985817C8FE038A1DB95B7E4`
 - Live fixture project: `a` (`prj_xPXHmh3TcvuBDvgSFyTRarWRfJgz`)
 - Live fixture production deployment: `dpl_4wUiXh9LEKoAkP4Qih5pLBA3oi7F` (`READY / production / PROMOTED`), GitHub commit `3c2323670628ba1d8cc72ffecd1c5c2128295f72`
 - Live fixture URL: https://a-murex-one.vercel.app/
 
-The signer uses the injected EIP-1193 wallet. The signer project is connected to `ometere123/margin` on `main` with repository-root deployment settings; the controlled release is GitHub-triggered and the final public bundle is verified separately below. The primary human production browser flow is retained as its recorded normal-claim evidence; a separate manual Covered UI walkthrough is optional and not claimed.
+The signer uses the injected EIP-1193 wallet. The signer project is connected to `ometere123/margin` on `main` with repository-root deployment settings; its verified production release is GitHub-triggered and recorded above. A read-only browser visit to the final supported Covered claim route showed `SUPPORTED`, `FINALIZED`, Studionet `61999`, the connected wallet surface and canonical provenance. The primary human production browser flow is retained as its recorded normal-claim evidence; a separate manual Covered UI walkthrough is optional and not claimed.
 
 ## Historical production browser proof (not re-attributed to the closeout bundle)
 
