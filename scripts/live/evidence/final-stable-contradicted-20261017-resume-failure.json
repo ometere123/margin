@@ -1,0 +1,50 @@
+{
+  "network": "studionet",
+  "chainId": 61999,
+  "rpc": "https://studio.genlayer.com/api",
+  "margin": "0x38a12Db824979A1E051792Cd322211FdB24473f3",
+  "consumer": "0xD067556b32Ef7D9975d524B942344E4098724541",
+  "claim": {
+    "key": "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+    "pageKey": "c72551418d6fd74040d731c557b855db26a7c2c7d1400fff60dacba3ee2e1bba",
+    "url": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017.html",
+    "quote": "MARGIN publisher collateral pays release losses to release creators and beneficiaries.",
+    "prefix": "Final contradicted fixed fixture: ",
+    "suffix": " This intentionally false statement is challenged by the committed policy evidence.",
+    "pageDigest": "70c6e4230ee05a9720ccd97d4fc62ae6837bc20edd99a28a91461e600cd8f721",
+    "challenge": "Confirm whether the unchanged contradicted final fixture is disproved by its evidence artifact in the definitive Covered Claim run.",
+    "evidence": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017-evidence.txt",
+    "nonce": "margin-final-stable-contradicted-20261017",
+    "expiry": "2027-10-17T01:00:00+01:00",
+    "releaseExpiry": "2027-10-18T01:00:00+01:00"
+  },
+  "steps": [
+    {
+      "account": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+      "function": "submit_claim",
+      "args": [
+        "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+        "c72551418d6fd74040d731c557b855db26a7c2c7d1400fff60dacba3ee2e1bba",
+        "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017.html",
+        "MARGIN publisher collateral pays release losses to release creators and beneficiaries.",
+        "Final contradicted fixed fixture: ",
+        " This intentionally false statement is challenged by the committed policy evidence.",
+        "70c6e4230ee05a9720ccd97d4fc62ae6837bc20edd99a28a91461e600cd8f721",
+        "TECHNICAL",
+        "Confirm whether the unchanged contradicted final fixture is disproved by its evidence artifact in the definitive Covered Claim run.",
+        "[\"https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017-evidence.txt\"]",
+        ""
+      ],
+      "value": "0",
+      "submittedAt": "2026-10-17T08:52:23.060Z",
+      "txHash": "0xdd2514c6b538132777932be9e9cbe335a12ef42441bec9350d08dd02f3c4aaf1",
+      "status": "SUBMITTED"
+    }
+  ],
+  "publicAccounts": {
+    "publisher": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+    "challenger": "0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB",
+    "integrator": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+    "beneficiary": "0xB845a69860ba4CDf19CfDC5AfbAF2e20b6bE86b0"
+  }
+}

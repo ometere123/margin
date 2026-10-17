@@ -1,0 +1,685 @@
+{
+  "network": "studionet",
+  "chainId": 61999,
+  "rpc": "https://studio.genlayer.com/api",
+  "margin": "0x38a12Db824979A1E051792Cd322211FdB24473f3",
+  "consumer": "0xD067556b32Ef7D9975d524B942344E4098724541",
+  "claim": {
+    "key": "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+    "pageKey": "c72551418d6fd74040d731c557b855db26a7c2c7d1400fff60dacba3ee2e1bba",
+    "url": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017.html",
+    "quote": "MARGIN publisher collateral pays release losses to release creators and beneficiaries.",
+    "prefix": "Final contradicted fixed fixture: ",
+    "suffix": " This intentionally false statement is challenged by the committed policy evidence.",
+    "pageDigest": "70c6e4230ee05a9720ccd97d4fc62ae6837bc20edd99a28a91461e600cd8f721",
+    "challenge": "Confirm whether the unchanged contradicted final fixture is disproved by its evidence artifact in the definitive Covered Claim run.",
+    "evidence": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017-evidence.txt",
+    "nonce": "margin-final-stable-contradicted-20261017",
+    "expiry": "2027-10-17T01:00:00+01:00",
+    "releaseExpiry": "2027-10-18T01:00:00+01:00"
+  },
+  "publicAccounts": {
+    "publisher": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+    "challenger": "0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB",
+    "integrator": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+    "beneficiary": "0xB845a69860ba4CDf19CfDC5AfbAF2e20b6bE86b0"
+  },
+  "appealDeadline": "2026-10-17T08:51:30.796114+00:00",
+  "steps": [
+    {
+      "account": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+      "function": "submit_claim",
+      "args": [
+        "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+        "c72551418d6fd74040d731c557b855db26a7c2c7d1400fff60dacba3ee2e1bba",
+        "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017.html",
+        "MARGIN publisher collateral pays release losses to release creators and beneficiaries.",
+        "Final contradicted fixed fixture: ",
+        " This intentionally false statement is challenged by the committed policy evidence.",
+        "70c6e4230ee05a9720ccd97d4fc62ae6837bc20edd99a28a91461e600cd8f721",
+        "TECHNICAL",
+        "Confirm whether the unchanged contradicted final fixture is disproved by its evidence artifact in the definitive Covered Claim run.",
+        "[\"https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017-evidence.txt\"]",
+        ""
+      ],
+      "value": "0",
+      "txHash": "0x4862e67f01a14367aa980c1a86c1475c71014867e007ce56810297b26091e974",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "txHash": "0x4862e67f01a14367aa980c1a86c1475c71014867e007ce56810297b26091e974"
+      },
+      "readback": {
+        "claim": {
+          "archive_url": "",
+          "canonical_url": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017.html",
+          "challenge_statement": "Confirm whether the unchanged contradicted final fixture is disproved by its evidence artifact in the definitive Covered Claim run.",
+          "challenger": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "claim_class": "TECHNICAL",
+          "claim_key": "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+          "created_at": "2026-10-17T07:47:29.734742+00:00",
+          "evidence_urls_json": "[\"https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017-evidence.txt\"]",
+          "latest_manifest": {
+            "accepted_observation_manifest": [
+              {
+                "content_digest": "a0f9e483c7fc425dafa70a775f1d1b9c125e600eaf39349d4498902a33ae0e51",
+                "fetch_status": "OK",
+                "integrity_status": "VERIFIED",
+                "kind": "PRIMARY",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017.html"
+              },
+              {
+                "content_digest": "977bf71a4f1f797089d444aca0adbacdf5f9147a83df5797e808cfdd5d67f28b",
+                "fetch_status": "OK",
+                "integrity_status": "VERIFIED",
+                "kind": "EVIDENCE",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017-evidence.txt"
+              }
+            ],
+            "adjudication_context_digest": "0f771334b56f7808abd89b22c1ed23f99803b5584ecdd38ef8027cd981688297",
+            "appeal_count": 0,
+            "claim_present": true,
+            "context_kind": "ASSURED_INITIAL",
+            "contradicting_source_indexes": [
+              1
+            ],
+            "historical_evidence_used": false,
+            "leader_cited_indexes": {
+              "contradicting": [
+                1
+              ],
+              "supporting": []
+            },
+            "material_observations": [
+              {
+                "authority_profile": "DOMAIN_CONTROLLED",
+                "authority_status": "ACCEPTED",
+                "citation_digest": "a7628aa5a739c1a0a2b21502f211fe8f288656bd39aaa0ea15afa063e139282c",
+                "citation_present": true,
+                "evidence_id": "final-stable-contradicted-20261017",
+                "integrity_status": "VERIFIED",
+                "semantic_relation": "CONTRADICTS"
+              }
+            ],
+            "protocol_version": 2,
+            "source_manifest_digest": "0780ca94756359b4999c0fe00e154bdeed49dfb8be7cd27b754cc748d68924ca",
+            "source_set_digest": "0d2787afd5c62a8d15ef65aa8c0f26c5f419ab3691bb559078ae479d6f391986",
+            "sources": [
+              {
+                "content_digest": "a0f9e483c7fc425dafa70a775f1d1b9c125e600eaf39349d4498902a33ae0e51",
+                "fetch_status": "OK",
+                "integrity_status": "VERIFIED",
+                "kind": "PRIMARY",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017.html"
+              },
+              {
+                "content_digest": "977bf71a4f1f797089d444aca0adbacdf5f9147a83df5797e808cfdd5d67f28b",
+                "fetch_status": "OK",
+                "integrity_status": "VERIFIED",
+                "kind": "EVIDENCE",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017-evidence.txt"
+              }
+            ],
+            "supporting_source_indexes": []
+          },
+          "page_digest": "70c6e4230ee05a9720ccd97d4fc62ae6837bc20edd99a28a91461e600cd8f721",
+          "page_key": "c72551418d6fd74040d731c557b855db26a7c2c7d1400fff60dacba3ee2e1bba",
+          "prefix": "Final contradicted fixed fixture: ",
+          "quote": "MARGIN publisher collateral pays release losses to release creators and beneficiaries.",
+          "rationale": "The primary page contains the highlighted sentence. The evidence artifact directly states that publisher collateral is a dispute stake and is not paid to release creators or beneficiaries, which materially contradicts the claim that publisher collateral pays release losses to those parties.",
+          "resolved_at": "2026-10-17T07:51:30.796114+00:00",
+          "revision": 2,
+          "source_manifest_digest": "0780ca94756359b4999c0fe00e154bdeed49dfb8be7cd27b754cc748d68924ca",
+          "source_set_digest": "0d2787afd5c62a8d15ef65aa8c0f26c5f419ab3691bb559078ae479d6f391986",
+          "status": "CONTRADICTED",
+          "suffix": " This intentionally false statement is challenged by the committed policy evidence."
+        }
+      }
+    },
+    {
+      "account": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+      "function": "resolve_claim",
+      "args": [
+        "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b"
+      ],
+      "value": "0",
+      "txHash": "0x57d2a6a94e2d528ba39e850073ba43a92d67b2f75ee24d74ed524a443afdb04e",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "txHash": "0x57d2a6a94e2d528ba39e850073ba43a92d67b2f75ee24d74ed524a443afdb04e"
+      },
+      "readback": {
+        "claim": {
+          "archive_url": "",
+          "canonical_url": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017.html",
+          "challenge_statement": "Confirm whether the unchanged contradicted final fixture is disproved by its evidence artifact in the definitive Covered Claim run.",
+          "challenger": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "claim_class": "TECHNICAL",
+          "claim_key": "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+          "created_at": "2026-10-17T07:47:29.734742+00:00",
+          "evidence_urls_json": "[\"https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017-evidence.txt\"]",
+          "latest_manifest": {
+            "accepted_observation_manifest": [
+              {
+                "content_digest": "a0f9e483c7fc425dafa70a775f1d1b9c125e600eaf39349d4498902a33ae0e51",
+                "fetch_status": "OK",
+                "integrity_status": "VERIFIED",
+                "kind": "PRIMARY",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017.html"
+              },
+              {
+                "content_digest": "977bf71a4f1f797089d444aca0adbacdf5f9147a83df5797e808cfdd5d67f28b",
+                "fetch_status": "OK",
+                "integrity_status": "VERIFIED",
+                "kind": "EVIDENCE",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017-evidence.txt"
+              }
+            ],
+            "adjudication_context_digest": "0f771334b56f7808abd89b22c1ed23f99803b5584ecdd38ef8027cd981688297",
+            "appeal_count": 0,
+            "claim_present": true,
+            "context_kind": "ASSURED_INITIAL",
+            "contradicting_source_indexes": [
+              1
+            ],
+            "historical_evidence_used": false,
+            "leader_cited_indexes": {
+              "contradicting": [
+                1
+              ],
+              "supporting": []
+            },
+            "material_observations": [
+              {
+                "authority_profile": "DOMAIN_CONTROLLED",
+                "authority_status": "ACCEPTED",
+                "citation_digest": "a7628aa5a739c1a0a2b21502f211fe8f288656bd39aaa0ea15afa063e139282c",
+                "citation_present": true,
+                "evidence_id": "final-stable-contradicted-20261017",
+                "integrity_status": "VERIFIED",
+                "semantic_relation": "CONTRADICTS"
+              }
+            ],
+            "protocol_version": 2,
+            "source_manifest_digest": "0780ca94756359b4999c0fe00e154bdeed49dfb8be7cd27b754cc748d68924ca",
+            "source_set_digest": "0d2787afd5c62a8d15ef65aa8c0f26c5f419ab3691bb559078ae479d6f391986",
+            "sources": [
+              {
+                "content_digest": "a0f9e483c7fc425dafa70a775f1d1b9c125e600eaf39349d4498902a33ae0e51",
+                "fetch_status": "OK",
+                "integrity_status": "VERIFIED",
+                "kind": "PRIMARY",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017.html"
+              },
+              {
+                "content_digest": "977bf71a4f1f797089d444aca0adbacdf5f9147a83df5797e808cfdd5d67f28b",
+                "fetch_status": "OK",
+                "integrity_status": "VERIFIED",
+                "kind": "EVIDENCE",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017-evidence.txt"
+              }
+            ],
+            "supporting_source_indexes": []
+          },
+          "page_digest": "70c6e4230ee05a9720ccd97d4fc62ae6837bc20edd99a28a91461e600cd8f721",
+          "page_key": "c72551418d6fd74040d731c557b855db26a7c2c7d1400fff60dacba3ee2e1bba",
+          "prefix": "Final contradicted fixed fixture: ",
+          "quote": "MARGIN publisher collateral pays release losses to release creators and beneficiaries.",
+          "rationale": "The primary page contains the highlighted sentence. The evidence artifact directly states that publisher collateral is a dispute stake and is not paid to release creators or beneficiaries, which materially contradicts the claim that publisher collateral pays release losses to those parties.",
+          "resolved_at": "2026-10-17T07:51:30.796114+00:00",
+          "revision": 2,
+          "source_manifest_digest": "0780ca94756359b4999c0fe00e154bdeed49dfb8be7cd27b754cc748d68924ca",
+          "source_set_digest": "0d2787afd5c62a8d15ef65aa8c0f26c5f419ab3691bb559078ae479d6f391986",
+          "status": "CONTRADICTED",
+          "suffix": " This intentionally false statement is challenged by the committed policy evidence."
+        }
+      }
+    },
+    {
+      "account": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+      "function": "register_covered_claim",
+      "args": [
+        "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+        "margin-final-stable-contradicted-20261017",
+        "2027-10-17T01:00:00+01:00"
+      ],
+      "value": "2",
+      "txHash": "0x982d62fb09fa5f3483dcdd43aca708e59cc8cae3eb88a6b8506cc02b90bed82f",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "txHash": "0x982d62fb09fa5f3483dcdd43aca708e59cc8cae3eb88a6b8506cc02b90bed82f"
+      },
+      "readback": {
+        "covered": {
+          "appeal_appellant": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "appeal_bond": 0,
+          "appeal_deadline": "2026-10-17T08:51:30.796114+00:00",
+          "appeal_reason": "",
+          "challenge_bond": 2,
+          "challenger": "0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB",
+          "challenger_credit": 0,
+          "claim_key": "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+          "coverage_cap": 2,
+          "evidence_pack_digest": "6b3599dd7ff279fbfbde201258ac195dbd1014469507aacc54e5dd8ad30f8726",
+          "final_status": "CONTRADICTED",
+          "manifest_digest": "a0ca31e3314a48ff63b50fe258c51d80a815b3922f9cd753f17bf4820460d412",
+          "manifest_url": "https://a-murex-one.vercel.app/.well-known/margin/claims/db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b.json",
+          "primary_artifact_sha256": "a0f9e483c7fc425dafa70a775f1d1b9c125e600eaf39349d4498902a33ae0e51",
+          "publisher": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "publisher_collateral": 2,
+          "publisher_credit": 0,
+          "required_appeal_bond": 2,
+          "required_challenge_bond": 2,
+          "settled": false,
+          "state": "RESOLVED"
+        },
+        "coverage": {
+          "active_exposure": 1,
+          "available_coverage": 1,
+          "canonical_consumer": "0xD067556b32Ef7D9975d524B942344E4098724541",
+          "claim_key": "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+          "coverage_cap": 2,
+          "final_status": "CONTRADICTED",
+          "registration_open": true,
+          "required_appeal_bond": 2,
+          "required_challenge_bond": 2,
+          "state": "RESOLVED"
+        }
+      }
+    },
+    {
+      "account": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+      "function": "create_protected_release",
+      "args": [
+        "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+        "0xB845a69860ba4CDf19CfDC5AfbAF2e20b6bE86b0",
+        "2027-10-18T01:00:00+01:00"
+      ],
+      "value": "1",
+      "txHash": "0xe23fc92703eea0679a09ffa47a71b7fb580412cb0ec6ee52965a53f3b0bf3f3c",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "txHash": "0xe23fc92703eea0679a09ffa47a71b7fb580412cb0ec6ee52965a53f3b0bf3f3c"
+      },
+      "readback": {
+        "releases": [
+          {
+            "amount": 1,
+            "beneficiary": "0xB845a69860ba4CDf19CfDC5AfbAF2e20b6bE86b0",
+            "beneficiary_credit": 0,
+            "claim_key": "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+            "creator": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+            "creator_credit": 0,
+            "executed": false,
+            "expiry": "2027-10-18T00:00:00+00:00",
+            "refunded": false,
+            "release_id": "3:db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b"
+          }
+        ],
+        "coverage": {
+          "active_exposure": 1,
+          "available_coverage": 1,
+          "canonical_consumer": "0xD067556b32Ef7D9975d524B942344E4098724541",
+          "claim_key": "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+          "coverage_cap": 2,
+          "final_status": "CONTRADICTED",
+          "registration_open": true,
+          "required_appeal_bond": 2,
+          "required_challenge_bond": 2,
+          "state": "RESOLVED"
+        }
+      }
+    },
+    {
+      "account": "0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB",
+      "function": "challenge_assured_claim",
+      "args": [
+        "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b"
+      ],
+      "value": "2",
+      "txHash": "0x809021e14664d5a2640a06c4b359f43369fd00326b9ce29eaf8c890a0d763bfd",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "txHash": "0x809021e14664d5a2640a06c4b359f43369fd00326b9ce29eaf8c890a0d763bfd"
+      },
+      "readback": {
+        "assured": {
+          "appeal_bond": 0,
+          "appeal_context_digest": "0f771334b56f7808abd89b22c1ed23f99803b5584ecdd38ef8027cd981688297",
+          "appeal_count": 0,
+          "appeal_deadline": "2026-10-17T08:51:30.796114+00:00",
+          "appeal_reason": "",
+          "challenge_bond": 2,
+          "challenger": "0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB",
+          "challenger_credit": 0,
+          "claim_key": "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+          "domain_nonce": "margin-final-stable-contradicted-20261017",
+          "domain_proof_url": "https://a-murex-one.vercel.app/.well-known/margin/claims/db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b.json",
+          "final_status": "CONTRADICTED",
+          "proof_digest": "a0ca31e3314a48ff63b50fe258c51d80a815b3922f9cd753f17bf4820460d412",
+          "proof_expires_at": "2027-10-17T00:00:00+00:00",
+          "publisher": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "publisher_bond": 2,
+          "publisher_credit": 0,
+          "settled": false,
+          "state": "RESOLVED",
+          "state_started_at": "2026-10-17T07:51:30.796114+00:00"
+        },
+        "covered": {
+          "appeal_appellant": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "appeal_bond": 0,
+          "appeal_deadline": "2026-10-17T08:51:30.796114+00:00",
+          "appeal_reason": "",
+          "challenge_bond": 2,
+          "challenger": "0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB",
+          "challenger_credit": 0,
+          "claim_key": "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+          "coverage_cap": 2,
+          "evidence_pack_digest": "6b3599dd7ff279fbfbde201258ac195dbd1014469507aacc54e5dd8ad30f8726",
+          "final_status": "CONTRADICTED",
+          "manifest_digest": "a0ca31e3314a48ff63b50fe258c51d80a815b3922f9cd753f17bf4820460d412",
+          "manifest_url": "https://a-murex-one.vercel.app/.well-known/margin/claims/db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b.json",
+          "primary_artifact_sha256": "a0f9e483c7fc425dafa70a775f1d1b9c125e600eaf39349d4498902a33ae0e51",
+          "publisher": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "publisher_collateral": 2,
+          "publisher_credit": 0,
+          "required_appeal_bond": 2,
+          "required_challenge_bond": 2,
+          "settled": false,
+          "state": "RESOLVED"
+        }
+      }
+    },
+    {
+      "account": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+      "function": "resolve_assured_claim",
+      "args": [
+        "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b"
+      ],
+      "value": "0",
+      "txHash": "0x81d65e05f5bcd3ec792d11ecef36c4de2646c2156796e8f7399be4e7b95cb111",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "txHash": "0x81d65e05f5bcd3ec792d11ecef36c4de2646c2156796e8f7399be4e7b95cb111"
+      },
+      "readback": {
+        "assured": {
+          "appeal_bond": 0,
+          "appeal_context_digest": "0f771334b56f7808abd89b22c1ed23f99803b5584ecdd38ef8027cd981688297",
+          "appeal_count": 0,
+          "appeal_deadline": "2026-10-17T08:51:30.796114+00:00",
+          "appeal_reason": "",
+          "challenge_bond": 2,
+          "challenger": "0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB",
+          "challenger_credit": 0,
+          "claim_key": "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+          "domain_nonce": "margin-final-stable-contradicted-20261017",
+          "domain_proof_url": "https://a-murex-one.vercel.app/.well-known/margin/claims/db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b.json",
+          "final_status": "CONTRADICTED",
+          "proof_digest": "a0ca31e3314a48ff63b50fe258c51d80a815b3922f9cd753f17bf4820460d412",
+          "proof_expires_at": "2027-10-17T00:00:00+00:00",
+          "publisher": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "publisher_bond": 2,
+          "publisher_credit": 0,
+          "settled": false,
+          "state": "RESOLVED",
+          "state_started_at": "2026-10-17T07:51:30.796114+00:00"
+        },
+        "covered": {
+          "appeal_appellant": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "appeal_bond": 0,
+          "appeal_deadline": "2026-10-17T08:51:30.796114+00:00",
+          "appeal_reason": "",
+          "challenge_bond": 2,
+          "challenger": "0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB",
+          "challenger_credit": 0,
+          "claim_key": "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+          "coverage_cap": 2,
+          "evidence_pack_digest": "6b3599dd7ff279fbfbde201258ac195dbd1014469507aacc54e5dd8ad30f8726",
+          "final_status": "CONTRADICTED",
+          "manifest_digest": "a0ca31e3314a48ff63b50fe258c51d80a815b3922f9cd753f17bf4820460d412",
+          "manifest_url": "https://a-murex-one.vercel.app/.well-known/margin/claims/db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b.json",
+          "primary_artifact_sha256": "a0f9e483c7fc425dafa70a775f1d1b9c125e600eaf39349d4498902a33ae0e51",
+          "publisher": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "publisher_collateral": 2,
+          "publisher_credit": 0,
+          "required_appeal_bond": 2,
+          "required_challenge_bond": 2,
+          "settled": false,
+          "state": "RESOLVED"
+        }
+      }
+    },
+    {
+      "account": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+      "function": "settle_assured_claim",
+      "args": [
+        "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b"
+      ],
+      "value": "0",
+      "submittedAt": "2026-10-17T08:54:30.008Z",
+      "txHash": "0xfef3e027b3e75d88bf400292aad824e41c6a62b3a9bc25855a918d1ad0c365bb",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "txHash": "0xfef3e027b3e75d88bf400292aad824e41c6a62b3a9bc25855a918d1ad0c365bb"
+      },
+      "readback": {
+        "assured": {
+          "appeal_bond": 0,
+          "appeal_context_digest": "0f771334b56f7808abd89b22c1ed23f99803b5584ecdd38ef8027cd981688297",
+          "appeal_count": 0,
+          "appeal_deadline": "2026-10-17T08:51:30.796114+00:00",
+          "appeal_reason": "",
+          "challenge_bond": 0,
+          "challenger": "0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB",
+          "challenger_credit": 4,
+          "claim_key": "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+          "domain_nonce": "margin-final-stable-contradicted-20261017",
+          "domain_proof_url": "https://a-murex-one.vercel.app/.well-known/margin/claims/db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b.json",
+          "final_status": "CONTRADICTED",
+          "proof_digest": "a0ca31e3314a48ff63b50fe258c51d80a815b3922f9cd753f17bf4820460d412",
+          "proof_expires_at": "2027-10-17T00:00:00+00:00",
+          "publisher": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "publisher_bond": 0,
+          "publisher_credit": 0,
+          "settled": true,
+          "state": "SETTLED",
+          "state_started_at": "2026-10-17T07:51:30.796114+00:00"
+        },
+        "coverage": {
+          "active_exposure": 1,
+          "available_coverage": 0,
+          "canonical_consumer": "0xD067556b32Ef7D9975d524B942344E4098724541",
+          "claim_key": "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+          "coverage_cap": 2,
+          "final_status": "CONTRADICTED",
+          "registration_open": false,
+          "required_appeal_bond": 2,
+          "required_challenge_bond": 2,
+          "state": "SETTLED"
+        }
+      }
+    },
+    {
+      "account": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+      "function": "refund_release",
+      "args": [
+        "3:db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b"
+      ],
+      "value": "0",
+      "submittedAt": "2026-10-17T08:55:16.009Z",
+      "txHash": "0x4f0e2dfc7d9384a00016de3a95d8e4fe9dd2dd5e78f3555fcd84ce9eebef2616",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "txHash": "0x4f0e2dfc7d9384a00016de3a95d8e4fe9dd2dd5e78f3555fcd84ce9eebef2616"
+      },
+      "readback": {
+        "release": {
+          "amount": 1,
+          "beneficiary": "0xB845a69860ba4CDf19CfDC5AfbAF2e20b6bE86b0",
+          "beneficiary_credit": 0,
+          "claim_key": "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+          "creator": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+          "creator_credit": 1,
+          "executed": false,
+          "expiry": "2027-10-18T00:00:00+00:00",
+          "refunded": true,
+          "release_id": "3:db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b"
+        }
+      }
+    },
+    {
+      "account": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+      "function": "withdraw_release_credit",
+      "args": [
+        "3:db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b"
+      ],
+      "value": "0",
+      "submittedAt": "2026-10-17T08:56:01.103Z",
+      "txHash": "0x2d01b0db10b917c2a28fd14378768068572ca8b2d872977436507a9772a9a7d3",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "txHash": "0x2d01b0db10b917c2a28fd14378768068572ca8b2d872977436507a9772a9a7d3"
+      },
+      "readback": {
+        "release": {
+          "amount": 1,
+          "beneficiary": "0xB845a69860ba4CDf19CfDC5AfbAF2e20b6bE86b0",
+          "beneficiary_credit": 0,
+          "claim_key": "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+          "creator": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+          "creator_credit": 0,
+          "executed": false,
+          "expiry": "2027-10-18T00:00:00+00:00",
+          "refunded": true,
+          "release_id": "3:db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b"
+        }
+      }
+    },
+    {
+      "account": "0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB",
+      "function": "withdraw_assured_credit",
+      "args": [
+        "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b"
+      ],
+      "value": "0",
+      "submittedAt": "2026-10-17T08:56:43.499Z",
+      "txHash": "0x7737c57176ee022c1e95eda51b7d7ea9af2238355c972ed10e6679ac89c3691d",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "txHash": "0x7737c57176ee022c1e95eda51b7d7ea9af2238355c972ed10e6679ac89c3691d"
+      },
+      "readback": {
+        "assured": {
+          "appeal_bond": 0,
+          "appeal_context_digest": "0f771334b56f7808abd89b22c1ed23f99803b5584ecdd38ef8027cd981688297",
+          "appeal_count": 0,
+          "appeal_deadline": "2026-10-17T08:51:30.796114+00:00",
+          "appeal_reason": "",
+          "challenge_bond": 0,
+          "challenger": "0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB",
+          "challenger_credit": 0,
+          "claim_key": "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+          "domain_nonce": "margin-final-stable-contradicted-20261017",
+          "domain_proof_url": "https://a-murex-one.vercel.app/.well-known/margin/claims/db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b.json",
+          "final_status": "CONTRADICTED",
+          "proof_digest": "a0ca31e3314a48ff63b50fe258c51d80a815b3922f9cd753f17bf4820460d412",
+          "proof_expires_at": "2027-10-17T00:00:00+00:00",
+          "publisher": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "publisher_bond": 0,
+          "publisher_credit": 0,
+          "settled": true,
+          "state": "SETTLED",
+          "state_started_at": "2026-10-17T07:51:30.796114+00:00"
+        }
+      }
+    }
+  ],
+  "releaseId": "3:db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+  "finalReadback": {
+    "assured": {
+      "appeal_bond": 0,
+      "appeal_context_digest": "0f771334b56f7808abd89b22c1ed23f99803b5584ecdd38ef8027cd981688297",
+      "appeal_count": 0,
+      "appeal_deadline": "2026-10-17T08:51:30.796114+00:00",
+      "appeal_reason": "",
+      "challenge_bond": 0,
+      "challenger": "0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB",
+      "challenger_credit": 0,
+      "claim_key": "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+      "domain_nonce": "margin-final-stable-contradicted-20261017",
+      "domain_proof_url": "https://a-murex-one.vercel.app/.well-known/margin/claims/db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b.json",
+      "final_status": "CONTRADICTED",
+      "proof_digest": "a0ca31e3314a48ff63b50fe258c51d80a815b3922f9cd753f17bf4820460d412",
+      "proof_expires_at": "2027-10-17T00:00:00+00:00",
+      "publisher": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+      "publisher_bond": 0,
+      "publisher_credit": 0,
+      "settled": true,
+      "state": "SETTLED",
+      "state_started_at": "2026-10-17T07:51:30.796114+00:00"
+    },
+    "coverage": {
+      "active_exposure": 0,
+      "available_coverage": 0,
+      "canonical_consumer": "0xD067556b32Ef7D9975d524B942344E4098724541",
+      "claim_key": "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+      "coverage_cap": 2,
+      "final_status": "CONTRADICTED",
+      "registration_open": false,
+      "required_appeal_bond": 2,
+      "required_challenge_bond": 2,
+      "state": "SETTLED"
+    },
+    "consumerExposure": 0,
+    "release": {
+      "amount": 1,
+      "beneficiary": "0xB845a69860ba4CDf19CfDC5AfbAF2e20b6bE86b0",
+      "beneficiary_credit": 0,
+      "claim_key": "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+      "creator": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+      "creator_credit": 0,
+      "executed": false,
+      "expiry": "2027-10-18T00:00:00+00:00",
+      "refunded": true,
+      "release_id": "3:db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b"
+    }
+  }
+}

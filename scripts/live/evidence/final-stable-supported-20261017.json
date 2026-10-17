@@ -1,0 +1,50 @@
+{
+  "network": "studionet",
+  "chainId": 61999,
+  "rpc": "https://studio.genlayer.com/api",
+  "margin": "0x38a12Db824979A1E051792Cd322211FdB24473f3",
+  "consumer": "0xD067556b32Ef7D9975d524B942344E4098724541",
+  "claim": {
+    "key": "bd9a74117d96a75f9ffea9402defbb18067d64fcd12356ac1fa77eea30d7349e",
+    "pageKey": "4e40f2f1d18aa2699d0fbfc084b6ce7ca5540084c24cdaeac99427e1dc194e66",
+    "url": "https://a-murex-one.vercel.app/v2-final-supported-20261017.html",
+    "quote": "The MARGIN protocol records finalized evidence commitments before a Covered Claim can protect value.",
+    "prefix": "Covered Claim evidence: ",
+    "suffix": " This statement is published as a V2 evidence fixture.",
+    "pageDigest": "8b65179b2a2554283b813b833113a1f46e9faf33cf080eb7df459c03bdf22bd5",
+    "challenge": "Confirm that the unchanged supported final fixture is backed by its evidence artifact in the definitive Covered Claim run.",
+    "evidence": "https://a-murex-one.vercel.app/v2-final-supported-20261017-evidence.txt",
+    "nonce": "margin-final-stable-supported-20261017",
+    "expiry": "2027-10-17T00:00:00+00:00",
+    "releaseExpiry": "2027-10-18T00:00:00+00:00"
+  },
+  "steps": [
+    {
+      "account": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+      "function": "submit_claim",
+      "args": [
+        "bd9a74117d96a75f9ffea9402defbb18067d64fcd12356ac1fa77eea30d7349e",
+        "4e40f2f1d18aa2699d0fbfc084b6ce7ca5540084c24cdaeac99427e1dc194e66",
+        "https://a-murex-one.vercel.app/v2-final-supported-20261017.html",
+        "The MARGIN protocol records finalized evidence commitments before a Covered Claim can protect value.",
+        "Covered Claim evidence: ",
+        " This statement is published as a V2 evidence fixture.",
+        "8b65179b2a2554283b813b833113a1f46e9faf33cf080eb7df459c03bdf22bd5",
+        "TECHNICAL",
+        "Confirm that the unchanged supported final fixture is backed by its evidence artifact in the definitive Covered Claim run.",
+        "[\"https://a-murex-one.vercel.app/v2-final-supported-20261017-evidence.txt\"]",
+        ""
+      ],
+      "value": "0",
+      "submittedAt": "2026-10-17T07:40:26.378Z",
+      "txHash": "0x987e00ceb159367c5e8a9a2062a3521dd882ed66e23a03466f7514110fa72f8b",
+      "status": "SUBMITTED"
+    }
+  ],
+  "publicAccounts": {
+    "publisher": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+    "challenger": "0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB",
+    "integrator": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+    "beneficiary": "0xB845a69860ba4CDf19CfDC5AfbAF2e20b6bE86b0"
+  }
+}

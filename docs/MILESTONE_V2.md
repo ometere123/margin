@@ -49,28 +49,28 @@ cannot produce a definitive `SUPPORTED` or `CONTRADICTED` result.
 | V1 limitation | V2 change | Test/live proof |
 | --- | --- | --- |
 | Fixed one-unit assurance did not cover arbitrary protected value | Covered Claim `coverage_cap` and full publisher collateral | `tests/direct/test_covered_claims.py`; V2 live pre-settlement release and settlement readback |
-| Releases were not coupled to a claim-wide value ceiling | One canonical consumer, synchronous MARGIN exposure readback and `MarginConsumer.active_exposure_by_claim` checks | consumer Direct Mode integration; V2 live release refunded after `INCONCLUSIVE` |
+| Releases were not coupled to a claim-wide value ceiling | One canonical consumer, synchronous MARGIN exposure readback and `MarginConsumer.active_exposure_by_claim` checks | consumer Direct Mode integration; final stable-render SUPPORTED execution and CONTRADICTED refund |
 | Arbitrary high-assurance evidence URLs | Derived publisher manifest URL and typed evidence pack | manifest validation tests; V2 live manifest readback |
-| Mutable or oversized evidence could be silently truncated | bounded manifest/artifact policy, primary and evidence digest commitments | integrity mutation tests; V2 live primary-observation mismatch produced `INCONCLUSIVE` |
+| Mutable or oversized evidence could be silently truncated | bounded manifest/artifact policy, primary and evidence digest commitments | integrity mutation tests; earlier mismatch fail-closed plus final stable-render definitive paths |
 | Ordinary annotations are advisory | explicit distinction between public annotation and Covered Claim | signer/assurance UI and documentation |
 
 ## Current limitations
 
 V2 MARGIN is deployed on Studionet at
 `0x38a12Db824979A1E051792Cd322211FdB24473f3` and the bound consumer is
-`0xD067556b32Ef7D9975d524B942344E4098724541`. The production project
-environment is configured for those addresses; a fresh public signer build is
-not claimed until its deployment is independently verified. Earlier V2
-Covered checkpoints remain historical for their original deployments. The
-fresh final-deployment checkpoints completed their real appeal deadlines and
-post-settlement readbacks as `SETTLED / INCONCLUSIVE` with refunded releases and
-zero MARGIN/consumer exposure; no browser run against the corrected deployment
-is claimed.
+`0xD067556b32Ef7D9975d524B942344E4098724541`. Earlier V2 Covered checkpoints
+remain historical and the two `final-v3-*` checkpoints remain genuine
+fail-closed `SETTLED / INCONCLUSIVE` evidence. The definitive final-deployment
+stable-render checkpoints are separately recorded: one is `SETTLED /
+SUPPORTED` with an executed release and one is `SETTLED / CONTRADICTED` with a
+refunded release. Both end with zero MARGIN/consumer exposure and zero
+post-withdrawal credits. The primary human browser record is historical; an
+optional manual Covered UI walkthrough is not claimed.
 
 ## Local gate snapshot
 
 At the latest local run, contract AST lint passed for both contracts, extension
-tests passed `17/17`, signer tests passed `40/40`, Python invariants passed
+tests passed `17/17`, signer tests passed `42/42`, Python invariants passed
 `12/12`, Direct Mode passed `59/59`, and security mutations passed `15/15 killed`.
 Extension and signer production builds
 also passed. These are local results for this branch, not Studionet live

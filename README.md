@@ -193,7 +193,7 @@ This follows the important GenLayer rule that validators must independently veri
 
 ## What remains intentionally environment-specific
 
-The final material-observation V2 contract and bound consumer are deployed. Fresh final-deployment economic evidence is recorded separately under `scripts/live/evidence/`; historical V2 checkpoints remain explicitly historical. Browser verification is a separate manual track and is not inferred from unit tests. The following evidence remains account/browser dependent and must not be inferred from unit tests:
+The final material-observation V2 contract and bound consumer are deployed. Definitive final-deployment `SUPPORTED` and `CONTRADICTED` Covered lifecycle evidence is recorded separately under `scripts/live/evidence/`; earlier V2 and digest-mismatch checkpoints remain explicitly historical fail-closed evidence. The deterministic browser harness passed, while production-wallet/browser observations remain separately labelled and are not inferred from unit tests. The following evidence remains account/browser dependent and must not be inferred from unit tests:
 
 ### Frontend workspace routes
 
@@ -201,8 +201,8 @@ The static signer is a focused transaction and provenance workspace, not a repla
 
 The signer and extension use the supplied MARGIN logo/icon assets. The assurance view exposes the existing registration, challenge, resolution, appeal, settlement and withdrawal actions only when the connected account and finalized state permit them. The current bound reference consumer is `0xD067556b32Ef7D9975d524B942344E4098724541`; older consumer addresses in `deployment.json` are historical only. It supports up to five protected releases per creator and claim, with bounded pagination across all releases. Covered Claims add publisher-controlled manifests, typed evidence packs, complete artifact commitments and value-coupled coverage.
 
-- repeat the complete wallet-to-chain submit/resolve session from a fresh browser profile if an independent reviewer requires it;
+- repeat the complete wallet-to-chain submit/resolve session from a fresh browser profile if an independent reviewer requires a separate production-wallet observation;
 - measure broader fee profiles and exercise a separate GenLayer transaction-level appeal where supported by the stable tooling;
-- complete the full automated browser E2E and hostile-page matrix described in `docs/LIVE_VALIDATION.md`.
+- perform the optional manual Covered UI walkthrough described in `docs/FINAL_HANDOFF.md`.
 
 The product architecture should not be redesigned to complete those steps.

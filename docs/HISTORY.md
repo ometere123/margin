@@ -17,4 +17,15 @@ The historical consumer path included the former single-release implementation. 
 
 ## Historical browser boundary
 
-Earlier browser annotation and wallet evidence belongs to superseded deployments. The current browser matrix is intentionally marked `NOT RUN BY AGENT`; the human operator must execute it manually.
+Earlier browser annotation and wallet evidence belongs to superseded deployments. The deterministic browser harness is automated; production-wallet browser evidence remains separately labelled as human/manual evidence and is not inferred from the harness.
+
+## Final closeout evidence boundary
+
+The earlier final-deployment `final-v3-supported-20261017.json` and
+`final-v3-contradicted-fixed-20261017.json` records remain historical
+fail-closed `INCONCLUSIVE` outcomes caused by the committed/runtime primary
+render-digest mismatch. The definitive stable-render checkpoints are recorded
+in `deployment.json` and linked from `SUBMISSION.md`. The separate
+`final-stable-contradicted-20261017-resume-failure.json` file records a
+finalized execution-error duplicate tracking attempt with no state mutation; it
+is not part of the definitive lifecycle sequence.

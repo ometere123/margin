@@ -33,16 +33,20 @@
   "vercelGitDeployments": {
     "signerProject": "prj_sLtSr9PeurxKRzR8buv1KA99zWL8",
     "fixtureProject": "prj_xPXHmh3TcvuBDvgSFyTRarWRfJgz",
-    "createDeployments": "disabled",
-    "verifiedVia": "authenticated Vercel project API before repository push"
+    "signerCreateDeployments": "enabled",
+    "fixtureCreateDeployments": "disabled",
+    "verifiedVia": "authenticated Vercel project API before signer release push"
   },
   "fixtureDeployment": {
     "project": "a",
     "projectId": "prj_xPXHmh3TcvuBDvgSFyTRarWRfJgz",
-    "deployment": "dpl_4kHV5KpGXPKb3Pa3hX6xfjPct1um",
+    "deployment": "dpl_4wUiXh9LEKoAkP4Qih5pLBA3oi7F",
     "url": "https://a-murex-one.vercel.app/",
-    "status": "READY / production",
-    "purpose": "fresh immutable final-deployment evidence fixtures"
+    "status": "READY / production / PROMOTED",
+    "rootDirectory": "scripts/live/hosted/a",
+    "githubCommit": "3c2323670628ba1d8cc72ffecd1c5c2128295f72",
+    "purpose": "fresh immutable final-deployment evidence fixtures",
+    "deploymentTrigger": "GitHub push only"
   },
   "signerSourceCommit": "e35e27ea2c76fcb5482d285b6b41b858813b684e",
   "supersededSignerDeployment": "dpl_BYeZLjjx3zP3sUqNZ4jJy1nSuBvh",
@@ -113,17 +117,17 @@
     "boundMarginAddress": "0x0f8D86d56F1b8997475dD048579807fBFe60e227",
     "status": "historical; constructor argument encoding error, execution failed; not current evidence"
   },
-  "currentProductionBrowserProof": {
+  "historicalProductionBrowserProof": {
     "canonicalUrl": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at",
     "claim": "Negative index counts back from the end of the array — if index < 0, index + array.length is accessed.",
     "challenge": "Verify whether Array.prototype.at() handles a negative index by adding it to the array length, rather than treating it as an ordinary string property.",
     "evidenceUrl": "https://tc39.es/ecma262/2026/multipage/indexed-collections.html#sec-array.prototype.at",
     "claimClass": "TECHNICAL",
-    "marginAddress": "0x38a12Db824979A1E051792Cd322211FdB24473f3",
+    "marginAddress": "not independently bound by a committed transaction record",
     "result": "Human-observed production signer submission and resolution finalized on Studionet 61999 with canonical verdict SUPPORTED; exact re-anchor, highlight, visible badge and provenance were confirmed.",
     "submissionTx": null,
     "resolutionTx": null,
-    "note": "Transaction hashes were not committed and are intentionally not invented. This was a normal claim only; no Covered/Assured economic lifecycle was rerun."
+    "note": "Transaction hashes and a deployment identity binding were not committed and are intentionally not invented. This was a normal claim only; no Covered/Assured economic lifecycle was rerun. Retained as historical browser evidence, not proof of the closeout signer release."
   },
   "historicalEvidence": {
     "normalClaim": {
@@ -691,7 +695,43 @@
       "allWrites": "FINALIZED / MAJORITY_AGREE / SUCCESS",
       "note": "The primary artifact was fetched with a different runtime-rendered digest than the committed artifact; the final deployment settled INCONCLUSIVE and refunded rather than producing a definitive CONTRADICTED result."
     },
-    "status": "Final deployment checks and two fresh final-deployment economic lifecycles recorded; both fail-closed as INCONCLUSIVE because the accepted primary render digests did not equal the committed artifact digests."
+    "finalStableSupported": {
+      "evidenceFile": "scripts/live/evidence/final-stable-supported-20261017-retry.json",
+      "summaryFile": "scripts/live/evidence/final-stable-supported-20261017.md",
+      "claimKey": "bd9a74117d96a75f9ffea9402defbb18067d64fcd12356ac1fa77eea30d7349e",
+      "page": "https://a-murex-one.vercel.app/v2-final-supported-20261017.html",
+      "manifest": "https://a-murex-one.vercel.app/.well-known/margin/claims/bd9a74117d96a75f9ffea9402defbb18067d64fcd12356ac1fa77eea30d7349e.json",
+      "state": "SETTLED",
+      "finalStatus": "SUPPORTED",
+      "releaseId": "2:bd9a74117d96a75f9ffea9402defbb18067d64fcd12356ac1fa77eea30d7349e",
+      "releaseOutcome": "EXECUTED",
+      "renderedPrimaryArtifactSha256": "e5866f8a9d2c905e3251a3ee53e26c37d5a9a780756a57c896a7fb9decab33c2",
+      "rawPageSha256": "8b65179b2a2554283b813b833113a1f46e9faf33cf080eb7df459c03bdf22bd5",
+      "evidenceSha256": "ff840f3812095e56a5a7458d9a2fb1411767bf7a4b50ae2eab0f6a73f304a248",
+      "activeExposure": 0,
+      "consumerExposure": 0,
+      "postWithdrawalCredits": { "publisher": 0, "challenger": 0, "beneficiary": 0 },
+      "allWrites": "FINALIZED / MAJORITY_AGREE / SUCCESS"
+    },
+    "finalStableContradicted": {
+      "evidenceFile": "scripts/live/evidence/final-stable-contradicted-20261017.json",
+      "summaryFile": "scripts/live/evidence/final-stable-contradicted-20261017.md",
+      "claimKey": "db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+      "page": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017.html",
+      "manifest": "https://a-murex-one.vercel.app/.well-known/margin/claims/db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b.json",
+      "state": "SETTLED",
+      "finalStatus": "CONTRADICTED",
+      "releaseId": "3:db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b",
+      "releaseOutcome": "REFUNDED",
+      "renderedPrimaryArtifactSha256": "a0f9e483c7fc425dafa70a775f1d1b9c125e600eaf39349d4498902a33ae0e51",
+      "rawPageSha256": "70c6e4230ee05a9720ccd97d4fc62ae6837bc20edd99a28a91461e600cd8f721",
+      "evidenceSha256": "977bf71a4f1f797089d444aca0adbacdf5f9147a83df5797e808cfdd5d67f28b",
+      "activeExposure": 0,
+      "consumerExposure": 0,
+      "postWithdrawalCredits": { "publisher": 0, "challenger": 0, "creator": 0 },
+      "allWrites": "FINALIZED / MAJORITY_AGREE / SUCCESS"
+    },
+    "status": "Final deployment definitive SUPPORTED and CONTRADICTED Covered Claim lifecycles recorded after stable GenVM-render digest verification; earlier INCONCLUSIVE checkpoints remain historical fail-closed evidence."
   },
   "toolVersions": {
     "genlayerCli": "0.39.1",

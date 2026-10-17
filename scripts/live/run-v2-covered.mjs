@@ -39,14 +39,27 @@ const CLAIM = {
 const statePath = resolve(process.env.MARGIN_V2_STATE_PATH ?? 'scripts/live/evidence/V2-covered.json');
 const dryRun = process.argv.includes('--dry-run');
 const sha = (value) => crypto.createHash('sha256').update(value).digest('hex');
+const canonicalJson = (value) => {
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(',')}]`;
+  if (value && typeof value === 'object') return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`).join(',')}}`;
+  return JSON.stringify(value);
+};
+const derivedClaimKey = sha(canonicalJson({
+  archiveUrl: '', canonicalUrl: CLAIM.url, challengeStatement: CLAIM.challenge,
+  claimClass: 'TECHNICAL', exact: CLAIM.quote, evidenceUrls: [CLAIM.evidence],
+  pageDigest: CLAIM.pageDigest, pageKey: CLAIM.pageKey, prefix: CLAIM.prefix,
+  suffix: CLAIM.suffix, v: 1,
+}));
+if (derivedClaimKey !== CLAIM.key) throw new Error(`Claim key does not match the submitted claim payload: expected ${derivedClaimKey}, got ${CLAIM.key}`);
 
 async function save(state) {
   await mkdir(dirname(statePath), { recursive: true });
   await writeFile(statePath, `${JSON.stringify(state, null, 2)}\n`);
 }
 async function load() {
-  try { return JSON.parse(await readFile(statePath, 'utf8')); } catch {
-    return { network: 'studionet', chainId: 61999, rpc: RPC, margin: MARGIN, consumer: CONSUMER, claim: CLAIM, steps: [] };
+  try { return JSON.parse(await readFile(statePath, 'utf8')); } catch (error) {
+    if (error?.code === 'ENOENT') return { network: 'studionet', chainId: 61999, rpc: RPC, margin: MARGIN, consumer: CONSUMER, claim: CLAIM, steps: [] };
+    throw new Error(`Checkpoint ${statePath} is unreadable or invalid; refusing to submit a replacement transaction: ${error.message}`);
   }
 }
 async function account(name) {
@@ -128,6 +141,10 @@ async function step(state, who, address, functionName, args, value, readbacks) {
   const existing = state.steps.find((item) => item.function === functionName
     && item.account?.toLowerCase() === who.address.toLowerCase()
     && JSON.stringify(item.args) === JSON.stringify(args));
+  const conflicting = state.steps.find((item) => item.function === functionName
+    && item.account?.toLowerCase() === who.address.toLowerCase()
+    && JSON.stringify(item.args) !== JSON.stringify(args));
+  if (conflicting && !existing) throw new Error(`${functionName} already exists in the checkpoint with different arguments; refusing to submit a second write`);
   if (existing?.txHash) {
     if (existing.status !== 'FINALIZED') {
       existing.finality = await waitFinal(existing.txHash);

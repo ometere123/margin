@@ -29,23 +29,23 @@ This file describes only the current canonical deployment. Historical deployment
 ## Production signer and release
 
 - Signer: https://margin-signer.vercel.app/
-- Production deployment: `dpl_9Avj9b5Mx7BwgtbBYsZhdVKazJmV` (`READY`), built from signer-only patch commit `e35e27ea2c76fcb5482d285b6b41b858813b684e` and verified at the production URL.
+- Production deployment: the signer release is performed only by the controlled GitHub-triggered release push; the final READY deployment ID and source SHA are recorded in `deployment.json` after Vercel verification. No direct Vercel CLI deployment is used.
 - Extension archive: `MARGIN-extension-v0.1.0.zip`
 - Extension SHA-256: `59230A8330579C5D2126CD31DEC72F51C0A4BE42B985817C8FE038A1DB95B7E4`
 - Live fixture project: `a` (`prj_xPXHmh3TcvuBDvgSFyTRarWRfJgz`)
-- Live fixture production deployment: `dpl_4kHV5KpGXPKb3Pa3hX6xfjPct1um`
+- Live fixture production deployment: `dpl_4wUiXh9LEKoAkP4Qih5pLBA3oi7F` (`READY / production / PROMOTED`), GitHub commit `3c2323670628ba1d8cc72ffecd1c5c2128295f72`
 - Live fixture URL: https://a-murex-one.vercel.app/
 
-The signer uses the injected EIP-1193 wallet. Its production project environment is configured for the current MARGIN and consumer, but the public deployment listed above is historical and still targets the superseded deployment; no direct signer redeployment is claimed in this pass. The primary human production browser flow against the prior final deployment passed; a fresh Covered UI walkthrough against the corrected deployment is not claimed.
+The signer uses the injected EIP-1193 wallet. The signer project is connected to `ometere123/margin` on `main` with repository-root deployment settings; the controlled release is GitHub-triggered and the final public bundle is verified separately below. The primary human production browser flow is retained as its recorded normal-claim evidence; a separate manual Covered UI walkthrough is optional and not claimed.
 
-## Final production browser proof
+## Historical production browser proof (not re-attributed to the closeout bundle)
 
 - Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
 - Claim: `Negative index counts back from the end of the array — if index < 0, index + array.length is accessed.`
 - Challenge: `Verify whether Array.prototype.at() handles a negative index by adding it to the array length, rather than treating it as an ordinary string property.`
 - Evidence: https://tc39.es/ecma262/2026/multipage/indexed-collections.html#sec-array.prototype.at
 - Class: `TECHNICAL`
-- Result: human-observed `FINALIZED / Accepted / SUCCESS` submission and resolution on Studionet 61999; canonical verdict `SUPPORTED`; exact re-anchor, highlight, visible `M · SUPPORTED` badge and finalized provenance were confirmed against the final MARGIN deployment.
+- Result: human-observed `FINALIZED / Accepted / SUCCESS` submission and resolution on Studionet 61999; canonical verdict `SUPPORTED`; exact re-anchor, highlight, visible `M · SUPPORTED` badge and finalized provenance were observed. The transaction hashes and a deployment identity binding were not committed, so this is retained as historical browser evidence and is not attributed to the final signer release.
 - Submission/resolution transaction hashes: not present in the repository evidence; intentionally not invented.
 
 ## Verification
@@ -54,7 +54,8 @@ The signer uses the injected EIP-1193 wallet. Its production project environment
 - Python invariants: `12/12`
 - Direct Mode: `59/59` in the current local verification after the material-observation, citation, canonical-exposure and withdrawal tests
 - Extension tests: `17/17`
-- Signer tests: `40/40`
+- Signer tests: `42/42`
+- Security mutations: `15/15` killed
 - Extension and signer builds: passed
 - MARGIN source commit `6798b2e748d7ef6f1e41538de4e33f84d9c7ae68` matches the deployed source SHA-256 above; the Consumer source at the same commit matches its deployed digest and constructor binding.
 
@@ -68,9 +69,9 @@ The signer uses the injected EIP-1193 wallet. Its production project environment
 
 ## Live evidence boundary
 
-The material-observation V2 contract and bound consumer above are current. Prior V2 checkpoints are historical. The primary human production browser flow passed. The fresh final-deployment checkpoints below completed their real appeal-window settlements and authoritative post-settlement readbacks: both settled `INCONCLUSIVE`, refunded the protected release, and ended with zero MARGIN/consumer exposure and zero recorded credits. An optional manual Covered UI walkthrough is not claimed.
+The material-observation V2 contract and bound consumer above are current. Prior V2 checkpoints remain historical. The primary human production normal browser flow passed. The two fresh final-deployment checkpoints below use stable GenVM-rendered primary digests and completed their real appeal-window settlements with definitive outcomes: one `SUPPORTED` release executed and one `CONTRADICTED` release refunded; both ended with zero MARGIN/consumer exposure and zero post-withdrawal credits. An optional manual Covered UI walkthrough is not claimed.
 
-Historical final-deployment economic lifecycle: [`scripts/live/evidence/final-v2-economic-contradicted.json`](scripts/live/evidence/final-v2-economic-contradicted.json). New final-deployment checkpoints are [`scripts/live/evidence/final-v3-supported-20261017.json`](scripts/live/evidence/final-v3-supported-20261017.json) and [`scripts/live/evidence/final-v3-contradicted-fixed-20261017.json`](scripts/live/evidence/final-v3-contradicted-fixed-20261017.json); both completed post-deadline readbacks as `SETTLED / INCONCLUSIVE` with `REFUNDED` releases and zero final exposure.
+Historical final-deployment economic lifecycle: [`scripts/live/evidence/final-v2-economic-contradicted.json`](scripts/live/evidence/final-v2-economic-contradicted.json). The two earlier final-deployment checkpoints [`scripts/live/evidence/final-v3-supported-20261017.json`](scripts/live/evidence/final-v3-supported-20261017.json) and [`scripts/live/evidence/final-v3-contradicted-fixed-20261017.json`](scripts/live/evidence/final-v3-contradicted-fixed-20261017.json) remain genuine `SETTLED / INCONCLUSIVE` fail-closed evidence. The definitive final-deployment checkpoints are [`scripts/live/evidence/final-stable-supported-20261017-retry.json`](scripts/live/evidence/final-stable-supported-20261017-retry.json) and [`scripts/live/evidence/final-stable-contradicted-20261017.json`](scripts/live/evidence/final-stable-contradicted-20261017.json), with concise summaries in the adjacent Markdown files.
 
 ## Live sequence labels
 
@@ -78,14 +79,14 @@ Historical final-deployment economic lifecycle: [`scripts/live/evidence/final-v2
 - **B — Protected release:** create the release before settlement, settle `SUPPORTED`, execute, beneficiary withdraw.
 - **C — Cancellation:** register, wait the 24-hour challenge window, cancel, withdraw.
 
-## Primary human browser proof
+## Primary human browser proof (historical record)
 
 - Status: `PASS`
 - Run by: human operator
 - Claim: `259063a89ee24ca0f7cb78ee6158f024db0df1f6c5744dea0c3ec120fee36c33`
 - Source: https://www.sqlite.org/serverless.html
 - Observed: capture, signer handoff, Studionet 61999 connection, finalized submission, finalized resolution, `SUPPORTED`, exact re-anchor, highlight, visible `M · SUPPORTED` badge, refresh persistence, extension provenance/details, full provenance route, direct claim route and assurance route.
-- The SQLite claim was a normal claim only; no Assured lifecycle was executed for it.
+- The SQLite claim was a normal claim only; no Assured lifecycle was executed for it. Its deployment identity is not independently bound by committed transaction hashes, so it is not used as proof of the final signer release.
 
 ### MANUAL BROWSER STATUS
 

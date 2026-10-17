@@ -78,4 +78,9 @@ if (!bundle.includes(canonicalMargin)) {
 if (!bundle.includes(canonicalConsumer)) {
   throw new Error(`signer bundle: missing canonical consumer address ${canonicalConsumer}`);
 }
+for (const superseded of ['0x4E0a75B63D913FC2d39A75F61905CA5973c77491', '0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F']) {
+  if (bundle.toLowerCase().includes(superseded.toLowerCase())) {
+    throw new Error(`signer bundle: superseded contract address remains active: ${superseded}`);
+  }
+}
 console.log(`${signerOrigin}/ HTTP ${signerResponse.status}: bundle ${bundleUrl} contains canonical V2 addresses; no missing-config banner`);
