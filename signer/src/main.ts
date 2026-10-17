@@ -5,7 +5,7 @@ import { canonicalizeUrl, claimKeyFor, decodeDraft, MARGIN_CHAIN_ID, MARGIN_CONS
 import { disconnectStorageKey, executionSummary, isSuccessfulFinalizedReceipt, pendingAccountMatches, trackingFailureMessage, transactionsStorageKey, type PendingTransaction } from './transaction';
 import { createProviderBackedClient } from './wallet';
 import { accountFromProvider, accountRequestMethod, isStudionetChainHex, shouldAutoRestore, walletHeaderState } from './session';
-import { assuredActions, assuredDisplay, canonicalCoveredExposure, coveredBondValue, protectedReleaseCoverageError, type AssuredClaimView, type CoveredClaimView, type AssuredAction, type CoveredExposureView } from './assured';
+import { assuredActions, assuredDisplay, canonicalCoveredExposure, coveredBondValue, protectedReleaseActions, protectedReleaseCoverageError, type AssuredClaimView, type CoveredClaimView, type AssuredAction, type CoveredExposureView } from './assured';
 import { parseRoute, type Route } from './router';
 import { decisionHistoryHtml, type DecisionHistoryEntry } from './history';
 import { consumerErrorMessage, mergeProtectedReleases, prioritizeProtectedReleases, type ProtectedReleaseView } from './consumer';
@@ -122,12 +122,24 @@ function assuredPanel() {
   const deadlineMs = deadline ? Date.parse(deadline) : NaN;
   const appealWindow = Number.isFinite(deadlineMs) ? (Date.now() <= deadlineMs ? `Open until ${new Date(deadlineMs).toLocaleString()}` : `Closed ${new Date(deadlineMs).toLocaleString()}`) : 'No valid appeal deadline returned';
   const releaseEligible = state === 'SETTLED' && String(assuredClaim?.final_status || '').toUpperCase() === 'SUPPORTED';
-  const releaseActions = protectedRelease ? `${releaseEligible && !protectedRelease.executed && !protectedRelease.refunded ? '<button class="dark" data-consumer-action="execute">Execute protected release</button>' : ''}${!protectedRelease.executed && !protectedRelease.refunded && (state === 'CANCELLED' || state === 'ABORTED' || (protectedRelease.expiry && Date.parse(protectedRelease.expiry) <= Date.now())) ? '<button class="quiet" data-consumer-action="refund">Refund release</button>' : ''}${(Number(protectedRelease.beneficiary_credit || 0) > 0 || Number(protectedRelease.creator_credit || 0) > 0) ? '<button class="quiet" data-consumer-action="withdraw">Withdraw release credit</button>' : ''}` : '';
+  const releasePermissions = protectedRelease ? protectedReleaseActions({
+    walletAddress: account,
+    creator: protectedRelease.creator,
+    beneficiary: protectedRelease.beneficiary,
+    executed: protectedRelease.executed,
+    refunded: protectedRelease.refunded,
+    assuredState: state,
+    finalStatus: assuredClaim?.final_status,
+    expiry: protectedRelease.expiry,
+    beneficiaryCredit: protectedRelease.beneficiary_credit,
+    creatorCredit: protectedRelease.creator_credit,
+  }) : { execute: false, refund: false, withdraw: false };
+  const releaseActions = protectedRelease ? `${releasePermissions.execute ? '<button class="dark" data-consumer-action="execute">Execute protected release</button>' : ''}${releasePermissions.refund ? '<button class="quiet" data-consumer-action="refund">Refund release</button>' : ''}${releasePermissions.withdraw ? '<button class="quiet" data-consumer-action="withdraw">Withdraw release credit</button>' : ''}` : '';
   const releaseList = protectedReleases.length ? `<div class="release-list"><div class="eyebrow">Protected releases (${protectedReleases.length}${protectedReleaseHasMore ? '+' : ''})</div>${protectedReleases.map((release) => `<button class="quiet release-picker ${release.release_id === protectedRelease?.release_id ? 'selected' : ''}" data-select-release="${esc(String(release.release_id))}">${esc(String(release.release_id))} · ${release.executed ? 'Executed' : release.refunded ? 'Refunded' : 'Open'} · ${esc(assuredDisplay(release.amount))}</button>`).join('')}${protectedReleaseHasMore ? '<button class="quiet" id="load-more-releases">Load more releases</button>' : ''}</div>` : '<p class="meta">No protected release exists for this claim.</p>';
   const releaseRows = protectedRelease ? `<div class="detail-grid"><span>Selected release</span><code>${esc(assuredDisplay(protectedRelease.release_id))}</code><span>Creator</span><code>${esc(assuredDisplay(protectedRelease.creator))}</code><span>Beneficiary</span><code>${esc(assuredDisplay(protectedRelease.beneficiary))}</code><span>Amount</span><code>${esc(assuredDisplay(protectedRelease.amount))}</code><span>Expiry</span><span>${esc(assuredDisplay(protectedRelease.expiry))}</span><span>Executed</span><strong>${protectedRelease.executed ? 'Yes' : 'No'}</strong><span>Refunded</span><strong>${protectedRelease.refunded ? 'Yes' : 'No'}</strong><span>Beneficiary credit</span><code>${esc(assuredDisplay(protectedRelease.beneficiary_credit))}</code><span>Creator credit</span><code>${esc(assuredDisplay(protectedRelease.creator_credit))}</code></div>` : '';
   const canCreateRelease = ['REGISTERED', 'CHALLENGED', 'RESOLVED', 'APPEALED'].includes(state);
   const releaseCreate = canCreateRelease ? '<label for="release-beneficiary">Protected release beneficiary</label><input id="release-beneficiary" placeholder="0x…"><label for="release-amount">GEN amount (smallest units)</label><input id="release-amount" inputmode="numeric" placeholder="1000000000000000000"><label for="release-expiry">Release expiry (ISO datetime)</label><input id="release-expiry" placeholder="2026-10-01T00:00:00+00:00"><button class="dark" data-consumer-action="create">Create protected release</button>' : '';
-  const coveredRows = coveredClaim ? `<section class="covered-card"><div class="eyebrow">Covered Claim</div><div class="detail-grid"><span>Publisher</span><code>${esc(assuredDisplay(coveredClaim.publisher))}</code><span>Manifest</span><a href="${esc(assuredDisplay(coveredClaim.manifest_url))}" target="_blank" rel="noreferrer">${esc(assuredDisplay(coveredClaim.manifest_url))} ↗</a><span>Coverage cap</span><code>${esc(assuredDisplay(coveredClaim.coverage_cap))}</code><span>Publisher collateral</span><code>${esc(assuredDisplay(coveredClaim.publisher_collateral))}</code><span>Required challenge bond</span><code>${esc(assuredDisplay(coveredClaim.required_challenge_bond))}</code><span>Required appeal bond</span><code>${esc(assuredDisplay(coveredClaim.required_appeal_bond))}</code><span>Active exposure</span><code>${coveredExposure?.error ? 'Unavailable' : esc(assuredDisplay(coveredExposure?.activeExposure))}</code><span>Available coverage</span><code>${coveredExposure?.error ? 'Unavailable' : esc(assuredDisplay(coveredExposure?.availableCoverage))}</code><span>Manifest digest</span><code>${esc(assuredDisplay(coveredClaim.manifest_digest))}</code><span>Evidence-pack digest</span><code>${esc(assuredDisplay(coveredClaim.evidence_pack_digest))}</code></div>${coveredExposure?.error ? `<p class="bad">${esc(coveredExposure.error)}</p>` : ''}</section>` : '';
+  const coveredRows = coveredClaim ? `<section class="covered-card"><div class="eyebrow">Covered Claim</div><p class="meta">Publisher collateral is dispute collateral, not insurance. Release principal is funded separately through the canonical consumer and is conditionally credited or refunded.</p><div class="detail-grid"><span>Publisher</span><code>${esc(assuredDisplay(coveredClaim.publisher))}</code><span>Manifest</span><a href="${esc(assuredDisplay(coveredClaim.manifest_url))}" target="_blank" rel="noreferrer">${esc(assuredDisplay(coveredClaim.manifest_url))} ↗</a><span>Coverage cap</span><code>${esc(assuredDisplay(coveredClaim.coverage_cap))}</code><span>Publisher collateral</span><code>${esc(assuredDisplay(coveredClaim.publisher_collateral))}</code><span>Required challenge bond</span><code>${esc(assuredDisplay(coveredClaim.required_challenge_bond))}</code><span>Required appeal bond</span><code>${esc(assuredDisplay(coveredClaim.required_appeal_bond))}</code><span>Active exposure</span><code>${coveredExposure?.error ? 'Unavailable' : esc(assuredDisplay(coveredExposure?.activeExposure))}</code><span>Available coverage</span><code>${coveredExposure?.error ? 'Unavailable' : esc(assuredDisplay(coveredExposure?.availableCoverage))}</code><span>Manifest digest</span><code>${esc(assuredDisplay(coveredClaim.manifest_digest))}</code><span>Evidence-pack digest</span><code>${esc(assuredDisplay(coveredClaim.evidence_pack_digest))}</code></div>${coveredExposure?.error ? `<p class="bad">${esc(coveredExposure.error)}</p>` : ''}</section>` : '';
   const coveredRegistration = !coveredClaim && state === 'NOT REGISTERED' ? `<div class="covered-registration"><div class="eyebrow">Register Covered Claim</div><p class="meta">The canonical manifest URL is derived from the claim origin and claim key.</p><label for="covered-coverage-cap">Coverage cap (GEN base units)</label><input id="covered-coverage-cap" inputmode="numeric" placeholder="100"><label for="covered-nonce">Manifest nonce</label><input id="covered-nonce" placeholder="Publisher nonce"><label for="covered-expiry">Manifest expiry (ISO datetime)</label><input id="covered-expiry" placeholder="2026-10-01T00:00:00+00:00">${action('registerCovered','Register Covered Claim')}</div>` : '';
   return `<section><div class="eyebrow">Assured Claim</div><div class="row"><strong>${esc(state)}</strong><span class="meta">Optional bonded lifecycle</span></div>${rows}${coveredRows}${state === 'NOT REGISTERED' ? '<label for="proof-url">HTTPS domain proof URL</label><input id="proof-url" value="" placeholder="https://example.com/.well-known/margin.json"><label for="proof-nonce">Proof nonce</label><input id="proof-nonce" value="" placeholder="Publisher nonce"><label for="proof-expiry">Proof expiry (ISO datetime)</label><input id="proof-expiry" value="" placeholder="2026-10-01T00:00:00+00:00">' : ''}${coveredRegistration}${assuredClaim ? `<p class="meta">Appeal window: ${esc(appealWindow)}</p>` : ''}<label for="appeal-reason">Appeal reason</label><textarea id="appeal-reason" maxlength="800" placeholder="Bounded new evidence or adjudication issue"></textarea><div class="row assured-actions">${action('register','Register Assured Claim')}${action('challenge','Challenge Assured Claim')}${action('resolve','Resolve Assured Claim')}${action('cancel','Cancel Assured Claim')}${action('abort','Abort stalled lifecycle')}${action('appeal','Appeal Assured Claim')}${action('resolveAppeal','Resolve Assured Appeal')}${action('settle','Settle Assured Claim')}${action('withdraw','Withdraw Assured Credit')}</div><p class="meta">${assuredError ? esc(assuredError) : 'Bonds, deadlines and credits are read from the canonical MARGIN contract.'}</p><p class="meta">${contractLink(contractAddress)}</p><div class="consumer-proof"><div class="eyebrow">Downstream use</div><p class="meta">Bound reference consumer: ${esc(MARGIN_CONSUMER_ADDRESS)}</p><p>The consumer permits protected execution only for a SETTLED + SUPPORTED Assured Claim.</p><p>${releaseEligible ? 'Eligible ✓' : 'Not eligible until the claim is SETTLED + SUPPORTED'} · ${consumerExecuted === true ? 'Legacy execution: Yes ✓' : consumerExecuted === false ? 'Legacy execution: No' : 'Legacy execution: not read'}</p>${releaseList}${releaseRows}${releaseCreate}${releaseActions}${consumerError ? `<p class="bad">${esc(consumerError)}</p>` : ''}<button id="refresh-assured" class="quiet">Refresh Assured state</button></div></section>`;
 }
@@ -374,11 +386,18 @@ async function readAssuredState(redraw = true) {
       coveredExposure = coveredClaim ? null : null;
       if (coveredClaim) {
         try {
+          const canonicalConsumer = await readClient.readContract({ address: contractAddress, functionName: 'get_canonical_consumer_address', args: [], transactionHashVariant: TransactionHashVariant.LATEST_FINAL }) as string;
+          if (typeof canonicalConsumer !== 'string' || canonicalConsumer.toLowerCase() !== MARGIN_CONSUMER_ADDRESS.toLowerCase()) {
+            throw new Error('Canonical Covered Claim consumer binding does not match this signer configuration.');
+          }
           const rawExposure = await readClient.readContract({ address: MARGIN_CONSUMER_ADDRESS, functionName: 'get_active_exposure', args: [assuredKey], transactionHashVariant: TransactionHashVariant.LATEST_FINAL });
           coveredExposure = canonicalCoveredExposure(coveredClaim, rawExposure);
           coveredReadHealthy = !coveredExposure?.error;
-        } catch {
+        } catch (error) {
           coveredExposure = { activeExposure: 0n, availableCoverage: 0n, error: 'Canonical protected exposure could not be read safely.' };
+          if (String((error as Error)?.message || '').includes('binding')) {
+            coveredExposure.error = 'Canonical Covered Claim consumer binding does not match this signer configuration.';
+          }
           coveredReadHealthy = false;
         }
       }
@@ -507,6 +526,21 @@ async function runConsumerAction(action: 'create' | 'execute' | 'refund' | 'with
   }
   const selectedRelease = protectedReleases.find((release) => release.release_id === releaseId) || protectedReleases.find((release) => release.release_id === selectedReleaseId) || protectedReleases[0];
   if ((action === 'execute' || action === 'refund' || action === 'withdraw') && !selectedRelease?.release_id) throw new Error('No protected release is available.');
+  if (selectedRelease && action !== 'create') {
+    const permissions = protectedReleaseActions({
+      walletAddress: account,
+      creator: selectedRelease.creator,
+      beneficiary: selectedRelease.beneficiary,
+      executed: selectedRelease.executed,
+      refunded: selectedRelease.refunded,
+      assuredState: assuredClaim?.state,
+      finalStatus: assuredClaim?.final_status,
+      expiry: selectedRelease.expiry,
+      beneficiaryCredit: selectedRelease.beneficiary_credit,
+      creatorCredit: selectedRelease.creator_credit,
+    });
+    if (!permissions[action]) throw new Error('This protected release action is not valid for the current state or wallet.');
+  }
   const definition = action === 'create'
     ? { functionName: 'create_protected_release', args: [assuredKey, beneficiary, expiry], value: BigInt(amount) }
     : action === 'execute'

@@ -13,6 +13,43 @@ ALICE = "0x" + "11" * 20
 BOB = "0x" + "22" * 20
 
 
+def _deploy_bound_margin(direct_vm, direct_deploy, direct_alice):
+    direct_vm.sender = direct_alice
+    margin = direct_deploy("contracts/margin.py")
+    consumer_address = "0x" + "44" * 20
+    _install_canonical_consumer_hook(direct_vm, consumer_address, margin.address, 0)
+    direct_vm.sender = direct_alice
+    direct_vm.value = 0
+    margin.bind_canonical_consumer(consumer_address)
+    return margin, consumer_address
+
+
+def _install_canonical_consumer_hook(
+    direct_vm, consumer_address, margin_address, exposure, *, fail_exposure=False
+):
+    from genlayer.py import calldata
+
+    def hook(_vm, request):
+        call = request.get("CallContract")
+        if not call:
+            return None
+        address = call.get("address")
+        address_hex = address.as_hex if hasattr(address, "as_hex") else str(address)
+        if address_hex.lower() != consumer_address.lower():
+            return bytes([1]) + b"unexpected canonical consumer address"
+        encoded = call.get("calldata", {})
+        method = encoded.get("method")
+        if method == "get_canonical_margin_address":
+            return bytes([0]) + calldata.encode(margin_address)
+        if method == "get_active_exposure":
+            if fail_exposure:
+                return bytes([1]) + b"canonical exposure read failed"
+            return bytes([0]) + calldata.encode(exposure)
+        return bytes([1]) + f"unsupported canonical consumer view {method}".encode()
+
+    direct_vm._gl_call_hook = hook
+
+
 def _claim_key():
     statement = "The covered support matrix establishes the documented runtime guarantee."
     payload = {
@@ -74,8 +111,63 @@ def _manifest(key, expiry, publisher, coverage):
     }, separators=(",", ":"), sort_keys=True)
 
 
-def test_covered_claim_binds_manifest_collateral_and_exposure(direct_vm, direct_deploy, direct_alice, direct_bob):
+def test_covered_registration_requires_one_verified_canonical_consumer(direct_vm, direct_deploy, direct_alice):
     margin = direct_deploy("contracts/margin.py")
+    direct_vm.sender = direct_alice
+    key = _claim_key()
+    _submit(margin, key)
+    expiry = "2999-01-01T00:00:00+00:00"
+    direct_vm.mock_web(r".*example\.com/\.well-known/margin/claims/.*", {"status": 200, "body": _manifest(key, expiry, "0x" + direct_alice.hex(), 5)})
+    direct_vm.value = 5
+    with direct_vm.expect_revert("canonical consumer must be bound"):
+        margin.register_covered_claim(key, "covered-nonce-1", expiry)
+
+
+def test_coverage_view_fails_closed_when_canonical_exposure_cannot_be_read(
+    direct_vm, direct_deploy, direct_alice
+):
+    margin, consumer_address = _deploy_bound_margin(direct_vm, direct_deploy, direct_alice)
+    direct_vm.sender = direct_alice
+    key = _claim_key()
+    _submit(margin, key)
+    expiry = "2999-01-01T00:00:00+00:00"
+    direct_vm.mock_web(
+        r".*example\.com/\.well-known/margin/claims/.*",
+        {"status": 200, "body": _manifest(key, expiry, "0x" + direct_alice.hex(), 5)},
+    )
+    direct_vm.value = 5
+    margin.register_covered_claim(key, "covered-nonce-1", expiry)
+    _install_canonical_consumer_hook(
+        direct_vm, consumer_address, margin.address, 0, fail_exposure=True
+    )
+    with direct_vm.expect_revert("canonical consumer exposure could not be read"):
+        margin.get_coverage_state(key)
+
+
+def test_canonical_consumer_binding_is_admin_only_verified_once_and_not_rebindable(direct_vm, direct_deploy, direct_alice, direct_bob):
+    direct_vm.sender = direct_alice
+    margin = direct_deploy("contracts/margin.py")
+    consumer_address = "0x" + "44" * 20
+    _install_canonical_consumer_hook(direct_vm, consumer_address, margin.address, "0")
+
+    direct_vm.sender = direct_bob
+    with direct_vm.expect_revert("deployment administrator"):
+        margin.bind_canonical_consumer(consumer_address)
+    direct_vm.sender = direct_alice
+    with direct_vm.expect_revert("malformed"):
+        margin.bind_canonical_consumer("not-an-address")
+    _install_canonical_consumer_hook(direct_vm, consumer_address, "0x" + "33" * 20, "0")
+    with direct_vm.expect_revert("another MARGIN"):
+        margin.bind_canonical_consumer(consumer_address)
+    _install_canonical_consumer_hook(direct_vm, consumer_address, margin.address, "0")
+    margin.bind_canonical_consumer(consumer_address)
+    assert margin.get_canonical_consumer_address().lower() == consumer_address.lower()
+    with direct_vm.expect_revert("already bound"):
+        margin.bind_canonical_consumer(consumer_address)
+
+
+def test_covered_claim_binds_manifest_collateral_and_exposure(direct_vm, direct_deploy, direct_alice, direct_bob):
+    margin, _consumer = _deploy_bound_margin(direct_vm, direct_deploy, direct_alice)
     direct_vm.sender = direct_alice
     key = _claim_key()
     _submit(margin, key)
@@ -103,7 +195,7 @@ def test_covered_claim_binds_manifest_collateral_and_exposure(direct_vm, direct_
 
 
 def test_covered_manifest_rejects_wrong_claim_or_under_collateral(direct_vm, direct_deploy, direct_alice):
-    margin = direct_deploy("contracts/margin.py")
+    margin, _consumer = _deploy_bound_margin(direct_vm, direct_deploy, direct_alice)
     direct_vm.sender = direct_alice
     key = _claim_key()
     _submit(margin, key)
@@ -116,7 +208,7 @@ def test_covered_manifest_rejects_wrong_claim_or_under_collateral(direct_vm, dir
 
 
 def test_covered_registration_cannot_overwrite_an_existing_assured_claim(direct_vm, direct_deploy, direct_alice):
-    margin = direct_deploy("contracts/margin.py")
+    margin, _consumer = _deploy_bound_margin(direct_vm, direct_deploy, direct_alice)
     direct_vm.sender = direct_alice
     key = _claim_key()
     _submit(margin, key)
@@ -138,7 +230,7 @@ def test_covered_registration_cannot_overwrite_an_existing_assured_claim(direct_
 
 
 def test_covered_manifest_requires_primary_artifact_commitment(direct_vm, direct_deploy, direct_alice):
-    margin = direct_deploy("contracts/margin.py")
+    margin, _consumer = _deploy_bound_margin(direct_vm, direct_deploy, direct_alice)
     direct_vm.sender = direct_alice
     key = _claim_key()
     _submit(margin, key)
@@ -155,7 +247,7 @@ def test_covered_manifest_requires_primary_artifact_commitment(direct_vm, direct
 
 
 def test_covered_manifest_enforces_typed_authority_profile_and_citation(direct_vm, direct_deploy, direct_alice):
-    margin = direct_deploy("contracts/margin.py")
+    margin, _consumer = _deploy_bound_margin(direct_vm, direct_deploy, direct_alice)
     direct_vm.sender = direct_alice
     key = _claim_key()
     _submit(margin, key)
@@ -180,7 +272,7 @@ def test_covered_citation_is_checked_against_the_complete_fetched_artifact(direc
 
 
 def test_covered_digest_mismatch_cannot_finalize_supported(direct_vm, direct_deploy, direct_alice, direct_bob):
-    margin = direct_deploy("contracts/margin.py")
+    margin, _consumer = _deploy_bound_margin(direct_vm, direct_deploy, direct_alice)
     direct_vm.sender = direct_alice
     key = _claim_key()
     _submit(margin, key)
@@ -219,7 +311,7 @@ def test_covered_digest_mismatch_cannot_finalize_supported(direct_vm, direct_dep
 
 
 def test_covered_missing_citation_is_not_definitive(direct_vm, direct_deploy, direct_alice, direct_bob):
-    margin = direct_deploy("contracts/margin.py")
+    margin, _consumer = _deploy_bound_margin(direct_vm, direct_deploy, direct_alice)
     direct_vm.sender = direct_alice
     key = _claim_key()
     _submit(margin, key)

@@ -13,13 +13,13 @@ if (link.projectId !== projectId || link.projectName === 'margin-signer') {
   throw new Error(`Unexpected fixture Vercel link: ${JSON.stringify(link)}`);
 }
 
-const command = process.platform === 'win32' ? 'npx.cmd' : 'npx';
+const command = process.platform === 'win32' ? 'vercel.cmd' : 'vercel';
 const quote = (value) => process.platform === 'win32'
   ? `"${value.replaceAll('"', '\\"')}"`
   : `'${value.replaceAll("'", "'\\''")}'`;
 const commandLine = [
   command,
-  'vercel deploy',
+  'deploy',
   '--cwd', quote(fixtureDir),
   '--project', quote(projectId),
   '--prod',

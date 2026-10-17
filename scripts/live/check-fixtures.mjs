@@ -1,9 +1,11 @@
 import { readFile } from 'node:fs/promises';
+import deployment from '../../deployment.json' with { type: 'json' };
 
 const origin = 'https://a-murex-one.vercel.app';
 const signerOrigin = 'https://margin-signer.vercel.app';
-const canonicalMargin = '0x03197B3246a5BF0C28fad07c4E5868F52c601580';
-const canonicalConsumer = '0x59ef05cd7e136A66Ee16AE70776a0ddf2d036E24';
+const canonicalMargin = deployment.contractAddress;
+const canonicalConsumer = deployment.liveEvidence?.consumerDeployment?.contractAddress;
+if (!canonicalMargin || !canonicalConsumer) throw new Error('deployment.json is missing the current MARGIN/consumer addresses');
 const checks = [
   ['/', 'Every GenLayer transaction reaches consensus through independent validator adjudication before finalization.', 'MARGIN live claim A'],
   ['/b.html', 'GenLayer validators independently adjudicate transactions before the protocol finalizes them.', 'MARGIN live claim B'],

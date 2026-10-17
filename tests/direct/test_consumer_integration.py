@@ -134,6 +134,9 @@ def _new_real_system(seed):
     consumer_address, consumer = engine.deploy(
         "contracts/margin_consumer.py", args=[margin_address], sender=ALICE
     )
+    engine.call_method(
+        margin_address, "bind_canonical_consumer", [consumer_address], sender=ALICE
+    )
     return engine, margin_address, margin, consumer_address, consumer
 
 
@@ -146,6 +149,9 @@ def test_real_margin_and_bound_consumer_support_precommit_and_execution():
         margin_address, margin = engine.deploy("contracts/margin.py", sender=ALICE)
         consumer_address, consumer = engine.deploy(
             "contracts/margin_consumer.py", args=[margin_address], sender=ALICE
+        )
+        engine.call_method(
+            margin_address, "bind_canonical_consumer", [consumer_address], sender=ALICE
         )
         key = _claim_key()
         statement = "The current support matrix appears to require Node 20 or newer."
@@ -458,6 +464,11 @@ def test_covered_claim_couples_collateral_and_global_exposure_to_releases():
             margin_address, "register_covered_claim", [key, "covered-integration-nonce", expiry], sender=ALICE
         )
         assert margin.get_covered_claim(key)["coverage_cap"] == 10
+        initial_coverage = margin.get_coverage_state(key)
+        assert initial_coverage["canonical_consumer"].lower() == consumer_address.lower()
+        assert initial_coverage["active_exposure"] == 0
+        assert initial_coverage["available_coverage"] == 10
+        assert initial_coverage["registration_open"] is True
 
         engine.vm.value = 10
         engine.call_method(margin_address, "challenge_assured_claim", [key], sender=BOB)
@@ -481,6 +492,8 @@ def test_covered_claim_couples_collateral_and_global_exposure_to_releases():
             consumer_address, "create_protected_release", [key, BOB, "2999-01-03T00:00:00+00:00"], sender=CHARLIE
         )
         assert consumer.get_active_exposure(key) == 6
+        assert margin.get_coverage_state(key)["active_exposure"] == 6
+        assert margin.get_coverage_state(key)["available_coverage"] == 4
         engine.vm.value = 5
         with pytest.raises(Exception, match="protected release exceeds available covered claim"):
             engine.call_method(
@@ -489,8 +502,12 @@ def test_covered_claim_couples_collateral_and_global_exposure_to_releases():
 
         engine.vm.warp("2999-01-01T02:00:00+00:00")
         engine.call_method(margin_address, "settle_assured_claim", [key], sender=BOB)
+        terminal_coverage = margin.get_coverage_state(key)
+        assert terminal_coverage["registration_open"] is False
+        assert terminal_coverage["available_coverage"] == 0
         engine.call_method(consumer_address, "execute_release", [release_id], sender=ALICE)
         assert consumer.get_active_exposure(key) == 0
+        assert margin.get_coverage_state(key)["active_exposure"] == 0
         engine.call_method(consumer_address, "withdraw_release_credit", [release_id], sender=BOB)
         assert consumer.get_release(release_id)["beneficiary_credit"] == 0
     finally:
@@ -559,5 +576,43 @@ def test_covered_claim_release_refund_is_bound_to_canonical_terminal_state():
         assert consumer.get_active_exposure(key) == 0
         engine.call_method(consumer_address, "withdraw_release_credit", [release_id], sender=ALICE)
         assert consumer.get_release(release_id)["creator_credit"] == 0
+    finally:
+        engine.deactivate()
+
+
+def test_same_wallet_creator_and_beneficiary_can_withdraw_terminal_credit():
+    engine, margin_address, margin, consumer_address, consumer = _new_real_system("same-role-credit")
+    try:
+        supported_key = _claim_key("-same-role-supported")
+        _submit_real_claim(engine, margin_address, supported_key, suffix="-same-role-supported")
+        _prepare_assured(engine, margin_address, supported_key, status="SUPPORTED")
+        engine.vm.value = 2
+        supported_release = engine.call_method(
+            consumer_address, "create_protected_release",
+            [supported_key, ALICE, "2999-01-03T00:00:00+00:00"], sender=ALICE
+        )
+        engine.vm.warp("2999-01-01T02:00:00+00:00")
+        engine.call_method(margin_address, "settle_assured_claim", [supported_key], sender=BOB)
+        engine.call_method(consumer_address, "execute_release", [supported_release], sender=BOB)
+        assert consumer.get_release(supported_release)["beneficiary_credit"] == 2
+        engine.call_method(consumer_address, "withdraw_release_credit", [supported_release], sender=ALICE)
+        assert consumer.get_release(supported_release)["beneficiary_credit"] == 0
+        with pytest.raises(Exception, match="no release credit"):
+            engine.call_method(consumer_address, "withdraw_release_credit", [supported_release], sender=ALICE)
+
+        refund_key = _claim_key("-same-role-refund")
+        _submit_real_claim(engine, margin_address, refund_key, suffix="-same-role-refund")
+        _prepare_assured(engine, margin_address, refund_key, status="CONTRADICTED", proof_expiry="3000-01-01T00:00:00+00:00")
+        engine.vm.value = 3
+        refund_release = engine.call_method(
+            consumer_address, "create_protected_release",
+            [refund_key, ALICE, "3000-01-05T00:00:00+00:00"], sender=ALICE
+        )
+        engine.vm.warp("3000-01-02T00:00:00+00:00")
+        engine.call_method(margin_address, "settle_assured_claim", [refund_key], sender=BOB)
+        engine.call_method(consumer_address, "refund_release", [refund_release], sender=ALICE)
+        assert consumer.get_release(refund_release)["creator_credit"] == 3
+        engine.call_method(consumer_address, "withdraw_release_credit", [refund_release], sender=ALICE)
+        assert consumer.get_release(refund_release)["creator_credit"] == 0
     finally:
         engine.deactivate()

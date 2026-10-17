@@ -23,7 +23,8 @@ const CLAIM = {
   challenge: process.env.MARGIN_V2_CHALLENGE ?? 'Verify that this Covered Claim evidence commitment and value coverage statement is supported.',
   evidence: process.env.MARGIN_V2_EVIDENCE_URL ?? 'https://a-murex-one.vercel.app/v2-evidence.txt',
   nonce: process.env.MARGIN_V2_NONCE ?? 'margin-v2-covered-20261006',
-  expiry: '2027-01-01T00:00:00+00:00',
+  expiry: process.env.MARGIN_V2_EXPIRY ?? '2027-01-01T00:00:00+00:00',
+  releaseExpiry: process.env.MARGIN_V2_RELEASE_EXPIRY ?? '2027-02-01T00:00:00+00:00',
 };
 const statePath = resolve(process.env.MARGIN_V2_STATE_PATH ?? 'scripts/live/evidence/V2-covered.json');
 const dryRun = process.argv.includes('--dry-run');
@@ -107,8 +108,9 @@ async function main() {
   const publisher = await account('party_a');
   const challenger = await account('party_b');
   const integrator = await account('walletA');
-  state.publicAccounts = { publisher: publisher.address, challenger: challenger.address, integrator: integrator.address };
-  if (new Set(Object.values(state.publicAccounts).map((value) => value.toLowerCase())).size !== 3) throw new Error('V2 sequence requires three distinct accounts');
+  const beneficiary = await account(process.env.MARGIN_V2_BENEFICIARY_ACCOUNT ?? 'walletB');
+  state.publicAccounts = { publisher: publisher.address, challenger: challenger.address, integrator: integrator.address, beneficiary: beneficiary.address };
+  if (new Set(Object.values(state.publicAccounts).map((value) => value.toLowerCase())).size !== 4) throw new Error('V2 sequence requires four distinct accounts');
   if (dryRun) { console.log(JSON.stringify({ statePath, claim: CLAIM, plan: 'submit → normal resolve → register Covered → create release → challenge → assured resolve → wait appeal deadline → settle → execute/withdraw' }, null, 2)); return; }
   await step(state, publisher, MARGIN, 'submit_claim', [CLAIM.key, CLAIM.pageKey, CLAIM.url, CLAIM.quote, CLAIM.prefix, CLAIM.suffix, CLAIM.pageDigest, 'TECHNICAL', CLAIM.challenge, JSON.stringify([CLAIM.evidence]), ''], 0n, [['claim', MARGIN, 'get_claim', [CLAIM.key]]]);
   await step(state, publisher, MARGIN, 'resolve_claim', [CLAIM.key], 0n, [['claim', MARGIN, 'get_claim', [CLAIM.key]]]);
@@ -117,7 +119,7 @@ async function main() {
     return;
   }
   await step(state, publisher, MARGIN, 'register_covered_claim', [CLAIM.key, CLAIM.nonce, CLAIM.expiry], 2n, [['covered', MARGIN, 'get_covered_claim', [CLAIM.key]], ['coverage', MARGIN, 'get_coverage_state', [CLAIM.key]]]);
-  await step(state, integrator, CONSUMER, 'create_protected_release', [CLAIM.key, publisher.address, '2027-02-01T00:00:00+00:00'], 1n, [['releases', CONSUMER, 'get_releases_for_claim_page', [CLAIM.key, 0, 25]], ['coverage', MARGIN, 'get_coverage_state', [CLAIM.key]]]);
+  await step(state, integrator, CONSUMER, 'create_protected_release', [CLAIM.key, beneficiary.address, CLAIM.releaseExpiry], 1n, [['releases', CONSUMER, 'get_releases_for_claim_page', [CLAIM.key, 0, 25]], ['coverage', MARGIN, 'get_coverage_state', [CLAIM.key]]]);
   await step(state, challenger, MARGIN, 'challenge_assured_claim', [CLAIM.key], 2n, [['assured', MARGIN, 'get_assured_claim', [CLAIM.key]], ['covered', MARGIN, 'get_covered_claim', [CLAIM.key]]]);
   await step(state, publisher, MARGIN, 'resolve_assured_claim', [CLAIM.key], 0n, [['assured', MARGIN, 'get_assured_claim', [CLAIM.key]], ['covered', MARGIN, 'get_covered_claim', [CLAIM.key]]]);
   const assured = await readFinal(publisher.client, MARGIN, 'get_assured_claim', [CLAIM.key]);
@@ -130,7 +132,7 @@ async function main() {
   state.releaseId = release.release_id; await save(state);
   if (final.state === 'SETTLED' && final.final_status === 'SUPPORTED') {
     await step(state, integrator, CONSUMER, 'execute_release', [release.release_id], 0n, [['release', CONSUMER, 'get_release', [release.release_id]], ['supported', CONSUMER, 'is_claim_supported', [CLAIM.key]]]);
-    await step(state, publisher, CONSUMER, 'withdraw_release_credit', [release.release_id], 0n, [['release', CONSUMER, 'get_release', [release.release_id]]]);
+    await step(state, beneficiary, CONSUMER, 'withdraw_release_credit', [release.release_id], 0n, [['release', CONSUMER, 'get_release', [release.release_id]]]);
   } else {
     await step(state, integrator, CONSUMER, 'refund_release', [release.release_id], 0n, [['release', CONSUMER, 'get_release', [release.release_id]]]);
     await step(state, integrator, CONSUMER, 'withdraw_release_credit', [release.release_id], 0n, [['release', CONSUMER, 'get_release', [release.release_id]]]);
@@ -139,7 +141,12 @@ async function main() {
     const current = await readFinal(who.client, MARGIN, 'get_assured_claim', [CLAIM.key]);
     if (BigInt(current[`${label}_credit`] ?? 0) > 0n) await step(state, who, MARGIN, 'withdraw_assured_credit', [CLAIM.key], 0n, [['assured', MARGIN, 'get_assured_claim', [CLAIM.key]]]);
   }
-  state.finalReadback = { assured: await readFinal(publisher.client, MARGIN, 'get_assured_claim', [CLAIM.key]), coverage: await readFinal(publisher.client, MARGIN, 'get_coverage_state', [CLAIM.key]), release: await readFinal(publisher.client, CONSUMER, 'get_release', [state.releaseId]) };
+  state.finalReadback = {
+    assured: await readFinal(publisher.client, MARGIN, 'get_assured_claim', [CLAIM.key]),
+    coverage: await readFinal(publisher.client, MARGIN, 'get_coverage_state', [CLAIM.key]),
+    consumerExposure: await readFinal(publisher.client, CONSUMER, 'get_active_exposure', [CLAIM.key]),
+    release: await readFinal(publisher.client, CONSUMER, 'get_release', [state.releaseId]),
+  };
   await save(state); console.log(JSON.stringify(state, null, 2));
 }
 await main();

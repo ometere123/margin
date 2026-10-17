@@ -284,7 +284,6 @@ class CoveredClaim:
     publisher_collateral: u256
     required_challenge_bond: u256
     required_appeal_bond: u256
-    active_exposure: u256
     state: str
     final_status: str
     challenge_bond: u256
@@ -307,6 +306,14 @@ class _AssuredRecipient:
         pass
 
 
+@gl.contract_interface
+class _CanonicalConsumer:
+    class View:
+        def get_canonical_margin_address(self) -> str: ...
+
+        def get_active_exposure(self, claim_key: str) -> u256: ...
+
+
 class Margin(gl.Contract):
     claims: TreeMap[str, Claim]
     page_index: TreeMap[str, str]
@@ -317,11 +324,17 @@ class Margin(gl.Contract):
     expected_chain_id: u256
     assured_claims: TreeMap[str, AssuredClaim]
     covered_claims: TreeMap[str, CoveredClaim]
+    deployment_admin: Address
+    canonical_consumer_address: Address
+    canonical_consumer_bound: bool
 
     def __init__(self):
         self.total_claims = u32(0)
         self.total_decisions = u32(0)
         self.expected_chain_id = u256(EXPECTED_CHAIN_ID)
+        self.deployment_admin = gl.message.sender_address
+        self.canonical_consumer_address = Address("0x" + "00" * 20)
+        self.canonical_consumer_bound = False
 
     def _source_manifest_digest(self, records: list[dict[str, typing.Any]]) -> str:
         """Hash the bounded evidence actually fetched by a validator.
@@ -675,8 +688,6 @@ class Margin(gl.Contract):
             "publisher_collateral": record.publisher_collateral,
             "required_challenge_bond": record.required_challenge_bond,
             "required_appeal_bond": record.required_appeal_bond,
-            "active_exposure": record.active_exposure,
-            "available_coverage": u256(int(record.coverage_cap) - int(record.active_exposure)),
             "state": record.state,
             "final_status": record.final_status,
             "challenger": record.challenger.as_hex,
@@ -821,17 +832,70 @@ class Margin(gl.Contract):
             return {}
         return self._covered_dict(self.covered_claims[claim_key])
 
+    @gl.public.write
+    def bind_canonical_consumer(self, consumer_address: str) -> None:
+        """Bind the one Consumer allowed to admit Covered release exposure.
+
+        The deployment administrator performs this exactly once.  The target
+        must prove, through its own read-only interface, that it was deployed
+        against this MARGIN instance before the address is persisted.
+        """
+        if gl.message.sender_address != self.deployment_admin:
+            raise gl.vm.UserError("only the deployment administrator may bind the canonical consumer")
+        if self.canonical_consumer_bound:
+            raise gl.vm.UserError("canonical consumer is already bound")
+        try:
+            normalized = str(consumer_address).strip()
+            proposed = Address(normalized)
+        except Exception:
+            raise gl.vm.UserError("canonical consumer address is malformed")
+        zero_address = Address("0x" + "00" * 20)
+        if proposed == zero_address:
+            raise gl.vm.UserError("canonical consumer address cannot be zero")
+        if proposed == gl.message.contract_address:
+            raise gl.vm.UserError("canonical consumer cannot be this MARGIN contract")
+        try:
+            bound_margin = _CanonicalConsumer(proposed).view().get_canonical_margin_address()
+        except Exception:
+            raise gl.vm.UserError("canonical consumer could not be read")
+        if str(bound_margin).strip().lower() != gl.message.contract_address.as_hex.lower():
+            raise gl.vm.UserError("canonical consumer is bound to another MARGIN contract")
+        self.canonical_consumer_address = proposed
+        self.canonical_consumer_bound = True
+
+    @gl.public.view
+    def get_canonical_consumer_address(self) -> str:
+        if not self.canonical_consumer_bound:
+            return ""
+        return self.canonical_consumer_address.as_hex
+
     @gl.public.view
     def get_coverage_state(self, claim_key: str) -> dict[str, typing.Any]:
         claim_key = str(claim_key).strip().lower()
         if claim_key not in self.covered_claims:
             return {}
         record = self.covered_claims[claim_key]
+        if not self.canonical_consumer_bound:
+            raise gl.vm.UserError("canonical consumer is not bound")
+        try:
+            active_exposure = int(
+                _CanonicalConsumer(self.canonical_consumer_address)
+                .view()
+                .get_active_exposure(claim_key)
+            )
+        except Exception:
+            raise gl.vm.UserError("canonical consumer exposure could not be read")
+        coverage_cap = int(record.coverage_cap)
+        if active_exposure < 0 or active_exposure > coverage_cap:
+            raise gl.vm.UserError("canonical consumer exposure exceeds the Covered Claim cap")
+        registration_open = record.state in ("REGISTERED", "CHALLENGED", "RESOLVED", "APPEALED")
         return {
             "claim_key": record.claim_key,
             "coverage_cap": record.coverage_cap,
-            "active_exposure": record.active_exposure,
-            "available_coverage": u256(int(record.coverage_cap) - int(record.active_exposure)),
+            "canonical_consumer": self.canonical_consumer_address.as_hex,
+            "active_exposure": u256(active_exposure),
+            "available_coverage": u256(coverage_cap - active_exposure) if registration_open else u256(0),
+            "registration_open": registration_open,
             "required_challenge_bond": record.required_challenge_bond,
             "required_appeal_bond": record.required_appeal_bond,
             "state": record.state,
@@ -867,6 +931,8 @@ class Margin(gl.Contract):
         the manifest's declared coverage cap in full.
         """
         claim_key = str(claim_key).strip().lower()
+        if not self.canonical_consumer_bound:
+            raise gl.vm.UserError("canonical consumer must be bound before registering Covered Claims")
         if claim_key not in self.claims:
             raise gl.vm.UserError("unknown claim")
         if claim_key in self.covered_claims:
@@ -922,7 +988,6 @@ class Margin(gl.Contract):
             publisher_collateral=u256(value),
             required_challenge_bond=u256(coverage_cap),
             required_appeal_bond=u256(coverage_cap),
-            active_exposure=zero,
             state="REGISTERED",
             final_status="OPEN",
             challenge_bond=zero,

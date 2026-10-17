@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { assuredActions, canonicalCoveredExposure, coveredBondValue, protectedReleaseCoverageError } from './assured';
+import { assuredActions, canonicalCoveredExposure, coveredBondValue, protectedReleaseActions, protectedReleaseCoverageError } from './assured';
 
 const publisher = '0x0000000000000000000000000000000000000001';
 const challenger = '0x0000000000000000000000000000000000000002';
@@ -51,5 +51,60 @@ describe('Assured Claim action gating', () => {
   });
   it('leaves legacy non-Covered Assured releases unchanged', () => {
     expect(protectedReleaseCoverageError(5n, null)).toBeNull();
+  });
+  it('shows immediate creator refund for negative settled outcomes', () => {
+    for (const finalStatus of ['CONTRADICTED', 'INCONCLUSIVE', 'STALE']) {
+      expect(protectedReleaseActions({
+        walletAddress: publisher,
+        creator: publisher,
+        beneficiary: challenger,
+        assuredState: 'SETTLED',
+        finalStatus,
+        expiry: '2999-01-01T00:00:00Z',
+        creatorCredit: 0n,
+        beneficiaryCredit: 0n,
+      }).refund).toBe(true);
+    }
+  });
+  it('does not offer a supported release refund and gates execute on settlement', () => {
+    const context = {
+      walletAddress: challenger,
+      creator: publisher,
+      beneficiary: challenger,
+      assuredState: 'SETTLED',
+      finalStatus: 'SUPPORTED',
+      expiry: '2999-01-01T00:00:00Z',
+      creatorCredit: 0n,
+      beneficiaryCredit: 3n,
+    };
+    expect(protectedReleaseActions(context)).toMatchObject({ execute: true, refund: false, withdraw: true });
+    expect(protectedReleaseActions({ ...context, assuredState: 'RESOLVED' })).toMatchObject({ execute: false, refund: false });
+  });
+  it('allows a same-wallet creator and beneficiary to withdraw both positive credits once', () => {
+    expect(protectedReleaseActions({
+      walletAddress: publisher,
+      creator: publisher,
+      beneficiary: publisher,
+      assuredState: 'SETTLED',
+      finalStatus: 'SUPPORTED',
+      creatorCredit: '4',
+      beneficiaryCredit: '6',
+    }).withdraw).toBe(true);
+    expect(protectedReleaseActions({
+      walletAddress: challenger,
+      creator: publisher,
+      beneficiary: publisher,
+      creatorCredit: '4',
+      beneficiaryCredit: '6',
+    }).withdraw).toBe(false);
+  });
+  it('fails closed for malformed credit values instead of converting u256 through Number', () => {
+    expect(protectedReleaseActions({
+      walletAddress: publisher,
+      creator: publisher,
+      beneficiary: publisher,
+      creatorCredit: 'not-a-u256',
+      beneficiaryCredit: '1',
+    }).withdraw).toBe(false);
   });
 });

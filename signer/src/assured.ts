@@ -33,8 +33,6 @@ export type CoveredClaimView = {
   publisher_collateral?: string | number | bigint;
   required_challenge_bond?: string | number | bigint;
   required_appeal_bond?: string | number | bigint;
-  active_exposure?: string | number | bigint;
-  available_coverage?: string | number | bigint;
   state?: AssuredState;
   final_status?: string;
   challenger?: string;
@@ -50,6 +48,26 @@ export type CoveredExposureView = {
   activeExposure: bigint;
   availableCoverage: bigint;
   error: string | null;
+};
+
+export type ProtectedReleaseActionContext = {
+  walletAddress: string | null;
+  creator?: unknown;
+  beneficiary?: unknown;
+  executed?: boolean;
+  refunded?: boolean;
+  assuredState?: unknown;
+  finalStatus?: unknown;
+  expiry?: unknown;
+  beneficiaryCredit?: unknown;
+  creatorCredit?: unknown;
+  nowMs?: number;
+};
+
+export type ProtectedReleaseActions = {
+  execute: boolean;
+  refund: boolean;
+  withdraw: boolean;
 };
 
 function nonNegativeBigInt(value: unknown): bigint | null {
@@ -101,6 +119,42 @@ export function protectedReleaseCoverageError(amount: bigint, coveredClaim: Cove
   return amount <= available
     ? null
     : `Protected release amount ${amount.toString()} exceeds available Covered Claim coverage ${available.toString()}.`;
+}
+
+function releaseExpired(expiry: unknown, nowMs: number): boolean {
+  if (typeof expiry !== 'string' || expiry.trim() === '') return false;
+  const expiryMs = Date.parse(expiry);
+  return Number.isFinite(expiryMs) && expiryMs <= nowMs;
+}
+
+function positiveCredit(value: unknown): boolean | null {
+  const parsed = nonNegativeBigInt(value);
+  return parsed === null ? null : parsed > 0n;
+}
+
+export function protectedReleaseActions(context: ProtectedReleaseActionContext): ProtectedReleaseActions {
+  const wallet = context.walletAddress;
+  const creator = same(wallet, context.creator);
+  const beneficiary = same(wallet, context.beneficiary);
+  const open = context.executed !== true && context.refunded !== true;
+  const state = String(context.assuredState || '').toUpperCase();
+  const finalStatus = String(context.finalStatus || '').toUpperCase();
+  const nowMs = context.nowMs ?? Date.now();
+  const expired = releaseExpired(context.expiry, nowMs);
+  const execute = Boolean(wallet) && open && !expired && state === 'SETTLED' && finalStatus === 'SUPPORTED';
+  const negativeTerminal =
+    state === 'CANCELLED' ||
+    state === 'ABORTED' ||
+    (state === 'SETTLED' && ['CONTRADICTED', 'INCONCLUSIVE', 'STALE'].includes(finalStatus));
+  const refund = Boolean(wallet) && creator && open && (negativeTerminal || expired);
+
+  let withdraw = false;
+  if (wallet && (creator || beneficiary)) {
+    const creatorCredit = creator ? positiveCredit(context.creatorCredit) : false;
+    const beneficiaryCredit = beneficiary ? positiveCredit(context.beneficiaryCredit) : false;
+    withdraw = creatorCredit !== null && beneficiaryCredit !== null && Boolean(creatorCredit || beneficiaryCredit);
+  }
+  return { execute, refund, withdraw };
 }
 
 const zero = (value: unknown) => BigInt(String(value ?? 0)) === 0n;

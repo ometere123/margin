@@ -1,0 +1,1 @@
+The canonical consumer checks active release exposure before admitting additional Covered Claim principal. Covered release principal is separately funded and admitted only through the bound consumer.

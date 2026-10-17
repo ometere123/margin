@@ -44,6 +44,9 @@ export function consumerErrorMessage(error: unknown): string {
   if (text.includes('protected release exceeds available covered claim')) {
     return 'This release would exceed the Covered Claim coverage available for this claim.';
   }
+  if (text.includes('canonical consumer') || text.includes('canonical Covered Claim exposure')) {
+    return 'Canonical Covered Claim exposure could not be verified safely; no transaction was signed.';
+  }
   if (text.includes('protected release requires SETTLED SUPPORTED state')) {
     return 'This release can execute only after the Assured Claim is finalized SUPPORTED.';
   }

@@ -1,7 +1,14 @@
 import pytest
 
 
-def _install_margin_view_hook(direct_vm, claim_key, margin_address):
+def _install_margin_view_hook(
+    direct_vm,
+    claim_key,
+    margin_address,
+    *,
+    covered=False,
+    canonical_consumer_address="",
+):
     """Expose a canonical MARGIN view fixture through contract calls."""
     from genlayer.py import calldata
 
@@ -20,6 +27,10 @@ def _install_margin_view_hook(direct_vm, claim_key, margin_address):
             result = {"claim_key": claim_key} if args[0] == claim_key else {}
         elif method == "get_assured_claim":
             result = {"claim_key": claim_key, "state": "REGISTERED", "final_status": "OPEN"} if args[0] == claim_key else {}
+        elif method == "get_covered_claim":
+            result = {"claim_key": claim_key, "coverage_cap": 10} if covered and args[0] == claim_key else {}
+        elif method == "get_canonical_consumer_address":
+            result = canonical_consumer_address
         elif method == "is_claim_supported":
             result = False
         else:
@@ -53,6 +64,29 @@ def test_consumer_binds_margin_address_and_rejects_substitution(
 
     with direct_vm.expect_revert("assured claim is not finalized"):
         consumer.execute_if_supported("claim-key")
+
+
+def test_covered_release_requires_canonical_consumer_binding(
+    direct_vm, direct_deploy, direct_alice, direct_bob
+):
+    claim_key = "a" * 64
+    margin_address = "0x" + "22" * 20
+    consumer = direct_deploy("contracts/margin_consumer.py", margin_address)
+    _install_margin_view_hook(
+        direct_vm,
+        claim_key,
+        margin_address,
+        covered=True,
+        canonical_consumer_address="0x" + "33" * 20,
+    )
+    direct_vm.sender = direct_alice
+    direct_vm.value = 1
+    with direct_vm.expect_revert("consumer is not the canonical Covered Claim consumer"):
+        consumer.create_protected_release(
+            claim_key,
+            "0x" + direct_bob.hex(),
+            "2999-01-01T00:00:00+00:00",
+        )
 
 
 def test_protected_release_requires_existing_canonical_claim_and_keeps_creator_bound(

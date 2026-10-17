@@ -14,7 +14,7 @@ MUTATIONS = [
     ("publisher collateral guard", "contracts/margin.py", "if coverage_cap <= 0 or value < coverage_cap:", "if coverage_cap <= 0:", 1),
     ("challenge bond guard", "contracts/margin.py", "if int(gl.message.value) < required_bond:", "if False:", 1),
     ("appeal bond guard", "contracts/margin.py", "if int(gl.message.value) < MIN_CHALLENGE_BOND:\n            raise gl.vm.UserError(\"appeal bond is required\")", "if False:\n            raise gl.vm.UserError(\"appeal bond is required\")", 1),
-    ("active exposure ceiling", "contracts/margin_consumer.py", "if coverage <= 0 or active + int(gl.message.value) > coverage:", "if coverage <= 0:", 1),
+    ("active exposure ceiling", "contracts/margin_consumer.py", "if coverage <= 0 or active < 0 or active + int(gl.message.value) > coverage:", "if coverage <= 0:", 1),
     ("artifact digest equality", "contracts/margin.py", 'elif hashlib.sha256(body.encode("utf-8")).hexdigest() != str(expected.get("expected_sha256", "")).lower():', "elif False:", 1),
     ("citation presence verification", "contracts/margin.py", "return citation.strip() != \"\" and citation in str(complete_artifact)", "return True", 1),
     ("material observation agreement", "contracts/margin.py", "if expected_material_observations is not None and material_observations != expected_material_observations:", "if False:", 2),
@@ -23,6 +23,9 @@ MUTATIONS = [
     ("execute exposure decrement", "contracts/margin_consumer.py", "self.active_exposure_by_claim[record.claim_key] = u256(current - int(record.amount))", "self.active_exposure_by_claim[record.claim_key] = u256(current)", 1),
     ("beneficiary withdrawal zeroing", "contracts/margin_consumer.py", "record.beneficiary_credit = u256(0)", "record.beneficiary_credit = record.beneficiary_credit", 1),
     ("creator withdrawal zeroing", "contracts/margin_consumer.py", "record.creator_credit = u256(0)", "record.creator_credit = record.creator_credit", 1),
+    ("canonical consumer binding", "contracts/margin_consumer.py", "self._require_canonical_covered_consumer(margin)", "pass", 1),
+    ("binding administrator authorization", "contracts/margin.py", "if gl.message.sender_address != self.deployment_admin:", "if False:", 1),
+    ("same-role creator credit accounting", "contracts/margin_consumer.py", "if creator_authorized:\n            amount = amount + record.creator_credit\n            record.creator_credit = u256(0)", "if False:\n            amount = amount + record.creator_credit\n            record.creator_credit = u256(0)", 1),
 ]
 
 def run_pytest(cwd: Path) -> int:
