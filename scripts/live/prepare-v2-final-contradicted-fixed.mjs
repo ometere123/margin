@@ -20,6 +20,9 @@ const body = `<!doctype html>\n<html><head><meta charset="utf-8"><title>MARGIN V
 const evidenceBody = 'Publisher collateral is a dispute stake and is not paid to release creators or beneficiaries. Release principal is funded separately through the canonical consumer.\n';
 const pageKey = sha(url);
 const pageDigest = sha(body);
+const renderedPrimaryDigest = String(process.env.MARGIN_RENDERED_PRIMARY_SHA256 || '').trim().toLowerCase();
+if (process.env.MARGIN_REQUIRE_RENDERED_DIGEST === '1' && !/^[0-9a-f]{64}$/.test(renderedPrimaryDigest)) throw new Error('A verified GenVM-rendered primary digest is required; raw HTTP bytes are not sufficient for a Covered manifest.');
+const primaryArtifactDigest = renderedPrimaryDigest || pageDigest;
 const evidenceDigest = sha(evidenceBody);
 const payload = { archiveUrl: '', canonicalUrl: url, challengeStatement: challenge, claimClass: 'TECHNICAL', exact: quote, evidenceUrls: [evidenceUrl], pageDigest, pageKey, prefix, suffix, v: 1 };
 const claimKey = sha(canonicalJson(payload));
@@ -43,7 +46,7 @@ const manifest = {
   coverage_cap: 2,
   evidence_pack: evidencePack,
   evidence_pack_digest: sha(canonicalJson(evidencePack)),
-  primary_artifact_sha256: pageDigest,
+  primary_artifact_sha256: primaryArtifactDigest,
   issued_at: '2026-10-17T00:00:00+00:00',
   expires_at: '2027-10-17T00:00:00+00:00',
   nonce: 'margin-final-contradicted-fixed-20261017',
@@ -52,4 +55,4 @@ await mkdir(resolve(root, '.well-known/margin/claims'), { recursive: true });
 await writeFile(resolve(root, 'v2-final-contradicted-fixed-20261017.html'), body);
 await writeFile(resolve(root, 'v2-final-contradicted-fixed-20261017-evidence.txt'), evidenceBody);
 await writeFile(resolve(root, `.well-known/margin/claims/${claimKey}.json`), `${JSON.stringify(manifest)}\n`);
-console.log(JSON.stringify({ url, evidenceUrl, pageKey, pageDigest, evidenceDigest, claimKey, manifest }, null, 2));
+console.log(JSON.stringify({ url, evidenceUrl, pageKey, rawPageDigest: pageDigest, primaryArtifactDigest, primaryArtifactDigestSource: renderedPrimaryDigest ? 'GENVM_RENDER' : 'RAW_HTTP_COMPATIBILITY_MODE', evidenceDigest, claimKey, manifest }, null, 2));

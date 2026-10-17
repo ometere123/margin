@@ -42,6 +42,10 @@ def main() -> int:
             temp = Path(raw)
             shutil.copytree(ROOT / "contracts", temp / "contracts")
             shutil.copytree(ROOT / "tests", temp / "tests")
+            # Direct Mode discovers the selected network from this file. Keep
+            # each disposable mutant on the repository's pinned Studionet
+            # configuration instead of silently falling back to localnet.
+            shutil.copy2(ROOT / "gltest.config.yaml", temp / "gltest.config.yaml")
             source_path = temp / relative
             source = source_path.read_text(encoding="utf-8")
             locations = [index for index in range(len(source)) if source.startswith(needle, index)]

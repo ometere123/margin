@@ -561,7 +561,47 @@
       "value": "0",
       "submittedAt": "2026-10-17T02:29:11.788Z",
       "txHash": "0x61aa0fb63616cb06a2bdbfbd684cb7ca5196871d46b4bd044d2c4a281adea1ae",
-      "status": "SUBMITTED"
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "txHash": "0x61aa0fb63616cb06a2bdbfbd684cb7ca5196871d46b4bd044d2c4a281adea1ae"
+      },
+      "readback": {
+        "assured": {
+          "appeal_bond": 0,
+          "appeal_context_digest": "08427de1b3a850b5e905ec4e56bc5ea6179dd5de013a0cd6b0c6b23cc34bde41",
+          "appeal_count": 0,
+          "appeal_deadline": "2026-10-17T02:24:37.001644+00:00",
+          "appeal_reason": "",
+          "challenge_bond": 0,
+          "challenger": "0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB",
+          "claim_key": "3f9cf19672f85011c6f99aad6b202061d34fca63680df38f1ae1dd5edd82ffef",
+          "domain_nonce": "margin-final-supported-20261017",
+          "domain_proof_url": "https://a-murex-one.vercel.app/.well-known/margin/claims/3f9cf19672f85011c6f99aad6b202061d34fca63680df38f1ae1dd5edd82ffef.json",
+          "proof_digest": "6abd89816f3967ad66ed3e84c7c5ff0bf0d9806252398c9a26912dd5152f19e2",
+          "proof_expires_at": "2027-10-17T00:00:00+00:00",
+          "publisher": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "publisher_bond": 0,
+          "state": "SETTLED",
+          "final_status": "INCONCLUSIVE",
+          "settled": true,
+          "publisher_credit": 0,
+          "challenger_credit": 0
+        },
+        "coverage": {
+          "claim_key": "3f9cf19672f85011c6f99aad6b202061d34fca63680df38f1ae1dd5edd82ffef",
+          "canonical_consumer": "0xD067556b32Ef7D9975d524B942344E4098724541",
+          "coverage_cap": 2,
+          "active_exposure": 0,
+          "available_coverage": 0,
+          "registration_open": false,
+          "state": "SETTLED",
+          "final_status": "INCONCLUSIVE"
+        },
+        "consumerExposure": 0
+      }
     }
   ],
   "publicAccounts": {

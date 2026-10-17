@@ -44,9 +44,24 @@ export type CoveredClaimView = {
   challenger_credit?: string | number | bigint;
 };
 
+export type CoveredCoverageStateView = {
+  claim_key?: string;
+  canonical_consumer?: string;
+  coverage_cap?: string | number | bigint;
+  active_exposure?: string | number | bigint;
+  available_coverage?: string | number | bigint;
+  registration_open?: boolean;
+  state?: AssuredState;
+  final_status?: string;
+  required_challenge_bond?: string | number | bigint;
+  required_appeal_bond?: string | number | bigint;
+};
+
 export type CoveredExposureView = {
   activeExposure: bigint;
   availableCoverage: bigint;
+  registrationOpen: boolean;
+  canonicalConsumer?: string;
   error: string | null;
 };
 
@@ -85,12 +100,45 @@ export function canonicalCoveredExposure(
   const cap = nonNegativeBigInt(coveredClaim.coverage_cap);
   const activeExposure = nonNegativeBigInt(consumerExposure);
   if (cap === null || activeExposure === null) {
-    return { activeExposure: 0n, availableCoverage: 0n, error: 'Canonical protected exposure could not be read safely.' };
+    return { activeExposure: 0n, availableCoverage: 0n, registrationOpen: true, error: 'Canonical protected exposure could not be read safely.' };
   }
   if (activeExposure > cap) {
-    return { activeExposure, availableCoverage: 0n, error: 'Canonical protected exposure exceeds the Covered Claim coverage cap.' };
+    return { activeExposure, availableCoverage: 0n, registrationOpen: true, error: 'Canonical protected exposure exceeds the Covered Claim coverage cap.' };
   }
-  return { activeExposure, availableCoverage: cap - activeExposure, error: null };
+  return { activeExposure, availableCoverage: cap - activeExposure, registrationOpen: true, error: null };
+}
+
+export function canonicalCoverageState(
+  state: CoveredCoverageStateView | null,
+  expectedConsumer: string,
+): CoveredExposureView | null {
+  if (!state) return null;
+  const canonicalConsumer = typeof state.canonical_consumer === 'string' ? state.canonical_consumer : '';
+  if (!/^0x[0-9a-fA-F]{40}$/.test(canonicalConsumer) || canonicalConsumer.toLowerCase() !== expectedConsumer.toLowerCase()) {
+    return {
+      activeExposure: 0n,
+      availableCoverage: 0n,
+      registrationOpen: false,
+      canonicalConsumer,
+      error: 'Canonical Covered Claim consumer binding does not match this signer configuration.',
+    };
+  }
+  if (typeof state.registration_open !== 'boolean') {
+    return { activeExposure: 0n, availableCoverage: 0n, registrationOpen: false, canonicalConsumer, error: 'Canonical protected exposure could not be read safely.' };
+  }
+  const cap = nonNegativeBigInt(state.coverage_cap);
+  const activeExposure = nonNegativeBigInt(state.active_exposure);
+  const availableCoverage = nonNegativeBigInt(state.available_coverage);
+  if (cap === null || activeExposure === null || availableCoverage === null || activeExposure > cap) {
+    return { activeExposure: activeExposure ?? 0n, availableCoverage: 0n, registrationOpen: state.registration_open, canonicalConsumer, error: 'Canonical protected exposure could not be read safely.' };
+  }
+  if (!state.registration_open && availableCoverage !== 0n) {
+    return { activeExposure, availableCoverage: 0n, registrationOpen: false, canonicalConsumer, error: 'Terminal Covered Claim returned non-zero available coverage.' };
+  }
+  if (state.registration_open && availableCoverage !== cap - activeExposure) {
+    return { activeExposure, availableCoverage: 0n, registrationOpen: true, canonicalConsumer, error: 'Canonical Covered Claim coverage arithmetic could not be verified safely.' };
+  }
+  return { activeExposure, availableCoverage, registrationOpen: state.registration_open, canonicalConsumer, error: null };
 }
 
 export type AssuredAction = 'register' | 'registerCovered' | 'challenge' | 'resolve' | 'appeal' | 'resolveAppeal' | 'settle' | 'withdraw' | 'cancel' | 'abort';
@@ -113,8 +161,11 @@ export function coveredBondValue(
 
 export function protectedReleaseCoverageError(amount: bigint, coveredClaim: CoveredClaimView | null, consumerExposure?: unknown): string | null {
   if (!coveredClaim) return null;
-  const exposure = canonicalCoveredExposure(coveredClaim, consumerExposure);
+  const exposure = consumerExposure && typeof consumerExposure === 'object' && 'registrationOpen' in consumerExposure
+    ? consumerExposure as CoveredExposureView
+    : canonicalCoveredExposure(coveredClaim, consumerExposure);
   if (!exposure || exposure.error) return exposure?.error || 'Canonical protected exposure could not be read safely.';
+  if (!exposure.registrationOpen) return 'Protected release admission is closed for this Covered Claim.';
   const available = exposure.availableCoverage;
   return amount <= available
     ? null

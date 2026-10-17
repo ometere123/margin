@@ -20,6 +20,9 @@ const evidenceUrl = 'https://a-murex-one.vercel.app/v2-evidence.txt';
 const publisher = '0xac3ac69dc0bde389256dd6748c75817ead9286d9';
 const pageKey = sha(url);
 const pageDigest = sha(body);
+const renderedPrimaryDigest = String(process.env.MARGIN_RENDERED_PRIMARY_SHA256 || '').trim().toLowerCase();
+if (process.env.MARGIN_REQUIRE_RENDERED_DIGEST === '1' && !/^[0-9a-f]{64}$/.test(renderedPrimaryDigest)) throw new Error('A verified GenVM-rendered primary digest is required; raw HTTP bytes are not sufficient for a Covered manifest.');
+const primaryArtifactDigest = renderedPrimaryDigest || pageDigest;
 const payload = { archiveUrl: '', canonicalUrl: url, challengeStatement: challenge, claimClass: 'TECHNICAL', exact: quote, evidenceUrls: [evidenceUrl], pageDigest, pageKey, prefix, suffix, v: 1 };
 const claimKey = sha(canonicalJson(payload));
 const manifest = {
@@ -41,7 +44,7 @@ const manifest = {
     authority_metadata: { bounded_bytes: 40000 },
   }],
   evidence_pack_digest: '',
-  primary_artifact_sha256: pageDigest,
+  primary_artifact_sha256: primaryArtifactDigest,
   issued_at: '2026-10-07T00:00:00+00:00',
   expires_at: '2027-01-01T00:00:00+00:00',
   nonce: 'margin-v2-final-supported-20261007',
@@ -50,4 +53,4 @@ manifest.evidence_pack_digest = sha(canonicalJson(manifest.evidence_pack));
 await writeFile(resolve(root, 'v2-final-supported.html'), body);
 await mkdir(resolve(root, '.well-known/margin/claims'), { recursive: true });
 await writeFile(resolve(root, `.well-known/margin/claims/${claimKey}.json`), `${JSON.stringify(manifest)}\n`);
-console.log(JSON.stringify({ url, pageKey, pageDigest, claimKey, manifestPath: `.well-known/margin/claims/${claimKey}.json` }, null, 2));
+console.log(JSON.stringify({ url, pageKey, rawPageDigest: pageDigest, primaryArtifactDigest, primaryArtifactDigestSource: renderedPrimaryDigest ? 'GENVM_RENDER' : 'RAW_HTTP_COMPATIBILITY_MODE', claimKey, manifestPath: `.well-known/margin/claims/${claimKey}.json` }, null, 2));

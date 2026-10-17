@@ -7,9 +7,19 @@ import keytar from 'keytar';
 import { createAccount, createClient } from 'genlayer-js';
 import { studionet } from 'genlayer-js/chains';
 import { TransactionHashVariant } from 'genlayer-js/types';
+import deployment from '../../deployment.json' with { type: 'json' };
 
-const MARGIN = process.env.MARGIN_V2_MARGIN ?? '0x4E0a75B63D913FC2d39A75F61905CA5973c77491';
-const CONSUMER = process.env.MARGIN_V2_CONSUMER ?? '0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F';
+const DEPLOYED_MARGIN = String(deployment.contractAddress || '').trim();
+const DEPLOYED_CONSUMER = String(deployment.liveEvidence?.consumerDeployment?.contractAddress || '').trim();
+const historicalResume = process.env.MARGIN_V2_HISTORICAL_RESUME === '1';
+const requestedMargin = process.env.MARGIN_V2_MARGIN?.trim() || '';
+const requestedConsumer = process.env.MARGIN_V2_CONSUMER?.trim() || '';
+if (!DEPLOYED_MARGIN || !DEPLOYED_CONSUMER) throw new Error('deployment.json must contain the current MARGIN and canonical consumer addresses');
+if (!historicalResume && ((requestedMargin && requestedMargin.toLowerCase() !== DEPLOYED_MARGIN.toLowerCase()) || (requestedConsumer && requestedConsumer.toLowerCase() !== DEPLOYED_CONSUMER.toLowerCase()))) {
+  throw new Error('Fresh live runs may not override deployment.json with a historical contract; set MARGIN_V2_HISTORICAL_RESUME=1 for an explicitly historical checkpoint.');
+}
+let MARGIN = requestedMargin || DEPLOYED_MARGIN;
+let CONSUMER = requestedConsumer || DEPLOYED_CONSUMER;
 const RPC = 'https://studio.genlayer.com/api';
 const ORIGIN = 'https://a-murex-one.vercel.app';
 const CLAIM = {
@@ -52,6 +62,45 @@ async function readFinal(client, address, functionName, args = []) {
     catch (error) { if (attempt === 9) throw error; await new Promise((resolveDelay) => setTimeout(resolveDelay, delay)); delay = Math.min(12000, Math.round(delay * 1.4)); }
   }
 }
+
+async function assertStableChain() {
+  const response = await fetch(RPC, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'eth_chainId', params: [] }),
+  });
+  const result = await response.json();
+  if (!response.ok || String(result.result || '').toLowerCase() !== '0xf22f') throw new Error(`Refusing write on unexpected chain: ${JSON.stringify(result)}`);
+}
+
+function claimKeyInArgs(args, claimKey) {
+  return args.some((value) => typeof value === 'string' && (value === claimKey || value.includes(claimKey)));
+}
+
+function assertExpectedActor(state, who, functionName) {
+  const addresses = state.publicAccounts || {};
+  const allowed = {
+    submit_claim: ['publisher'], resolve_claim: ['publisher'], register_covered_claim: ['publisher'],
+    create_protected_release: ['integrator'], challenge_assured_claim: ['challenger'], resolve_assured_claim: ['publisher'],
+    settle_assured_claim: ['publisher'], execute_release: ['integrator'], refund_release: ['integrator'],
+    withdraw_release_credit: ['integrator', 'beneficiary'], withdraw_assured_credit: ['publisher', 'challenger'],
+  }[functionName] || [];
+  if (allowed.length && !allowed.some((role) => String(addresses[role] || '').toLowerCase() === who.address.toLowerCase())) {
+    throw new Error(`${functionName} would be sent from an unexpected configured wallet`);
+  }
+}
+
+async function assertWriteContext(state, who, address, functionName, args) {
+  await assertStableChain();
+  if (address.toLowerCase() !== MARGIN.toLowerCase() && address.toLowerCase() !== CONSUMER.toLowerCase()) throw new Error(`Refusing write to unconfigured contract ${address}`);
+  if (state.claim?.key && !claimKeyInArgs(args, state.claim.key)) throw new Error(`${functionName} is not bound to the expected claim key`);
+  assertExpectedActor(state, who, functionName);
+  if (address.toLowerCase() === CONSUMER.toLowerCase() || functionName === 'register_covered_claim') {
+    const boundConsumer = await readFinal(who.client, MARGIN, 'get_canonical_consumer_address');
+    const boundMargin = await readFinal(who.client, CONSUMER, 'get_canonical_margin_address');
+    if (String(boundConsumer).toLowerCase() !== CONSUMER.toLowerCase() || String(boundMargin).toLowerCase() !== MARGIN.toLowerCase()) throw new Error('Canonical MARGIN/consumer binding is not verified before write');
+  }
+}
 function runReceipt(hash) {
   return new Promise((resolveReceipt) => {
     const child = process.platform === 'win32'
@@ -91,6 +140,7 @@ async function step(state, who, address, functionName, args, value, readbacks) {
   }
   const entry = { account: who.address, function: functionName, args, value: String(value), submittedAt: new Date().toISOString() };
   if (dryRun) { entry.status = 'DRY_RUN'; state.steps.push(entry); await save(state); return entry; }
+  await assertWriteContext(state, who, address, functionName, args);
   const txHash = await who.client.writeContract({ address, functionName, args, value });
   entry.txHash = txHash; entry.status = 'SUBMITTED'; state.steps.push(entry); await save(state);
   entry.finality = await waitFinal(txHash);
@@ -101,6 +151,15 @@ async function step(state, who, address, functionName, args, value, readbacks) {
 }
 async function main() {
   const state = await load();
+  if (state.margin && state.consumer && !historicalResume && (state.margin.toLowerCase() !== DEPLOYED_MARGIN.toLowerCase() || state.consumer.toLowerCase() !== DEPLOYED_CONSUMER.toLowerCase())) {
+    throw new Error('Checkpoint deployment identity differs from deployment.json; use a new state path or explicit historical resume.');
+  }
+  if (historicalResume && state.margin && state.consumer) {
+    if (requestedMargin && requestedMargin.toLowerCase() !== state.margin.toLowerCase()) throw new Error('Historical resume MARGIN override does not match checkpoint identity');
+    if (requestedConsumer && requestedConsumer.toLowerCase() !== state.consumer.toLowerCase()) throw new Error('Historical resume consumer override does not match checkpoint identity');
+    MARGIN = state.margin;
+    CONSUMER = state.consumer;
+  }
   // An explicit fixture environment is authoritative when resuming a
   // checkpoint. This prevents a prior failed attempt with a different quote
   // from leaving stale claim metadata in the evidence record.

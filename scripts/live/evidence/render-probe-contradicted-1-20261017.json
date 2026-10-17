@@ -1,0 +1,173 @@
+{
+  "network": "studionet",
+  "chainId": 61999,
+  "rpc": "https://studio.genlayer.com/api",
+  "margin": "0x38a12Db824979A1E051792Cd322211FdB24473f3",
+  "consumer": "0xD067556b32Ef7D9975d524B942344E4098724541",
+  "claim": {
+    "key": "fc3eb85daf4e0eaedd6fdc7467281ad5cf8ba251c8d9d6c031fddae821d06e7a",
+    "pageKey": "c72551418d6fd74040d731c557b855db26a7c2c7d1400fff60dacba3ee2e1bba",
+    "url": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017.html",
+    "quote": "MARGIN publisher collateral pays release losses to release creators and beneficiaries.",
+    "prefix": "Final contradicted fixed fixture: ",
+    "suffix": " This intentionally false statement is challenged by the committed policy evidence.",
+    "pageDigest": "70c6e4230ee05a9720ccd97d4fc62ae6837bc20edd99a28a91461e600cd8f721",
+    "challenge": "Confirm whether the unchanged contradicted final fixture is disproved by its evidence artifact (render probe 1).",
+    "evidence": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017-evidence.txt",
+    "nonce": "margin-v2-covered-20261006",
+    "expiry": "2027-01-01T00:00:00+00:00",
+    "releaseExpiry": "2027-02-01T00:00:00+00:00"
+  },
+  "steps": [
+    {
+      "account": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+      "function": "submit_claim",
+      "args": [
+        "fc3eb85daf4e0eaedd6fdc7467281ad5cf8ba251c8d9d6c031fddae821d06e7a",
+        "c72551418d6fd74040d731c557b855db26a7c2c7d1400fff60dacba3ee2e1bba",
+        "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017.html",
+        "MARGIN publisher collateral pays release losses to release creators and beneficiaries.",
+        "Final contradicted fixed fixture: ",
+        " This intentionally false statement is challenged by the committed policy evidence.",
+        "70c6e4230ee05a9720ccd97d4fc62ae6837bc20edd99a28a91461e600cd8f721",
+        "TECHNICAL",
+        "Confirm whether the unchanged contradicted final fixture is disproved by its evidence artifact (render probe 1).",
+        "[\"https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017-evidence.txt\"]",
+        ""
+      ],
+      "value": "0",
+      "submittedAt": "2026-10-17T07:19:56.349Z",
+      "txHash": "0x2d3ba7defadf7475c9690a50dd584f4e60080233d7129595a813a6a367ce1720",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "txHash": "0x2d3ba7defadf7475c9690a50dd584f4e60080233d7129595a813a6a367ce1720"
+      },
+      "readback": {
+        "claim": {
+          "archive_url": "",
+          "canonical_url": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017.html",
+          "challenge_statement": "Confirm whether the unchanged contradicted final fixture is disproved by its evidence artifact (render probe 1).",
+          "challenger": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "claim_class": "TECHNICAL",
+          "claim_key": "fc3eb85daf4e0eaedd6fdc7467281ad5cf8ba251c8d9d6c031fddae821d06e7a",
+          "created_at": "2026-10-17T07:20:41.354097+00:00",
+          "evidence_urls_json": "[\"https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017-evidence.txt\"]",
+          "latest_manifest": {},
+          "page_digest": "70c6e4230ee05a9720ccd97d4fc62ae6837bc20edd99a28a91461e600cd8f721",
+          "page_key": "c72551418d6fd74040d731c557b855db26a7c2c7d1400fff60dacba3ee2e1bba",
+          "prefix": "Final contradicted fixed fixture: ",
+          "quote": "MARGIN publisher collateral pays release losses to release creators and beneficiaries.",
+          "rationale": "",
+          "resolved_at": "",
+          "revision": 0,
+          "source_manifest_digest": "",
+          "source_set_digest": "",
+          "status": "OPEN",
+          "suffix": " This intentionally false statement is challenged by the committed policy evidence."
+        }
+      }
+    },
+    {
+      "account": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+      "function": "resolve_claim",
+      "args": [
+        "fc3eb85daf4e0eaedd6fdc7467281ad5cf8ba251c8d9d6c031fddae821d06e7a"
+      ],
+      "value": "0",
+      "submittedAt": "2026-10-17T07:20:40.055Z",
+      "txHash": "0xf746a7816d5b14fdde42d288bfb45a5b99f3e9451350c5df1181b02982288ae8",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "txHash": "0xf746a7816d5b14fdde42d288bfb45a5b99f3e9451350c5df1181b02982288ae8"
+      },
+      "readback": {
+        "claim": {
+          "archive_url": "",
+          "canonical_url": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017.html",
+          "challenge_statement": "Confirm whether the unchanged contradicted final fixture is disproved by its evidence artifact (render probe 1).",
+          "challenger": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "claim_class": "TECHNICAL",
+          "claim_key": "fc3eb85daf4e0eaedd6fdc7467281ad5cf8ba251c8d9d6c031fddae821d06e7a",
+          "created_at": "2026-10-17T07:20:41.354097+00:00",
+          "evidence_urls_json": "[\"https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017-evidence.txt\"]",
+          "latest_manifest": {
+            "accepted_observation_manifest": [
+              {
+                "content_digest": "a0f9e483c7fc425dafa70a775f1d1b9c125e600eaf39349d4498902a33ae0e51",
+                "fetch_status": "OK",
+                "kind": "PRIMARY",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017.html"
+              },
+              {
+                "content_digest": "977bf71a4f1f797089d444aca0adbacdf5f9147a83df5797e808cfdd5d67f28b",
+                "fetch_status": "OK",
+                "kind": "EVIDENCE",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017-evidence.txt"
+              }
+            ],
+            "adjudication_context_digest": "c47e3085d7e2853013c749d74235ada8730d64ec694142e59a064fddd98d3cf0",
+            "appeal_count": 0,
+            "claim_present": true,
+            "context_kind": "NORMAL",
+            "contradicting_source_indexes": [
+              1
+            ],
+            "historical_evidence_used": false,
+            "leader_cited_indexes": {
+              "contradicting": [
+                1
+              ],
+              "supporting": []
+            },
+            "material_observations": [],
+            "protocol_version": 2,
+            "source_manifest_digest": "3aabcd7d3bb6320c6f0d34374fd980558b717bb53e0f910e48bc645bdefbf206",
+            "source_set_digest": "0d2787afd5c62a8d15ef65aa8c0f26c5f419ab3691bb559078ae479d6f391986",
+            "sources": [
+              {
+                "content_digest": "a0f9e483c7fc425dafa70a775f1d1b9c125e600eaf39349d4498902a33ae0e51",
+                "fetch_status": "OK",
+                "kind": "PRIMARY",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017.html"
+              },
+              {
+                "content_digest": "977bf71a4f1f797089d444aca0adbacdf5f9147a83df5797e808cfdd5d67f28b",
+                "fetch_status": "OK",
+                "kind": "EVIDENCE",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017-evidence.txt"
+              }
+            ],
+            "supporting_source_indexes": []
+          },
+          "page_digest": "70c6e4230ee05a9720ccd97d4fc62ae6837bc20edd99a28a91461e600cd8f721",
+          "page_key": "c72551418d6fd74040d731c557b855db26a7c2c7d1400fff60dacba3ee2e1bba",
+          "prefix": "Final contradicted fixed fixture: ",
+          "quote": "MARGIN publisher collateral pays release losses to release creators and beneficiaries.",
+          "rationale": "The highlighted claim appears verbatim on the primary page (source 0), which itself flags the statement as intentionally false. The committed evidence artifact (source 1) directly contradicts the claim in the challenged respect: it states that publisher collateral is a dispute stake and is not paid to release creators or beneficiaries, with release principal funded separately through the canonical consumer. Both manifest artifacts show fetch_status OK with no missing or oversized artifact, so the contradiction is independently established by the committed policy evidence.",
+          "resolved_at": "2026-10-17T07:21:24.767908+00:00",
+          "revision": 1,
+          "source_manifest_digest": "3aabcd7d3bb6320c6f0d34374fd980558b717bb53e0f910e48bc645bdefbf206",
+          "source_set_digest": "0d2787afd5c62a8d15ef65aa8c0f26c5f419ab3691bb559078ae479d6f391986",
+          "status": "CONTRADICTED",
+          "suffix": " This intentionally false statement is challenged by the committed policy evidence."
+        }
+      }
+    }
+  ],
+  "publicAccounts": {
+    "publisher": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+    "challenger": "0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB",
+    "integrator": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+    "beneficiary": "0xB845a69860ba4CDf19CfDC5AfbAF2e20b6bE86b0"
+  }
+}

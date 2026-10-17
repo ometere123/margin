@@ -1,0 +1,175 @@
+{
+  "network": "studionet",
+  "chainId": 61999,
+  "rpc": "https://studio.genlayer.com/api",
+  "margin": "0x38a12Db824979A1E051792Cd322211FdB24473f3",
+  "consumer": "0xD067556b32Ef7D9975d524B942344E4098724541",
+  "claim": {
+    "key": "db296c355c06268683935c24b7e408334e8a8a4bdb9891b6923a2debb993397e",
+    "pageKey": "4e40f2f1d18aa2699d0fbfc084b6ce7ca5540084c24cdaeac99427e1dc194e66",
+    "url": "https://a-murex-one.vercel.app/v2-final-supported-20261017.html",
+    "quote": "The canonical consumer checks active release exposure before admitting additional Covered Claim principal.",
+    "prefix": "Final supported Covered fixture: ",
+    "suffix": " This statement is published as a fresh final-deployment evidence fixture.",
+    "pageDigest": "8b65179b2a2554283b813b833113a1f46e9faf33cf080eb7df459c03bdf22bd5",
+    "challenge": "Confirm that the unchanged supported final fixture is backed by its evidence artifact (render probe 1).",
+    "evidence": "https://a-murex-one.vercel.app/v2-final-supported-20261017-evidence.txt",
+    "nonce": "margin-v2-covered-20261006",
+    "expiry": "2027-01-01T00:00:00+00:00",
+    "releaseExpiry": "2027-02-01T00:00:00+00:00"
+  },
+  "steps": [
+    {
+      "account": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+      "function": "submit_claim",
+      "args": [
+        "db296c355c06268683935c24b7e408334e8a8a4bdb9891b6923a2debb993397e",
+        "4e40f2f1d18aa2699d0fbfc084b6ce7ca5540084c24cdaeac99427e1dc194e66",
+        "https://a-murex-one.vercel.app/v2-final-supported-20261017.html",
+        "The canonical consumer checks active release exposure before admitting additional Covered Claim principal.",
+        "Final supported Covered fixture: ",
+        " This statement is published as a fresh final-deployment evidence fixture.",
+        "8b65179b2a2554283b813b833113a1f46e9faf33cf080eb7df459c03bdf22bd5",
+        "TECHNICAL",
+        "Confirm that the unchanged supported final fixture is backed by its evidence artifact (render probe 1).",
+        "[\"https://a-murex-one.vercel.app/v2-final-supported-20261017-evidence.txt\"]",
+        ""
+      ],
+      "value": "0",
+      "submittedAt": "2026-10-17T07:16:17.495Z",
+      "txHash": "0xe1adcbc4d0582307088acf87082852706f86368d3e31d863727fca0c2787ff73",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "txHash": "0xe1adcbc4d0582307088acf87082852706f86368d3e31d863727fca0c2787ff73"
+      },
+      "readback": {
+        "claim": {
+          "archive_url": "",
+          "canonical_url": "https://a-murex-one.vercel.app/v2-final-supported-20261017.html",
+          "challenge_statement": "Confirm that the unchanged supported final fixture is backed by its evidence artifact (render probe 1).",
+          "challenger": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "claim_class": "TECHNICAL",
+          "claim_key": "db296c355c06268683935c24b7e408334e8a8a4bdb9891b6923a2debb993397e",
+          "created_at": "2026-10-17T07:17:02.594198+00:00",
+          "evidence_urls_json": "[\"https://a-murex-one.vercel.app/v2-final-supported-20261017-evidence.txt\"]",
+          "latest_manifest": {},
+          "page_digest": "8b65179b2a2554283b813b833113a1f46e9faf33cf080eb7df459c03bdf22bd5",
+          "page_key": "4e40f2f1d18aa2699d0fbfc084b6ce7ca5540084c24cdaeac99427e1dc194e66",
+          "prefix": "Final supported Covered fixture: ",
+          "quote": "The canonical consumer checks active release exposure before admitting additional Covered Claim principal.",
+          "rationale": "",
+          "resolved_at": "",
+          "revision": 0,
+          "source_manifest_digest": "",
+          "source_set_digest": "",
+          "status": "OPEN",
+          "suffix": " This statement is published as a fresh final-deployment evidence fixture."
+        }
+      }
+    },
+    {
+      "account": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+      "function": "resolve_claim",
+      "args": [
+        "db296c355c06268683935c24b7e408334e8a8a4bdb9891b6923a2debb993397e"
+      ],
+      "value": "0",
+      "submittedAt": "2026-10-17T07:16:59.705Z",
+      "txHash": "0xd79222e091e830e9391887ad553fb3e8b80188cf3deef3662cbbabf47c9109b1",
+      "status": "FINALIZED",
+      "finality": {
+        "status": "FINALIZED",
+        "consensus": "MAJORITY_AGREE",
+        "execution": "SUCCESS",
+        "txHash": "0xd79222e091e830e9391887ad553fb3e8b80188cf3deef3662cbbabf47c9109b1"
+      },
+      "readback": {
+        "claim": {
+          "archive_url": "",
+          "canonical_url": "https://a-murex-one.vercel.app/v2-final-supported-20261017.html",
+          "challenge_statement": "Confirm that the unchanged supported final fixture is backed by its evidence artifact (render probe 1).",
+          "challenger": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+          "claim_class": "TECHNICAL",
+          "claim_key": "db296c355c06268683935c24b7e408334e8a8a4bdb9891b6923a2debb993397e",
+          "created_at": "2026-10-17T07:17:02.594198+00:00",
+          "evidence_urls_json": "[\"https://a-murex-one.vercel.app/v2-final-supported-20261017-evidence.txt\"]",
+          "latest_manifest": {
+            "accepted_observation_manifest": [
+              {
+                "content_digest": "e5866f8a9d2c905e3251a3ee53e26c37d5a9a780756a57c896a7fb9decab33c2",
+                "fetch_status": "OK",
+                "kind": "PRIMARY",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/v2-final-supported-20261017.html"
+              },
+              {
+                "content_digest": "ff840f3812095e56a5a7458d9a2fb1411767bf7a4b50ae2eab0f6a73f304a248",
+                "fetch_status": "OK",
+                "kind": "EVIDENCE",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/v2-final-supported-20261017-evidence.txt"
+              }
+            ],
+            "adjudication_context_digest": "608f3b3e3b11b37eb4ba06ebf130f50ec287b2cc7fc4bab30ae326e51b988cb0",
+            "appeal_count": 0,
+            "claim_present": true,
+            "context_kind": "NORMAL",
+            "contradicting_source_indexes": [],
+            "historical_evidence_used": false,
+            "leader_cited_indexes": {
+              "contradicting": [],
+              "supporting": [
+                0,
+                1
+              ]
+            },
+            "material_observations": [],
+            "protocol_version": 2,
+            "source_manifest_digest": "33b8f13e04e081de5c5b7e3d331ed2effd92f54e05901c439e7ab562cfc88049",
+            "source_set_digest": "b377d19f1e33bba53d2073dbcebda9408b8c4cc46a1a6c8211dfb159a7cd752a",
+            "sources": [
+              {
+                "content_digest": "e5866f8a9d2c905e3251a3ee53e26c37d5a9a780756a57c896a7fb9decab33c2",
+                "fetch_status": "OK",
+                "kind": "PRIMARY",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/v2-final-supported-20261017.html"
+              },
+              {
+                "content_digest": "ff840f3812095e56a5a7458d9a2fb1411767bf7a4b50ae2eab0f6a73f304a248",
+                "fetch_status": "OK",
+                "kind": "EVIDENCE",
+                "provenance": "PUBLIC_SOURCE",
+                "url": "https://a-murex-one.vercel.app/v2-final-supported-20261017-evidence.txt"
+              }
+            ],
+            "supporting_source_indexes": [
+              0,
+              1
+            ]
+          },
+          "page_digest": "8b65179b2a2554283b813b833113a1f46e9faf33cf080eb7df459c03bdf22bd5",
+          "page_key": "4e40f2f1d18aa2699d0fbfc084b6ce7ca5540084c24cdaeac99427e1dc194e66",
+          "prefix": "Final supported Covered fixture: ",
+          "quote": "The canonical consumer checks active release exposure before admitting additional Covered Claim principal.",
+          "rationale": "Claim text is present verbatim on primary page and matches the supplied evidence artifact exactly.",
+          "resolved_at": "2026-10-17T07:17:44.321341+00:00",
+          "revision": 1,
+          "source_manifest_digest": "33b8f13e04e081de5c5b7e3d331ed2effd92f54e05901c439e7ab562cfc88049",
+          "source_set_digest": "b377d19f1e33bba53d2073dbcebda9408b8c4cc46a1a6c8211dfb159a7cd752a",
+          "status": "SUPPORTED",
+          "suffix": " This statement is published as a fresh final-deployment evidence fixture."
+        }
+      }
+    }
+  ],
+  "publicAccounts": {
+    "publisher": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+    "challenger": "0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB",
+    "integrator": "0x951e6B75530774fF82321a5ae54e14F778F0C855",
+    "beneficiary": "0xB845a69860ba4CDf19CfDC5AfbAF2e20b6bE86b0"
+  }
+}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { assuredActions, canonicalCoveredExposure, coveredBondValue, protectedReleaseActions, protectedReleaseCoverageError } from './assured';
+import { assuredActions, canonicalCoverageState, canonicalCoveredExposure, coveredBondValue, protectedReleaseActions, protectedReleaseCoverageError } from './assured';
 
 const publisher = '0x0000000000000000000000000000000000000001';
 const challenger = '0x0000000000000000000000000000000000000002';
@@ -41,6 +41,44 @@ describe('Assured Claim action gating', () => {
     expect(protectedReleaseCoverageError(4n, covered, 6)).toBeNull();
     expect(protectedReleaseCoverageError(5n, covered, 6)).toContain('5');
     expect(protectedReleaseCoverageError(5n, covered, 6)).toContain('4');
+  });
+  it('uses authoritative terminal coverage fields instead of recomputing capacity', () => {
+    const consumer = '0x00000000000000000000000000000000000000aa';
+    expect(canonicalCoverageState({
+      canonical_consumer: consumer,
+      coverage_cap: '10',
+      active_exposure: '6',
+      available_coverage: '4',
+      registration_open: true,
+    }, consumer)).toMatchObject({ activeExposure: 6n, availableCoverage: 4n, registrationOpen: true, error: null });
+    expect(canonicalCoverageState({
+      canonical_consumer: consumer,
+      coverage_cap: '10',
+      active_exposure: '0',
+      available_coverage: '0',
+      registration_open: false,
+      state: 'SETTLED',
+      final_status: 'SUPPORTED',
+    }, consumer)).toMatchObject({ activeExposure: 0n, availableCoverage: 0n, registrationOpen: false, error: null });
+    expect(canonicalCoverageState({
+      canonical_consumer: consumer,
+      coverage_cap: '10',
+      active_exposure: '0',
+      available_coverage: '10',
+      registration_open: false,
+    }, consumer)?.error).toContain('non-zero available coverage');
+    expect(canonicalCoverageState({
+      canonical_consumer: '0x00000000000000000000000000000000000000bb',
+      coverage_cap: '10',
+      active_exposure: '0',
+      available_coverage: '10',
+      registration_open: true,
+    }, consumer)?.error).toContain('binding');
+  });
+  it('blocks release preflight when terminal coverage is closed', () => {
+    const covered = { coverage_cap: 10 };
+    const terminal = { activeExposure: 0n, availableCoverage: 0n, registrationOpen: false, error: null };
+    expect(protectedReleaseCoverageError(1n, covered, terminal)).toContain('admission is closed');
   });
   it('fails closed for missing, malformed, or over-cap Consumer exposure', () => {
     const covered = { coverage_cap: 10 };
