@@ -174,12 +174,20 @@ re-fetches the committed artifacts during adjudication and forces
 Publisher collateral equals the declared coverage cap; the consumer rejects
 protected releases whose aggregate active exposure would exceed that cap.
 
+Covered Claims are collateral-backed claims with bounded conditional-release
+exposure, not insurance or indemnity. Publisher collateral is a dispute stake
+and is not automatically paid to release creators or beneficiaries. An
+integrator separately deposits each protected release principal into the one
+canonical consumer; a supported terminal result credits the beneficiary, while
+a negative terminal result or permitted expiry credits the creator. The
+coverage cap limits aggregate active release principal through that consumer;
+it does not guarantee arbitrary third-party losses or supplier billing.
+
 Covered Claim status is the committee-consensus decision. Rationale, observed
 content digests and cited indexes are accepted-proposal provenance and are not
 claimed to be byte-identical output from every validator. The V2 source changes
-are currently on the milestone branch; the V1 Studionet deployment documented
-above remains historical for this branch until the V2 local/CI gates and a fresh
-deployment are complete.
+are deployed at the current Studionet address recorded in `deployment.json`; the
+V1 Studionet deployment documented above remains historical.
 
 This follows the important GenLayer rule that validators must independently verify the substance rather than only checking that the leader returned syntactically valid JSON.
 
@@ -191,7 +199,7 @@ The final material-observation V2 contract and bound consumer are deployed. Fres
 
 The static signer is a focused transaction and provenance workspace, not a replacement for the extension. The extension opens `/challenge?draft=...`; finalized annotations link to `/claim/<claimKey>` and `/claim/<claimKey>/assurance`; `/activity` shows browser-local transaction provenance and `/` explains the extension-first entry point. Direct claim and assurance routes read finalized state from the canonical Studionet contract, so visitors do not need the original draft.
 
-The signer and extension use the supplied MARGIN logo/icon assets. The assurance view exposes the existing registration, challenge, resolution, appeal, settlement and withdrawal actions only when the connected account and finalized state permit them. The current bound reference consumer is `0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F`; older consumer addresses in `deployment.json` are historical only. It supports up to five protected releases per creator and claim, with bounded pagination across all releases. Covered Claims add publisher-controlled manifests, typed evidence packs, complete artifact commitments and value-coupled coverage.
+The signer and extension use the supplied MARGIN logo/icon assets. The assurance view exposes the existing registration, challenge, resolution, appeal, settlement and withdrawal actions only when the connected account and finalized state permit them. The current bound reference consumer is `0xD067556b32Ef7D9975d524B942344E4098724541`; older consumer addresses in `deployment.json` are historical only. It supports up to five protected releases per creator and claim, with bounded pagination across all releases. Covered Claims add publisher-controlled manifests, typed evidence packs, complete artifact commitments and value-coupled coverage.
 
 - repeat the complete wallet-to-chain submit/resolve session from a fresh browser profile if an independent reviewer requires it;
 - measure broader fee profiles and exercise a separate GenLayer transaction-level appeal where supported by the stable tooling;

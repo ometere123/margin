@@ -3,17 +3,54 @@
   "chainId": 61999,
   "rpc": "https://studio.genlayer.com/api",
   "explorer": "https://explorer-studio.genlayer.com",
-  "contractAddress": "0x4E0a75B63D913FC2d39A75F61905CA5973c77491",
-  "deploymentTx": "0xa6917d417dd63f683684acdfe7168c75bad1310172a79d0a91fed21835d5a617",
+  "contractAddress": "0x38a12Db824979A1E051792Cd322211FdB24473f3",
+  "deploymentTx": "0x6b7c5bd6ec5a458ce668e9908ac0c9111ec8dbbf90fdda8f281992ecc707f9e9",
   "deploymentStatus": "FINALIZED / MAJORITY_AGREE / SUCCESS",
-  "sourceCommit": "ab5bbef32d046cf19e6621275485b57d4268ac87",
-  "sourceBytes": 86605,
-  "sourceSha256": "A079E57EA831456721A6982FC5A4FB5B6AA77649D71EC3636BE44540292B41F1",
+  "sourceCommit": "6798b2e748d7ef6f1e41538de4e33f84d9c7ae68",
+  "sourceBytes": 91516,
+  "sourceSha256": "3A23F33952A35E3C848694887BB1C8D8DB03D3E1AEB10999F8A1518A9870BA12",
+  "canonicalConsumerAddress": "0xD067556b32Ef7D9975d524B942344E4098724541",
+  "canonicalConsumerBindingTx": "0x3da7c5b731733ce69ac6dba9d4a3f91f074a465ddd3d6975aac80c9c4b14f77a",
+  "consumerDeployment": {
+    "contractAddress": "0xD067556b32Ef7D9975d524B942344E4098724541",
+    "deploymentTx": "0xbdc8d87ef3185dab1dfdd1103f1ba2a14dda4c1c2d47284eb737dd39f2692fa8",
+    "boundMarginAddress": "0x38a12Db824979A1E051792Cd322211FdB24473f3",
+    "sourceCommit": "6798b2e748d7ef6f1e41538de4e33f84d9c7ae68",
+    "sourceBytes": 16742,
+    "sourceSha256": "FBDC44E60CEAC4BFB0F63C8A6F4E78443382D6E6904BC33CE494AEC9C95DD9DA",
+    "deploymentStatus": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+    "boundAddressReadback": "0x38a12Db824979A1E051792Cd322211FdB24473f3"
+  },
+  "supersededCurrentDeployment": {
+    "contractAddress": "0x4E0a75B63D913FC2d39A75F61905CA5973c77491",
+    "deploymentTx": "0xa6917d417dd63f683684acdfe7168c75bad1310172a79d0a91fed21835d5a617",
+    "consumerAddress": "0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F",
+    "status": "historical; superseded by the canonical-consumer exposure deployment"
+  },
   "signerUrl": "https://margin-signer.vercel.app/",
   "signerDeployment": "dpl_9Avj9b5Mx7BwgtbBYsZhdVKazJmV",
-  "signerDeploymentStatus": "READY / production; verified at https://margin-signer.vercel.app/",
+  "signerDeploymentStatus": "historical; corrected production environment variables are configured, but this deployment targets the superseded MARGIN address",
+  "vercelGitDeployments": {
+    "signerProject": "prj_sLtSr9PeurxKRzR8buv1KA99zWL8",
+    "fixtureProject": "prj_xPXHmh3TcvuBDvgSFyTRarWRfJgz",
+    "createDeployments": "disabled",
+    "verifiedVia": "authenticated Vercel project API before repository push"
+  },
+  "fixtureDeployment": {
+    "project": "a",
+    "projectId": "prj_xPXHmh3TcvuBDvgSFyTRarWRfJgz",
+    "deployment": "dpl_4kHV5KpGXPKb3Pa3hX6xfjPct1um",
+    "url": "https://a-murex-one.vercel.app/",
+    "status": "READY / production",
+    "purpose": "fresh immutable final-deployment evidence fixtures"
+  },
   "signerSourceCommit": "e35e27ea2c76fcb5482d285b6b41b858813b684e",
   "supersededSignerDeployment": "dpl_BYeZLjjx3zP3sUqNZ4jJy1nSuBvh",
+  "historicalSignerDeployment": {
+    "deployment": "dpl_9Avj9b5Mx7BwgtbBYsZhdVKazJmV",
+    "status": "historical; superseded after canonical consumer exposure deployment",
+    "url": "https://margin-signer.vercel.app/"
+  },
   "supersededV2Deployment": {
     "contractAddress": "0x03197B3246a5BF0C28fad07c4E5868F52c601580",
     "deploymentTx": "0x84a4b0a159205e4ba2be9c913a9d3698cb43d5bbcfe66502f24093b50fc67250",
@@ -82,7 +119,7 @@
     "challenge": "Verify whether Array.prototype.at() handles a negative index by adding it to the array length, rather than treating it as an ordinary string property.",
     "evidenceUrl": "https://tc39.es/ecma262/2026/multipage/indexed-collections.html#sec-array.prototype.at",
     "claimClass": "TECHNICAL",
-    "marginAddress": "0x4E0a75B63D913FC2d39A75F61905CA5973c77491",
+    "marginAddress": "0x38a12Db824979A1E051792Cd322211FdB24473f3",
     "result": "Human-observed production signer submission and resolution finalized on Studionet 61999 with canonical verdict SUPPORTED; exact re-anchor, highlight, visible badge and provenance were confirmed.",
     "submissionTx": null,
     "resolutionTx": null,
@@ -549,27 +586,28 @@
   },
   "liveEvidence": {
     "canonicalDeploymentChecks": {
-      "contractAddress": "0x4E0a75B63D913FC2d39A75F61905CA5973c77491",
-      "deploymentTx": "0xa6917d417dd63f683684acdfe7168c75bad1310172a79d0a91fed21835d5a617",
+      "contractAddress": "0x38a12Db824979A1E051792Cd322211FdB24473f3",
+      "deploymentTx": "0x6b7c5bd6ec5a458ce668e9908ac0c9111ec8dbbf90fdda8f281992ecc707f9e9",
       "networkReadback": {
         "chain_id": 61999,
         "network": "studionet",
         "rpc": "https://studio.genlayer.com/api"
       },
-      "sourceCommit": "ab5bbef32d046cf19e6621275485b57d4268ac87",
+      "sourceCommit": "6798b2e748d7ef6f1e41538de4e33f84d9c7ae68",
       "deploymentFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
-      "sourceSha256": "A079E57EA831456721A6982FC5A4FB5B6AA77649D71EC3636BE44540292B41F1",
-      "sourceBytes": 86605
+      "sourceSha256": "3A23F33952A35E3C848694887BB1C8D8DB03D3E1AEB10999F8A1518A9870BA12",
+      "sourceBytes": 91516
     },
     "consumerDeployment": {
-      "contractAddress": "0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F",
-      "deploymentTx": "0x521f944b8274e4f4e5bfe151c3f9a6fdba0fd4f5f4f515dd8f98b5d7976ce01d",
-      "boundMarginAddress": "0x4E0a75B63D913FC2d39A75F61905CA5973c77491",
+      "contractAddress": "0xD067556b32Ef7D9975d524B942344E4098724541",
+      "deploymentTx": "0xbdc8d87ef3185dab1dfdd1103f1ba2a14dda4c1c2d47284eb737dd39f2692fa8",
+      "boundMarginAddress": "0x38a12Db824979A1E051792Cd322211FdB24473f3",
       "deploymentFinality": "FINALIZED / MAJORITY_AGREE / SUCCESS",
-      "sourceCommit": "ab5bbef32d046cf19e6621275485b57d4268ac87",
-      "sourceSha256": "4060BFABA93A8B6BF90F6CDA6466D2066A7F1E1ED91036C1DB275047201DF6EC",
-      "sourceBytes": 15416,
-      "boundAddressReadback": "0x4E0a75B63D913FC2d39A75F61905CA5973c77491"
+      "sourceCommit": "6798b2e748d7ef6f1e41538de4e33f84d9c7ae68",
+      "sourceSha256": "FBDC44E60CEAC4BFB0F63C8A6F4E78443382D6E6904BC33CE494AEC9C95DD9DA",
+      "sourceBytes": 16742,
+      "boundAddressReadback": "0x38a12Db824979A1E051792Cd322211FdB24473f3",
+      "canonicalBindingTx": "0x3da7c5b731733ce69ac6dba9d4a3f91f074a465ddd3d6975aac80c9c4b14f77a"
     },
     "finalEconomicLifecycle": {
       "evidenceFile": "scripts/live/evidence/final-v2-economic-contradicted.json",
@@ -595,11 +633,69 @@
       },
       "allWrites": "FINALIZED / MAJORITY_AGREE / SUCCESS"
     },
-    "status": "Final deployment checks and one fresh final-deployment economic lifecycle recorded."
+    "finalV3Supported": {
+      "evidenceFile": "scripts/live/evidence/final-v3-supported-20261017.json",
+      "claimKey": "3f9cf19672f85011c6f99aad6b202061d34fca63680df38f1ae1dd5edd82ffef",
+      "page": "https://a-murex-one.vercel.app/v2-final-supported-20261017.html",
+      "state": "SETTLED",
+      "finalStatus": "INCONCLUSIVE",
+      "releaseId": "0:3f9cf19672f85011c6f99aad6b202061d34fca63680df38f1ae1dd5edd82ffef",
+      "releaseOutcome": "REFUNDED",
+      "primaryArtifactSha256": "8b65179b2a2554283b813b833113a1f46e9faf33cf080eb7df459c03bdf22bd5",
+      "acceptedPrimaryObservationDigest": "e5866f8a9d2c905e3251a3ee53e26c37d5a9a780756a57c896a7fb9decab33c2",
+      "activeExposure": 0,
+      "consumerExposure": 0,
+      "postWithdrawalCredits": { "publisher": 0, "challenger": 0, "creator": 0 },
+      "transactions": {
+        "submit": "0x6f54377106d632b82e86135f174148296a77a22a70494e5ad621b9b39833ff4a",
+        "normalResolve": "0x5d7a71fe2babf9cfe6f5c5a68960c0f1fdaae5d60c9e9f7409b875686f59fcd2",
+        "registerCovered": "0xbbde29baa1c226af495de7e263cab9c31446f3c9d54467b93fcb9443be8012b9",
+        "createProtectedRelease": "0x2e25a2ee4433d8f2bd0e0853b6a688e3609343e55e21d7c6ff061d23355ba9e2",
+        "challenge": "0xc137640be9cfb3ac450785e4a03c76c2a15f42596ef1429f074f136b5565da99",
+        "resolveAssured": "0x9bbf8630c5d6775082d9a3dbd8132725bdb8cf6c0b7980cc9f40f2561670b8c7",
+        "settle": "0xfb1bdee2222a94299a7f27be25f99626018265cadec8fbb2d419350306166859",
+        "refundRelease": "0x9d3decd5e97f573d60ed5f3ca6d4bb396e4818e61af196cb1ac72f28a763692d",
+        "withdrawReleaseCredit": "0x85200c989f2abc8fe4699678e88b61944edd12f4e80d94f904faadd00456b9e1",
+        "withdrawPublisherCredit": "0x967e6351c60810f4cf39cd66d92c31fda928f45e36d881e591f18150d9d5a4eb",
+        "withdrawChallengerCredit": "0x61aa0fb63616cb06a2bdbfbd684cb7ca5196871d46b4bd044d2c4a281adea1ae"
+      },
+      "allWrites": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "note": "Primary artifact was fetched with a different runtime-rendered digest than the committed artifact; the final deployment therefore settled INCONCLUSIVE and refunded rather than producing a definitive SUPPORTED result."
+    },
+    "finalV3Contradicted": {
+      "evidenceFile": "scripts/live/evidence/final-v3-contradicted-fixed-20261017.json",
+      "claimKey": "8196f4688023a05e38c61b96d970d65d75c2fb7fa43fc307f40f9b9a579cb3ed",
+      "page": "https://a-murex-one.vercel.app/v2-final-contradicted-fixed-20261017.html",
+      "state": "SETTLED",
+      "finalStatus": "INCONCLUSIVE",
+      "releaseId": "1:8196f4688023a05e38c61b96d970d65d75c2fb7fa43fc307f40f9b9a579cb3ed",
+      "releaseOutcome": "REFUNDED",
+      "primaryArtifactSha256": "70c6e4230ee05a9720ccd97d4fc62ae6837bc20edd99a28a91461e600cd8f721",
+      "acceptedPrimaryObservationDigest": "a0f9e483c7fc425dafa70a775f1d1b9c125e600eaf39349d4498902a33ae0e51",
+      "activeExposure": 0,
+      "consumerExposure": 0,
+      "postWithdrawalCredits": { "publisher": 0, "challenger": 0, "creator": 0 },
+      "transactions": {
+        "submit": "0x16a9d9dbefd9bb0a835c672b4d8ed049066a56e01cf8dc291650541bd5817bc2",
+        "normalResolve": "0x621f96862c8d4c95b3d609d0d3ba9928a1f433f58d3d2f897f70b1964374c5ba",
+        "registerCovered": "0xd4d264ed3f56a5189dca7ba138009776634b9129d00b786e3b378efce8f6ac6e",
+        "createProtectedRelease": "0x9e0c81033f58d034a51f53c51a7504dd6455261de09302f843eca2627e1ca30e",
+        "challenge": "0xa9945ef9d98e64a050ca3a055473766224fca70066043050668c640bb2e5e5f0",
+        "resolveAssured": "0xc33a3752a988cb0c0902bde5d46226b131e751cbc9a5ca8370625364c4979f95",
+        "settle": "0xe45826ca006fda0506c6be3b437fc6bf5f1832a800755fd7250fc239f0cdf872",
+        "refundRelease": "0xd602ce74dd002e365e1cb234e098a6a9ccd1873feb7cc88d7395f9949a9c86cf",
+        "withdrawReleaseCredit": "0x1f445a02310f40c50d3ce2bfabf5184ffff466cad685f177abfde1549b9353fc",
+        "withdrawPublisherCredit": "0x8a69b215a419472afba38fb3854603efc7db1b4399960aa89523e4f3cf8c014f",
+        "withdrawChallengerCredit": "0x821982392d8303798214e2556904c6b9f87e1e23f2d08210aea3a66342715698"
+      },
+      "allWrites": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+      "note": "The primary artifact was fetched with a different runtime-rendered digest than the committed artifact; the final deployment settled INCONCLUSIVE and refunded rather than producing a definitive CONTRADICTED result."
+    },
+    "status": "Final deployment checks and two fresh final-deployment economic lifecycles recorded; both fail-closed as INCONCLUSIVE because the accepted primary render digests did not equal the committed artifact digests."
   },
   "toolVersions": {
     "genlayerCli": "0.39.1",
-    "genvmLint": "0.11.1rc2",
+    "genvmLint": "0.11.0",
     "directModeRunner": "v0.2.12"
   }
 }

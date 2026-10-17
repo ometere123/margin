@@ -35,6 +35,8 @@ Mitigations:
 - it shows the highlighted claim, class, challenge, public evidence, archive and key before signing;
 - the production signer uses a release-configured canonical contract address and ignores contract-address query parameters;
 - the extension uses the same release configuration and does not expose editable contract/RPC/signer settings to normal users;
+- Covered exposure is fail-closed at the canonical-consumer boundary: MARGIN binds one consumer exactly once after reciprocal address verification, and the consumer rejects Covered release admission when it is not that bound address;
+- publisher collateral is dispute collateral, not insurance or indemnity; release principal is funded separately in the consumer and is conditionally credited or refunded according to finalized claim state;
 - it reads the target contract's `network()` view and refuses writes unless the contract identifies itself as Studionet 61999;
 - it uses injected EIP-1193 only;
 - network is fixed to Studionet 61999;

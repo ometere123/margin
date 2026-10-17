@@ -1,6 +1,6 @@
 # Manual browser verification
 
-This is an optional manual UI walkthrough for the current release. The primary human production normal browser flow and final scripted Covered/Assured economic lifecycle are already recorded as passed. This document does not authorize contract redeployment or duplicate state-changing transactions; record only observed hashes, screenshots and readbacks if the optional walkthrough is performed.
+This is an optional manual UI walkthrough for the current release. The primary human production normal browser flow is recorded as passed; the fresh scripted Covered/Assured checkpoints are being finalized separately from their real appeal-window deadlines. This document does not authorize contract redeployment or duplicate state-changing transactions; record only observed hashes, screenshots and readbacks if the optional walkthrough is performed.
 
 ## Release checks
 
@@ -9,7 +9,7 @@ This is an optional manual UI walkthrough for the current release. The primary h
 3. Run `npm run zip` and record the resulting ZIP SHA-256.
 4. Load `extension/dist` as an unpacked extension in a fresh Chromium profile.
 5. Confirm the toolbar and side-panel icons use the MARGIN assets.
-6. Open the local signer build and confirm the deployment card shows Studionet `61999`, final MARGIN `0x4E0a75B63D913FC2d39A75F61905CA5973c77491`, and bound consumer `0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F` where shown.
+6. Open the local signer build and confirm the deployment card shows Studionet `61999`, final MARGIN `0x38a12Db824979A1E051792Cd322211FdB24473f3`, and bound consumer `0xD067556b32Ef7D9975d524B942344E4098724541` where shown.
 
 ## Normal claim flow
 
@@ -66,13 +66,13 @@ The primary human browser flow is complete and passed. Record the date, browser 
 - Challenge: `Verify whether Array.prototype.at() handles a negative index by adding it to the array length, rather than treating it as an ordinary string property.`
 - Evidence: https://tc39.es/ecma262/2026/multipage/indexed-collections.html#sec-array.prototype.at
 - Class: `TECHNICAL`
-- Result: production signer, injected wallet and Studionet 61999; submission and resolution finalized with `SUPPORTED`; exact re-anchor, highlight, visible `M · SUPPORTED` badge and side-panel/full provenance were observed against final MARGIN `0x4E0a75B63D913FC2d39A75F61905CA5973c77491`.
+- Result: production signer, injected wallet and Studionet 61999; submission and resolution finalized with `SUPPORTED`; exact re-anchor, highlight, visible `M · SUPPORTED` badge and side-panel/full provenance were observed against the prior final MARGIN `0x4E0a75B63D913FC2d39A75F61905CA5973c77491`. A fresh browser run against corrected MARGIN `0x38a12Db824979A1E051792Cd322211FdB24473f3` is not claimed.
 - This was a normal claim only. No Covered/Assured lifecycle was executed for this claim.
 - Exact transaction hashes were not committed and are intentionally not inferred.
 
 ## Optional manual UI walkthrough / not required for completion
 
-The following public fixtures are hosted on `https://a-murex-one.vercel.app` and are not the signer origin. They are read-only inspection fixtures for the browser run. The fixture project is Vercel project `a` (`prj_xPXHmh3TcvuBDvgSFyTRarWRfJgz`), production deployment `dpl_DD43w22FgrutZMj15euqzPjaZR14`.
+The following public fixtures are hosted on `https://a-murex-one.vercel.app` and are not the signer origin. They are read-only inspection fixtures for the browser run. The fixture project is Vercel project `a` (`prj_xPXHmh3TcvuBDvgSFyTRarWRfJgz`), current production deployment `dpl_4kHV5KpGXPKb3Pa3hX6xfjPct1um`.
 
 | Fixture | URL | Claim key | Non-browser state |
 | --- | --- | --- | --- |
@@ -91,7 +91,7 @@ These fixtures were produced against the superseded V2 deployment and are retain
 | Weak contradiction | `https://a-murex-one.vercel.app/v2-contradicted.html` | `d5ddb9e0eb1932861a75f8e6ef144e8fdcef17dd5cb207a6c6c2ce6ac4e33c94` | `SETTLED + INCONCLUSIVE` | release `6:d5ddb9e0eb1932861a75f8e6ef144e8fdcef17dd5cb207a6c6c2ce6ac4e33c94` refunded; credits withdrawn |
 | Strong contradiction | `https://a-murex-one.vercel.app/v2-contradicted-strong.html` | `006e13f4fee1713961c4a45148e7e196fb5e35204c9ab97c5831da2fe7c87880` | `SETTLED + CONTRADICTED` | release `7:006e13f4fee1713961c4a45148e7e196fb5e35204c9ab97c5831da2fe7c87880` refunded; credits withdrawn |
 
-Public V2 evidence roles are: publisher `0xac3AC69dC0Bde389256dD6748C75817ead9286D9`, challenger `0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB`, and integrator `0x951e6B75530774fF82321a5ae54e14F778F0C855`. Read-only inspection does not require importing them. The final V2 contract is `0x4E0a75B63D913FC2d39A75F61905CA5973c77491`; the bound consumer is `0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F`.
+Public V2 evidence roles are: publisher `0xac3AC69dC0Bde389256dD6748C75817ead9286D9`, challenger `0xA7EeAE0E93793e3146Cb14b0700251B8b0EBADFB`, integrator `0x951e6B75530774fF82321a5ae54e14F778F0C855`, and fresh beneficiary `0xB845a69860ba4CDf19CfDC5AfbAF2e20b6bE86b0`. Read-only inspection does not require importing them. The corrected V2 contract is `0x38a12Db824979A1E051792Cd322211FdB24473f3`; the bound consumer is `0xD067556b32Ef7D9975d524B942344E4098724541`.
 
 The A, B and C fixture routes are read-only against canonical finalized state. They do not require importing the publisher, challenger or integrator keys. A fresh claim submission, resolution, wallet rejection and network-switch test require your own funded injected wallet; you cannot sign as the recorded publisher/challenger/integrator accounts unless you deliberately import those accounts.
 
@@ -131,7 +131,7 @@ Record screenshots and observed transaction hashes alongside the corresponding s
 
 `PRIMARY HUMAN BROWSER FLOW: PASS`
 
-`FINAL COVERED/ASSURED ECONOMIC LIFECYCLE: PASS`
+`FRESH FINAL COVERED/ASSURED ECONOMIC LIFECYCLE: SETTLED / INCONCLUSIVE; REFUNDED; EXPOSURE ZERO`
 
 `OPTIONAL MANUAL COVERED UI WALKTHROUGH: NOT CLAIMED`
 

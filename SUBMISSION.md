@@ -12,16 +12,17 @@ This file describes only the current canonical deployment. Historical deployment
 
 ## Current deployments
 
-- MARGIN: [`0x4E0a75B63D913FC2d39A75F61905CA5973c77491`](https://explorer-studio.genlayer.com/address/0x4E0a75B63D913FC2d39A75F61905CA5973c77491)
-- MARGIN deployment: [`0xa6917d417dd63f683684acdfe7168c75bad1310172a79d0a91fed21835d5a617`](https://explorer-studio.genlayer.com/tx/0xa6917d417dd63f683684acdfe7168c75bad1310172a79d0a91fed21835d5a617)
-- MARGIN source commit: `ab5bbef32d046cf19e6621275485b57d4268ac87`
-- MARGIN source SHA-256: `A079E57EA831456721A6982FC5A4FB5B6AA77649D71EC3636BE44540292B41F1`
+- MARGIN: [`0x38a12Db824979A1E051792Cd322211FdB24473f3`](https://explorer-studio.genlayer.com/address/0x38a12Db824979A1E051792Cd322211FdB24473f3)
+- MARGIN deployment: [`0x6b7c5bd6ec5a458ce668e9908ac0c9111ec8dbbf90fdda8f281992ecc707f9e9`](https://explorer-studio.genlayer.com/tx/0x6b7c5bd6ec5a458ce668e9908ac0c9111ec8dbbf90fdda8f281992ecc707f9e9)
+- MARGIN source commit: `6798b2e748d7ef6f1e41538de4e33f84d9c7ae68`
+- MARGIN source SHA-256: `3A23F33952A35E3C848694887BB1C8D8DB03D3E1AEB10999F8A1518A9870BA12`
 - MARGIN deployment result: `FINALIZED / MAJORITY_AGREE / SUCCESS`
-- Consumer: [`0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F`](https://explorer-studio.genlayer.com/address/0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F)
-- Consumer deployment: [`0x521f944b8274e4f4e5bfe151c3f9a6fdba0fd4f5f4f515dd8f98b5d7976ce01d`](https://explorer-studio.genlayer.com/tx/0x521f944b8274e4f4e5bfe151c3f9a6fdba0fd4f5f4f515dd8f98b5d7976ce01d)
-- Consumer source commit: `ab5bbef32d046cf19e6621275485b57d4268ac87`
-- Consumer source SHA-256: `4060BFABA93A8B6BF90F6CDA6466D2066A7F1E1ED91036C1DB275047201DF6EC`
-- Consumer source size: `15416` bytes
+- Consumer: [`0xD067556b32Ef7D9975d524B942344E4098724541`](https://explorer-studio.genlayer.com/address/0xD067556b32Ef7D9975d524B942344E4098724541)
+- Consumer deployment: [`0xbdc8d87ef3185dab1dfdd1103f1ba2a14dda4c1c2d47284eb737dd39f2692fa8`](https://explorer-studio.genlayer.com/tx/0xbdc8d87ef3185dab1dfdd1103f1ba2a14dda4c1c2d47284eb737dd39f2692fa8)
+- Canonical consumer binding: [`0x3da7c5b731733ce69ac6dba9d4a3f91f074a465ddd3d6975aac80c9c4b14f77a`](https://explorer-studio.genlayer.com/tx/0x3da7c5b731733ce69ac6dba9d4a3f91f074a465ddd3d6975aac80c9c4b14f77a)
+- Consumer source commit: `6798b2e748d7ef6f1e41538de4e33f84d9c7ae68`
+- Consumer source SHA-256: `FBDC44E60CEAC4BFB0F63C8A6F4E78443382D6E6904BC33CE494AEC9C95DD9DA`
+- Consumer source size: `16742` bytes
 - Consumer constructor binding: final MARGIN address above
 - Consumer deployment result: `FINALIZED / MAJORITY_AGREE / SUCCESS`
 
@@ -30,12 +31,12 @@ This file describes only the current canonical deployment. Historical deployment
 - Signer: https://margin-signer.vercel.app/
 - Production deployment: `dpl_9Avj9b5Mx7BwgtbBYsZhdVKazJmV` (`READY`), built from signer-only patch commit `e35e27ea2c76fcb5482d285b6b41b858813b684e` and verified at the production URL.
 - Extension archive: `MARGIN-extension-v0.1.0.zip`
-- Extension SHA-256: `29264999CA6202A184899EA3FBA0E4097BCE25088B88A602FC3622F114FB1079`
+- Extension SHA-256: `59230A8330579C5D2126CD31DEC72F51C0A4BE42B985817C8FE038A1DB95B7E4`
 - Live fixture project: `a` (`prj_xPXHmh3TcvuBDvgSFyTRarWRfJgz`)
-- Live fixture production deployment: `dpl_DD43w22FgrutZMj15euqzPjaZR14`
+- Live fixture production deployment: `dpl_4kHV5KpGXPKb3Pa3hX6xfjPct1um`
 - Live fixture URL: https://a-murex-one.vercel.app/
 
-The signer uses the injected EIP-1193 wallet and the final configured V2 MARGIN address. The primary human production browser flow against final MARGIN passed, and the final Covered/Assured economic lifecycle was completed live by script on the final deployment. An additional manual Covered UI walkthrough is optional and not claimed; it is not a completion blocker.
+The signer uses the injected EIP-1193 wallet. Its production project environment is configured for the current MARGIN and consumer, but the public deployment listed above is historical and still targets the superseded deployment; no direct signer redeployment is claimed in this pass. The primary human production browser flow against the prior final deployment passed; a fresh Covered UI walkthrough against the corrected deployment is not claimed.
 
 ## Final production browser proof
 
@@ -51,11 +52,11 @@ The signer uses the injected EIP-1193 wallet and the final configured V2 MARGIN 
 
 - Contract lint: `3/3` for each contract
 - Python invariants: `12/12`
-- Direct Mode: `54/54` in the current local verification after the material-observation and citation tests
+- Direct Mode: `59/59` in the current local verification after the material-observation, citation, canonical-exposure and withdrawal tests
 - Extension tests: `17/17`
-- Signer tests: `36/36`
+- Signer tests: `40/40`
 - Extension and signer builds: passed
-- MARGIN source commit `ab5bbef32d046cf19e6621275485b57d4268ac87` matches the deployed source SHA-256 above.
+- MARGIN source commit `6798b2e748d7ef6f1e41538de4e33f84d9c7ae68` matches the deployed source SHA-256 above; the Consumer source at the same commit matches its deployed digest and constructor binding.
 
 ## Fresh final-MARGIN normal evidence
 
@@ -67,9 +68,9 @@ The signer uses the injected EIP-1193 wallet and the final configured V2 MARGIN 
 
 ## Live evidence boundary
 
-The material-observation V2 contract and bound consumer above are current. Final-deployment economic evidence is recorded only in the final checkpoint named below; prior V2 checkpoints are historical. The primary human production browser flow passed, and the final Covered/Assured economic lifecycle passed through the final live script. An optional manual Covered UI walkthrough is not claimed.
+The material-observation V2 contract and bound consumer above are current. Prior V2 checkpoints are historical. The primary human production browser flow passed. The fresh final-deployment checkpoints below completed their real appeal-window settlements and authoritative post-settlement readbacks: both settled `INCONCLUSIVE`, refunded the protected release, and ended with zero MARGIN/consumer exposure and zero recorded credits. An optional manual Covered UI walkthrough is not claimed.
 
-Fresh final-deployment economic lifecycle: [`scripts/live/evidence/final-v2-economic-contradicted.json`](scripts/live/evidence/final-v2-economic-contradicted.json). It reached `SETTLED + CONTRADICTED` after the real appeal window; the protected release was created before settlement, refunded, and withdrawn. Final readback reports active exposure `0` and publisher/challenger/creator credits `0`.
+Historical final-deployment economic lifecycle: [`scripts/live/evidence/final-v2-economic-contradicted.json`](scripts/live/evidence/final-v2-economic-contradicted.json). New final-deployment checkpoints are [`scripts/live/evidence/final-v3-supported-20261017.json`](scripts/live/evidence/final-v3-supported-20261017.json) and [`scripts/live/evidence/final-v3-contradicted-fixed-20261017.json`](scripts/live/evidence/final-v3-contradicted-fixed-20261017.json); both completed post-deadline readbacks as `SETTLED / INCONCLUSIVE` with `REFUNDED` releases and zero final exposure.
 
 ## Live sequence labels
 

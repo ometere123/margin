@@ -20,6 +20,14 @@ canonical coverage cap.
 The ordinary annotation path remains permissionless and is not described as
 financial assurance.
 
+The coverage cap is a bounded admission ceiling for aggregate active release
+principal funded separately by integrators. It is not insurance, indemnity or a
+promise that publisher collateral reimburses a release party. A supported
+terminal result permits the consumer to credit a beneficiary; a negative
+terminal result or permitted expiry credits the release creator. MARGIN's
+publisher/challenger/appeal collateral remains governed by its dispute
+settlement rules.
+
 ## Verification boundary
 
 The status (`SUPPORTED`, `CONTRADICTED`, `INCONCLUSIVE`, or `STALE`) remains
@@ -41,7 +49,7 @@ cannot produce a definitive `SUPPORTED` or `CONTRADICTED` result.
 | V1 limitation | V2 change | Test/live proof |
 | --- | --- | --- |
 | Fixed one-unit assurance did not cover arbitrary protected value | Covered Claim `coverage_cap` and full publisher collateral | `tests/direct/test_covered_claims.py`; V2 live pre-settlement release and settlement readback |
-| Releases were not coupled to a claim-wide value ceiling | `MarginConsumer.active_exposure_by_claim` and coverage checks | consumer Direct Mode integration; V2 live release refunded after `INCONCLUSIVE` |
+| Releases were not coupled to a claim-wide value ceiling | One canonical consumer, synchronous MARGIN exposure readback and `MarginConsumer.active_exposure_by_claim` checks | consumer Direct Mode integration; V2 live release refunded after `INCONCLUSIVE` |
 | Arbitrary high-assurance evidence URLs | Derived publisher manifest URL and typed evidence pack | manifest validation tests; V2 live manifest readback |
 | Mutable or oversized evidence could be silently truncated | bounded manifest/artifact policy, primary and evidence digest commitments | integrity mutation tests; V2 live primary-observation mismatch produced `INCONCLUSIVE` |
 | Ordinary annotations are advisory | explicit distinction between public annotation and Covered Claim | signer/assurance UI and documentation |
@@ -49,23 +57,21 @@ cannot produce a definitive `SUPPORTED` or `CONTRADICTED` result.
 ## Current limitations
 
 V2 MARGIN is deployed on Studionet at
-`0x4E0a75B63D913FC2d39A75F61905CA5973c77491` and the bound consumer is
-`0x11B5E8457C4Bf77B5F5dc19210FEdBBb7c3fB91F`. The production signer is
-configured for those addresses. Fresh V2 Covered Claim evidence includes the
-integrity-protective `SETTLED + INCONCLUSIVE` refund in
-`V2-final-supported.json`, a render-matched `SETTLED + SUPPORTED` execution in
-`V2-render-supported.json`, and a genuine `SETTLED + CONTRADICTED` refund in
-`V2-contradicted-strong.json`. The weak contradiction is recorded separately
-as `SETTLED + INCONCLUSIVE`. The human production normal browser flow passed,
-and the final Covered/Assured economic lifecycle passed through the final live
-script. Only an optional manual Covered UI walkthrough was not performed; the
-earlier A/B/C evidence is historical V1 evidence and is not relabeled.
+`0x38a12Db824979A1E051792Cd322211FdB24473f3` and the bound consumer is
+`0xD067556b32Ef7D9975d524B942344E4098724541`. The production project
+environment is configured for those addresses; a fresh public signer build is
+not claimed until its deployment is independently verified. Earlier V2
+Covered checkpoints remain historical for their original deployments. The
+fresh final-deployment checkpoints completed their real appeal deadlines and
+post-settlement readbacks as `SETTLED / INCONCLUSIVE` with refunded releases and
+zero MARGIN/consumer exposure; no browser run against the corrected deployment
+is claimed.
 
 ## Local gate snapshot
 
 At the latest local run, contract AST lint passed for both contracts, extension
-tests passed `17/17`, signer tests passed `36/36`, Python invariants passed
-`12/12`, Direct Mode passed `54/54`, and security mutations passed `12/12 killed`.
+tests passed `17/17`, signer tests passed `40/40`, Python invariants passed
+`12/12`, Direct Mode passed `59/59`, and security mutations passed `15/15 killed`.
 Extension and signer production builds
 also passed. These are local results for this branch, not Studionet live
 evidence. The repository-local CLI guard reports GenLayer `0.39.1`.

@@ -36,6 +36,7 @@ This is a short, evidence-first review path for the current Studionet release.
 | Bond conservation for cancellation and abort | `test_publisher_can_cancel_unchallenged_assured_claim_once`; `test_stalled_challenge_can_abort_and_refund_both_bonds` (Direct Mode only) |
 | Bond conservation for publisher and challenger appeals | `test_publisher_appeal_conserves_and_withdraws_all_bonds`; `test_appealed_timeout_has_only_abort_refund_exit` (Direct Mode only) |
 | Protected release is pre-settlement and pull-paid | consumer lifecycle tests, `create_protected_release`, `execute_release`, `refund_release` and `withdraw_release_credit` |
+| Publisher collateral is not presented as indemnity | Covered collateral is a dispute stake; release principal is separately funded and capped through the single canonical consumer |
 | Covered Claim requires a publisher-controlled derived manifest and typed evidence pack | `tests/direct/test_covered_claims.py`; `_validate_covered_manifest` and derived `/.well-known/margin/claims/<claim>.json` path |
 | Covered evidence binds complete primary/evidence artifact digests | `test_covered_claim_requires_primary_artifact_commitment`; `test_covered_claim_digest_mismatch_is_not_definitively_supported` |
 | Covered collateral and challenge economics are value-coupled | `test_covered_claim_collateral_and_exposure`; covered registration checks in `tests/direct/test_covered_claims.py` |
@@ -43,8 +44,8 @@ This is a short, evidence-first review path for the current Studionet release.
 | Resolver cannot escape by waiting briefly | `abort_stalled` timeout tests and timing notes in `docs/LIVE_VALIDATION.md` |
 | Wallet signing is ordinary EIP-1193 | signer wallet tests and source review; no Snap methods |
 | Browser annotation is extension-first | extension anchor/badge tests; current browser matrix remains manual and `NOT RUN BY AGENT` |
-| V2 live sequence A — Covered lifecycle | `scripts/live/evidence/V2-covered.json` / `V2-covered.md`: normal resolve, Covered registration, challenge, Assured resolve, real appeal wait, settlement and withdrawals; final `SETTLED + INCONCLUSIVE` |
-| V2 live sequence B — Covered protected release | `scripts/live/evidence/V2-covered.json` / `V2-covered.md`: release created before settlement, then refunded after the live `INCONCLUSIVE` outcome; positive `SUPPORTED` execution remains unclaimed |
+| V2 live sequence A — Covered lifecycle | `scripts/live/evidence/final-v3-supported-20261017.json`: final-deployment submit, resolve, Covered registration, protected release, challenge, Assured resolve, post-deadline settlement and refund; final status `INCONCLUSIVE` after the committed/runtime primary-digest mismatch |
+| V2 live sequence B — Covered protected release | `scripts/live/evidence/final-v3-contradicted-fixed-20261017.json`: final-deployment release, challenge, Assured resolve, post-deadline settlement and refund; final status `INCONCLUSIVE` after the committed/runtime primary-digest mismatch |
 | V2 live sequence C — Covered cancellation | Not yet run against V2; prior `scripts/live/evidence/C.*` is historical V1 evidence |
 
 The current release uses Studionet chain `61999`, RPC `https://studio.genlayer.com/api`, and the addresses recorded in `deployment.json`. Browser, wallet and live lifecycle claims remain limited to the transactions and manual checks explicitly recorded there and in `docs/LIVE_VALIDATION.md`.
