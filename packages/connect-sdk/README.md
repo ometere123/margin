@@ -1,6 +1,6 @@
-# @converts/margin-connect
+# @margin-connect/sdk
 
-`@converts/margin-connect` is a fail-closed integration SDK for applications that need
+`@margin-connect/sdk` is a fail-closed integration SDK for applications that need
 to consume a finalized MARGIN V2 Covered Claim. It reads the existing MARGIN
 deployment directly with `genlayer-js@1.1.8` and uses `LATEST_FINAL` for every
 authorization read.
@@ -18,20 +18,20 @@ The SDK returns only four decisions:
 
 ## Install
 
-The public package name is `@converts/margin-connect`. The authenticated npm
-account is `converts`; the original `@margin` organization is not accessible
-to that account. The registry release is performed separately after the
-final owner confirmation. Consumers may use the workspace package during
-development:
+The official package is [`@margin-connect/sdk@0.1.0`](https://www.npmjs.com/package/@margin-connect/sdk),
+published by the authenticated `converts` account from main commit
+`a275be880c508a54c0796b709a0cbf6e5b123fdb`. The original `@margin`
+organization is not accessible to that account. Install the registry release
+with:
 
 ```bash
-npm install @converts/margin-connect genlayer-js@1.1.8
+npm install @margin-connect/sdk genlayer-js@1.1.8
 ```
 
 ## Example
 
 ```ts
-import { createMarginConnect } from '@converts/margin-connect';
+import { createMarginConnect } from '@margin-connect/sdk';
 
 const connect = createMarginConnect({
   marginAddress: '0x38a12Db824979A1E051792Cd322211FdB24473f3',

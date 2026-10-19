@@ -10,7 +10,7 @@ import { parseRoute, type Route } from './router';
 import { decisionHistoryHtml, type DecisionHistoryEntry } from './history';
 import { consumerErrorMessage, mergeProtectedReleases, prioritizeProtectedReleases, type ProtectedReleaseView } from './consumer';
 import { consumerActivityRecord } from './activity';
-import { createMarginConnect, type MarginPolicyCommitment, type MarginVerdict } from '@converts/margin-connect';
+import { createMarginConnect, type MarginPolicyCommitment, type MarginVerdict } from '@margin-connect/sdk';
 import './style.css';
 
 declare global {

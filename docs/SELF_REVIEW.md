@@ -48,11 +48,15 @@ This is an evidence inventory, not a project score. Historical deployments and b
 - Local SDK tests cover seven API cases, Action binding tests cover five cases,
   and the reference PolicyGate Direct Mode suite covers seven cases. The
   existing V2 regression/mutation suite remains part of the final gates.
-- SDK publication uses the authenticated `@converts/margin-connect` scope;
-  independent third-party adoption is not claimed without public maintainer
-  evidence.
+- The official SDK migration target is [`@margin-connect/sdk@0.1.0`](https://www.npmjs.com/package/@margin-connect/sdk);
+  publication, clean ESM/CJS installation and production-audit checks are
+  release gates. The prior `@converts/margin-connect@0.1.0` release remains
+  historical migration evidence. Independent third-party
+  adoption is not claimed without public maintainer evidence.
 - The separately deployed PolicyGate is `0xa2Eab1218E09b9d3B28390d4332643Cb3C29ecA1`;
   its finalized deployment, source parity, `APPROVED` readback and one-shot
   action are recorded in `artifacts/margin_connect_v3_policy_gate.json`.
-- Main verification run `39244609574` passed on the merged V3 source commit;
-  the deterministic browser harness is not a production-wallet proof.
+- Main verification run [`39262301297`](https://github.com/ometere123/margin/actions/runs/39262301297)
+  passed on `a275be880c508a54c0796b709a0cbf6e5b123fdb`; the deterministic
+  browser harness is not a production-wallet proof. The V2-to-V3 comparison is
+  [`9d33116f...a275be8`](https://github.com/ometere123/margin/compare/9d33116f24d5f62b9ca562229ed573fbdb133c31...a275be880c508a54c0796b709a0cbf6e5b123fdb).

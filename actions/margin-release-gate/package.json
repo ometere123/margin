@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@actions/core": "3.0.1",
-    "@converts/margin-connect": "file:../../packages/connect-sdk"
+    "@margin-connect/sdk": "file:../../packages/connect-sdk"
   },
   "devDependencies": {
     "esbuild": "0.28.2",

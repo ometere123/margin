@@ -1,5 +1,5 @@
 {
-  "name": "@converts/margin-connect",
+  "name": "@margin-connect/sdk",
   "version": "0.1.0",
   "description": "Fail-closed, finality-aware TypeScript integration SDK for MARGIN V2 Covered Claims.",
   "type": "module",

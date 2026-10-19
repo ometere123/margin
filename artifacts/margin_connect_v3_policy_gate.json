@@ -67,9 +67,33 @@
     "postActionCount": 1,
     "readbackMethod": "get_action"
   },
+  "previousNpmPublication": {
+    "package": "@converts/margin-connect",
+    "version": "0.1.0",
+    "registry": "https://registry.npmjs.org/",
+    "packageUrl": "https://www.npmjs.com/package/@converts/margin-connect",
+    "publishedFromCommit": "a275be880c508a54c0796b709a0cbf6e5b123fdb",
+    "tarball": "https://registry.npmjs.org/@converts/margin-connect/-/margin-connect-0.1.0.tgz",
+    "tarballSha1": "5233bc2a3d9e2657e2d1225094ee603ccc2c7093",
+    "tarballIntegrity": "sha512-TN3iOZdKTNmfqDCHk5CHhn62glSfKLL4ugfjn6uhRyYnW6+yN66/z9Lw/G7OM9X55Ic+UttO0tSA9I4+/Zqyjg==",
+    "fileCount": 8,
+    "cleanConsumerEsmCjsImports": true,
+    "cleanConsumerProductionAudit": "0 vulnerabilities"
+  },
+  "npmMigration": {
+    "targetPackage": "@margin-connect/sdk",
+    "version": "0.1.0",
+    "registry": "https://registry.npmjs.org/",
+    "organization": "margin-connect",
+    "organizationOwnerVerified": true,
+    "authenticatedUser": "converts",
+    "status": "PENDING_OWNER_CONFIRMATION_BEFORE_PUBLISH",
+    "oldPackage": "@converts/margin-connect@0.1.0",
+    "oldPackageAction": "PENDING_NEW_PACKAGE_PUBLIC_VERIFICATION"
+  },
   "limitations": [
     "The policy gate is a reference non-custodial contract and does not hold release principal or publisher collateral.",
-    "The SDK and Action are not published to npm because namespace ownership and npm authentication were not independently available.",
+    "The immutable PolicyGate policy record predates this separate npm namespace migration; the package publication does not mutate or redeploy that contract.",
     "No independently maintained third-party application adoption is claimed.",
     "The signer production deployment was not changed by this evidence commit; the automated browser harness is not a production-wallet proof."
   ]
