@@ -10,6 +10,7 @@ import { parseRoute, type Route } from './router';
 import { decisionHistoryHtml, type DecisionHistoryEntry } from './history';
 import { consumerErrorMessage, mergeProtectedReleases, prioritizeProtectedReleases, type ProtectedReleaseView } from './consumer';
 import { consumerActivityRecord } from './activity';
+import { createMarginConnect, type MarginPolicyCommitment, type MarginVerdict } from '@margin/connect';
 import './style.css';
 
 declare global {
@@ -47,6 +48,9 @@ let protectedReleaseOffset = 0;
 let protectedReleaseHasMore = false;
 let directClaim: MarginClaim | null = null;
 let decisionHistory: DecisionHistoryEntry[] = [];
+let integrationMessage = '';
+let integrationVerdict: MarginVerdict | null = null;
+const integrationFields: Record<string, string> = {};
 
 function esc(v: string) { return v.replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]!)); }
 function validAddress(v: string): v is `0x${string}` { return /^0x[0-9a-fA-F]{40}$/.test(v); }
@@ -70,7 +74,7 @@ function headerHtml() {
   const walletState = walletHeaderState(account, chainCorrect);
   const wallet = walletState.connected ? `<span class="wallet-chip" title="${esc(account!)}">${esc(account!.slice(0, 8))}…${esc(account!.slice(-6))}</span><button id="header-disconnect" class="header-action">Disconnect</button>` : '<button id="header-connect" class="header-action">Connect wallet</button>';
   const networkLabel = walletState.networkActive ? `Studionet · ${MARGIN_CHAIN_ID}` : account ? 'Wallet not on Studionet' : `Studionet · ${MARGIN_CHAIN_ID}`;
-  return `<header><a class="brand" href="/"><img src="/assets/margin-logo.svg" alt="MARGIN"><span><span class="wordmark">MARGIN</span><span class="sub">Consensus-backed web claims</span></span></a><nav><a class="nav-item" href="/activity">Activity</a>${wallet}<span class="pill ${walletState.networkActive ? 'ok' : 'warn'}">${networkLabel}</span></nav></header>`;
+  return `<header><a class="brand" href="/"><img src="/assets/margin-logo.svg" alt="MARGIN"><span><span class="wordmark">MARGIN</span><span class="sub">Consensus-backed web claims</span></span></a><nav><a class="nav-item" href="/activity">Activity</a><a class="nav-item" href="/integrations">Integrations</a>${wallet}<span class="pill ${walletState.networkActive ? 'ok' : 'warn'}">${networkLabel}</span></nav></header>`;
 }
 
 function evidenceRows(claim: MarginClaim) {
@@ -103,8 +107,23 @@ function activityView() {
   return `<section><div class="eyebrow">Local activity</div><h1>Transaction provenance</h1><p class="meta">Stored only in this browser. MARGIN has no activity backend.</p>${records.length ? records.sort((a, b) => String(b.submittedAt).localeCompare(String(a.submittedAt))).map((tx) => `<div class="activity-row"><strong>${esc(tx.label)}</strong><span>${esc(tx.state || 'submitted')}</span><code>${esc(tx.claimKey)}</code><span>${esc(tx.account || 'wallet unavailable')}</span><span>${esc(tx.submittedAt || '')}</span><span>${tx.id ? txLink(tx.id) : ''}</span></div>`).join('') : '<p class="empty-state">No local transactions recorded yet.</p>'}</section>`;
 }
 
+function integrationInput(name: string, label: string, placeholder: string, type = 'text') {
+  const value = integrationFields[name] || '';
+  return `<label for="integration-${esc(name)}">${esc(label)}</label><input id="integration-${esc(name)}" name="${esc(name)}" type="${esc(type)}" value="${esc(value)}" placeholder="${esc(placeholder)}" autocomplete="off">`;
+}
+
+function integrationVerdictHtml() {
+  if (!integrationVerdict) return '<p class="meta">No policy read has been performed in this browser session.</p>';
+  const tone = integrationVerdict.state === 'APPROVED' ? 'ok' : integrationVerdict.state === 'PENDING' ? 'pending' : 'bad';
+  return `<div class="${tone}"><strong>${esc(integrationVerdict.state)}</strong><p>${esc(integrationVerdict.reason)}</p><div class="detail-grid"><span>Claim key</span><code>${esc(integrationVerdict.claimKey)}</code><span>Chain</span><code>${esc(String(integrationVerdict.chainId))}</code><span>Assurance</span><strong>${esc(integrationVerdict.assurance)}</strong></div></div>`;
+}
+
+function integrationsView() {
+  return `<section class="hero integration-workspace"><div class="eyebrow">MARGIN Connect</div><h1>Consensus verification for external applications.</h1><p>Evaluate an immutable release policy against finalized MARGIN state. This workspace is read-only: it never replaces GenLayer consensus, signs a transaction, or treats an unavailable read as approval.</p><div class="flow-strip" aria-label="MARGIN Connect flow"><span>Exact policy</span><i aria-hidden="true">→</i><span>LATEST_FINAL reads</span><i aria-hidden="true">→</i><span>Fail-closed decision</span></div></section><section class="integration-workspace"><div class="eyebrow">Policy inspector</div><p class="meta">MARGIN ${esc(contractAddress)} · canonical consumer ${esc(MARGIN_CONSUMER_ADDRESS)} · Studionet ${MARGIN_CHAIN_ID}</p><form id="integration-policy-form" class="integration-policy-form">${integrationInput('policyId', 'Policy ID', 'release-policy-v1')}${integrationInput('claimKey', 'Claim key', '64 hexadecimal characters')}${integrationInput('canonicalUrl', 'Canonical URL', 'https://…')}${integrationInput('publisher', 'Publisher wallet', '0x…')}${integrationInput('manifestDigest', 'Manifest digest', '64 hexadecimal characters')}${integrationInput('evidencePackDigest', 'Evidence-pack digest', '64 hexadecimal characters')}${integrationInput('primaryArtifactSha256', 'Primary artifact SHA-256', '64 hexadecimal characters')}${integrationInput('repository', 'Repository', 'owner/repository')}${integrationInput('commitSha', 'Commit SHA', '40 hexadecimal characters')}${integrationInput('releaseArtifactSha256', 'Release artifact SHA-256', '64 hexadecimal characters')}${integrationInput('policyHash', 'Policy commitment hash', '64 hexadecimal characters')}<button class="accent" type="submit" ${contractVerified ? '' : 'disabled'}>Evaluate finalized policy</button></form>${integrationMessage ? `<p class="bad">${esc(integrationMessage)}</p>` : ''}${integrationVerdictHtml()}</section><section class="integration-workspace"><div class="eyebrow">Integration boundary</div><div class="detail-grid"><span>Authorisation source</span><strong>Finalized MARGIN consensus</strong><span>Read variant</span><code>LATEST_FINAL</code><span>Write authority</span><strong>None</strong><span>Unavailable state</span><strong>Never approved</strong></div><p class="meta">The SDK and GitHub Action bind the repository, commit and release artifact separately. They do not create a second Covered Claim consumer.</p></section>`;
+}
+
 function renderNonChallenge(message = '') {
-  const body = route.kind === 'home' ? `<section class="hero"><div class="eyebrow">Browser-native protocol workspace</div><h1>Consensus-backed footnotes for the public web.</h1><p>Install or open the MARGIN extension, highlight a public claim, then choose <strong>Challenge with MARGIN</strong>.</p><div class="flow-strip" aria-label="MARGIN flow"><span>Highlight</span><i aria-hidden="true">→</i><span>Challenge</span><i aria-hidden="true">→</i><span>Consensus</span></div></section><details class="deployment-card"><summary><span>Deployment</span><span class="meta">Studionet · ${MARGIN_CHAIN_ID}</span></summary><div class="detail-grid"><span>Network</span><strong>Studionet · ${MARGIN_CHAIN_ID}</strong><span>Contract</span><code>${esc(contractAddress)}</code></div><p>${contractLink(contractAddress)}</p></details>` : route.kind === 'activity' ? activityView() : route.kind === 'claim' ? directClaimView() : route.kind === 'assurance' ? `<section><div class="eyebrow">Assurance</div><h1>Assured Claim</h1><p class="meta">Canonical claim: <code>${esc(route.claimKey)}</code></p>${directClaimView()}</section>${assuredPanel()}` : `<section class="empty-state"><h1>Page not found</h1><a class="button dark" href="/">Back to MARGIN</a></section>`;
+  const body = route.kind === 'home' ? `<section class="hero"><div class="eyebrow">Browser-native protocol workspace</div><h1>Consensus-backed footnotes for the public web.</h1><p>Install or open the MARGIN extension, highlight a public claim, then choose <strong>Challenge with MARGIN</strong>.</p><div class="flow-strip" aria-label="MARGIN flow"><span>Highlight</span><i aria-hidden="true">→</i><span>Challenge</span><i aria-hidden="true">→</i><span>Consensus</span></div></section><details class="deployment-card"><summary><span>Deployment</span><span class="meta">Studionet · ${MARGIN_CHAIN_ID}</span></summary><div class="detail-grid"><span>Network</span><strong>Studionet · ${MARGIN_CHAIN_ID}</strong><span>Contract</span><code>${esc(contractAddress)}</code></div><p>${contractLink(contractAddress)}</p></details>` : route.kind === 'activity' ? activityView() : route.kind === 'integrations' ? integrationsView() : route.kind === 'claim' ? directClaimView() : route.kind === 'assurance' ? `<section><div class="eyebrow">Assurance</div><h1>Assured Claim</h1><p class="meta">Canonical claim: <code>${esc(route.claimKey)}</code></p>${directClaimView()}</section>${assuredPanel()}` : `<section class="empty-state"><h1>Page not found</h1><a class="button dark" href="/">Back to MARGIN</a></section>`;
   const visibleMessage = /^(Wallet connected to Studionet 61999\.|Wallet is on Studionet 61999\.|Wallet disconnected from MARGIN\.)$/.test(message) ? '' : message;
   app.innerHTML = `<main>${headerHtml()}${visibleMessage ? `<div class="notice">${esc(visibleMessage)}</div>` : ''}${contractError ? `<div class="notice">${esc(contractError)}</div>` : ''}${body}</main>`;
   bind();
@@ -600,9 +619,44 @@ async function resumeAssuredTransactions() {
   }
 }
 
+async function evaluateIntegration(event: SubmitEvent) {
+  event.preventDefault();
+  integrationMessage = '';
+  const form = event.currentTarget as HTMLFormElement;
+  const formData = new FormData(form);
+  for (const [name, value] of formData.entries()) integrationFields[name] = String(value).trim();
+  try {
+    if (!contractVerified || !validAddress(contractAddress)) throw new Error('The canonical MARGIN deployment is not verified.');
+    const commitment = {
+      policyId: integrationFields.policyId,
+      claimKey: integrationFields.claimKey,
+      canonicalUrl: integrationFields.canonicalUrl,
+      publisher: integrationFields.publisher as `0x${string}`,
+      manifestDigest: integrationFields.manifestDigest,
+      evidencePackDigest: integrationFields.evidencePackDigest,
+      primaryArtifactSha256: integrationFields.primaryArtifactSha256,
+      repository: integrationFields.repository,
+      commitSha: integrationFields.commitSha,
+      releaseArtifactSha256: integrationFields.releaseArtifactSha256,
+      policyHash: integrationFields.policyHash,
+    } satisfies MarginPolicyCommitment;
+    const connect = createMarginConnect({
+      marginAddress: contractAddress as `0x${string}`,
+      consumerAddress: MARGIN_CONSUMER_ADDRESS,
+      policyCommitment: commitment,
+    });
+    integrationVerdict = await connect.getVerdict();
+  } catch (error) {
+    integrationVerdict = null;
+    integrationMessage = String((error as Error).message || error);
+  }
+  renderNonChallenge();
+}
+
 function bind() {
   document.querySelector('#header-connect')?.addEventListener('click', () => connect(true).catch(e => render(String(e.message || e))));
   document.querySelector('#header-disconnect')?.addEventListener('click', disconnect);
+  document.querySelector<HTMLFormElement>('#integration-policy-form')?.addEventListener('submit', (event) => evaluateIntegration(event).catch((error) => { integrationMessage = String((error as Error).message || error); renderNonChallenge(); }));
   document.querySelector('#connect')?.addEventListener('click', () => connect(true).catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`)));
   document.querySelector('#disconnect')?.addEventListener('click', disconnect);
   document.querySelector('#submit')?.addEventListener('click', () => submitClaim().catch(e => setStatus(`<div class="bad">${esc(String(e.message || e))}</div>`)));

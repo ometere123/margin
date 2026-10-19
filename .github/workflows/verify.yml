@@ -2,9 +2,13 @@ name: verify
 on: [push, pull_request]
 jobs:
   verify:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
+    env:
+      GENVM_VERSION: v0.2.12
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -17,6 +21,7 @@ jobs:
       - run: python -m pip install --no-deps git+https://github.com/genlayerlabs/genlayer-testing-suite@75a5bcde75582734caaf210b9ebadab358fd45cb
       - run: npm ci
       - run: npm run cli
+      - run: npm exec -- genlayer --version
       - run: mkdir -p "$HOME/.cache/gltest-direct" && curl --fail --location --retry 3 https://github.com/genlayerlabs/genvm/releases/download/v0.2.12/genvm-universal.tar.xz --output "$HOME/.cache/gltest-direct/genvm-universal-v0.2.12.tar.xz"
       - run: npm run lint:contract
       - run: npm run verify

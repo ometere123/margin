@@ -35,3 +35,18 @@ This is an evidence inventory, not a project score. Historical deployments and b
 - The extension ZIP hash is `59230A8330579C5D2126CD31DEC72F51C0A4BE42B985817C8FE038A1DB95B7E4`.
 - Historical browser evidence demonstrates the RFC `<wbr>` anchoring and visible claim badge; it is not presented as fresh proof against the current deployment.
 - Limitation: the optional/hostile browser matrix and the demo video were not recorded or claimed.
+
+## V3 integration boundary
+
+- The V2 contracts and canonical consumer remain unchanged from the accepted
+  baseline; V3 adds integration tooling rather than a new claim protocol.
+- The SDK, release Action and PolicyGate all require finalized MARGIN state and
+  fail closed for ordinary, pending, negative, malformed or unavailable reads.
+- The signer `/integrations` workspace is read-only and has a browser-harness
+  check for unavailable canonical reads; it does not claim a production wallet
+  approval run by itself.
+- Local SDK tests cover seven API cases, Action binding tests cover five cases,
+  and the reference PolicyGate Direct Mode suite covers seven cases. The
+  existing V2 regression/mutation suite remains part of the final gates.
+- No npm publication or independent third-party adoption is claimed without
+  verified namespace access or public maintainer evidence.

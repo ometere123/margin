@@ -10,7 +10,14 @@ const python = process.platform === 'win32' ? 'python' : 'python3';
 const child = spawn(
   python,
   ['-c', 'from genvm_linter.cli import cli; cli()', ...args],
-  { stdio: 'inherit', env: { ...process.env, PYTHONIOENCODING: 'utf-8' } },
+  {
+    stdio: 'inherit',
+    env: {
+      ...process.env,
+      PYTHONIOENCODING: 'utf-8',
+      GENVM_VERSION: process.env.GENVM_VERSION || 'v0.2.12',
+    },
+  },
 );
 
 child.on('error', (error) => {

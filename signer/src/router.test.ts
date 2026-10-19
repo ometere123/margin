@@ -8,6 +8,9 @@ describe('signer routes', () => {
     expect(parseRoute(`/claim/${key}`)).toEqual({ kind: 'claim', claimKey: key });
     expect(parseRoute(`/claim/${key}/assurance`)).toEqual({ kind: 'assurance', claimKey: key });
   });
+  it('loads the read-only MARGIN Connect integration workspace', () => {
+    expect(parseRoute('/integrations')).toEqual({ kind: 'integrations' });
+  });
   it('fails closed for malformed or unknown routes', () => {
     expect(parseRoute('/claim/nope')).toEqual({ kind: 'not-found' });
     expect(parseRoute('/unknown')).toEqual({ kind: 'not-found' });

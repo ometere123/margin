@@ -1,0 +1,29 @@
+name: MARGIN release gate
+description: Fail-closed finality and artifact gate for a MARGIN Covered Claim policy.
+author: MARGIN contributors
+inputs:
+  policy-file:
+    description: Repository-relative JSON policy commitment file.
+    required: true
+  artifact-path:
+    description: Repository-relative release artifact whose exact SHA-256 is committed by the policy.
+    required: true
+  expected-commit:
+    description: Exact commit SHA bound by the policy. Defaults to GITHUB_SHA.
+    required: false
+  margin-address:
+    description: Exact MARGIN deployment address.
+    required: true
+  consumer-address:
+    description: Exact canonical MARGIN Consumer address.
+    required: true
+outputs:
+  state:
+    description: APPROVED, DENIED, PENDING or UNAVAILABLE.
+  claim-key:
+    description: Claim key evaluated by the gate.
+  reason:
+    description: Safe human-readable decision reason.
+runs:
+  using: node24
+  main: dist/index.js

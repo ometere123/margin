@@ -2,6 +2,7 @@ export type Route =
   | { kind: 'home' }
   | { kind: 'challenge'; draft: string }
   | { kind: 'activity' }
+  | { kind: 'integrations' }
   | { kind: 'claim'; claimKey: string }
   | { kind: 'assurance'; claimKey: string }
   | { kind: 'not-found' };
@@ -13,6 +14,7 @@ export function parseRoute(pathname: string, search = ''): Route {
   if (path === '/') return { kind: 'home' };
   if (path === '/challenge') return draft ? { kind: 'challenge', draft } : { kind: 'not-found' };
   if (path === '/activity') return { kind: 'activity' };
+  if (path === '/integrations') return { kind: 'integrations' };
   const assurance = path.match(/^\/claim\/([0-9a-fA-F]{64})\/assurance$/);
   if (assurance) return { kind: 'assurance', claimKey: assurance[1].toLowerCase() };
   const claim = path.match(/^\/claim\/([0-9a-fA-F]{64})$/);

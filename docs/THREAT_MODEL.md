@@ -72,3 +72,37 @@ The current evidence policy accepts both HTTP and HTTPS public evidence URLs; HT
 MARGIN is deliberately not a universal truth oracle. UI and documentation limit v0.1 to technical, licence, compatibility, pricing and documentation claims.
 
 Do not add political persuasion, personal allegations, medical determinations, broad reputation scores or subjective quality ranking to the same contract.
+
+## External integration policy confusion
+
+Threat: an application, CI job or SDK caller treats an ordinary, pending,
+malformed, unavailable or negative claim as approval, or supplies a different
+publisher, claim key, URL, Covered commitment, repository, commit or release
+artifact than the reviewed policy.
+
+Invariant: only the exact immutable policy over a finalized `SETTLED /
+SUPPORTED` Covered Claim may authorize the downstream integration.
+
+Mitigation: `@margin/connect` validates the exact policy commitment, verifies
+Studionet 61999 identity, reads with `LATEST_FINAL`, checks canonical consumer
+and coverage arithmetic, and maps all read failures to `UNAVAILABLE`. The
+release-gate Action independently checks `GITHUB_REPOSITORY`, `GITHUB_SHA` and
+the local artifact SHA-256. `MarginPolicyGate` repeats the decisive MARGIN
+read on-chain and stores a bounded one-time action.
+
+Residual limitation: repository identity and release-artifact bytes are not
+facts that the V2 MARGIN contract itself attests. They are therefore refused
+when the Action policy cannot establish them; the SDK, Action and reference
+gate are not a replacement for GitHub or package-registry trust controls.
+
+## Integration availability and adoption
+
+Threat: a consumer mistakes an RPC outage or an unfinalized read for a
+positive decision, or documentation implies third-party adoption without
+evidence.
+
+Mitigation: explicit `PENDING` and `UNAVAILABLE` states, no local AI or
+backend verdict authority, and explicit adoption evidence requirements.
+
+Residual limitation: no independently maintained third-party application is
+claimed until a maintainer-authorized public merge and public CI run exist.
