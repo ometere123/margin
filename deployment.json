@@ -748,5 +748,23 @@
     "genlayerCli": "0.39.1",
     "genvmLint": "0.11.0",
     "directModeRunner": "v0.2.12"
+  },
+  "v3PolicyGate": {
+    "contractAddress": "0xa2Eab1218E09b9d3B28390d4332643Cb3C29ecA1",
+    "deploymentTx": "0x56a7e9bf2aa59fcbcfce02cfcf8de42bbd9cd7b4a627c0e56f501f71ca8350a5",
+    "deploymentStatus": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+    "sourceCommit": "eb7937c21a16feded049e85c8aca18f409eda493",
+    "sourceBytes": 13809,
+    "sourceSha256": "1fd89faff425c133e1cc9c34a65856b60e199a7d769cd10a1dfb411552e80ac3",
+    "deployedSourceParity": "byte-for-byte",
+    "policyId": "margin-connect-v3-supported-20261019",
+    "claimKey": "bd9a74117d96a75f9ffea9402defbb18067d64fcd12356ac1fa77eea30d7349e",
+    "policyHash": "6912a1b1ee51d74d1b737f553005a2fb6b5a03c7c01ec21ec261640c69e3b05a",
+    "evaluatePolicyReadback": "APPROVED / SETTLED / SUPPORTED / active_exposure=0 / available_coverage=0 / registration_open=false",
+    "actionTx": "0x59608feba008b9868e88368040cf1bbfd7950e6416fa3f6b227c138046750353",
+    "actionId": "v3-demo-action-20261019",
+    "actionStatus": "FINALIZED / MAJORITY_AGREE / SUCCESS",
+    "actionCountReadback": 1,
+    "evidenceFile": "artifacts/margin_connect_v3_policy_gate.json"
   }
 }

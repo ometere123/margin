@@ -64,12 +64,12 @@ Do not run bare `genlayer ...` commands from this repo.
 
 ## Checks completed for the corrected candidate
 
-- Direct Mode: 59/59 PASS, including Covered Claim collateral/exposure cases, citation-integrity cases, timeout-race cases, per-creator release-cap enforcement, pagination, bond-conservation assertions, real MARGIN/consumer integration coverage and explicit consensus trust-boundary tamper cases.
+- Direct Mode: 66/66 PASS, including the 59-case V2 regression suite and 7 PolicyGate reference-contract cases.
 - Contract AST lint: 3/3 PASS for both contracts with pinned `genvm-linter==0.11.0`; both contracts also passed the pinned SDK semantic validation in the recorded CI run.
 - Python/source invariant suite: 12/12 PASS.
 - `npm exec -- genlayer --version`: `0.39.1`.
 - Studionet network info and deployed `network()` readback: `61999`, `studionet`, `https://studio.genlayer.com/api`.
-- Extension/signer typecheck, tests and builds: PASS on the current source; extension tests `17/17`, signer tests `42/42`, source invariants `12/12`, Direct Mode `59/59`, security mutations `15/15` killed. The deterministic browser harness is separate from manual real-wallet verification.
+- Extension/signer/SDK/Action typechecks, tests and builds: PASS on the current source; extension tests `17/17`, signer tests `43/43`, SDK tests `7/7`, Action tests `5/5`, source invariants `12/12`, Direct Mode `66/66`, security mutations `15/15` killed. The deterministic browser harness is separate from manual real-wallet verification.
 - Reproducible extension archive: `MARGIN-extension-v0.1.0.zip`, SHA-256 `59230A8330579C5D2126CD31DEC72F51C0A4BE42B985817C8FE038A1DB95B7E4`, produced by `npm run zip` from `extension/dist`; the ZIP is not committed as generated noise.
 - GitHub Actions status must be read from the workflow run attached to the exact candidate commit; the prior run reference is historical and is not current verification for this hardening pass.
 

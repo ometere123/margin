@@ -15,14 +15,14 @@ This is an evidence inventory, not a project score. Historical deployments and b
 
 - `contracts/margin.py` covers bounded claims, source identity commitments, accepted observation provenance, explicit normal/Assured adjudication contexts, revision limits, cooldowns, cancellation, stalled abort, appeal, settlement and pull-credit withdrawal.
 - `contracts/margin_consumer.py` binds the canonical MARGIN address at construction and rejects caller-selected trust anchors.
-- Direct Mode passes `59/59`; the consumer integration subset passes; source invariants pass `12/12`; the focused security mutation suite kills `15/15` mutations.
+- Direct Mode passes `66/66` (`59/59` V2 regression cases plus `7/7` PolicyGate cases); the consumer integration subset passes; source invariants pass `12/12`; the focused security mutation suite kills `15/15` mutations.
 - The current deployed MARGIN source matches `deployment.json`: source commit `6798b2e`, 91,516 bytes, SHA-256 `3A23F33952A35E3C848694887BB1C8D8DB03D3E1AEB10999F8A1518A9870BA12`; the consumer is 16,742 bytes with SHA-256 `FBDC44E60CEAC4BFB0F63C8A6F4E78443382D6E6904BC33CE494AEC9C95DD9DA` and is bound to that MARGIN.
 - Both contracts passed the pinned GenVM semantic validation in the recorded CI run; the repository also retains the `3/3` AST-lint checks per contract and the green Direct Mode suite.
 
 ## Engineering
 
 - `npm run verify` runs contract AST lint, TypeScript typechecks, extension tests, signer tests, Python invariants, Direct Mode and both production builds.
-- Current totals are: AST lint `3/3` for each contract, extension `17/17`, signer `42/42`, invariants `12/12`, Direct Mode `59/59`, security mutations `15/15` killed. The deterministic browser harness passed; the primary human production normal browser flow is recorded separately from the final Covered lifecycle evidence.
+- Current totals are: AST lint `3/3` for each contract, extension `17/17`, signer `43/43`, SDK `7/7`, Action `5/5`, invariants `12/12`, Direct Mode `66/66`, security mutations `15/15` killed. The deterministic browser harness passed; the primary human production normal browser flow is recorded separately from the final Covered lifecycle evidence.
 - CLI verification reports exactly `0.39.1`; the exact candidate's GitHub Actions result is reported with the final handoff and must not be inferred from an older run.
 - The read-only `npm run live:read` script verifies finalized `network()` identity without a wallet or write.
 - Limitation: the optional manual Covered UI walkthrough and demo video were not recorded; the deterministic browser harness is a separate automated check and is not presented as production-wallet evidence.
@@ -50,3 +50,8 @@ This is an evidence inventory, not a project score. Historical deployments and b
   existing V2 regression/mutation suite remains part of the final gates.
 - No npm publication or independent third-party adoption is claimed without
   verified namespace access or public maintainer evidence.
+- The separately deployed PolicyGate is `0xa2Eab1218E09b9d3B28390d4332643Cb3C29ecA1`;
+  its finalized deployment, source parity, `APPROVED` readback and one-shot
+  action are recorded in `artifacts/margin_connect_v3_policy_gate.json`.
+- Main verification run `39244609574` passed on the merged V3 source commit;
+  the deterministic browser harness is not a production-wallet proof.

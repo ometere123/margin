@@ -41,10 +41,21 @@ Both sequences waited for the actual appeal deadline and every claimed successfu
 
 ## V3 live-evidence boundary
 
-The V3 SDK and reference PolicyGate do not change the V2 lifecycle above. Any
-new PolicyGate address, transaction, source digest and post-state is recorded
-separately after a real finalized Studionet deployment; a local Direct Mode
-result is not presented as live consensus evidence. The SDK/Action integration
-also does not claim npm publication, external maintainer adoption or a
-production `/integrations` approval until those external facts are independently
-verified.
+The V3 SDK and reference PolicyGate do not change the V2 lifecycle above. The
+separate PolicyGate deployment is
+`0xa2Eab1218E09b9d3B28390d4332643Cb3C29ecA1`, deployment transaction
+`0x56a7e9bf2aa59fcbcfce02cfcf8de42bbd9cd7b4a627c0e56f501f71ca8350a5`, with
+byte-for-byte source parity at SHA-256
+`1fd89faff425c133e1cc9c34a65856b60e199a7d769cd10a1dfb411552e80ac3`. Its
+finalized `evaluate_policy` read returned `APPROVED` for the existing V2
+`SETTLED / SUPPORTED` Covered Claim, and its owner-only action finalized in
+`0x59608feba008b9868e88368040cf1bbfd7950e6416fa3f6b227c138046750353`.
+The machine-readable receipt and readback are in
+[`artifacts/margin_connect_v3_policy_gate.json`](../artifacts/margin_connect_v3_policy_gate.json).
+
+The merged-main verification is GitHub Actions run
+[`39244609574`](https://github.com/ometere123/margin/actions/runs/39244609574).
+The SDK/Action integration does not claim npm publication, external maintainer
+adoption or a production `/integrations` approval until those external facts
+are independently verified. A local Direct Mode result is not presented as
+live consensus evidence.

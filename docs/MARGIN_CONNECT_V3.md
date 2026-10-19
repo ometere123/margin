@@ -49,8 +49,21 @@ requires the exact Covered commitments and `SETTLED / SUPPORTED` state, and
 records a bounded one-time-per-action application state transition for its
 owner. It has no release escrow, token transfer or alternative Covered Claim
 capacity. Direct Mode tests cover approved, denied, pending, malformed,
-unavailable and replayed cases; deployment evidence is recorded only after a
-real finalized Studionet deployment.
+unavailable and replayed cases.
+
+The reference gate was deployed without changing V2 at
+`0xa2Eab1218E09b9d3B28390d4332643Cb3C29ecA1` in finalized transaction
+`0x56a7e9bf2aa59fcbcfce02cfcf8de42bbd9cd7b4a627c0e56f501f71ca8350a5`.
+The deployed source is byte-for-byte equal to
+`contracts/margin_policy_gate.py` (13,809 UTF-8 bytes; SHA-256
+`1fd89faff425c133e1cc9c34a65856b60e199a7d769cd10a1dfb411552e80ac3`). Its
+`evaluate_policy` read returned `APPROVED` for the existing finalized V2
+`SETTLED / SUPPORTED` claim, with canonical consumer
+`0xD067556b32Ef7D9975d524B942344E4098724541`, and its owner-only
+`perform` action finalized in transaction
+`0x59608feba008b9868e88368040cf1bbfd7950e6416fa3f6b227c138046750353`.
+The machine-readable record is
+[`artifacts/margin_connect_v3_policy_gate.json`](../artifacts/margin_connect_v3_policy_gate.json).
 
 ## Signer integration workspace
 
@@ -65,4 +78,8 @@ No independently maintained third-party application integration or maintainer
 permission is claimed until a public repository and public CI run verify it.
 The first-party SDK, Action and reference contract are the reproducible
 integration surface; external adoption remains an explicit limitation unless
-independently evidenced.
+independently evidenced. The final merged main verification is GitHub Actions
+run [`39244609574`](https://github.com/ometere123/margin/actions/runs/39244609574)
+on commit `eb7937c21a16feded049e85c8aca18f409eda493`; it passed the existing V2
+checks together with the V3 SDK, Action, PolicyGate, typecheck, build,
+mutation and browser-harness checks.

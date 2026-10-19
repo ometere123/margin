@@ -1,0 +1,76 @@
+{
+  "milestone": "MARGIN Connect V3",
+  "comparisonBaseline": "9d33116f24d5f62b9ca562229ed573fbdb133c31",
+  "sourceCommit": "eb7937c21a16feded049e85c8aca18f409eda493",
+  "network": {
+    "name": "studionet",
+    "chainId": 61999,
+    "rpc": "https://studio.genlayer.com/api",
+    "cli": "genlayer@0.39.1",
+    "genvm": "v0.2.12",
+    "linter": "genvm-linter==0.11.0"
+  },
+  "preservedV2": {
+    "margin": "0x38a12Db824979A1E051792Cd322211FdB24473f3",
+    "canonicalConsumer": "0xD067556b32Ef7D9975d524B942344E4098724541"
+  },
+  "policy": {
+    "policyId": "margin-connect-v3-supported-20261019",
+    "claimKey": "bd9a74117d96a75f9ffea9402defbb18067d64fcd12356ac1fa77eea30d7349e",
+    "canonicalUrl": "https://a-murex-one.vercel.app/v2-final-supported-20261017.html",
+    "publisher": "0xac3AC69dC0Bde389256dD6748C75817ead9286D9",
+    "manifestDigest": "d6aabe54a4986f7eeb531c9cc771110e59ccadc5ba02ab133e2abe87a6898cba",
+    "evidencePackDigest": "41c4f846402dabf19f95e3fdb9654a60a03b242706d68accf37228cea81f26c9",
+    "primaryArtifactSha256": "e5866f8a9d2c905e3251a3ee53e26c37d5a9a780756a57c896a7fb9decab33c2",
+    "repository": "ometere123/margin",
+    "commitSha": "eb7937c21a16feded049e85c8aca18f409eda493",
+    "releaseArtifact": "packages/connect-sdk/package.json",
+    "releaseArtifactSha256": "128e39cbd284e4de1f9fe46c9b2ad9c4796a6fca38580ba42bc94f5ed7c3bb0f",
+    "policyHash": "6912a1b1ee51d74d1b737f553005a2fb6b5a03c7c01ec21ec261640c69e3b05a",
+    "expiresAt": "2027-10-19T00:00:00Z",
+    "manifestUrl": "https://a-murex-one.vercel.app/.well-known/margin/claims/bd9a74117d96a75f9ffea9402defbb18067d64fcd12356ac1fa77eea30d7349e.json",
+    "evidenceUrl": "https://a-murex-one.vercel.app/v2-final-supported-20261017-evidence.txt",
+    "evidenceSha256": "ff840f3812095e56a5a7458d9a2fb1411767bf7a4b50ae2eab0f6a73f304a248",
+    "publicFetchVerified": true
+  },
+  "deployment": {
+    "contract": "0xa2Eab1218E09b9d3B28390d4332643Cb3C29ecA1",
+    "deploymentTx": "0x56a7e9bf2aa59fcbcfce02cfcf8de42bbd9cd7b4a627c0e56f501f71ca8350a5",
+    "status": "FINALIZED",
+    "consensus": "MAJORITY_AGREE",
+    "leaderExecution": "SUCCESS",
+    "sourceBytes": 13809,
+    "sourceSha256": "1fd89faff425c133e1cc9c34a65856b60e199a7d769cd10a1dfb411552e80ac3",
+    "deployedSourceParity": "byte-for-byte",
+    "owner": "0x0d5540e0aD4B92Aa0ad4e5F1b8cD645ee1E363E7"
+  },
+  "evaluation": {
+    "readMethod": "evaluate_policy",
+    "readFinality": "LATEST_FINAL",
+    "state": "APPROVED",
+    "assuredState": "SETTLED",
+    "finalStatus": "SUPPORTED",
+    "coverageCap": 2,
+    "activeExposure": 0,
+    "availableCoverage": 0,
+    "registrationOpen": false,
+    "canonicalConsumer": "0xD067556b32Ef7D9975d524B942344E4098724541"
+  },
+  "applicationAction": {
+    "actionId": "v3-demo-action-20261019",
+    "actionDigest": "1111111111111111111111111111111111111111111111111111111111111111",
+    "tx": "0x59608feba008b9868e88368040cf1bbfd7950e6416fa3f6b227c138046750353",
+    "status": "FINALIZED",
+    "consensus": "MAJORITY_AGREE",
+    "leaderExecution": "SUCCESS",
+    "actor": "0x0d5540e0aD4B92Aa0ad4e5F1b8cD645ee1E363E7",
+    "postActionCount": 1,
+    "readbackMethod": "get_action"
+  },
+  "limitations": [
+    "The policy gate is a reference non-custodial contract and does not hold release principal or publisher collateral.",
+    "The SDK and Action are not published to npm because namespace ownership and npm authentication were not independently available.",
+    "No independently maintained third-party application adoption is claimed.",
+    "The signer production deployment was not changed by this evidence commit; the automated browser harness is not a production-wallet proof."
+  ]
+}

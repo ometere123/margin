@@ -70,8 +70,9 @@ optional manual Covered UI walkthrough is not claimed.
 ## Local gate snapshot
 
 At the latest local run, contract AST lint passed for both contracts, extension
-tests passed `17/17`, signer tests passed `42/42`, Python invariants passed
-`12/12`, Direct Mode passed `59/59`, and security mutations passed `15/15 killed`.
+tests passed `17/17`, signer tests passed `43/43`, Python invariants passed
+`12/12`, Direct Mode passed `66/66` (`59/59` V2 regression cases plus `7/7`
+PolicyGate cases), and security mutations passed `15/15 killed`.
 Extension and signer production builds
 also passed. These are local results for this branch, not Studionet live
 evidence. The repository-local CLI guard reports GenLayer `0.39.1`.
