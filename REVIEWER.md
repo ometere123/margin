@@ -37,8 +37,8 @@ owner-only one-shot application action are recorded in
 [`artifacts/margin_connect_v3_policy_gate.json`](artifacts/margin_connect_v3_policy_gate.json).
 The merged-main verification is GitHub Actions run
 [`39244609574`](https://github.com/ometere123/margin/actions/runs/39244609574).
-The npm package is not published and no independently maintained third-party
-adoption is claimed.
+The SDK publication uses the authenticated `@converts/margin-connect` scope;
+independently maintained third-party adoption is not claimed.
 
 ## Claims-to-evidence map
 

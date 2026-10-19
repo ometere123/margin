@@ -7,9 +7,9 @@ incremental MARGIN Connect work adds a typed SDK, a fail-closed Node 24
 release-gate Action, a separately deployable non-custodial `MarginPolicyGate`
 reference and a read-only signer `/integrations` workspace. These components
 consume finalized V2 state; they do not modify or redeploy the V2 contracts or
-replace the canonical Covered consumer. No npm publication or independent
-third-party adoption is claimed without independently verified ownership and
-public evidence.
+replace the canonical Covered consumer. SDK publication uses the authenticated
+`@converts/margin-connect` scope; no independent third-party adoption is
+claimed without independently verified public evidence.
 
 This file describes only the current canonical deployment. Historical deployment and transaction records are in [`docs/HISTORY.md`](docs/HISTORY.md).
 

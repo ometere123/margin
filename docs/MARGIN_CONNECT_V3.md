@@ -20,16 +20,24 @@ cannot become approval.
 
 ## SDK
 
-`packages/connect-sdk/` provides the local `@margin/connect` package with
+`packages/connect-sdk/` provides the local `@converts/margin-connect` package with
 strict TypeScript types, ESM/CJS exports and declarations. Its policy
 commitment binds the MARGIN address, canonical consumer, claim key, canonical
 URL, publisher and Covered evidence commitments. Release integration adds the
 repository, exact commit and release-artifact SHA-256 binding.
 
-The npm namespace was checked and no public `@margin/connect` package was
-found. npm account ownership/authentication was not independently available
-in this environment, so the package is not published and no publication is
-claimed.
+The authenticated npm account is `converts`, and the `@margin` organization is
+not accessible to that account. The SDK is therefore released under the
+authorized `@converts/margin-connect` scope; publication evidence is recorded
+only after registry release and independent installation verification.
+
+The current production dependency audit is clean (`npm audit --omit=dev`:
+0 vulnerabilities). The remaining six workspace findings are development-only:
+the pinned GenLayer `0.39.1` toolchain brings Dockerode 4 / UUID 10, and the
+Node-20-compatible Vitest 3 test tooling has advisories whose supported fix is
+Vitest 5 (Node 22.12+). Neither chain is included in the published SDK files
+or the bundled Action runtime; the pinned CLI and Node 20+ repository support
+were preserved rather than force-upgraded.
 
 ## GitHub Action
 

@@ -83,7 +83,7 @@ artifact than the reviewed policy.
 Invariant: only the exact immutable policy over a finalized `SETTLED /
 SUPPORTED` Covered Claim may authorize the downstream integration.
 
-Mitigation: `@margin/connect` validates the exact policy commitment, verifies
+Mitigation: `@converts/margin-connect` validates the exact policy commitment, verifies
 Studionet 61999 identity, reads with `LATEST_FINAL`, checks canonical consumer
 and coverage arithmetic, and maps all read failures to `UNAVAILABLE`. The
 release-gate Action independently checks `GITHUB_REPOSITORY`, `GITHUB_SHA` and
