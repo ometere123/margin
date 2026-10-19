@@ -120,3 +120,18 @@ There is no MARGIN indexing server in v0.1. Per-page keys make finalized state d
 - no central verdict API;
 - no backend that can silently suppress claims;
 - fewer trust assumptions.
+
+## 7. MARGIN Connect integrations
+
+The V3 integration surface is deliberately downstream of V2. The SDK reads
+the existing MARGIN address and canonical consumer with `LATEST_FINAL`, checks
+the exact claim/source commitments and returns a four-state fail-closed
+decision. The GitHub Action adds repository, commit and release-artifact
+binding before allowing a release job to continue.
+
+`MarginPolicyGate` is a separate reference Intelligent Contract rather than a
+second release consumer. It stores an immutable policy, reads MARGIN through a
+typed view interface, requires `SETTLED / SUPPORTED`, and records only a
+bounded one-shot application action. It does not custody release principal,
+publisher collateral or any payment token. The signer `/integrations` route
+is read-only and preserves the extension as the primary user experience.

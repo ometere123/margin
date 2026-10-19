@@ -38,3 +38,13 @@ The superseded V2 checkpoints `V2-final-supported.json`, `V2-render-supported.js
 - Contradicted claim `db4fca64e939f315e5e78f20c563b19adf11d592ca134a8a9e6f24d652ab617b`: rendered primary digest `a0f9e483c7fc425dafa70a775f1d1b9c125e600eaf39349d4498902a33ae0e51`; `SETTLED / CONTRADICTED`; release `3:db4f...617b` refunded; MARGIN and consumer exposure `0`; release creator, publisher and challenger credits `0` after withdrawal. Full transaction sequence: [`final-stable-contradicted-20261017.md`](../scripts/live/evidence/final-stable-contradicted-20261017.md).
 
 Both sequences waited for the actual appeal deadline and every claimed successful write finalized as `FINALIZED / MAJORITY_AGREE / SUCCESS`. The raw HTTP page digest and the GenVM-rendered primary digest are intentionally recorded as separate commitments.
+
+## V3 live-evidence boundary
+
+The V3 SDK and reference PolicyGate do not change the V2 lifecycle above. Any
+new PolicyGate address, transaction, source digest and post-state is recorded
+separately after a real finalized Studionet deployment; a local Direct Mode
+result is not presented as live consensus evidence. The SDK/Action integration
+also does not claim npm publication, external maintainer adoption or a
+production `/integrations` approval until those external facts are independently
+verified.

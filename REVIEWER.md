@@ -1,5 +1,20 @@
 # MARGIN reviewer path
 
+## V3 integration reviewer path
+
+The V3 comparison baseline is `9d33116f24d5f62b9ca562229ed573fbdb133c31`.
+Review `packages/connect-sdk/`, `actions/margin-release-gate/`,
+`contracts/margin_policy_gate.py` and the signer `/integrations` route as an
+incremental integration surface. The V2 MARGIN and canonical consumer source
+and addresses remain the accepted deployment boundary.
+
+Run `npm run typecheck`, `npm run test`, `npm run test:direct`,
+`npm run lint:contract`, `npm run test:mutation`, `npm run build` and
+`npm run test:browser`. The SDK consumer test verifies both ESM and CJS
+exports. The new reference contract is not evidence of V2 redeployment.
+External third-party adoption is not claimed unless a public independent
+repository, maintainer permission and public CI evidence are linked.
+
 This is a short, evidence-first review path for the current Studionet release.
 
 1. Install dependencies with `npm ci`.

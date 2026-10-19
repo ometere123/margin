@@ -1,0 +1,13 @@
+{
+  "policyId": "replace-with-reviewed-policy-id",
+  "claimKey": "replace-with-finalized-covered-claim-key",
+  "canonicalUrl": "https://example.invalid/release-policy.html",
+  "publisher": "0x0000000000000000000000000000000000000000",
+  "manifestDigest": "replace-with-finalized-manifest-digest",
+  "evidencePackDigest": "replace-with-finalized-evidence-pack-digest",
+  "primaryArtifactSha256": "replace-with-finalized-rendered-artifact-digest",
+  "repository": "owner/repository",
+  "commitSha": "replace-with-exact-40-hex-commit",
+  "releaseArtifactSha256": "replace-with-exact-release-artifact-sha256",
+  "policyHash": "replace-with-hash-of-all-fields-except-policyHash"
+}

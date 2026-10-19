@@ -85,6 +85,11 @@ async function run() {
     const calls = await page.evaluate(() => window.__marginWallet.calls);
     assert(calls.includes('eth_accounts'), 'refresh recovery must query eth_accounts');
     assert(!calls.includes('eth_requestAccounts'), 'refresh recovery must not request accounts');
+    await page.goto(`${baseUrl}/integrations`);
+    await page.getByText('Consensus verification for external applications.').waitFor();
+    assert(await page.locator('#integration-policy-form').count() === 1, 'integration workspace should expose the policy inspector');
+    assert(await page.locator('#integration-policy-form button').isDisabled(), 'integration writes must remain disabled when canonical reads are unavailable');
+    assert((await page.locator('body').textContent()).includes('Unavailable state'), 'integration boundary should explain fail-closed unavailable reads');
     await context.close();
 
     const annotationContext = await browser.newContext();

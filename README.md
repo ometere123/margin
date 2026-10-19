@@ -206,3 +206,25 @@ The signer and extension use the supplied MARGIN logo/icon assets. The assurance
 - perform the optional manual Covered UI walkthrough described in `docs/FINAL_HANDOFF.md`.
 
 The product architecture should not be redesigned to complete those steps.
+
+## MARGIN Connect (V3 incremental integration surface)
+
+The accepted V2 contracts and canonical consumer remain unchanged. The V3
+integration surface adds a local typed SDK in `packages/connect-sdk/`, a
+Node 24 GitHub release-gate Action in `actions/margin-release-gate/`, a
+separately deployable non-custodial `MarginPolicyGate` reference contract,
+and a read-only `/integrations` workspace in the existing signer. These are
+integration tools over finalized V2 consensus, not a new fact-checking
+protocol or a second Covered Claim consumer.
+
+The SDK and Action bind the exact Studionet deployment, publisher, claim key,
+canonical URL, Covered commitments, repository, commit and release-artifact
+digest. They read with `LATEST_FINAL` and fail closed on ordinary, pending,
+malformed, unavailable, contradicted or unresolved state. The policy gate
+reads MARGIN directly and changes only its own bounded one-time application
+state; it does not hold release principal or publisher collateral.
+
+See [`docs/MARGIN_CONNECT_V3.md`](docs/MARGIN_CONNECT_V3.md) for the verified
+boundary and limitations. No npm publication or independent third-party
+adoption is claimed without namespace/authentication and public maintainer
+evidence respectively.
