@@ -30,7 +30,7 @@ This file describes only the current canonical deployment. Historical deployment
 - Registry integrity: `sha512-89mvRcyI4yWlQ11cf1IzZxOXQ6ifUgMJVFPgdmqZDMAvaGpphZIjD1moqq4geWsLURRbcjeog1I+aXfjh2Q/Cw==`
 - Registry file count: `8`
 - Independent clean-project verification: `npm install @margin-connect/sdk@0.1.0 --registry=https://registry.npmjs.org/`; ESM and CommonJS imports passed; `npm audit --omit=dev` reported `0` vulnerabilities.
-- Historical package: [`@converts/margin-connect@0.1.0`](https://www.npmjs.com/package/@converts/margin-connect), previously published from `a275be880c508a54c0796b709a0cbf6e5b123fdb`; it remains published and untouched pending separate owner confirmation.
+- Historical package: [`@converts/margin-connect@0.1.0`](https://www.npmjs.com/package/@converts/margin-connect), previously published from `a275be880c508a54c0796b709a0cbf6e5b123fdb`; that exact version was later unpublished after separate owner confirmation and now returns 404 from the registry. ReferralRail packages were not touched.
 - V2-to-V3 comparison: [`9d33116f...facbdf6`](https://github.com/ometere123/margin/compare/9d33116f24d5f62b9ca562229ed573fbdb133c31...facbdf6f61c9f7868e027faa41ca821fe50a63c2)
 
 ## Network

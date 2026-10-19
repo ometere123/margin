@@ -38,8 +38,9 @@ and eight files. A clean external project installed the package by name;
 ESM and CommonJS imports passed and `npm audit --omit=dev` reported zero
 vulnerabilities. The prior
 [`@converts/margin-connect@0.1.0`](https://www.npmjs.com/package/@converts/margin-connect)
-release remains historical migration evidence and is untouched pending a
-separate owner confirmation before any unpublish action.
+release remains historical migration evidence; that exact version was later
+unpublished after separate owner confirmation and now returns 404 from the
+registry. ReferralRail packages were not touched.
 The immutable PolicyGate evidence remains bound to its original V3 policy
 artifact; an npm namespace migration does not redeploy or mutate that gate.
 
@@ -52,8 +53,8 @@ artifact; an npm namespace migration does not redeploy or mutate that gate.
 3. Obtain explicit owner confirmation, publish publicly, and verify registry
    metadata plus independent ESM/CJS installation. This step is complete.
 4. Obtain a second explicit confirmation before any irreversible action on the
-   prior `@converts/margin-connect@0.1.0`; it remains published and untouched.
-   Never touch ReferralRail packages.
+   prior `@converts/margin-connect@0.1.0`. This step is complete for version
+   `0.1.0`; never touch ReferralRail packages.
 
 The current production dependency audit is clean (`npm audit --omit=dev`:
 0 vulnerabilities). The remaining six workspace findings are development-only:

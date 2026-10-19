@@ -53,8 +53,9 @@ This is an evidence inventory, not a project score. Historical deployments and b
   ESM/CJS imports passed and its production audit reported zero vulnerabilities.
   The published tarball has eight files and was published from
   `facbdf6f61c9f7868e027faa41ca821fe50a63c2`. The prior
-  `@converts/margin-connect@0.1.0` release remains historical migration evidence
-  and is untouched pending separate owner confirmation. Independent third-party
+  `@converts/margin-connect@0.1.0` release remains historical migration evidence;
+  that exact version was later unpublished after separate owner confirmation.
+  Independent third-party
   adoption is not claimed without public maintainer evidence.
 - The separately deployed PolicyGate is `0xa2Eab1218E09b9d3B28390d4332643Cb3C29ecA1`;
   its finalized deployment, source parity, `APPROVED` readback and one-shot

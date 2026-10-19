@@ -230,8 +230,9 @@ boundary and limitations. The official SDK is publicly available as
 It was published by `converts` from source commit
 `facbdf6f61c9f7868e027faa41ca821fe50a63c2`; the public registry package was
 installed in a clean external project and its ESM/CommonJS imports passed.
-The prior `@converts/margin-connect@0.1.0` release remains historical migration
-evidence and is untouched pending separate owner confirmation.
+The prior `@converts/margin-connect@0.1.0` release is retained as historical
+migration evidence; that exact version was later unpublished after separate
+owner confirmation. ReferralRail packages were not touched.
 No independent third-party adoption is claimed without public maintainer
 evidence.
 

@@ -58,9 +58,8 @@ The merged-main verification is GitHub Actions run
 on `facbdf6f61c9f7868e027faa41ca821fe50a63c2`. The official SDK is
 [`@margin-connect/sdk@0.1.0`](https://www.npmjs.com/package/@margin-connect/sdk);
 its public registry metadata and clean external ESM/CJS installation passed
-after publication. The prior `@converts/margin-connect@0.1.0` release remains
-historical and untouched pending separate owner confirmation.
-The prior `@converts/margin-connect@0.1.0` release is historical migration
-evidence. No external maintainer adoption or production `/integrations`
+after publication. The prior `@converts/margin-connect@0.1.0` release is
+historical migration evidence; that exact version was later unpublished after
+separate owner confirmation and now returns 404 from the registry. No external maintainer adoption or production `/integrations`
 approval is claimed. A local Direct Mode result is not presented as live
 consensus evidence.

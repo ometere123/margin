@@ -99,7 +99,9 @@
     "cleanConsumerEsmCjsImports": true,
     "cleanConsumerProductionAudit": "0 vulnerabilities",
     "oldPackage": "@converts/margin-connect@0.1.0",
-    "oldPackageAction": "PENDING_SEPARATE_OWNER_CONFIRMATION_BEFORE_UNPUBLISH"
+    "oldPackageAction": "UNPUBLISHED_AFTER_SEPARATE_OWNER_CONFIRMATION",
+    "oldPackageVersionRegistryCheck": "404_NOT_FOUND",
+    "referralRailPackagesModified": false
   },
   "limitations": [
     "The policy gate is a reference non-custodial contract and does not hold release principal or publisher collateral.",
