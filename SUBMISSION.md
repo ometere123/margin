@@ -7,11 +7,12 @@ incremental MARGIN Connect work adds a typed SDK, a fail-closed Node 24
 release-gate Action, a separately deployable non-custodial `MarginPolicyGate`
 reference and a read-only signer `/integrations` workspace. These components
 consume finalized V2 state; they do not modify or redeploy the V2 contracts or
-replace the canonical Covered consumer. The official SDK migration target is
-[`@margin-connect/sdk@0.1.0`](https://www.npmjs.com/package/@margin-connect/sdk);
-publication and public install verification are release gates after the
-namespace ownership check. The previous `@converts/margin-connect@0.1.0`
-release is retained only as historical migration evidence.
+replace the canonical Covered consumer. The official SDK is publicly available
+as [`@margin-connect/sdk@0.1.0`](https://www.npmjs.com/package/@margin-connect/sdk).
+It was published by `converts` from source commit
+`facbdf6f61c9f7868e027faa41ca821fe50a63c2` and independently verified from the
+public registry. The previous `@converts/margin-connect@0.1.0` release is
+retained only as historical migration evidence.
 No independent third-party adoption is claimed without independently verified
 public evidence.
 
@@ -22,10 +23,15 @@ This file describes only the current canonical deployment. Historical deployment
 - Target package: [`@margin-connect/sdk@0.1.0`](https://www.npmjs.com/package/@margin-connect/sdk)
 - npm account and organisation: `converts`, owner of `margin-connect`
 - Required publish command: `npm publish --workspace=@margin-connect/sdk --access public --registry=https://registry.npmjs.org/`
-- Publication status: pending owner confirmation after final dry-run and package-safety checks
-- Required post-publication checks: public registry metadata, clean ESM/CJS install and production audit
-- Historical package: [`@converts/margin-connect@0.1.0`](https://www.npmjs.com/package/@converts/margin-connect), previously published from `a275be880c508a54c0796b709a0cbf6e5b123fdb`; no unpublish/deprecation action is recorded before the new package is verified.
-- V2-to-V3 comparison: [`9d33116f...a275be8`](https://github.com/ometere123/margin/compare/9d33116f24d5f62b9ca562229ed573fbdb133c31...a275be880c508a54c0796b709a0cbf6e5b123fdb)
+- Publication status: public and verified on 2026-10-19
+- Published source commit: `facbdf6f61c9f7868e027faa41ca821fe50a63c2`
+- Registry tarball: `https://registry.npmjs.org/@margin-connect/sdk/-/sdk-0.1.0.tgz`
+- Registry SHA-1: `045aedfe842f9481a67d5a614513ceaefd25e526`
+- Registry integrity: `sha512-89mvRcyI4yWlQ11cf1IzZxOXQ6ifUgMJVFPgdmqZDMAvaGpphZIjD1moqq4geWsLURRbcjeog1I+aXfjh2Q/Cw==`
+- Registry file count: `8`
+- Independent clean-project verification: `npm install @margin-connect/sdk@0.1.0 --registry=https://registry.npmjs.org/`; ESM and CommonJS imports passed; `npm audit --omit=dev` reported `0` vulnerabilities.
+- Historical package: [`@converts/margin-connect@0.1.0`](https://www.npmjs.com/package/@converts/margin-connect), previously published from `a275be880c508a54c0796b709a0cbf6e5b123fdb`; it remains published and untouched pending separate owner confirmation.
+- V2-to-V3 comparison: [`9d33116f...facbdf6`](https://github.com/ometere123/margin/compare/9d33116f24d5f62b9ca562229ed573fbdb133c31...facbdf6f61c9f7868e027faa41ca821fe50a63c2)
 
 ## Network
 
@@ -83,7 +89,7 @@ The signer uses the injected EIP-1193 wallet. The signer project is connected to
 - Security mutations: `15/15` killed
 - SDK tests: `7/7`; Action tests: `5/5`; ESM/CJS consumer imports passed
 - Extension and signer builds: passed
-- Main CI: [`39262301297`](https://github.com/ometere123/margin/actions/runs/39262301297) green on `a275be880c508a54c0796b709a0cbf6e5b123fdb`
+- Main CI before publication: [`39270741687`](https://github.com/ometere123/margin/actions/runs/39270741687) green on `facbdf6f61c9f7868e027faa41ca821fe50a63c2`
 - MARGIN source commit `6798b2e748d7ef6f1e41538de4e33f84d9c7ae68` matches the deployed source SHA-256 above; the Consumer source at the same commit matches its deployed digest and constructor binding.
 
 ## Fresh final-MARGIN normal evidence

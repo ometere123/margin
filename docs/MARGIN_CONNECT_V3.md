@@ -27,15 +27,19 @@ URL, publisher and Covered evidence commitments. Release integration adds the
 repository, exact commit and release-artifact SHA-256 binding.
 
 The authenticated npm account is `converts`, and `npm org ls margin-connect`
-verifies that account as an organisation owner. The official package target is
+verifies that account as an organisation owner. The official package is
 [`@margin-connect/sdk@0.1.0`](https://www.npmjs.com/package/@margin-connect/sdk).
-Publication is intentionally gated on the final dry-run, package-safety checks
-and an explicit owner confirmation immediately before the irreversible publish
-command. After publication, a clean external project must install the exact
-version and pass real ESM/CJS import and production-audit checks before the
-historical package is considered for removal. The prior
+It was published publicly from source commit
+`facbdf6f61c9f7868e027faa41ca821fe50a63c2`. Registry metadata reports the
+tarball `https://registry.npmjs.org/@margin-connect/sdk/-/sdk-0.1.0.tgz`,
+SHA-1 `045aedfe842f9481a67d5a614513ceaefd25e526`, integrity
+`sha512-89mvRcyI4yWlQ11cf1IzZxOXQ6ifUgMJVFPgdmqZDMAvaGpphZIjD1moqq4geWsLURRbcjeog1I+aXfjh2Q/Cw==`,
+and eight files. A clean external project installed the package by name;
+ESM and CommonJS imports passed and `npm audit --omit=dev` reported zero
+vulnerabilities. The prior
 [`@converts/margin-connect@0.1.0`](https://www.npmjs.com/package/@converts/margin-connect)
-release remains historical migration evidence until that sequence is complete.
+release remains historical migration evidence and is untouched pending a
+separate owner confirmation before any unpublish action.
 The immutable PolicyGate evidence remains bound to its original V3 policy
 artifact; an npm namespace migration does not redeploy or mutate that gate.
 
@@ -46,9 +50,10 @@ artifact; an npm namespace migration does not redeploy or mutate that gate.
 2. Verify the `margin-connect` npm organisation owner, clean package tarball,
    production dependency audit and all workspace/consumer checks.
 3. Obtain explicit owner confirmation, publish publicly, and verify registry
-   metadata plus independent ESM/CJS installation.
+   metadata plus independent ESM/CJS installation. This step is complete.
 4. Obtain a second explicit confirmation before any irreversible action on the
-   prior `@converts/margin-connect@0.1.0`; never touch ReferralRail packages.
+   prior `@converts/margin-connect@0.1.0`; it remains published and untouched.
+   Never touch ReferralRail packages.
 
 The current production dependency audit is clean (`npm audit --omit=dev`:
 0 vulnerabilities). The remaining six workspace findings are development-only:
@@ -106,8 +111,8 @@ permission is claimed until a public repository and public CI run verify it.
 The first-party SDK, Action and reference contract are the reproducible
 integration surface; external adoption remains an explicit limitation unless
 independently evidenced. The final merged-main verification is GitHub Actions
-run [`39262301297`](https://github.com/ometere123/margin/actions/runs/39262301297)
-on commit `a275be880c508a54c0796b709a0cbf6e5b123fdb`; it passed the existing V2
+run [`39270741687`](https://github.com/ometere123/margin/actions/runs/39270741687)
+on commit `facbdf6f61c9f7868e027faa41ca821fe50a63c2`; it passed the existing V2
 checks together with the V3 SDK, Action, PolicyGate, typecheck, build,
 mutation and browser-harness checks. The exact V2-to-V3 source comparison is
-[`9d33116f...a275be8`](https://github.com/ometere123/margin/compare/9d33116f24d5f62b9ca562229ed573fbdb133c31...a275be880c508a54c0796b709a0cbf6e5b123fdb).
+[`9d33116f...facbdf6`](https://github.com/ometere123/margin/compare/9d33116f24d5f62b9ca562229ed573fbdb133c31...facbdf6f61c9f7868e027faa41ca821fe50a63c2).

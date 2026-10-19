@@ -36,10 +36,10 @@ Its finalized deployment, byte-for-byte source parity, `APPROVED` readback and
 owner-only one-shot application action are recorded in
 [`artifacts/margin_connect_v3_policy_gate.json`](artifacts/margin_connect_v3_policy_gate.json).
 The merged-main verification is GitHub Actions run
-[`39262301297`](https://github.com/ometere123/margin/actions/runs/39262301297)
-on `a275be880c508a54c0796b709a0cbf6e5b123fdb`. The official SDK migration
-target is [`@margin-connect/sdk@0.1.0`](https://www.npmjs.com/package/@margin-connect/sdk);
-registry ESM/CJS installation checks are recorded in
+[`39270741687`](https://github.com/ometere123/margin/actions/runs/39270741687)
+on `facbdf6f61c9f7868e027faa41ca821fe50a63c2`. The official SDK is publicly
+available as [`@margin-connect/sdk@0.1.0`](https://www.npmjs.com/package/@margin-connect/sdk);
+registry metadata and clean ESM/CJS installation checks are recorded in
 [`docs/MARGIN_CONNECT_V3.md`](docs/MARGIN_CONNECT_V3.md). Independently
 maintained third-party adoption is not claimed.
 

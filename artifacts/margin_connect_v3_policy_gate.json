@@ -87,9 +87,19 @@
     "organization": "margin-connect",
     "organizationOwnerVerified": true,
     "authenticatedUser": "converts",
-    "status": "PENDING_OWNER_CONFIRMATION_BEFORE_PUBLISH",
+    "status": "PUBLISHED_AND_VERIFIED",
+    "publishedFromCommit": "facbdf6f61c9f7868e027faa41ca821fe50a63c2",
+    "publishedAt": "2026-10-19T15:12:21.263Z",
+    "packageUrl": "https://www.npmjs.com/package/@margin-connect/sdk",
+    "tarball": "https://registry.npmjs.org/@margin-connect/sdk/-/sdk-0.1.0.tgz",
+    "tarballSha1": "045aedfe842f9481a67d5a614513ceaefd25e526",
+    "tarballIntegrity": "sha512-89mvRcyI4yWlQ11cf1IzZxOXQ6ifUgMJVFPgdmqZDMAvaGpphZIjD1moqq4geWsLURRbcjeog1I+aXfjh2Q/Cw==",
+    "fileCount": 8,
+    "cleanConsumerInstall": "npm install @margin-connect/sdk@0.1.0 --registry=https://registry.npmjs.org/",
+    "cleanConsumerEsmCjsImports": true,
+    "cleanConsumerProductionAudit": "0 vulnerabilities",
     "oldPackage": "@converts/margin-connect@0.1.0",
-    "oldPackageAction": "PENDING_NEW_PACKAGE_PUBLIC_VERIFICATION"
+    "oldPackageAction": "PENDING_SEPARATE_OWNER_CONFIRMATION_BEFORE_UNPUBLISH"
   },
   "limitations": [
     "The policy gate is a reference non-custodial contract and does not hold release principal or publisher collateral.",
