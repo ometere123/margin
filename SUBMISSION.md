@@ -63,9 +63,9 @@ The signer uses the injected EIP-1193 wallet. The signer project is connected to
 
 - Contract lint: `3/3` for each contract
 - Python invariants: `12/12`
-- Direct Mode: `59/59` in the current local verification after the material-observation, citation, canonical-exposure and withdrawal tests
+- Direct Mode: `66/66` in the current local verification (`59/59` V2 regression cases plus `7/7` PolicyGate cases)
 - Extension tests: `17/17`
-- Signer tests: `42/42`
+- Signer tests: `43/43`
 - Security mutations: `15/15` killed
 - Extension and signer builds: passed
 - MARGIN source commit `6798b2e748d7ef6f1e41538de4e33f84d9c7ae68` matches the deployed source SHA-256 above; the Consumer source at the same commit matches its deployed digest and constructor binding.

@@ -135,3 +135,6 @@ typed view interface, requires `SETTLED / SUPPORTED`, and records only a
 bounded one-shot application action. It does not custody release principal,
 publisher collateral or any payment token. The signer `/integrations` route
 is read-only and preserves the extension as the primary user experience.
+The reference deployment is `0xa2Eab1218E09b9d3B28390d4332643Cb3C29ecA1`; its
+finalized receipt and source-parity evidence are recorded in
+`artifacts/margin_connect_v3_policy_gate.json`.

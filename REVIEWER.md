@@ -28,6 +28,18 @@ This is a short, evidence-first review path for the current Studionet release.
 9. For a read-only current deployment check, run `npm run live:read` or `npm run live:read -- --claim=<64-hex-claim-key>`. This verifies `network()` at `LATEST_FINAL` and optionally reads a claim; it performs no writes. The consumer binding is verified from deployment construction calldata because the bound storage field is not exposed as a callable public view in this SDK path.
 10. Read [`docs/SELF_REVIEW.md`](docs/SELF_REVIEW.md) for the evidence-only limitations across GenLayer fit, contract quality, engineering and frontend/UX.
 
+### V3 integration evidence
+
+The accepted V2 MARGIN and canonical consumer remain unchanged. The separate
+V3 reference PolicyGate is `0xa2Eab1218E09b9d3B28390d4332643Cb3C29ecA1`.
+Its finalized deployment, byte-for-byte source parity, `APPROVED` readback and
+owner-only one-shot application action are recorded in
+[`artifacts/margin_connect_v3_policy_gate.json`](artifacts/margin_connect_v3_policy_gate.json).
+The merged-main verification is GitHub Actions run
+[`39244609574`](https://github.com/ometere123/margin/actions/runs/39244609574).
+The npm package is not published and no independently maintained third-party
+adoption is claimed.
+
 ## Claims-to-evidence map
 
 | Claim | Evidence |
