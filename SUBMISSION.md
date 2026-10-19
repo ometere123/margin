@@ -7,23 +7,24 @@ incremental MARGIN Connect work adds a typed SDK, a fail-closed Node 24
 release-gate Action, a separately deployable non-custodial `MarginPolicyGate`
 reference and a read-only signer `/integrations` workspace. These components
 consume finalized V2 state; they do not modify or redeploy the V2 contracts or
-replace the canonical Covered consumer. The public SDK is
-[`@converts/margin-connect@0.1.0`](https://www.npmjs.com/package/@converts/margin-connect),
-published from main commit `a275be880c508a54c0796b709a0cbf6e5b123fdb`.
+replace the canonical Covered consumer. The official SDK migration target is
+[`@margin-connect/sdk@0.1.0`](https://www.npmjs.com/package/@margin-connect/sdk);
+publication and public install verification are release gates after the
+namespace ownership check. The previous `@converts/margin-connect@0.1.0`
+release is retained only as historical migration evidence.
 No independent third-party adoption is claimed without independently verified
 public evidence.
 
 This file describes only the current canonical deployment. Historical deployment and transaction records are in [`docs/HISTORY.md`](docs/HISTORY.md).
 
-## Public SDK release
+## SDK namespace migration
 
-- Package: [`@converts/margin-connect@0.1.0`](https://www.npmjs.com/package/@converts/margin-connect)
-- Registry tarball: [`margin-connect-0.1.0.tgz`](https://registry.npmjs.org/@converts/margin-connect/-/margin-connect-0.1.0.tgz)
-- Published source commit: `a275be880c508a54c0796b709a0cbf6e5b123fdb`
-- Tarball SHA-1: `5233bc2a3d9e2657e2d1225094ee603ccc2c7093`
-- Tarball integrity: `sha512-TN3iOZdKTNmfqDCHk5CHhn62glSfKLL4ugfjn6uhRyYnW6+yN66/z9Lw/G7OM9X55Ic+UttO0tSA9I4+/Zqyjg==`
-- Contents: eight intended files — compiled ESM/CJS, declarations, README, licence and package metadata; no tests, source secrets or unrelated workspace files.
-- Clean consumer verification: `npm install @converts/margin-connect@0.1.0`; ESM and CJS imports passed; production audit reported zero vulnerabilities.
+- Target package: [`@margin-connect/sdk@0.1.0`](https://www.npmjs.com/package/@margin-connect/sdk)
+- npm account and organisation: `converts`, owner of `margin-connect`
+- Required publish command: `npm publish --workspace=@margin-connect/sdk --access public --registry=https://registry.npmjs.org/`
+- Publication status: pending owner confirmation after final dry-run and package-safety checks
+- Required post-publication checks: public registry metadata, clean ESM/CJS install and production audit
+- Historical package: [`@converts/margin-connect@0.1.0`](https://www.npmjs.com/package/@converts/margin-connect), previously published from `a275be880c508a54c0796b709a0cbf6e5b123fdb`; no unpublish/deprecation action is recorded before the new package is verified.
 - V2-to-V3 comparison: [`9d33116f...a275be8`](https://github.com/ometere123/margin/compare/9d33116f24d5f62b9ca562229ed573fbdb133c31...a275be880c508a54c0796b709a0cbf6e5b123fdb)
 
 ## Network

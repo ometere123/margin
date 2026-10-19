@@ -67,7 +67,7 @@
     "postActionCount": 1,
     "readbackMethod": "get_action"
   },
-  "npmPublication": {
+  "previousNpmPublication": {
     "package": "@converts/margin-connect",
     "version": "0.1.0",
     "registry": "https://registry.npmjs.org/",
@@ -79,6 +79,17 @@
     "fileCount": 8,
     "cleanConsumerEsmCjsImports": true,
     "cleanConsumerProductionAudit": "0 vulnerabilities"
+  },
+  "npmMigration": {
+    "targetPackage": "@margin-connect/sdk",
+    "version": "0.1.0",
+    "registry": "https://registry.npmjs.org/",
+    "organization": "margin-connect",
+    "organizationOwnerVerified": true,
+    "authenticatedUser": "converts",
+    "status": "PENDING_OWNER_CONFIRMATION_BEFORE_PUBLISH",
+    "oldPackage": "@converts/margin-connect@0.1.0",
+    "oldPackageAction": "PENDING_NEW_PACKAGE_PUBLIC_VERIFICATION"
   },
   "limitations": [
     "The policy gate is a reference non-custodial contract and does not hold release principal or publisher collateral.",

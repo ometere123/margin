@@ -225,9 +225,11 @@ reads MARGIN directly and changes only its own bounded one-time application
 state; it does not hold release principal or publisher collateral.
 
 See [`docs/MARGIN_CONNECT_V3.md`](docs/MARGIN_CONNECT_V3.md) for the verified
-boundary and limitations. The public SDK is
-[`@converts/margin-connect@0.1.0`](https://www.npmjs.com/package/@converts/margin-connect),
-published from main commit `a275be880c508a54c0796b709a0cbf6e5b123fdb`.
+boundary and limitations. The official SDK migration target is
+[`@margin-connect/sdk@0.1.0`](https://www.npmjs.com/package/@margin-connect/sdk);
+publication is completed only after registry verification and the documented
+owner confirmation gate. The prior `@converts/margin-connect@0.1.0` release is
+historical migration evidence.
 No independent third-party adoption is claimed without public maintainer
 evidence.
 

@@ -48,9 +48,10 @@ This is an evidence inventory, not a project score. Historical deployments and b
 - Local SDK tests cover seven API cases, Action binding tests cover five cases,
   and the reference PolicyGate Direct Mode suite covers seven cases. The
   existing V2 regression/mutation suite remains part of the final gates.
-- The public SDK is [`@converts/margin-connect@0.1.0`](https://www.npmjs.com/package/@converts/margin-connect),
-  published from `a275be880c508a54c0796b709a0cbf6e5b123fdb`; clean ESM/CJS
-  installation and production-audit checks passed. Independent third-party
+- The official SDK migration target is [`@margin-connect/sdk@0.1.0`](https://www.npmjs.com/package/@margin-connect/sdk);
+  publication, clean ESM/CJS installation and production-audit checks are
+  release gates. The prior `@converts/margin-connect@0.1.0` release remains
+  historical migration evidence. Independent third-party
   adoption is not claimed without public maintainer evidence.
 - The separately deployed PolicyGate is `0xa2Eab1218E09b9d3B28390d4332643Cb3C29ecA1`;
   its finalized deployment, source parity, `APPROVED` readback and one-shot

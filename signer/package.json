@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@converts/margin-connect": "file:../packages/connect-sdk",
+    "@margin-connect/sdk": "file:../packages/connect-sdk",
     "genlayer-js": "1.1.8"
   },
   "devDependencies": {

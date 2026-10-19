@@ -55,9 +55,10 @@ The machine-readable receipt and readback are in
 
 The merged-main verification is GitHub Actions run
 [`39262301297`](https://github.com/ometere123/margin/actions/runs/39262301297)
-on `a275be880c508a54c0796b709a0cbf6e5b123fdb`. The SDK is publicly available
-as [`@converts/margin-connect@0.1.0`](https://www.npmjs.com/package/@converts/margin-connect);
-its clean external ESM/CJS installation is recorded in the V3 submission
+on `a275be880c508a54c0796b709a0cbf6e5b123fdb`. The official SDK migration
+target is [`@margin-connect/sdk@0.1.0`](https://www.npmjs.com/package/@margin-connect/sdk);
+its clean external ESM/CJS installation is a release gate after publication.
+The prior `@converts/margin-connect@0.1.0` release is historical migration
 evidence. No external maintainer adoption or production `/integrations`
 approval is claimed. A local Direct Mode result is not presented as live
 consensus evidence.

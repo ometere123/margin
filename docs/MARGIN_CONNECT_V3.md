@@ -20,25 +20,35 @@ cannot become approval.
 
 ## SDK
 
-`packages/connect-sdk/` provides the local `@converts/margin-connect` package with
+`packages/connect-sdk/` provides the local `@margin-connect/sdk` package with
 strict TypeScript types, ESM/CJS exports and declarations. Its policy
 commitment binds the MARGIN address, canonical consumer, claim key, canonical
 URL, publisher and Covered evidence commitments. Release integration adds the
 repository, exact commit and release-artifact SHA-256 binding.
 
-The authenticated npm account is `converts`, and the `@margin` organization is
-not accessible to that account. The public SDK is released under the
-authorized [`@converts/margin-connect`](https://www.npmjs.com/package/@converts/margin-connect)
-scope at version `0.1.0`. It was published from main commit
-`a275be880c508a54c0796b709a0cbf6e5b123fdb`; the public registry reports the
-same `gitHead`, tarball SHA-1
-`5233bc2a3d9e2657e2d1225094ee603ccc2c7093`, SHA-512 integrity
-`sha512-TN3iOZdKTNmfqDCHk5CHhn62glSfKLL4ugfjn6uhRyYnW6+yN66/z9Lw/G7OM9X55Ic+UttO0tSA9I4+/Zqyjg==`,
-and eight packaged files. A clean external project installed it with
-`npm install @converts/margin-connect@0.1.0`, passed real ESM and CJS import
-checks, and reported zero production-audit vulnerabilities. The immutable
-PolicyGate evidence remains bound to its original V3 policy artifact; this npm
-release is distribution evidence, not a redeployment or mutation of that gate.
+The authenticated npm account is `converts`, and `npm org ls margin-connect`
+verifies that account as an organisation owner. The official package target is
+[`@margin-connect/sdk@0.1.0`](https://www.npmjs.com/package/@margin-connect/sdk).
+Publication is intentionally gated on the final dry-run, package-safety checks
+and an explicit owner confirmation immediately before the irreversible publish
+command. After publication, a clean external project must install the exact
+version and pass real ESM/CJS import and production-audit checks before the
+historical package is considered for removal. The prior
+[`@converts/margin-connect@0.1.0`](https://www.npmjs.com/package/@converts/margin-connect)
+release remains historical migration evidence until that sequence is complete.
+The immutable PolicyGate evidence remains bound to its original V3 policy
+artifact; an npm namespace migration does not redeploy or mutate that gate.
+
+### SDK namespace migration plan
+
+1. Rename only the SDK and its first-party workspace consumers to
+   `@margin-connect/sdk`, retaining version `0.1.0`.
+2. Verify the `margin-connect` npm organisation owner, clean package tarball,
+   production dependency audit and all workspace/consumer checks.
+3. Obtain explicit owner confirmation, publish publicly, and verify registry
+   metadata plus independent ESM/CJS installation.
+4. Obtain a second explicit confirmation before any irreversible action on the
+   prior `@converts/margin-connect@0.1.0`; never touch ReferralRail packages.
 
 The current production dependency audit is clean (`npm audit --omit=dev`:
 0 vulnerabilities). The remaining six workspace findings are development-only:
