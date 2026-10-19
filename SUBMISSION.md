@@ -7,11 +7,24 @@ incremental MARGIN Connect work adds a typed SDK, a fail-closed Node 24
 release-gate Action, a separately deployable non-custodial `MarginPolicyGate`
 reference and a read-only signer `/integrations` workspace. These components
 consume finalized V2 state; they do not modify or redeploy the V2 contracts or
-replace the canonical Covered consumer. SDK publication uses the authenticated
-`@converts/margin-connect` scope; no independent third-party adoption is
-claimed without independently verified public evidence.
+replace the canonical Covered consumer. The public SDK is
+[`@converts/margin-connect@0.1.0`](https://www.npmjs.com/package/@converts/margin-connect),
+published from main commit `a275be880c508a54c0796b709a0cbf6e5b123fdb`.
+No independent third-party adoption is claimed without independently verified
+public evidence.
 
 This file describes only the current canonical deployment. Historical deployment and transaction records are in [`docs/HISTORY.md`](docs/HISTORY.md).
+
+## Public SDK release
+
+- Package: [`@converts/margin-connect@0.1.0`](https://www.npmjs.com/package/@converts/margin-connect)
+- Registry tarball: [`margin-connect-0.1.0.tgz`](https://registry.npmjs.org/@converts/margin-connect/-/margin-connect-0.1.0.tgz)
+- Published source commit: `a275be880c508a54c0796b709a0cbf6e5b123fdb`
+- Tarball SHA-1: `5233bc2a3d9e2657e2d1225094ee603ccc2c7093`
+- Tarball integrity: `sha512-TN3iOZdKTNmfqDCHk5CHhn62glSfKLL4ugfjn6uhRyYnW6+yN66/z9Lw/G7OM9X55Ic+UttO0tSA9I4+/Zqyjg==`
+- Contents: eight intended files — compiled ESM/CJS, declarations, README, licence and package metadata; no tests, source secrets or unrelated workspace files.
+- Clean consumer verification: `npm install @converts/margin-connect@0.1.0`; ESM and CJS imports passed; production audit reported zero vulnerabilities.
+- V2-to-V3 comparison: [`9d33116f...a275be8`](https://github.com/ometere123/margin/compare/9d33116f24d5f62b9ca562229ed573fbdb133c31...a275be880c508a54c0796b709a0cbf6e5b123fdb)
 
 ## Network
 
@@ -67,7 +80,9 @@ The signer uses the injected EIP-1193 wallet. The signer project is connected to
 - Extension tests: `17/17`
 - Signer tests: `43/43`
 - Security mutations: `15/15` killed
+- SDK tests: `7/7`; Action tests: `5/5`; ESM/CJS consumer imports passed
 - Extension and signer builds: passed
+- Main CI: [`39262301297`](https://github.com/ometere123/margin/actions/runs/39262301297) green on `a275be880c508a54c0796b709a0cbf6e5b123fdb`
 - MARGIN source commit `6798b2e748d7ef6f1e41538de4e33f84d9c7ae68` matches the deployed source SHA-256 above; the Consumer source at the same commit matches its deployed digest and constructor binding.
 
 ## Fresh final-MARGIN normal evidence

@@ -225,9 +225,11 @@ reads MARGIN directly and changes only its own bounded one-time application
 state; it does not hold release principal or publisher collateral.
 
 See [`docs/MARGIN_CONNECT_V3.md`](docs/MARGIN_CONNECT_V3.md) for the verified
-boundary and limitations. The SDK publication uses the authenticated
-`@converts/margin-connect` scope; no independent third-party adoption is
-claimed without public maintainer evidence.
+boundary and limitations. The public SDK is
+[`@converts/margin-connect@0.1.0`](https://www.npmjs.com/package/@converts/margin-connect),
+published from main commit `a275be880c508a54c0796b709a0cbf6e5b123fdb`.
+No independent third-party adoption is claimed without public maintainer
+evidence.
 
 The reference PolicyGate deployment is
 `0xa2Eab1218E09b9d3B28390d4332643Cb3C29ecA1`; its finalized deployment and

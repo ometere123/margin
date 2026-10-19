@@ -27,9 +27,18 @@ URL, publisher and Covered evidence commitments. Release integration adds the
 repository, exact commit and release-artifact SHA-256 binding.
 
 The authenticated npm account is `converts`, and the `@margin` organization is
-not accessible to that account. The SDK is therefore released under the
-authorized `@converts/margin-connect` scope; publication evidence is recorded
-only after registry release and independent installation verification.
+not accessible to that account. The public SDK is released under the
+authorized [`@converts/margin-connect`](https://www.npmjs.com/package/@converts/margin-connect)
+scope at version `0.1.0`. It was published from main commit
+`a275be880c508a54c0796b709a0cbf6e5b123fdb`; the public registry reports the
+same `gitHead`, tarball SHA-1
+`5233bc2a3d9e2657e2d1225094ee603ccc2c7093`, SHA-512 integrity
+`sha512-TN3iOZdKTNmfqDCHk5CHhn62glSfKLL4ugfjn6uhRyYnW6+yN66/z9Lw/G7OM9X55Ic+UttO0tSA9I4+/Zqyjg==`,
+and eight packaged files. A clean external project installed it with
+`npm install @converts/margin-connect@0.1.0`, passed real ESM and CJS import
+checks, and reported zero production-audit vulnerabilities. The immutable
+PolicyGate evidence remains bound to its original V3 policy artifact; this npm
+release is distribution evidence, not a redeployment or mutation of that gate.
 
 The current production dependency audit is clean (`npm audit --omit=dev`:
 0 vulnerabilities). The remaining six workspace findings are development-only:
@@ -86,8 +95,9 @@ No independently maintained third-party application integration or maintainer
 permission is claimed until a public repository and public CI run verify it.
 The first-party SDK, Action and reference contract are the reproducible
 integration surface; external adoption remains an explicit limitation unless
-independently evidenced. The final merged main verification is GitHub Actions
-run [`39244609574`](https://github.com/ometere123/margin/actions/runs/39244609574)
-on commit `eb7937c21a16feded049e85c8aca18f409eda493`; it passed the existing V2
+independently evidenced. The final merged-main verification is GitHub Actions
+run [`39262301297`](https://github.com/ometere123/margin/actions/runs/39262301297)
+on commit `a275be880c508a54c0796b709a0cbf6e5b123fdb`; it passed the existing V2
 checks together with the V3 SDK, Action, PolicyGate, typecheck, build,
-mutation and browser-harness checks.
+mutation and browser-harness checks. The exact V2-to-V3 source comparison is
+[`9d33116f...a275be8`](https://github.com/ometere123/margin/compare/9d33116f24d5f62b9ca562229ed573fbdb133c31...a275be880c508a54c0796b709a0cbf6e5b123fdb).

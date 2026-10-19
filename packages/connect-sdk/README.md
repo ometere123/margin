@@ -18,11 +18,11 @@ The SDK returns only four decisions:
 
 ## Install
 
-The public package name is `@converts/margin-connect`. The authenticated npm
-account is `converts`; the original `@margin` organization is not accessible
-to that account. The registry release is performed separately after the
-final owner confirmation. Consumers may use the workspace package during
-development:
+The public package is [`@converts/margin-connect@0.1.0`](https://www.npmjs.com/package/@converts/margin-connect),
+published by the authenticated `converts` account from main commit
+`a275be880c508a54c0796b709a0cbf6e5b123fdb`. The original `@margin`
+organization is not accessible to that account. Install the registry release
+with:
 
 ```bash
 npm install @converts/margin-connect genlayer-js@1.1.8
