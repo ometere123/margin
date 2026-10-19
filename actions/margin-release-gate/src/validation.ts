@@ -1,4 +1,4 @@
-import { validateArtifactBinding, type MarginPolicyCommitment } from '@margin/connect';
+import { validateArtifactBinding, type MarginPolicyCommitment } from '@converts/margin-connect';
 
 export function verifyReleaseBinding(input: {
   commitment: MarginPolicyCommitment;

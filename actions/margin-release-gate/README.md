@@ -2,7 +2,7 @@
 
 This is a distributable Node 24 JavaScript Action. It checks the exact GitHub
 repository, commit SHA and release-artifact SHA-256 before using
-`@margin/connect` to read the existing MARGIN deployment at `LATEST_FINAL`.
+`@converts/margin-connect` to read the existing MARGIN deployment at `LATEST_FINAL`.
 
 The action fails closed for ordinary claims, unresolved claims, negative
 verdicts, malformed reads, consumer mismatches and RPC failures. It has no

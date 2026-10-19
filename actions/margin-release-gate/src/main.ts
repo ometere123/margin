@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { createMarginConnect, type MarginPolicyCommitment } from '@margin/connect';
+import { createMarginConnect, type MarginPolicyCommitment } from '@converts/margin-connect';
 import { verifyReleaseBinding } from './validation.js';
 
 function requiredEnv(name: string): string {

@@ -25,4 +25,4 @@ await build({
   packages: 'external',
 });
 
-console.log('Built @margin/connect ESM and CJS distributions.');
+console.log('Built @converts/margin-connect ESM and CJS distributions.');

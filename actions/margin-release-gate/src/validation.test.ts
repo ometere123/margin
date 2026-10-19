@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { verifyReleaseBinding } from './validation.js';
-import type { MarginPolicyCommitment } from '@margin/connect';
+import type { MarginPolicyCommitment } from '@converts/margin-connect';
 
 const commitment: MarginPolicyCommitment = {
   policyId: 'policy-1',

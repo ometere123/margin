@@ -48,8 +48,9 @@ This is an evidence inventory, not a project score. Historical deployments and b
 - Local SDK tests cover seven API cases, Action binding tests cover five cases,
   and the reference PolicyGate Direct Mode suite covers seven cases. The
   existing V2 regression/mutation suite remains part of the final gates.
-- No npm publication or independent third-party adoption is claimed without
-  verified namespace access or public maintainer evidence.
+- SDK publication uses the authenticated `@converts/margin-connect` scope;
+  independent third-party adoption is not claimed without public maintainer
+  evidence.
 - The separately deployed PolicyGate is `0xa2Eab1218E09b9d3B28390d4332643Cb3C29ecA1`;
   its finalized deployment, source parity, `APPROVED` readback and one-shot
   action are recorded in `artifacts/margin_connect_v3_policy_gate.json`.
